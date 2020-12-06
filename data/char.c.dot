@@ -1,0 +1,191 @@
+/* generated using sparse tool */
+digraph call_graph {
+subgraph cluster0x7f26210be010 {
+    color=blue;
+    label=<<TABLE BORDER="0" CELLBORDER="0">
+             <TR><TD>char.c</TD></TR>
+             <TR><TD><FONT POINT-SIZE="21">parse_escape()</FONT></TD></TR>
+           </TABLE>>;
+    file="char.c";
+    fun="parse_escape";
+    ep=bb0x7f26210b6010;
+    bb0x7f26210b6010 [shape=ellipse,label=8,line=8,col=19];
+    bb0x7f26210b6010 -> bb0x7f26210b6060 [op=br, weight=10];
+    bb0x7f26210b6010 -> bb0x7f26210b60b0 [op=br, weight=10];
+    bb0x7f26210b6060 [shape=ellipse,label=13,line=13,col=17];
+    bb0x7f26210b6060 -> bb0x7f26210b6100 [op=br, weight=5];
+    bb0x7f26210b60b0 [shape=ellipse,label=17,line=17,col=9];
+    bb0x7f26210b60b0 -> bb0x7f26210b61a0 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b61f0 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6240 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6290 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b62e0 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6330 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6380 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b63d0 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6420 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6470 [op=br, weight=10];
+    bb0x7f26210b60b0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b61a0 [shape=ellipse,label=19,line=19,col=19];
+    bb0x7f26210b61a0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b61f0 [shape=ellipse,label=20,line=20,col=19];
+    bb0x7f26210b61f0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6240 [shape=ellipse,label=21,line=21,col=19];
+    bb0x7f26210b6240 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6290 [shape=ellipse,label=22,line=22,col=19];
+    bb0x7f26210b6290 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b62e0 [shape=ellipse,label=23,line=23,col=19];
+    bb0x7f26210b62e0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6330 [shape=ellipse,label=24,line=24,col=19];
+    bb0x7f26210b6330 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6380 [shape=ellipse,label=25,line=25,col=19];
+    bb0x7f26210b6380 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b63d0 [shape=ellipse,label=26,line=26,col=19];
+    bb0x7f26210b63d0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6420 [shape=ellipse,label=28,line=28,col=17];
+    bb0x7f26210b6420 -> bb0x7f26210b6600 [op=br, weight=10];
+    bb0x7f26210b6600 [shape=ellipse,label=29,line=29,col=17];
+    bb0x7f26210b6600 -> bb0x7f26210b6510 [op=br, weight=10];
+    bb0x7f26210b6600 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6510 [shape=ellipse,label=30,line=30,col=25];
+    bb0x7f26210b6510 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6510 -> bb0x7f26210b66a0 [op=br, weight=10];
+    bb0x7f26210b66a0 [shape=ellipse,label=33,line=33,col=25];
+    bb0x7f26210b66a0 -> bb0x7f26210b66f0 [op=br, weight=10];
+    bb0x7f26210b66a0 -> bb0x7f26210b6560 [op=br, weight=5];
+    bb0x7f26210b66f0 [shape=ellipse,label=35,line=35,col=33];
+    bb0x7f26210b66f0 -> bb0x7f26210b6560 [op=br, weight=5];
+    bb0x7f26210b6560 [shape=ellipse,label=29,line=29,col=40];
+    bb0x7f26210b6560 -> bb0x7f26210b6600 [op=br, weight=10];
+    bb0x7f26210b6470 [shape=ellipse,label=43,line=43,col=17];
+    bb0x7f26210b6470 -> bb0x7f26210b6790 [op=br, weight=10];
+    bb0x7f26210b6470 -> bb0x7f26210b67e0 [op=br, weight=10];
+    bb0x7f26210b6790 [shape=ellipse,label=44,line=44,col=25];
+    bb0x7f26210b6790 -> bb0x7f26210b67e0 [op=br, weight=10];
+    bb0x7f26210b67e0 [shape=ellipse,label=45,line=45,col=17];
+    bb0x7f26210b67e0 -> bb0x7f26210b6920 [op=br, weight=10];
+    bb0x7f26210b6920 [shape=ellipse,label=46,line=46,col=17];
+    bb0x7f26210b6920 -> bb0x7f26210b6970 [op=br, weight=10];
+    bb0x7f26210b6920 -> bb0x7f26210b68d0 [op=br, weight=10];
+    bb0x7f26210b6970 [shape=ellipse,label=46,line=46,col=32];
+    bb0x7f26210b6970 -> bb0x7f26210b6830 [op=br, weight=10];
+    bb0x7f26210b6970 -> bb0x7f26210b68d0 [op=br, weight=10];
+    bb0x7f26210b6830 [shape=ellipse,label=47,line=47,col=25];
+    bb0x7f26210b6830 -> bb0x7f26210b6920 [op=br, weight=5];
+    bb0x7f26210b68d0 [shape=ellipse,label=50,line=50,col=17];
+    bb0x7f26210b68d0 -> bb0x7f26210b69c0 [op=br, weight=10];
+    bb0x7f26210b68d0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b69c0 [shape=ellipse,label=51,line=51,col=25];
+    bb0x7f26210b69c0 -> bb0x7f26210b6150 [op=br, weight=10];
+    bb0x7f26210b6150 [shape=ellipse,label=58,line=58,col=9];
+    bb0x7f26210b6150 -> bb0x7f26210b6100 [op=br, weight=5];
+    bb0x7f26210b6100 [shape=ellipse,label=8,line=8,col=19,op=ret];
+}
+subgraph cluster0x7f26210be040 {
+    color=blue;
+    label=<<TABLE BORDER="0" CELLBORDER="0">
+             <TR><TD>char.c</TD></TR>
+             <TR><TD><FONT POINT-SIZE="21">get_char_constant()</FONT></TD></TR>
+           </TABLE>>;
+    file="char.c";
+    fun="get_char_constant";
+    ep=bb0x7f26210b6a60;
+    bb0x7f26210b6a60 [shape=ellipse,label=62,line=62,col=6];
+    bb0x7f26210b6a60 -> bb0x7f26210b6b50 [op=br, weight=10];
+    bb0x7f26210b6a60 -> bb0x7f26210b6b50 [op=br, weight=10];
+    bb0x7f26210b6a60 -> bb0x7f26210b6ba0 [op=br, weight=10];
+    bb0x7f26210b6a60 -> bb0x7f26210b6bf0 [op=br, weight=10];
+    bb0x7f26210b6b50 [shape=ellipse,label=70,line=70,col=17];
+    bb0x7f26210b6b50 -> bb0x7f26210b6ab0 [op=br, weight=10];
+    bb0x7f26210b6ba0 [shape=ellipse,label=74,line=74,col=17];
+    bb0x7f26210b6ba0 -> bb0x7f26210b6ab0 [op=br, weight=10];
+    bb0x7f26210b6bf0 [shape=ellipse,label=77,line=77,col=17];
+    bb0x7f26210b6bf0 -> bb0x7f26210b6ab0 [op=br, weight=10];
+    bb0x7f26210b6ab0 [shape=ellipse,label=79,line=79,col=9, ls="[ load(bits_in_char)]"];
+    bb0x7f26210b6ab0 -> bb0x7f26210b6c40 [op=br, weight=10];
+    bb0x7f26210b6ab0 -> bb0x7f26210b6c90 [op=br, weight=10];
+    bb0x7f26210b6c40 [shape=ellipse,label=82,line=82,col=17];
+    bb0x7f26210b6c40 -> bb0x7f26210b6c90 [op=br, weight=10];
+    bb0x7f26210b6c90 [shape=ellipse,label=84,line=84,col=9, ls="[ load(v)]",op=ret];
+}
+bb0x7f26210b6ab0 -> bb0x7f26210b6010[label=79,line=79,col=25,op=call,style=bold,weight=30];
+subgraph cluster0x7f26210be070 {
+    color=blue;
+    label=<<TABLE BORDER="0" CELLBORDER="0">
+             <TR><TD>char.c</TD></TR>
+             <TR><TD><FONT POINT-SIZE="21">get_string_constant()</FONT></TD></TR>
+           </TABLE>>;
+    file="char.c";
+    fun="get_string_constant";
+    ep=bb0x7f26210b6d30;
+    bb0x7f26210b6d30 [shape=ellipse,label=87,line=87,col=14];
+    bb0x7f26210b6d30 -> bb0x7f26210b6d80 [op=br, weight=10];
+    bb0x7f26210b6e70 [shape=ellipse,label=98,line=98,col=9];
+    bb0x7f26210b6e70 -> bb0x7f26210b6e20 [op=br, weight=10];
+    bb0x7f26210b6e70 -> bb0x7f26210b6d80 [op=br, weight=10];
+    bb0x7f26210b6d80 [shape=ellipse,label=99,line=99,col=17];
+    bb0x7f26210b6d80 -> bb0x7f26210b6f10 [op=br, weight=10];
+    bb0x7f26210b6d80 -> bb0x7f26210b6f60 [op=br, weight=10];
+    bb0x7f26210b6d80 -> bb0x7f26210b6fb0 [op=br, weight=10];
+    bb0x7f26210b6f10 [shape=ellipse,label=101,line=101,col=25];
+    bb0x7f26210b6f10 -> bb0x7f26210b6f60 [op=br, weight=10];
+    bb0x7f26210b6f60 [shape=ellipse,label=103,line=103,col=25];
+    bb0x7f26210b6f60 -> bb0x7f26210b6e70 [op=br, weight=5];
+    bb0x7f26210b6fb0 [shape=ellipse,label=106,line=106,col=25];
+    bb0x7f26210b6fb0 -> bb0x7f26210b6e70 [op=br, weight=5];
+    bb0x7f26210b6e20 [shape=ellipse,label=109,line=109,col=9, ls="[ load(bits_in_char)]"];
+    bb0x7f26210b6e20 -> bb0x7f26210b70f0 [op=br, weight=10];
+    bb0x7f26210b70f0 [shape=ellipse,label=110,line=110,col=9];
+    bb0x7f26210b70f0 -> bb0x7f26210b7000 [op=br, weight=10];
+    bb0x7f26210b70f0 -> bb0x7f26210b70a0 [op=br, weight=10];
+    bb0x7f26210b7000 [shape=ellipse,label=112,line=112,col=17];
+    bb0x7f26210b7000 -> bb0x7f26210b7230 [op=br, weight=10];
+    bb0x7f26210b7230 [shape=ellipse,label=114,line=114,col=17];
+    bb0x7f26210b7230 -> bb0x7f26210b7140 [op=br, weight=10];
+    bb0x7f26210b7230 -> bb0x7f26210b71e0 [op=br, weight=10];
+    bb0x7f26210b7140 [shape=ellipse,label=115,line=115,col=25];
+    bb0x7f26210b7140 -> bb0x7f26210b7280 [op=br, weight=10];
+    bb0x7f26210b7140 -> bb0x7f26210b72d0 [op=br, weight=10];
+    bb0x7f26210b7280 [shape=ellipse,label=116,line=116,col=33];
+    bb0x7f26210b7280 -> bb0x7f26210b72d0 [op=br, weight=10];
+    bb0x7f26210b72d0 [shape=ellipse,label=117,line=117,col=25];
+    bb0x7f26210b72d0 -> bb0x7f26210b7320 [op=br, weight=10];
+    bb0x7f26210b72d0 -> bb0x7f26210b7370 [op=br, weight=10];
+    bb0x7f26210b7320 [shape=ellipse,label=119,line=119,col=33, ls="[ load(v)]"];
+    bb0x7f26210b7320 -> bb0x7f26210b7370 [op=br, weight=10];
+    bb0x7f26210b7370 [shape=ellipse,label=120,line=120,col=25];
+    bb0x7f26210b7370 -> bb0x7f26210b7230 [op=br, weight=5];
+    bb0x7f26210b71e0 [shape=ellipse,label=122,line=122,col=17];
+    bb0x7f26210b71e0 -> bb0x7f26210b70f0 [op=br, weight=5];
+    bb0x7f26210b70a0 [shape=ellipse,label=124,line=124,col=9];
+    bb0x7f26210b70a0 -> bb0x7f26210b73c0 [op=br, weight=10];
+    bb0x7f26210b70a0 -> bb0x7f26210b7410 [op=br, weight=10];
+    bb0x7f26210b73c0 [shape=ellipse,label=125,line=125,col=17];
+    bb0x7f26210b73c0 -> bb0x7f26210b7410 [op=br, weight=10];
+    bb0x7f26210b7410 [shape=ellipse,label=129,line=129,col=9];
+    bb0x7f26210b7410 -> bb0x7f26210b7460 [op=br, weight=10];
+    bb0x7f26210b7410 -> bb0x7f26210b7500 [op=br, weight=10];
+    bb0x7f26210b7500 [shape=ellipse,label=129,line=129,col=23];
+    bb0x7f26210b7500 -> bb0x7f26210b7460 [op=br, weight=10];
+    bb0x7f26210b7500 -> bb0x7f26210b74b0 [op=br, weight=10];
+    bb0x7f26210b7460 [shape=ellipse,label=130,line=130,col=17];
+    bb0x7f26210b7460 -> bb0x7f26210b7550 [op=br, weight=10];
+    bb0x7f26210b7460 -> bb0x7f26210b75f0 [op=br, weight=10];
+    bb0x7f26210b75f0 [shape=ellipse,label=130,line=130,col=39];
+    bb0x7f26210b75f0 -> bb0x7f26210b7550 [op=br, weight=10];
+    bb0x7f26210b75f0 -> bb0x7f26210b75a0 [op=br, weight=10];
+    bb0x7f26210b7550 [shape=ellipse,label=131,line=131,col=25];
+    bb0x7f26210b7550 -> bb0x7f26210b75a0 [op=br, weight=10];
+    bb0x7f26210b75a0 [shape=ellipse,label=132,line=132,col=17];
+    bb0x7f26210b75a0 -> bb0x7f26210b74b0 [op=br, weight=10];
+    bb0x7f26210b74b0 [shape=ellipse,label=136,line=136,col=9,op=ret];
+}
+bb0x7f26210b72d0 -> bb0x7f26210b6010[label=117,line=117,col=41,op=call,style=bold,weight=30];
+bb0x7f26210b6510 -> "hexval" [label=30,line=30,col=35,op=extern,style=dashed];
+bb0x7f26210b66f0 -> "warning" [label=35,line=35,col=40,op=extern,style=dashed];
+bb0x7f26210b69c0 -> "warning" [label=51,line=51,col=32,op=extern,style=dashed];
+bb0x7f26210b6c40 -> "warning" [label=82,line=82,col=24,op=extern,style=dashed];
+bb0x7f26210b73c0 -> "warning" [label=125,line=125,col=24,op=extern,style=dashed];
+bb0x7f26210b7550 -> "__alloc_string" [label=131,line=131,col=48,op=extern,style=dashed];
+bb0x7f26210b75a0 -> "memmove" [label=133,line=133,col=24,op=extern,style=dashed];
+}

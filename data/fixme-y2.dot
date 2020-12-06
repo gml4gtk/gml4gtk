@@ -1,0 +1,26 @@
+/* apt-rdepends -dotty nano
+ * y levels to fix, when compared with dot
+ * this has no cycles
+ */
+digraph packages {
+concentrate=true;
+size="30,40";
+"nano" [shape=box];
+"nano" -> "libc6";
+"nano" -> "libncursesw6";
+"nano" -> "libtinfo6";
+"nano" -> "zlib1g";
+"libc6" [shape=box];
+"libc6" -> "libgcc1";
+"libgcc1" [shape=box];
+"libgcc1" -> "gcc-8-base";
+//"libgcc1" -> "libc6"; // omit cycle
+"gcc-8-base" [shape=box];
+"libncursesw6" [shape=box];
+"libncursesw6" -> "libc6";
+"libncursesw6" -> "libtinfo6";
+"libtinfo6" [shape=box];
+"libtinfo6" -> "libc6";
+"zlib1g" [shape=box];
+"zlib1g" -> "libc6";
+}

@@ -1,0 +1,118 @@
+To run this program on windows it needs the 64bits gtk-3 dll's to be installed
+and these are available from: https://sourceforge.net/projects/gtk3win/
+The file with 64bits gtk3 dll's is gtk3-runtime x84_64
+Below are the names of the dll's which ar included in a bundled version.
+
+The gml4gtk program can be installed on any folder directory on windows.
+The gml4gtk program does not need or create extra files or change files.
+The gml4gtk program does not use network or send mail or other data.
+
+The gml4gtk windows bundle has all GTK+ dll's included and can be installed
+in any directory folder. To remove it remove the directory with the dlls'
+
+Howto compile:
+
+./autogen.sh
+./configure
+make
+cd src
+./gml4gtk
+
+also:
+make clean
+make cleaner
+
+Usage:
+gml4gtk
+or:
+gml4gtk file.gml
+gml4gtk file.dot
+gml4gtk file.gv
+
+Or see make-gtk2.sh and make-gtk3.sh scripts for the gtk2 or gtk3 versions.
+
+Because this is a gtk program it can be compiled for windows or mac osx.
+
+When compiled for windows it needs all gtk dll's to run the program.
+
+The gml4gtk reads most GML files and partial DOT graph files,
+and DOT data from gcc,bison,llvm,radare2 and more can be used.
+
+In the data directory are few sample graph files to try it.
+
+When the left mouse button is pressed on the drawing and held down
+the drawing can be dragged around instead of using the sliders.
+
+When the binary is renamed to gml4gtkd then debug output is generated.
+
+When "yydebug=true" is used in dot language debug output is generated.
+
+digraph "example"
+{
+  yydebug=true;
+  ...
+}
+
+To create a callgraph using gcc use gcc option -fcallgraph-info
+and the output.ci file is a vcg graph file to open with file->open vcg
+
+The windows gml4gtk.exe program is a 64 bits program.
+It is cross-compiled on a GNU/Linux computer.
+It is tested using wine64 windows emulator on Linux.
+In directory src is the sourcecode of gml4gtk.
+In directory data are some dot and gml graphs.
+The dll files are for gtk-3 and gml4gtk.exe is using gtk3.
+The zip file is created using zip -r on Linux.
+The gml4gtk.exe program is verified to run on native windows 64bit.
+The gml4gtk.exe program is checked to be virus free.
+
+To compile gml4gtk on windows it needs the mingw compiler and gtk+ runtime and gtk+ development files.
+
+This are the needed dll's to run this gtk+3 program:
+libatk-1.0-0.dll
+libcairo-2.dll
+libcairo-gobject-2.dll
+libcairo-script-interpreter-2.dll
+libcroco-0.6-3.dll
+libffi-6.dll
+libfontconfig-1.dll
+libfreetype-6.dll
+libgailutil-3-0.dll
+libgdk-3-0.dll
+libgdk_pixbuf-2.0-0.dll
+libgio-2.0-0.dll
+libglib-2.0-0.dll
+libgmodule-2.0-0.dll
+libgobject-2.0-0.dll
+libgthread-2.0-0.dll
+libgtk-3-0.dll
+libiconv-2.dll
+libintl-8.dll
+libjasper-1.dll
+libjpeg-9.dll
+liblzma-5.dll
+libpango-1.0-0.dll
+libpangocairo-1.0-0.dll
+libpangoft2-1.0-0.dll
+libpangowin32-1.0-0.dll
+libpixman-1-0.dll
+libpng15-15.dll
+librsvg-2-2.dll
+libtiff-5.dll
+libtiffxx-5.dll
+libwinpthread-1.dll
+libxml2-2.dll
+zlib1.dll
+
+Read also the Kozo Sugiyama book isbn 981-02-4879-2
+
+And donations of samples of graph data to layout are needed
+or financial means to buy programming and graph books.
+
+some parts are (C) Universitaet Passau 1986-1991
+some parts are Copyright (C) 1998-2021 Free Software Foundation, Inc.
+some parts are Copyright (C) 2008, 2011 Matthias Stallmann
+some parts are Copyright (C) 2008, 2011 Saurabh Gupta
+
+For questions mail to mooigraph on gmail.com
+

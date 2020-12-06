@@ -1,0 +1,29 @@
+digraph "Post dominator tree for 'rhp_barycenter' function" {
+	label="Post dominator tree for 'rhp_barycenter' function";
+
+	Node0x12971d0 [shape=record,label="{Post dominance root node}"];
+	Node0x12971d0 -> Node0x1297210;
+	Node0x1297210 [shape=record,label="{%35:\l\l  ret void\l}"];
+	Node0x1297210 -> Node0x1297250;
+	Node0x1297210 -> Node0x1361be0;
+	Node0x1297210 -> Node0x1361c80;
+	Node0x1297210 -> Node0x1361d00;
+	Node0x1297210 -> Node0x1361d40;
+	Node0x1297210 -> Node0x1361d80;
+	Node0x1297250 [shape=record,label="{%7:\l\l  br label %35\l}"];
+	Node0x1361be0 [shape=record,label="{%2:\l\l  %3 = load i32, i32* @rhp_nlevels, align 4\l  %4 = sub nsw i32 %3, 2\l  %5 = call i32 @rhp_barycenterupsweep(i32 1, i32 %4)\l  %6 = icmp ne i32 %5, 0\l  br i1 %6, label %7, label %8\l}"];
+	Node0x1361be0 -> Node0x1361c40;
+	Node0x1361c40 [shape=record,label="{%0:\l  %redu = alloca i64, align 8\l  store i64 0, i64* %redu, align 8\l  store i32 0, i32* @rhp_iter, align 4\l  store i32 255, i32* @rhp_maxiter, align 4\l  %1 = load i64, i64* @rhp_start_crossings, align 8\l  call void (i8*, ...) @rhp_log(i8* getelementptr inbounds ([60 x i8], [60 x\l... i8]* @.str.120, i32 0, i32 0), i8* getelementptr inbounds ([15 x i8], [15 x\l... i8]* @__FUNCTION__.rhp_barycenter, i32 0, i32 0), i64 %1)\l  br label %2\l}"];
+	Node0x1361c80 [shape=record,label="{%15:\l\l  %16 = call i32 @rhp_terminate()\l  %17 = icmp eq i32 %16, 0\l  br i1 %17, label %2, label %18\l}"];
+	Node0x1361c80 -> Node0x1361cc0;
+	Node0x1361cc0 [shape=record,label="{%14:\l\l  br label %15\l}"];
+	Node0x1361d00 [shape=record,label="{%8:\l\l  %9 = load i32, i32* @rhp_nlevels, align 4\l  %10 = sub nsw i32 %9, 2\l  %11 = call i32 @rhp_barycenterdownsweep(i32 1, i32 %10)\l  %12 = icmp ne i32 %11, 0\l  br i1 %12, label %13, label %14\l}"];
+	Node0x1361d40 [shape=record,label="{%13:\l\l  br label %35\l}"];
+	Node0x1361d80 [shape=record,label="{%31:\l\l  %32 = load i64, i64* %redu, align 8\l  %33 = load i64, i64* @rhp_start_crossings, align 8\l  %34 = load i64, i64* @rhp_crossings, align 8\l  call void (i8*, ...) @rhp_log(i8* getelementptr inbounds ([61 x i8], [61 x\l... i8]* @.str.122, i32 0, i32 0), i8* getelementptr inbounds ([15 x i8], [15 x\l... i8]* @__FUNCTION__.rhp_barycenter, i32 0, i32 0), i64 %32, i64 %33, i64 %34)\l  br label %35\l}"];
+	Node0x1361d80 -> Node0x1361dc0;
+	Node0x1361d80 -> Node0x1361e20;
+	Node0x1361d80 -> Node0x1361e80;
+	Node0x1361dc0 [shape=record,label="{%23:\l\l  %24 = load i64, i64* @rhp_crossings, align 8\l  %25 = mul nsw i64 100, %24\l  %26 = load i64, i64* @rhp_start_crossings, align 8\l  %27 = sdiv i64 %25, %26\l  store i64 %27, i64* %redu, align 8\l  %28 = load i64, i64* %redu, align 8\l  %29 = sub nsw i64 100, %28\l  store i64 %29, i64* %redu, align 8\l  br label %31\l}"];
+	Node0x1361e20 [shape=record,label="{%18:\l\l  %19 = load i64, i64* @rhp_crossings, align 8\l  %20 = load i64, i64* @rhp_start_crossings, align 8\l  call void (i8*, ...) @rhp_log(i8* getelementptr inbounds ([94 x i8], [94 x\l... i8]* @.str.121, i32 0, i32 0), i8* getelementptr inbounds ([15 x i8], [15 x\l... i8]* @__FUNCTION__.rhp_barycenter, i32 0, i32 0), i64 %19, i64 %20)\l  %21 = load i64, i64* @rhp_start_crossings, align 8\l  %22 = icmp ne i64 %21, 0\l  br i1 %22, label %23, label %30\l}"];
+	Node0x1361e80 [shape=record,label="{%30:\l\l  store i64 0, i64* %redu, align 8\l  br label %31\l}"];
+}

@@ -1,0 +1,175 @@
+digraph "todo-list" {
+
+
+
+// level I basic IO and arithmetic
+
+   3 -> {4 5};		// print two numbers -> add three numbers, area volume
+   4 -> {6 27};		// -> print three digits, area surface (hard)
+   {5 6 27} -> 283;	// level I boss (chicken, rabbit, crab (easy))
+
+
+
+// level II comparison and logic
+
+   283 -> {8, 7}		// -> riangle length, 
+   {8, 7} -> 241		//level II boss (original in quadral?
+
+// level III if-the-else switch
+
+   {8, 7} -> {9} 			// integer score
+   9 -> 215			// chicken, rabbit, crab (hard)
+   215 -> {80 240} 		// quadral type, triangle type
+   {80 240} -> 10
+   10 -> 202		// level III boss
+
+// level IV loop
+
+   10 -> 15 
+   15 -> 12
+   12 -> 13
+   13 -> {73, 88}
+   232 -> 36
+   73 -> 97
+   {54 73 88} -> 242
+   {54 88} -> {244 234 232}
+   73 -> 54
+   {244 242 232} -> {203 204}
+   {203 204 36} -> 55	// level IV boss
+
+// level V array
+
+   55 -> 14			// print sequence backward
+   14 -> 16			// even and odd
+   16 -> 74			// Mn, Mnplus1, ...
+   74 -> {17 18 33}		// coulmn average, larger than
+				// neghtbors, intersections
+				
+   {17 18 33} -> {99 195}	// bingo, tictactoe
+   {17 18 33} -> 32		// longest double palindrome
+   {17 18 33} -> {49 265}	// sum maximum and min
+       	      	 		// 265 min containing box
+   {17 18 33} -> 271 		// multiply polynomial 
+
+   {32 49 265 271} -> 235 // pachingo
+
+// level VI function
+
+   204 -> 236			// lcm
+   204 -> 22			// negative and positive
+   204 -> 21			// maximum in matrix
+   {236 22 21} -> 128		// city roads in function
+   {236 22 21} -> 218		// sum of selection
+   {128 218} -> 50		// overlap area
+
+   // level boss
+   50 -> 37 			// metal value
+
+// side track: floating point numbers
+
+   235 -> 96			// cow and house
+   96 -> 103
+
+// level VII pointer
+
+   37 -> 23 			//find max in pointer array
+   23 -> 206			//card shuffle
+   23 -> 72 			// fill the array 
+   72 -> 129			// zig zag array
+   72 -> 190			// function evaluation
+   {129 190} -> 100 			// snake order
+
+// level VIII character
+
+   100 -> 75			// count characters
+   75 -> 24			// vowel consonant and digit
+   100 -> 106			// divisible 
+   {24 106} -> {191 220} 		// character, word, tokenms, & sentence count
+   {191} -> 277				//digits
+
+// level IX string
+
+   277 -> 130 			// similar string
+   277 -> 260 			// string fusion
+   277 -> 276			// abbreviation
+
+   260 -> 46			// play with words
+   46 -> 47			// play with words too
+
+   130 -> 98			// food ingredients
+
+   260 -> 221 			// typesetting
+
+   {46 276 98 221} -> 270			// BASIC
+
+// level X extended data type and bit operation
+
+   277 -> 281			// number of ones
+   281 -> 262			// maximum consecutive ones
+   281 -> 282			// maximum ones for longlong
+
+   262 -> 208			// print a bitmap
+
+   {282 208} -> 222		//bookshelf
+
+// level XI recursion
+   
+   270 -> 28			// sum of aquares
+
+   28 -> 38			// witchcraft
+   28 -> 238 			// subset sum
+   28 -> 104			// material composition
+   {238 104} -> 230		// knapsack
+
+
+   28 -> 53			// permutation
+   53 -> 223			// tiles   
+
+   28 -> 29			// from one corner to another
+   29 -> 30			// from one corner to another with obstacle
+   58 -> 266			// edit distance
+   30 -> 58 			// lake
+
+   28 -> 132			// color countries
+   132 -> 248 			// mine field
+   {248 266 223 230} -> 261			// puzzle equation (boss)
+
+// level XII structure
+
+   261 -> 275			// set
+   275 -> 249			// company
+   275 -> 210			// SQL database
+   275 -> 44			// library fine
+   {249 210} -> 251			// company again
+
+// level XIII file IO
+
+   251 -> 89    		// file encoding
+   89 -> 264			// frequency count
+   89 -> 136			// binary grad to HTML
+   89 -> 225 			// friends
+ 
+// level XIV data structures & object
+
+   251 -> 77 	  		// get the i-th elelment
+   251 -> 87			// merge list
+   87 -> 269			// memory allocation
+
+   251 -> 224			// super and sub
+   224 -> 94			// tree traversal
+   94 -> 109			// path printing
+   94 -> 134			// reconstruct a tree
+   94 -> 65			// expression tree
+   94 -> 93			// heap
+ 
+// level XV standard library
+   93 -> 267   			// traveling distance
+   {275, 267} -> 85			// sort dates
+   {267, 136} -> 133			// word count with struct
+   {267, 85} -> 239			// daily expense
+   {267, 281} -> 256			// one count sorting
+   {267, 89} -> 76			// string comparison
+
+   103 -> 137			// Student grades
+   {137, 251} -> 253			// time object
+}

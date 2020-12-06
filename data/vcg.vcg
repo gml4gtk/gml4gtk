@@ -1,0 +1,145 @@
+graph: { title: "src/vcg.c"
+node: { title: "src/vcg.c:vel_clear" label: "vel_clear\nsrc/vcg.c:79:13\n32 bytes (static)" }
+node: { title: "free" label: "free\n/usr/include/stdlib.h:563:13" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vel_clear" targetname: "free" label: "src/vcg.c:88:3" }
+node: { title: "src/vcg.c:vnl_clear" label: "vnl_clear\nsrc/vcg.c:97:13\n32 bytes (static)" }
+edge: { sourcename: "src/vcg.c:vnl_clear" targetname: "free" label: "src/vcg.c:106:3" }
+node: { title: "src/vcg.c:vcgparse_clear" label: "vcgparse_clear\nsrc/vcg.c:115:13\n16 bytes (static)" }
+edge: { sourcename: "src/vcg.c:vcgparse_clear" targetname: "src/vcg.c:vel_clear" label: "src/vcg.c:118:2" }
+edge: { sourcename: "src/vcg.c:vcgparse_clear" targetname: "src/vcg.c:vnl_clear" label: "src/vcg.c:121:2" }
+node: { title: "vcg_lex_clear" label: "vcg_lex_clear\nsrc/vcg.yy.h:39:13" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcgparse_clear" targetname: "vcg_lex_clear" label: "src/vcg.c:124:2" }
+node: { title: "vcg_clear_uniqstr" label: "vcg_clear_uniqstr\nsrc/vcgus.h:38:13" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcgparse_clear" targetname: "vcg_clear_uniqstr" label: "src/vcg.c:127:2" }
+node: { title: "clear_vcguniqnode" label: "clear_vcguniqnode\nsrc/vcgun.h:38:13" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcgparse_clear" targetname: "clear_vcguniqnode" label: "src/vcg.c:130:2" }
+node: { title: "src/vcg.c:vcggraphtitle" label: "vcggraphtitle\nsrc/vcg.c:165:13\n16 bytes (static)" }
+node: { title: "vcglex" label: "vcglex\nsrc/vcg.h:50:12" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcggraphtitle" targetname: "vcglex" label: "src/vcg.c:167:13" }
+node: { title: "memset" label: "memset\n/usr/include/string.h:60:14" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcggraphtitle" targetname: "memset" label: "src/vcg.c:170:3" }
+node: { title: "snprintf" label: "snprintf\n/usr/include/stdio.h:354:12" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcggraphtitle" targetname: "snprintf" label: "src/vcg.c:171:3" }
+edge: { sourcename: "src/vcg.c:vcggraphtitle" targetname: "vcglex" label: "src/vcg.c:176:13" }
+edge: { sourcename: "src/vcg.c:vcggraphtitle" targetname: "memset" label: "src/vcg.c:179:3" }
+edge: { sourcename: "src/vcg.c:vcggraphtitle" targetname: "snprintf" label: "src/vcg.c:180:3" }
+node: { title: "src/vcg.c:vcgnode" label: "vcgnode\nsrc/vcg.c:191:13\n48 bytes (static)" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:198:13" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:201:3" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:202:3" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:207:13" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:210:3" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:211:3" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:221:14" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:224:4" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:225:4" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:237:15" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:240:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:241:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:247:15" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:250:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:251:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:261:15" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:264:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:265:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:270:15" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:273:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:274:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:284:15" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:287:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:288:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcglex" label: "src/vcg.c:294:15" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:297:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:298:5" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:307:4" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:308:4" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "memset" label: "src/vcg.c:321:3" }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "snprintf" label: "src/vcg.c:322:3" }
+node: { title: "calloc" label: "calloc\n/usr/include/stdlib.h:541:14" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "calloc" label: "src/vcg.c:326:12" }
+node: { title: "vcguniqnode_add" label: "vcguniqnode_add\nsrc/vcgun.h:41:13" shape : ellipse }
+edge: { sourcename: "src/vcg.c:vcgnode" targetname: "vcguniqnode_add" label: "src/vcg.c:350:2" }
+node: { title: "src/vcg.c:vcgedge" label: "vcgedge\nsrc/vcg.c:356:13\n48 bytes (static)" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:363:13" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:366:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:367:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:372:13" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:375:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:376:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:386:14" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:389:4" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:390:4" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:402:15" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:405:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:406:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:412:15" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:415:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:416:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:426:15" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:429:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:430:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:436:15" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:439:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:440:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:450:15" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:453:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:454:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "vcglex" label: "src/vcg.c:460:15" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:463:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:464:5" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:473:4" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:474:4" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:487:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:488:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "memset" label: "src/vcg.c:494:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "snprintf" label: "src/vcg.c:495:3" }
+edge: { sourcename: "src/vcg.c:vcgedge" targetname: "calloc" label: "src/vcg.c:504:12" }
+node: { title: "src/vcg.c:chkedges" label: "chkedges\nsrc/vcg.c:531:13\n32 bytes (static)" }
+node: { title: "vcguniqnode" label: "vcguniqnode\nsrc/vcgun.h:44:21" shape : ellipse }
+edge: { sourcename: "src/vcg.c:chkedges" targetname: "vcguniqnode" label: "src/vcg.c:539:8" }
+edge: { sourcename: "src/vcg.c:chkedges" targetname: "memset" label: "src/vcg.c:541:4" }
+edge: { sourcename: "src/vcg.c:chkedges" targetname: "snprintf" label: "src/vcg.c:542:4" }
+edge: { sourcename: "src/vcg.c:chkedges" targetname: "vcguniqnode" label: "src/vcg.c:548:8" }
+edge: { sourcename: "src/vcg.c:chkedges" targetname: "memset" label: "src/vcg.c:550:4" }
+edge: { sourcename: "src/vcg.c:chkedges" targetname: "snprintf" label: "src/vcg.c:551:4" }
+node: { title: "src/vcg.c:copyall" label: "copyall\nsrc/vcg.c:564:13\n80 bytes (dynamic,bounded)" }
+node: { title: "uniqstr" label: "uniqstr\nsrc/uniqstr.h:41:14" shape : ellipse }
+edge: { sourcename: "src/vcg.c:copyall" targetname: "uniqstr" label: "src/vcg.c:573:2" }
+node: { title: "add_new_node" label: "add_new_node\nsrc/hier.h:143:13" shape : ellipse }
+edge: { sourcename: "src/vcg.c:copyall" targetname: "add_new_node" label: "src/vcg.c:573:2" }
+edge: { sourcename: "src/vcg.c:copyall" targetname: "uniqstr" label: "src/vcg.c:580:1" }
+node: { title: "add_new_edge" label: "add_new_edge\nsrc/hier.h:151:1" shape : ellipse }
+edge: { sourcename: "src/vcg.c:copyall" targetname: "add_new_edge" label: "src/vcg.c:580:1" }
+node: { title: "vcgparse" label: "vcgparse\nsrc/vcg.c:588:5\n48 bytes (static)" }
+node: { title: "strcmp" label: "strcmp\n/usr/include/string.h:136:12" shape : ellipse }
+edge: { sourcename: "vcgparse" targetname: "strcmp" label: "src/vcg.c:602:6" }
+node: { title: "vcg_lex_init" label: "vcg_lex_init\nsrc/vcg.yy.h:36:13" shape : ellipse }
+edge: { sourcename: "vcgparse" targetname: "vcg_lex_init" label: "src/vcg.c:603:3" }
+edge: { sourcename: "vcgparse" targetname: "vcg_lex_init" label: "src/vcg.c:605:3" }
+edge: { sourcename: "vcgparse" targetname: "vcglex" label: "src/vcg.c:609:13" }
+edge: { sourcename: "vcgparse" targetname: "memset" label: "src/vcg.c:612:3" }
+edge: { sourcename: "vcgparse" targetname: "snprintf" label: "src/vcg.c:613:3" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:614:3" }
+edge: { sourcename: "vcgparse" targetname: "vcglex" label: "src/vcg.c:619:13" }
+edge: { sourcename: "vcgparse" targetname: "memset" label: "src/vcg.c:622:3" }
+edge: { sourcename: "vcgparse" targetname: "snprintf" label: "src/vcg.c:623:3" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:624:3" }
+edge: { sourcename: "vcgparse" targetname: "vcglex" label: "src/vcg.c:629:13" }
+edge: { sourcename: "vcgparse" targetname: "memset" label: "src/vcg.c:632:3" }
+edge: { sourcename: "vcgparse" targetname: "snprintf" label: "src/vcg.c:633:3" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:634:3" }
+edge: { sourcename: "vcgparse" targetname: "vcglex" label: "src/vcg.c:647:14" }
+edge: { sourcename: "vcgparse" targetname: "memset" label: "src/vcg.c:650:4" }
+edge: { sourcename: "vcgparse" targetname: "snprintf" label: "src/vcg.c:651:4" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcggraphtitle" label: "src/vcg.c:667:4" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgnode" label: "src/vcg.c:669:4" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgedge" label: "src/vcg.c:671:4" }
+edge: { sourcename: "vcgparse" targetname: "memset" label: "src/vcg.c:673:4" }
+edge: { sourcename: "vcgparse" targetname: "snprintf" label: "src/vcg.c:674:4" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:684:3" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:690:3" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:chkedges" label: "src/vcg.c:695:2" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:699:3" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:copyall" label: "src/vcg.c:704:1" }
+edge: { sourcename: "vcgparse" targetname: "src/vcg.c:vcgparse_clear" label: "src/vcg.c:706:2" }
+}

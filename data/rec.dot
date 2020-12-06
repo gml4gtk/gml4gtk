@@ -1,0 +1,12 @@
+digraph "rec"
+{
+ node [shape=Mrecord];
+ 4 [label="hello\nworld |{ b |{c|d|e}| f}| g | h"];
+ 5 [label="hello\nworld |{ {b1|b2} |{c|d|e}| f}| g | h"];
+ 6 [label="hello\nworld |{ {1|2} |{c|d|e}| f}| g | h"];
+ 7 [label="hello\nworld |{ {1|2} |{c|d|e}| {B|C}}| g | h"];
+
+4->5->6;
+4->7;
+
+}

@@ -1,0 +1,16 @@
+/* task depends on other tasks */
+digraph "task"
+{
+ /* to complete task, do task1,2 and 4*/
+ 1[label="to complete\ntask"];
+ 2[label="do task1"];
+ 3[label="do task2"];
+ 4[label="do task4"];
+ /* to complete task, first do task1 and task2 */
+ 1->2;
+ 1->3;
+ /* to do task1 or task2 first do task4 */
+ 2->4;
+ 3->4;
+}
+

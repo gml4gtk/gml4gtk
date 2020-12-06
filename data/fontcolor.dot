@@ -1,0 +1,10 @@
+/* set the fontcolor in a dot graph */
+digraph
+{
+  "0" [ fontcolor="#00ff00" ];
+  "1" [ label="December" fontcolor="#0000ff" ];
+  "2" [ fontcolor="#ff0000" shape="record" label="aa|bb" ];
+  "1"  -> "0";
+  "1"  -> "2";
+}
+

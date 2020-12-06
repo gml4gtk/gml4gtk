@@ -1,0 +1,351 @@
+digraph "rhp.c.227r.reginfo" {
+overlap=false;
+subgraph "cluster_rhp_init" {
+	style="dashed";
+	color="black";
+	label="rhp_init ()";
+	fn_3_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_3_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_3_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ \ 5:\ NOTE_INSN_BASIC_BLOCK\ 2\l\
+|\ \ \ \ 2:\ [frame:DI-0x8]=di:DI\l\
+|\ \ \ \ 3:\ [frame:DI-0xc]=si:SI\l\
+|\ \ \ \ 4:\ NOTE_INSN_FUNCTION_BEG\l\
+|\ \ \ \ 7:\ r87:SI=[`rhp_inited']\l\
+|\ \ \ \ 8:\ flags:CCZ=cmp(r87:SI,0)\l\
+|\ \ \ \ 9:\ pc=\{(flags:CCZ==0)?L16:pc\}\l\
+}"];
+
+	fn_3_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 10:\ NOTE_INSN_BASIC_BLOCK\ 3\l\
+|\ \ \ 11:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ \ 12:\ di:DI=`*.LC1'\l\
+|\ \ \ 13:\ ax:QI=0\l\
+|\ \ \ 14:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ \ 15:\ call\ [`rhp_deinit']\ argc:0\l\
+}"];
+
+	fn_3_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 16:\ L16:\l\
+|\ \ \ 17:\ NOTE_INSN_BASIC_BLOCK\ 4\l\
+|\ \ \ 18:\ [`rhp_logstream']=0\l\
+|\ \ \ 19:\ [`rhp_dolog']=0\l\
+|\ \ \ 20:\ [`rhp_logname']=0\l\
+|\ \ \ 21:\ flags:CCZ=cmp([frame:DI-0x8],0)\l\
+|\ \ \ 22:\ pc=\{(flags:CCZ==0)?L55:pc\}\l\
+}"];
+
+	fn_3_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 23:\ NOTE_INSN_BASIC_BLOCK\ 5\l\
+|\ \ \ 24:\ r96:DI=[frame:DI-0x8]\l\
+|\ \ \ 25:\ r88:QI=[r96:DI]\l\
+|\ \ \ 26:\ flags:CCZ=cmp(r88:QI,0)\l\
+|\ \ \ 27:\ pc=\{(flags:CCZ!=0)?L33:pc\}\l\
+}"];
+
+	fn_3_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 28:\ NOTE_INSN_BASIC_BLOCK\ 6\l\
+|\ \ \ 29:\ r89:DI=[`stdout']\l\
+|\ \ \ 30:\ [`rhp_logstream']=r89:DI\l\
+}"];
+
+	fn_3_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 33:\ L33:\l\
+|\ \ \ 34:\ NOTE_INSN_BASIC_BLOCK\ 7\l\
+|\ \ \ 35:\ r97:DI=[frame:DI-0x8]\l\
+|\ \ \ 36:\ si:DI=`*.LC2'\l\
+|\ \ \ 37:\ di:DI=r97:DI\l\
+|\ \ \ 38:\ ax:DI=call\ [`fopen']\ argc:0\l\
+|\ \ \ 39:\ r90:DI=ax:DI\l\
+|\ \ \ 40:\ [`rhp_logstream']=r90:DI\l\
+|\ \ \ 41:\ r91:DI=[`rhp_logstream']\l\
+|\ \ \ 42:\ flags:CCZ=cmp(r91:DI,0)\l\
+|\ \ \ 43:\ pc=\{(flags:CCZ!=0)?L47:pc\}\l\
+}"];
+
+	fn_3_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 44:\ NOTE_INSN_BASIC_BLOCK\ 8\l\
+|\ \ \ 45:\ r92:DI=[`stdout']\l\
+|\ \ \ 46:\ [`rhp_logstream']=r92:DI\l\
+}"];
+
+	fn_3_basic_block_9 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 47:\ L47:\l\
+|\ \ \ 48:\ NOTE_INSN_BASIC_BLOCK\ 9\l\
+|\ \ \ 49:\ r98:SI=[frame:DI-0xc]\l\
+|\ \ \ 50:\ [`rhp_dolog']=r98:SI\l\
+|\ \ \ 51:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ \ 52:\ di:DI=`*.LC3'\l\
+|\ \ \ 53:\ ax:QI=0\l\
+|\ \ \ 54:\ call\ [`rhp_log']\ argc:0\l\
+}"];
+
+	fn_3_basic_block_10 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 55:\ L55:\l\
+|\ \ \ 56:\ NOTE_INSN_BASIC_BLOCK\ 10\l\
+|\ \ \ 57:\ di:SI=0x1\l\
+|\ \ \ 58:\ ax:DI=call\ [`rhp_sp_new']\ argc:0\l\
+|\ \ \ 59:\ r93:DI=ax:DI\l\
+|\ \ \ 60:\ [`rhp_sp_master_node_list']=r93:DI\l\
+|\ \ \ 61:\ di:SI=0x1\l\
+|\ \ \ 62:\ ax:DI=call\ [`rhp_sp_new']\ argc:0\l\
+|\ \ \ 63:\ r94:DI=ax:DI\l\
+|\ \ \ 64:\ [`rhp_sp_master_edge_list']=r94:DI\l\
+|\ \ \ 65:\ [`rhp_uniq_nodenum']=0\l\
+|\ \ \ 66:\ [`rhp_uniq_edgenum']=0\l\
+|\ \ \ 67:\ [`rhp_number_of_nodes']=0\l\
+|\ \ \ 68:\ [`rhp_number_of_edges']=0\l\
+|\ \ \ 69:\ [`rhp_number_of_isolated_nodes']=0\l\
+|\ \ \ 70:\ di:SI=0x1\l\
+|\ \ \ 71:\ ax:DI=call\ [`rhp_sp_new']\ argc:0\l\
+|\ \ \ 72:\ r95:DI=ax:DI\l\
+|\ \ \ 73:\ [`rhp_sp_between_layers']=r95:DI\l\
+|\ \ \ 74:\ [`rhp_maxlevel']=0\l\
+|\ \ \ 75:\ [`rhp_nlevels']=0\l\
+|\ \ \ 76:\ [`rhp_crossings']=0xffffffffffffffff\l\
+|\ \ \ 77:\ [`rhp_start_crossings']=0xffffffffffffffff\l\
+|\ \ \ 78:\ [`rhp_best_crossings_order']=0\l\
+|\ \ \ 79:\ [`rhp_getlayoutdata']=0\l\
+|\ \ \ 80:\ [`rhp_improvements']=0\l\
+|\ \ \ 81:\ [`rhp_notimprovements']=0\l\
+|\ \ \ 82:\ dx:SI=0x4\l\
+|\ \ \ 83:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ \ 84:\ di:DI=`*.LC4'\l\
+|\ \ \ 85:\ ax:QI=0\l\
+|\ \ \ 86:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ \ 87:\ dx:SI=0x8\l\
+|\ \ \ 88:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ \ 89:\ di:DI=`*.LC5'\l\
+|\ \ \ 90:\ ax:QI=0\l\
+|\ \ \ 91:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ \ 92:\ dx:SI=0x8\l\
+|\ \ \ 93:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ \ 94:\ di:DI=`*.LC6'\l\
+|\ \ \ 95:\ ax:QI=0\l\
+|\ \ \ 96:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ \ 97:\ dx:SI=0x8\l\
+|\ \ \ 98:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ \ 99:\ di:DI=`*.LC7'\l\
+|\ \ 100:\ ax:QI=0\l\
+|\ \ 101:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 102:\ dx:SI=0x20\l\
+|\ \ 103:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 104:\ di:DI=`*.LC8'\l\
+|\ \ 105:\ ax:QI=0\l\
+|\ \ 106:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 107:\ dx:SI=0x10\l\
+|\ \ 108:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 109:\ di:DI=`*.LC9'\l\
+|\ \ 110:\ ax:QI=0\l\
+|\ \ 111:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 112:\ dx:SI=0x50\l\
+|\ \ 113:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 114:\ di:DI=`*.LC10'\l\
+|\ \ 115:\ ax:QI=0\l\
+|\ \ 116:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 117:\ dx:SI=0x38\l\
+|\ \ 118:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 119:\ di:DI=`*.LC11'\l\
+|\ \ 120:\ ax:QI=0\l\
+|\ \ 121:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 122:\ dx:SI=0x10\l\
+|\ \ 123:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 124:\ di:DI=`*.LC12'\l\
+|\ \ 125:\ ax:QI=0\l\
+|\ \ 126:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 127:\ dx:SI=0x18\l\
+|\ \ 128:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 129:\ di:DI=`*.LC13'\l\
+|\ \ 130:\ ax:QI=0\l\
+|\ \ 131:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 132:\ dx:SI=0x18\l\
+|\ \ 133:\ si:DI=`__FUNCTION__.3495'\l\
+|\ \ 134:\ di:DI=`*.LC14'\l\
+|\ \ 135:\ ax:QI=0\l\
+|\ \ 136:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 137:\ [`rhp_inited']=0x1\l\
+|\ \ 142:\ 0\l\
+}"];
+
+	fn_3_basic_block_0:s -> fn_3_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_2:s -> fn_3_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_2:s -> fn_3_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_3:s -> fn_3_basic_block_4:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_4:s -> fn_3_basic_block_5:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_4:s -> fn_3_basic_block_10:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_5:s -> fn_3_basic_block_6:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_5:s -> fn_3_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_6:s -> fn_3_basic_block_9:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[100%]"];
+	fn_3_basic_block_7:s -> fn_3_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_7:s -> fn_3_basic_block_9:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_3_basic_block_8:s -> fn_3_basic_block_9:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_9:s -> fn_3_basic_block_10:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_3_basic_block_10:s -> fn_3_basic_block_1:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[100%]"];
+	fn_3_basic_block_0:s -> fn_3_basic_block_1:n [style="invis",constraint=true];
+}
+subgraph "cluster_rhp_deinit" {
+	style="dashed";
+	color="black";
+	label="rhp_deinit ()";
+	fn_4_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_4_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_4_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ \ 3:\ NOTE_INSN_BASIC_BLOCK\ 2\l\
+|\ \ \ \ 2:\ NOTE_INSN_FUNCTION_BEG\l\
+|\ \ \ \ 5:\ r87:SI=[`rhp_inited']\l\
+|\ \ \ \ 6:\ flags:CCZ=cmp(r87:SI,0)\l\
+|\ \ \ \ 7:\ pc=\{(flags:CCZ!=0)?L15:pc\}\l\
+}"];
+
+	fn_4_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ \ 8:\ NOTE_INSN_BASIC_BLOCK\ 3\l\
+|\ \ \ \ 9:\ si:DI=`__FUNCTION__.3499'\l\
+|\ \ \ 10:\ di:DI=`*.LC15'\l\
+|\ \ \ 11:\ ax:QI=0\l\
+|\ \ \ 12:\ call\ [`rhp_log']\ argc:0\l\
+}"];
+
+	fn_4_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 15:\ L15:\l\
+|\ \ \ 16:\ NOTE_INSN_BASIC_BLOCK\ 4\l\
+|\ \ \ 17:\ si:DI=`__FUNCTION__.3499'\l\
+|\ \ \ 18:\ di:DI=`*.LC16'\l\
+|\ \ \ 19:\ ax:QI=0\l\
+|\ \ \ 20:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ \ 21:\ call\ [`rhp_empty_best_crossings_order']\ argc:0\l\
+|\ \ \ 22:\ call\ [`rhp_empty_sp_layers']\ argc:0\l\
+|\ \ \ 23:\ call\ [`rhp_empty_sp_between_layers']\ argc:0\l\
+|\ \ \ 24:\ call\ [`rhp_empty_sp_master_node_list']\ argc:0\l\
+|\ \ \ 25:\ call\ [`rhp_empty_sp_master_edge_list']\ argc:0\l\
+|\ \ \ 26:\ r88:DI=[`rhp_sp_layers']\l\
+|\ \ \ 27:\ di:DI=r88:DI\l\
+|\ \ \ 28:\ ax:DI=call\ [`rhp_sp_delete']\ argc:0\l\
+|\ \ \ 29:\ r89:DI=ax:DI\l\
+|\ \ \ 30:\ [`rhp_sp_layers']=r89:DI\l\
+|\ \ \ 31:\ r90:DI=[`rhp_best_crossings_order']\l\
+|\ \ \ 32:\ flags:CCZ=cmp(r90:DI,0)\l\
+|\ \ \ 33:\ pc=\{(flags:CCZ==0)?L42:pc\}\l\
+}"];
+
+	fn_4_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 34:\ NOTE_INSN_BASIC_BLOCK\ 5\l\
+|\ \ \ 35:\ r91:DI=[`rhp_best_crossings_order']\l\
+|\ \ \ 36:\ dx:SI=0x2df\l\
+|\ \ \ 37:\ si:DI=`__FUNCTION__.3499'\l\
+|\ \ \ 38:\ di:DI=r91:DI\l\
+|\ \ \ 39:\ ax:DI=call\ [`rhp_free']\ argc:0\l\
+|\ \ \ 40:\ r92:DI=ax:DI\l\
+|\ \ \ 41:\ [`rhp_best_crossings_order']=r92:DI\l\
+}"];
+
+	fn_4_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 42:\ L42:\l\
+|\ \ \ 43:\ NOTE_INSN_BASIC_BLOCK\ 6\l\
+|\ \ \ 44:\ r93:DI=[`rhp_sp_master_node_list']\l\
+|\ \ \ 45:\ di:DI=r93:DI\l\
+|\ \ \ 46:\ ax:DI=call\ [`rhp_sp_delete']\ argc:0\l\
+|\ \ \ 47:\ r94:DI=ax:DI\l\
+|\ \ \ 48:\ [`rhp_sp_master_node_list']=r94:DI\l\
+|\ \ \ 49:\ r95:DI=[`rhp_sp_master_edge_list']\l\
+|\ \ \ 50:\ di:DI=r95:DI\l\
+|\ \ \ 51:\ ax:DI=call\ [`rhp_sp_delete']\ argc:0\l\
+|\ \ \ 52:\ r96:DI=ax:DI\l\
+|\ \ \ 53:\ [`rhp_sp_master_edge_list']=r96:DI\l\
+|\ \ \ 54:\ r97:DI=[`rhp_sp_master_node_list_sorted']\l\
+|\ \ \ 55:\ di:DI=r97:DI\l\
+|\ \ \ 56:\ ax:DI=call\ [`rhp_sp_delete']\ argc:0\l\
+|\ \ \ 57:\ r98:DI=ax:DI\l\
+|\ \ \ 58:\ [`rhp_sp_master_node_list_sorted']=r98:DI\l\
+|\ \ \ 59:\ r99:DI=[`rhp_sp_between_layers']\l\
+|\ \ \ 60:\ di:DI=r99:DI\l\
+|\ \ \ 61:\ ax:DI=call\ [`rhp_sp_delete']\ argc:0\l\
+|\ \ \ 62:\ r100:DI=ax:DI\l\
+|\ \ \ 63:\ [`rhp_sp_between_layers']=r100:DI\l\
+|\ \ \ 64:\ [`rhp_uniq_nodenum']=0\l\
+|\ \ \ 65:\ [`rhp_uniq_edgenum']=0\l\
+|\ \ \ 66:\ [`rhp_number_of_nodes']=0\l\
+|\ \ \ 67:\ [`rhp_number_of_edges']=0\l\
+|\ \ \ 68:\ [`rhp_number_of_isolated_nodes']=0\l\
+|\ \ \ 69:\ [`rhp_maxlevel']=0\l\
+|\ \ \ 70:\ [`rhp_nlevels']=0\l\
+|\ \ \ 71:\ [`rhp_crossings']=0xffffffffffffffff\l\
+|\ \ \ 72:\ [`rhp_start_crossings']=0xffffffffffffffff\l\
+|\ \ \ 73:\ [`rhp_getlayoutdata']=0\l\
+|\ \ \ 74:\ [`rhp_improvements']=0\l\
+|\ \ \ 75:\ [`rhp_notimprovements']=0\l\
+|\ \ \ 76:\ r101:DI=[`rhp_n_malloc']\l\
+|\ \ \ 77:\ r102:DI=[`rhp_n_free']\l\
+|\ \ \ 78:\ flags:CCZ=cmp(r101:DI,r102:DI)\l\
+|\ \ \ 79:\ pc=\{(flags:CCZ==0)?L97:pc\}\l\
+}"];
+
+	fn_4_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 80:\ NOTE_INSN_BASIC_BLOCK\ 7\l\
+|\ \ \ 81:\ r103:SI=[`rhp_dolog']\l\
+|\ \ \ 82:\ flags:CCGC=cmp(r103:SI,0x1)\l\
+|\ \ \ 83:\ pc=\{(flags:CCGC\<=0)?L97:pc\}\l\
+}"];
+
+	fn_4_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 84:\ NOTE_INSN_BASIC_BLOCK\ 8\l\
+|\ \ \ 85:\ r104:DI=[`rhp_n_malloc']\l\
+|\ \ \ 86:\ r105:DI=[`rhp_n_free']\l\
+|\ \ \ 87:\ \{r106:DI=r104:DI-r105:DI;clobber\ flags:CC;\}\l\
+|\ \ \ 88:\ r107:DI=[`rhp_n_free']\l\
+|\ \ \ 89:\ r108:DI=[`rhp_n_malloc']\l\
+|\ \ \ 90:\ r8:DI=r106:DI\l\
+|\ \ \ 91:\ cx:DI=r107:DI\l\
+|\ \ \ 92:\ dx:DI=r108:DI\l\
+|\ \ \ 93:\ si:DI=`__FUNCTION__.3499'\l\
+|\ \ \ 94:\ di:DI=`*.LC17'\l\
+|\ \ \ 95:\ ax:QI=0\l\
+|\ \ \ 96:\ call\ [`rhp_log']\ argc:0\l\
+}"];
+
+	fn_4_basic_block_9 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ 97:\ L97:\l\
+|\ \ \ 98:\ NOTE_INSN_BASIC_BLOCK\ 9\l\
+|\ \ \ 99:\ [`rhp_n_malloc']=0\l\
+|\ \ 100:\ [`rhp_n_free']=0\l\
+|\ \ 101:\ r109:SI=[`rhp_dolog']\l\
+|\ \ 102:\ flags:CCZ=cmp(r109:SI,0)\l\
+|\ \ 103:\ pc=\{(flags:CCZ==0)?L117:pc\}\l\
+}"];
+
+	fn_4_basic_block_10 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ 104:\ NOTE_INSN_BASIC_BLOCK\ 10\l\
+|\ \ 105:\ si:DI=`__FUNCTION__.3499'\l\
+|\ \ 106:\ di:DI=`*.LC18'\l\
+|\ \ 107:\ ax:QI=0\l\
+|\ \ 108:\ call\ [`rhp_log']\ argc:0\l\
+|\ \ 109:\ r110:DI=[`rhp_logname']\l\
+|\ \ 110:\ flags:CCZ=cmp(r110:DI,0)\l\
+|\ \ 111:\ pc=\{(flags:CCZ==0)?L117:pc\}\l\
+}"];
+
+	fn_4_basic_block_11 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ 112:\ NOTE_INSN_BASIC_BLOCK\ 11\l\
+|\ \ 113:\ r111:DI=[`rhp_logstream']\l\
+|\ \ 114:\ di:DI=r111:DI\l\
+|\ \ 115:\ ax:SI=call\ [`fclose']\ argc:0\l\
+|\ \ 116:\ [`rhp_logname']=0\l\
+}"];
+
+	fn_4_basic_block_12 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ 117:\ L117:\l\
+|\ \ 118:\ NOTE_INSN_BASIC_BLOCK\ 12\l\
+|\ \ 119:\ [`rhp_dolog']=0\l\
+|\ \ 120:\ [`rhp_inited']=0\l\
+|\ \ 125:\ 0\l\
+}"];
+
+	fn_4_basic_block_13 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ 123:\ L123:\l\
+|\ \ 124:\ NOTE_INSN_BASIC_BLOCK\ 13\l\
+}"];
+
+	fn_4_basic_block_0:s -> fn_4_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_2:s -> fn_4_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_2:s -> fn_4_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_4_basic_block_3:s -> fn_4_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[100%]"];
+	fn_4_basic_block_4:s -> fn_4_basic_block_5:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_4:s -> fn_4_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_4_basic_block_5:s -> fn_4_basic_block_6:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_6:s -> fn_4_basic_block_7:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_6:s -> fn_4_basic_block_9:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_4_basic_block_7:s -> fn_4_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_7:s -> fn_4_basic_block_9:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_4_basic_block_8:s -> fn_4_basic_block_9:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_9:s -> fn_4_basic_block_10:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_9:s -> fn_4_basic_block_12:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_4_basic_block_10:s -> fn_4_basic_block_11:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_10:s -> fn_4_basic_block_12:n [style="solid,bold",color=black,weight=10,constraint=true, label="[0%]"];
+	fn_4_basic_block_11:s -> fn_4_basic_block_12:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_12:s -> fn_4_basic_block_13:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_4_basic_block_13:s -> fn_4_basic_block_1:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[100%]"];
+	fn_4_basic_block_0:s -> fn_4_basic_block_1:n [style="invis",constraint=true];
+}
+}

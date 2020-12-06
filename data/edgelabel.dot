@@ -1,0 +1,7 @@
+/* a graphviz dot graph with a edge label */
+digraph "edgelabel"
+{
+  "aa"; // node definition
+  "bb"; // node definition
+  "aa" -> "bb" [label="edgelabel"];
+}

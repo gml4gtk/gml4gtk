@@ -1,0 +1,7 @@
+/* a vcg graph with a edgelabel */
+graph:
+{
+  node: { title: "node1" }
+  node: { title: "node2" }
+  edge: { sourcename: "node1" targetname: "node2" label: "edgelabel" }
+}

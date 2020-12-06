@@ -1,0 +1,15 @@
+#!/bin/sh -x
+rm ./O1
+rm ./O2
+valgrind -v --leak-check=full ./gml4gtk 1>O1 2>O2
+
+# run valgrind to check for memory leaks
+# -v -v options add more verbose output
+# --show-reachable=yes show reachable memory, but also shows it in the linked thread lib code
+# --tool=memcheck use the memcheck tool, there are other tools too
+# --leak-check=full show all info
+# --show-reachable=yes show reachable memory
+# --track-fds=yes show open file descriptors
+# --trace-children=yes trace forked children
+# --log-file=00valgrindlog.txt write to log file
+

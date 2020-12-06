@@ -1,0 +1,8 @@
+/* test with few single nodes */
+digraph "sin"
+{
+ "s0"[label="label1"];
+ "s1"[label="label\nlabel\nlabel\nlabel"];
+ "s2"[label="label\nlabel"];
+ "t1"->"t2";
+}

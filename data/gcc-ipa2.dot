@@ -1,0 +1,118 @@
+digraph "g"{
+subgraph "cluster_rhp_barycenter" {
+	style="dashed";
+	color="black";
+	label="rhp_barycenter ()";
+	subgraph cluster_65_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_65_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 3\>:\l\
+|rhp_nlevels.241_2\ =\ rhp_nlevels;\l\
+|_3\ =\ rhp_nlevels.241_2\ +\ -2;\l\
+|_4\ =\ rhp_barycenterupsweep\ (1,\ _3);\l\
+|if\ (_4\ !=\ 0)\l\
+\ \ goto\ \<bb\ 4\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 5\>;\ [INV]\l\
+}"];
+
+	fn_65_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 5\>:\l\
+|rhp_nlevels.242_5\ =\ rhp_nlevels;\l\
+|_6\ =\ rhp_nlevels.242_5\ +\ -2;\l\
+|_7\ =\ rhp_barycenterdownsweep\ (1,\ _6);\l\
+|if\ (_7\ !=\ 0)\l\
+\ \ goto\ \<bb\ 6\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 7\>;\ [INV]\l\
+}"];
+
+	fn_65_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 7\>:\l\
+|_8\ =\ rhp_terminate\ ();\l\
+|if\ (_8\ ==\ 0)\l\
+\ \ goto\ \<bb\ 3\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 8\>;\ [INV]\l\
+}"];
+
+	}
+	fn_65_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_65_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_65_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 2\>:\l\
+|redu_20\ =\ 0;\l\
+|rhp_iter\ =\ 0;\l\
+|rhp_maxiter\ =\ 255;\l\
+|rhp_start_crossings.240_1\ =\ rhp_start_crossings;\l\
+|rhp_log\ (\"%s():\ starting\ barycenter\ with\ %li\ edge\ crossings\ at\ start\\n\",\ &__func__,\ rhp_start_crossings.240_1);\l\
+}"];
+
+	fn_65_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 4\>:\l\
+|//\ predicted\ unlikely\ by\ early\ return\ (on\ trees)\ predictor.\l\
+goto\ \<bb\ 12\>;\ [INV]\l\
+}"];
+
+	fn_65_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 6\>:\l\
+|//\ predicted\ unlikely\ by\ early\ return\ (on\ trees)\ predictor.\l\
+goto\ \<bb\ 12\>;\ [INV]\l\
+}"];
+
+	fn_65_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 8\>:\l\
+|rhp_start_crossings.243_9\ =\ rhp_start_crossings;\l\
+|rhp_crossings.244_10\ =\ rhp_crossings;\l\
+|rhp_log\ (\"%s():\ ending\ barycenter\ with\ %li\ edge\ crossings\ and\ started\ with\ %li\ edge\ crossings\ at\ start\\n\",\ &__func__,\ rhp_crossings.244_10,\ rhp_start_crossings.243_9);\l\
+|rhp_start_crossings.245_11\ =\ rhp_start_crossings;\l\
+|if\ (rhp_start_crossings.245_11\ !=\ 0)\l\
+\ \ goto\ \<bb\ 9\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 10\>;\ [INV]\l\
+}"];
+
+	fn_65_basic_block_9 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 9\>:\l\
+|rhp_crossings.246_12\ =\ rhp_crossings;\l\
+|_13\ =\ rhp_crossings.246_12\ *\ 100;\l\
+|rhp_start_crossings.247_14\ =\ rhp_start_crossings;\l\
+|redu_30\ =\ _13\ /\ rhp_start_crossings.247_14;\l\
+|redu_31\ =\ 100\ -\ redu_30;\l\
+goto\ \<bb\ 11\>;\ [INV]\l\
+}"];
+
+	fn_65_basic_block_10 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 10\>:\l\
+|redu_29\ =\ 0;\l\
+}"];
+
+	fn_65_basic_block_11 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 11\>:\l\
+|#\ redu_17\ =\ PHI\ \<redu_31(9),\ redu_29(10)\>\l\
+|rhp_crossings.248_15\ =\ rhp_crossings;\l\
+|rhp_start_crossings.249_16\ =\ rhp_start_crossings;\l\
+|rhp_log\ (\"%s():\ reduced\ edge\ crossings\ with\ %li\ percent\ from\ %li-\>%li\\n\",\ &__func__,\ redu_17,\ rhp_start_crossings.249_16,\ rhp_crossings.248_15);\l\
+}"];
+
+	fn_65_basic_block_12 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 12\>:\l\
+|\<L9\>:\l\
+|return;\l\
+}"];
+
+	fn_65_basic_block_0:s -> fn_65_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_2:s -> fn_65_basic_block_3:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_3:s -> fn_65_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_3:s -> fn_65_basic_block_5:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_4:s -> fn_65_basic_block_12:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_5:s -> fn_65_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_5:s -> fn_65_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_6:s -> fn_65_basic_block_12:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_7:s -> fn_65_basic_block_3:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_65_basic_block_7:s -> fn_65_basic_block_8:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_8:s -> fn_65_basic_block_9:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_8:s -> fn_65_basic_block_10:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_9:s -> fn_65_basic_block_11:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_10:s -> fn_65_basic_block_11:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_11:s -> fn_65_basic_block_12:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_65_basic_block_12:s -> fn_65_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_65_basic_block_0:s -> fn_65_basic_block_1:n [style="invis",constraint=true];
+}
+}

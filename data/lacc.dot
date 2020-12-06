@@ -1,0 +1,22 @@
+/* generated using the lacc c-compiler using the -dot option */
+digraph {
+	node [fontname="Courier_New",fontsize=10,style="setlinewidth(0.1)",shape=record];
+	edge [fontname="Courier_New",fontsize=10,style="setlinewidth(0.1)"];
+	label="main"
+	labelloc="t"
+	L5 [label="{ \.L5 | j [int] = 0 | i [int] = 0 | i [int] = 0 }"];
+	L6 [label="{ \.L6 | if argc \> i goto \.L7 }"];
+	L9 [label="{ \.L9 | return 0 }"];
+	L7 [label="{ \.L7 | .t2 [* * char] = argv + 8 | p [* char] = *.t2 | .t3 [int] = (int) *p | if .t3 == 45 goto \.L10 }"];
+	L11 [label="{ \.L11 }"];
+	L8 [label="{ \.L8 | .t1 [int] = i | i [int] = i + 1 }"];
+	L8:s -> L6:n;
+	L11:s -> L8:n;
+	L10 [label="{ \.L10 | .t4 [int] = j | j [int] = j + 1 }"];
+	L10:s -> L11:n;
+	L7:s -> L11:n;
+	L7:s -> L10:n;
+	L6:s -> L9:n;
+	L6:s -> L7:n;
+	L5:s -> L6:n;
+}

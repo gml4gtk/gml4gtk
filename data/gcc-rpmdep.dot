@@ -1,0 +1,66 @@
+/* gcc rpm dependacies: made with 'rpmdep.pl -o output.dot gcc' generating dot graph of rpm dependacies in package rpmorphan rpm tools */
+
+/*
+ * 
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+digraph "G" {
+gcc -> gcc45;
+gcc45 -> cpp45;
+cpp45 -> libelf1;
+libelf1 -> glibc;
+glibc -> filesystem;
+cpp45 -> libgmp3;
+cpp45 -> zlib;
+cpp45 -> libmpc2;
+libmpc2 -> libmpfr1;
+libmpfr1 -> bash;
+bash -> libncurses5;
+libncurses5 -> terminfo_base;
+bash -> libreadline6;
+cpp45 -> libppl7;
+libppl7 -> libgcc45;
+libppl7 -> libstdc45;
+libppl7 -> libgmpxx4;
+cpp45 -> libppl_c2;
+cpp45 -> libcloog0;
+gcc45 -> binutils_gold;
+binutils_gold -> binutils;
+binutils -> info;
+info -> libzio;
+libzio -> liblzma0;
+libzio -> libbz2_1;
+gcc45 -> glibc_devel;
+glibc_devel -> coreutils;
+coreutils -> libattr;
+coreutils -> pam;
+pam -> libxcrypt;
+pam -> libcrack2;
+libcrack2 -> cracklib;
+cracklib -> cracklib_dict_full;
+pam -> libselinux1;
+pam -> libdb_4_5;
+pam -> audit_libs;
+coreutils -> bundle_lang_common_ar;
+coreutils -> libacl;
+coreutils -> libcap2;
+glibc_devel -> perl_base;
+glibc_devel -> linux_glibc_devel;
+gcc45 -> libgomp45;
+gcc -> cpp;
+}
+
+/* end. */

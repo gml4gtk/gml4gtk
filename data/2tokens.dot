@@ -1,0 +1,5 @@
+/* this are two tokens, node "10" and node "A10" */
+digraph "huh"
+{
+ 10A10;
+}

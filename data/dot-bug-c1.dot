@@ -1,0 +1,14 @@
+/* bug: both node "aa" and "4" are inside cluster1 and "aa" should be outside cluster */
+digraph "a"
+{
+ aa;
+ bb;
+ subgraph cluster1
+ {
+  4;
+  4->aa;
+ }
+ // node aa is relocated to cluster1
+ // node bb is not relocated and in root graph
+ aa->bb;
+}

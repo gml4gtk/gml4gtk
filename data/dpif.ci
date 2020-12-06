@@ -1,0 +1,86 @@
+/* vcg call graph generated using gcc -fcallgraph-info */
+graph: { title: "src/dpif.c"
+node: { title: "src/dpif.c:dolabel" label: "dolabel\nsrc/dpif.c:60:14\n64 bytes (static)\n0 dynamic objects" }
+node: { title: "uniqstr" label: "uniqstr\nsrc/uniqstr.h:41:14" shape : ellipse }
+edge: { sourcename: "src/dpif.c:dolabel" targetname: "uniqstr" label: "src/dpif.c:72:11" }
+node: { title: "strlen" label: "strlen\n/usr/include/string.h:384:15" shape : ellipse }
+edge: { sourcename: "src/dpif.c:dolabel" targetname: "strlen" label: "src/dpif.c:75:27" }
+node: { title: "calloc" label: "calloc\n/usr/include/stdlib.h:541:14" shape : ellipse }
+edge: { sourcename: "src/dpif.c:dolabel" targetname: "calloc" label: "src/dpif.c:75:16" }
+edge: { sourcename: "src/dpif.c:dolabel" targetname: "uniqstr" label: "src/dpif.c:107:8" }
+node: { title: "free" label: "free\n/usr/include/stdlib.h:563:13" shape : ellipse }
+edge: { sourcename: "src/dpif.c:dolabel" targetname: "free" label: "src/dpif.c:108:2" }
+node: { title: "src/dpif.c:prrl" label: "prrl\nsrc/dpif.c:113:13\n48 bytes (static)\n0 dynamic objects" }
+node: { title: "putchar" label: "__builtin_putchar\n<built-in>" shape : ellipse }
+edge: { sourcename: "src/dpif.c:prrl" targetname: "putchar" label: "src/dpif.c:120:3" }
+node: { title: "printf" label: "printf\n/usr/include/stdio.h:332:12" shape : ellipse }
+edge: { sourcename: "src/dpif.c:prrl" targetname: "printf" label: "src/dpif.c:122:2" }
+edge: { sourcename: "src/dpif.c:prrl" targetname: "src/dpif.c:prrl" label: "src/dpif.c:125:3" }
+node: { title: "src/dpif.c:rlcopy" label: "rlcopy\nsrc/dpif.c:132:23\n64 bytes (static)\n0 dynamic objects" }
+edge: { sourcename: "src/dpif.c:rlcopy" targetname: "calloc" label: "src/dpif.c:139:26" }
+edge: { sourcename: "src/dpif.c:rlcopy" targetname: "calloc" label: "src/dpif.c:140:34" }
+edge: { sourcename: "src/dpif.c:rlcopy" targetname: "uniqstr" label: "src/dpif.c:144:15" }
+edge: { sourcename: "src/dpif.c:rlcopy" targetname: "uniqstr" label: "src/dpif.c:145:16" }
+edge: { sourcename: "src/dpif.c:rlcopy" targetname: "src/dpif.c:rlcopy" label: "src/dpif.c:147:20" }
+node: { title: "src/dpif.c:rlcheck" label: "rlcheck\nsrc/dpif.c:153:13\n48 bytes (static)\n0 dynamic objects" }
+edge: { sourcename: "src/dpif.c:rlcheck" targetname: "src/dpif.c:rlcheck" label: "src/dpif.c:161:4" }
+node: { title: "src/dpif.c:sp_addsg_r" label: "sp_addsg_r\nsrc/dpif.c:169:13\n80 bytes (static)\n0 dynamic objects" }
+edge: { sourcename: "src/dpif.c:sp_addsg_r" targetname: "src/dpif.c:sp_addsg_r" label: "src/dpif.c:186:3" }
+node: { title: "uniqgraph" label: "uniqgraph\nsrc/uniqgraph.h:44:26" shape : ellipse }
+edge: { sourcename: "src/dpif.c:sp_addsg_r" targetname: "uniqgraph" label: "src/dpif.c:189:9" }
+edge: { sourcename: "src/dpif.c:sp_addsg_r" targetname: "uniqgraph" label: "src/dpif.c:190:9" }
+edge: { sourcename: "src/dpif.c:sp_addsg_r" targetname: "printf" label: "src/dpif.c:193:6" }
+edge: { sourcename: "src/dpif.c:sp_addsg_r" targetname: "calloc" label: "src/dpif.c:198:10" }
+edge: { sourcename: "src/dpif.c:sp_addsg_r" targetname: "printf" label: "src/dpif.c:214:5" }
+node: { title: "src/dpif.c:sp_crsg_r" label: "sp_crsg_r\nsrc/dpif.c:224:13\n96 bytes (dynamic,bounded)\n0 dynamic objects" }
+edge: { sourcename: "src/dpif.c:sp_crsg_r" targetname: "src/dpif.c:sp_crsg_r" label: "src/dpif.c:237:3" }
+edge: { sourcename: "src/dpif.c:sp_crsg_r" targetname: "printf" label: "src/dpif.c:267:5" }
+edge: { sourcename: "src/dpif.c:sp_crsg_r" targetname: "uniqstr" label: "src/dpif.c:270:4" }
+edge: { sourcename: "src/dpif.c:sp_crsg_r" targetname: "uniqstr" label: "src/dpif.c:270:4" }
+node: { title: "create_sg" label: "create_sg\nsrc/hier.h:190:13" shape : ellipse }
+edge: { sourcename: "src/dpif.c:sp_crsg_r" targetname: "create_sg" label: "src/dpif.c:270:4" }
+node: { title: "dotparse" label: "dotparse\nsrc/dpif.c:279:5\n208 bytes (dynamic,bounded)\n0 dynamic objects" }
+node: { title: "memset" label: "memset\n/usr/include/string.h:60:14" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "memset" label: "src/dpif.c:308:2" }
+edge: { sourcename: "dotparse" targetname: "memset" label: "src/dpif.c:309:2" }
+node: { title: "strcmp" label: "strcmp\n/usr/include/string.h:136:12" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "strcmp" label: "src/dpif.c:312:6" }
+node: { title: "dp_lex_init" label: "dp_lex_init\nsrc/dpif.c:56:13" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "dp_lex_init" label: "src/dpif.c:314:3" }
+edge: { sourcename: "dotparse" targetname: "dp_lex_init" label: "src/dpif.c:316:3" }
+node: { title: "yyparse" label: "yyparse\ndot.tab.h:91:5" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "yyparse" label: "src/dpif.c:320:11" }
+edge: { sourcename: "dotparse" targetname: "printf" label: "src/dpif.c:322:3" }
+node: { title: "fflush" label: "fflush\n/usr/include/stdio.h:218:12" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:323:3" }
+node: { title: "strncpy" label: "strncpy\n/usr/include/string.h:124:14" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "strncpy" label: "src/dpif.c:327:3" }
+node: { title: "dp_clearall" label: "dp_clearall\nsrc/dp.h:1059:13" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "dp_clearall" label: "src/dpif.c:330:3" }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:332:3" }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:333:3" }
+node: { title: "dp_datachk" label: "dp_datachk\nsrc/dpmisc.h:47:12" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "dp_datachk" label: "src/dpif.c:338:11" }
+edge: { sourcename: "dotparse" targetname: "strncpy" label: "src/dpif.c:340:3" }
+edge: { sourcename: "dotparse" targetname: "dp_clearall" label: "src/dpif.c:343:3" }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:345:3" }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:346:3" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:sp_crsg_r" label: "src/dpif.c:351:2" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:sp_addsg_r" label: "src/dpif.c:354:2" }
+edge: { sourcename: "dotparse" targetname: "uniqgraph" label: "src/dpif.c:364:8" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:dolabel" label: "src/dpif.c:369:15" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:rlcopy" label: "src/dpif.c:421:9" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:rlcheck" label: "src/dpif.c:422:4" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:prrl" label: "src/dpif.c:430:4" }
+node: { title: "add_new_node" label: "add_new_node\nsrc/hier.h:143:13" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "add_new_node" label: "src/dpif.c:433:3" }
+edge: { sourcename: "dotparse" targetname: "uniqgraph" label: "src/dpif.c:445:8" }
+edge: { sourcename: "dotparse" targetname: "src/dpif.c:dolabel" label: "src/dpif.c:456:12" }
+edge: { sourcename: "dotparse" targetname: "uniqstr" label: "src/dpif.c:459:8" }
+edge: { sourcename: "dotparse" targetname: "uniqstr" label: "src/dpif.c:460:8" }
+node: { title: "add_new_edge" label: "add_new_edge\nsrc/hier.h:151:1" shape : ellipse }
+edge: { sourcename: "dotparse" targetname: "add_new_edge" label: "src/dpif.c:461:3" }
+edge: { sourcename: "dotparse" targetname: "dp_clearall" label: "src/dpif.c:471:2" }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:473:2" }
+edge: { sourcename: "dotparse" targetname: "fflush" label: "src/dpif.c:474:2" }
+}

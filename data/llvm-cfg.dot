@@ -1,0 +1,21 @@
+digraph "CFG for 'rhp_add_edges_to_array' function" {
+	label="CFG for 'rhp_add_edges_to_array' function";
+
+	Node0x1a8ab00 [shape=record,label="{%0:\l  %1 = alloca %struct.rhpedge**, align 8\l  %2 = alloca %struct.rhpedge**, align 8\l  %3 = alloca i32, align 4\l  %4 = alloca i32, align 4\l  %edges_added = alloca i32, align 4\l  store %struct.rhpedge** %edge_array, %struct.rhpedge*** %1, align 8\l  store %struct.rhpedge** %edges_to_add, %struct.rhpedge*** %2, align 8\l  store i32 %num_edges, i32* %3, align 4\l  store i32 %start_pos, i32* %4, align 4\l  store i32 0, i32* %edges_added, align 4\l  %5 = load i32, i32* %3, align 4\l  %6 = icmp sle i32 %5, 0\l  br i1 %6, label %7, label %9\l|{<s0>T|<s1>F}}"];
+	Node0x1a8ab00:s0 -> Node0x1a8ab50;
+	Node0x1a8ab00:s1 -> Node0x1a8aba0;
+	Node0x1a8ab50 [shape=record,label="{%7:\l\l  %8 = load i32, i32* %3, align 4\l  call void (i8*, ...) @rhp_log(i8* getelementptr inbounds ([48 x i8], [48 x\l... i8]* @.str.108, i32 0, i32 0), i8* getelementptr inbounds ([23 x i8], [23 x\l... i8]* @__FUNCTION__.rhp_add_edges_to_array, i32 0, i32 0), i32 %8)\l  br label %30\l}"];
+	Node0x1a8ab50 -> Node0x1a8ad30;
+	Node0x1a8aba0 [shape=record,label="{%9:\l\l  store i32 0, i32* %edges_added, align 4\l  br label %10\l}"];
+	Node0x1a8aba0 -> Node0x1a8abf0;
+	Node0x1a8abf0 [shape=record,label="{%10:\l\l  %11 = load i32, i32* %edges_added, align 4\l  %12 = load i32, i32* %3, align 4\l  %13 = icmp slt i32 %11, %12\l  br i1 %13, label %14, label %29\l|{<s0>T|<s1>F}}"];
+	Node0x1a8abf0:s0 -> Node0x1a8ac40;
+	Node0x1a8abf0:s1 -> Node0x1a8ace0;
+	Node0x1a8ac40 [shape=record,label="{%14:\l\l  %15 = load i32, i32* %edges_added, align 4\l  %16 = sext i32 %15 to i64\l  %17 = load %struct.rhpedge**, %struct.rhpedge*** %2, align 8\l  %18 = getelementptr inbounds %struct.rhpedge*, %struct.rhpedge** %17, i64 %16\l  %19 = load %struct.rhpedge*, %struct.rhpedge** %18, align 8\l  %20 = load i32, i32* %4, align 4\l  %21 = load i32, i32* %edges_added, align 4\l  %22 = add nsw i32 %20, %21\l  %23 = sext i32 %22 to i64\l  %24 = load %struct.rhpedge**, %struct.rhpedge*** %1, align 8\l  %25 = getelementptr inbounds %struct.rhpedge*, %struct.rhpedge** %24, i64 %23\l  store %struct.rhpedge* %19, %struct.rhpedge** %25, align 8\l  br label %26\l}"];
+	Node0x1a8ac40 -> Node0x1a8ac90;
+	Node0x1a8ac90 [shape=record,label="{%26:\l\l  %27 = load i32, i32* %edges_added, align 4\l  %28 = add nsw i32 %27, 1\l  store i32 %28, i32* %edges_added, align 4\l  br label %10\l}"];
+	Node0x1a8ac90 -> Node0x1a8abf0;
+	Node0x1a8ace0 [shape=record,label="{%29:\l\l  br label %30\l}"];
+	Node0x1a8ace0 -> Node0x1a8ad30;
+	Node0x1a8ad30 [shape=record,label="{%30:\l\l  ret void\l}"];
+}

@@ -1,0 +1,507 @@
+digraph "g"
+{
+subgraph "cluster_rhp_allocateadjacencylists" {
+	style="dashed";
+	color="black";
+	label="rhp_allocateadjacencylists ()";
+	subgraph cluster_46_4 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 4";
+	labeljust=l;
+	penwidth=2;
+	subgraph cluster_46_6 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey77";
+	label="loop 6";
+	labeljust=l;
+	penwidth=2;
+	fn_46_basic_block_37 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 37\>:\l\
+|#\ i_107\ =\ PHI\ \<i_159(35),\ i_162(36)\>\l\
+|_93\ =\ nd_151-\>down_degree;\l\
+|if\ (i_107\ \<\ _93)\l\
+\ \ goto\ \<bb\ 36\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 38\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_36 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 36\>:\l\
+|_88\ =\ nd_151-\>down_edges;\l\
+|_89\ =\ (long\ unsigned\ int)\ i_107;\l\
+|_90\ =\ _89\ *\ 8;\l\
+|_91\ =\ _88\ +\ _90;\l\
+|re_160\ =\ *_91;\l\
+|_92\ =\ re_160-\>innum;\l\
+|rhp_log\ (\"\ %d\",\ _92);\l\
+|i_162\ =\ i_107\ +\ 1;\l\
+}"];
+
+	}
+	subgraph cluster_46_5 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey77";
+	label="loop 5";
+	labeljust=l;
+	penwidth=2;
+	fn_46_basic_block_33 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 33\>:\l\
+|#\ i_106\ =\ PHI\ \<i_154(31),\ i_157(32)\>\l\
+|_86\ =\ nd_151-\>up_degree;\l\
+|if\ (i_106\ \<\ _86)\l\
+\ \ goto\ \<bb\ 32\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 34\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_32 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 32\>:\l\
+|_81\ =\ nd_151-\>up_edges;\l\
+|_82\ =\ (long\ unsigned\ int)\ i_106;\l\
+|_83\ =\ _82\ *\ 8;\l\
+|_84\ =\ _81\ +\ _83;\l\
+|re_155\ =\ *_84;\l\
+|_85\ =\ re_155-\>innum;\l\
+|rhp_log\ (\"\ %d\",\ _85);\l\
+|i_157\ =\ i_106\ +\ 1;\l\
+}"];
+
+	}
+	fn_46_basic_block_39 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 39\>:\l\
+|#\ spn_98\ =\ PHI\ \<spn_150(29),\ spn_165(38)\>\l\
+|if\ (spn_98\ !=\ 0B)\l\
+\ \ goto\ \<bb\ 30\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 40\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_30 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 30\>:\l\
+|_76\ =\ spn_98-\>value;\l\
+|nd_151\ =\ (struct\ rhpnode\ *)\ _76;\l\
+|_77\ =\ nd_151-\>down_degree;\l\
+|_78\ =\ nd_151-\>up_degree;\l\
+|_79\ =\ nd_151-\>innum;\l\
+|rhp_log\ (\"%s():\ node\ %d\ has\ up/down\ degree\ %d/%d\",\ &__func__,\ _79,\ _78,\ _77);\l\
+|_80\ =\ nd_151-\>up_edges;\l\
+|if\ (_80\ !=\ 0B)\l\
+\ \ goto\ \<bb\ 31\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 34\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_31 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 31\>:\l\
+|rhp_log\ (\"\ up\ connected\ with\ edge\ number\");\l\
+|i_154\ =\ 0;\l\
+goto\ \<bb\ 33\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_34 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 34\>:\l\
+|_87\ =\ nd_151-\>down_edges;\l\
+|if\ (_87\ !=\ 0B)\l\
+\ \ goto\ \<bb\ 35\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 38\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_35 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 35\>:\l\
+|rhp_log\ (\"\ down\ connected\ with\ edge\ number\");\l\
+|i_159\ =\ 0;\l\
+goto\ \<bb\ 37\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_38 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 38\>:\l\
+|rhp_log\ (\"%s\",\ \"\\n\");\l\
+|_94\ =\ spn_98-\>key;\l\
+|rhp_sp_master_node_list.182_95\ =\ rhp_sp_master_node_list;\l\
+|spn_165\ =\ rhp_sp_next\ (rhp_sp_master_node_list.182_95,\ _94);\l\
+}"];
+
+	}
+	subgraph cluster_46_3 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 3";
+	labeljust=l;
+	penwidth=2;
+	fn_46_basic_block_28 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 28\>:\l\
+|#\ spn_97\ =\ PHI\ \<spn_147(23),\ spn_177(27)\>\l\
+|if\ (spn_97\ !=\ 0B)\l\
+\ \ goto\ \<bb\ 24\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 29\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_24 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 24\>:\l\
+|_53\ =\ spn_97-\>value;\l\
+|re_166\ =\ (struct\ rhpedge\ *)\ _53;\l\
+|_54\ =\ re_166-\>fn;\l\
+|_55\ =\ _54-\>level;\l\
+|_56\ =\ re_166-\>tn;\l\
+|_57\ =\ _56-\>level;\l\
+|if\ (_55\ \>\ _57)\l\
+\ \ goto\ \<bb\ 25\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 26\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_25 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 25\>:\l\
+|rhp_log\ (\"%s():\ uppernode\ is\ above\ lowernode\ shouldnothappen!\\n\",\ &__func__);\l\
+|upper_node_170\ =\ re_166-\>fn;\l\
+|lower_node_171\ =\ re_166-\>tn;\l\
+goto\ \<bb\ 27\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_26 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 26\>:\l\
+|upper_node_167\ =\ re_166-\>tn;\l\
+|lower_node_168\ =\ re_166-\>fn;\l\
+}"];
+
+	fn_46_basic_block_27 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 27\>:\l\
+|#\ upper_node_100\ =\ PHI\ \<upper_node_170(25),\ upper_node_167(26)\>\l\
+|#\ lower_node_102\ =\ PHI\ \<lower_node_171(25),\ lower_node_168(26)\>\l\
+|_58\ =\ upper_node_100-\>down_edges;\l\
+|_59\ =\ upper_node_100-\>down_degree;\l\
+|_60\ =\ (long\ unsigned\ int)\ _59;\l\
+|_61\ =\ _60\ *\ 8;\l\
+|_62\ =\ _58\ +\ _61;\l\
+|*_62\ =\ re_166;\l\
+|_63\ =\ upper_node_100-\>down_degree;\l\
+|_64\ =\ _63\ +\ 1;\l\
+|upper_node_100-\>down_degree\ =\ _64;\l\
+|_65\ =\ lower_node_102-\>up_edges;\l\
+|_66\ =\ lower_node_102-\>up_degree;\l\
+|_67\ =\ (long\ unsigned\ int)\ _66;\l\
+|_68\ =\ _67\ *\ 8;\l\
+|_69\ =\ _65\ +\ _68;\l\
+|*_69\ =\ re_166;\l\
+|_70\ =\ lower_node_102-\>up_degree;\l\
+|_71\ =\ _70\ +\ 1;\l\
+|lower_node_102-\>up_degree\ =\ _71;\l\
+|_72\ =\ spn_97-\>key;\l\
+|rhp_sp_master_edge_list.179_73\ =\ rhp_sp_master_edge_list;\l\
+|spn_177\ =\ rhp_sp_next\ (rhp_sp_master_edge_list.179_73,\ _72);\l\
+}"];
+
+	}
+	subgraph cluster_46_2 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 2";
+	labeljust=l;
+	penwidth=2;
+	subgraph cluster_46_7 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey77";
+	label="loop 7";
+	labeljust=l;
+	penwidth=2;
+	fn_46_basic_block_20 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 20\>:\l\
+|#\ pos_104\ =\ PHI\ \<pos_180(14),\ pos_192(19)\>\l\
+|#\ i_105\ =\ PHI\ \<i_182(14),\ i_195(19)\>\l\
+|#\ bt_110\ =\ PHI\ \<bt_112(14),\ bt_109(19)\>\l\
+|_44\ =\ rl_181-\>number_of_nodes;\l\
+|if\ (i_105\ \<\ _44)\l\
+\ \ goto\ \<bb\ 15\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 21\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_15 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 15\>:\l\
+|_21\ =\ rl_181-\>nodes;\l\
+|_22\ =\ (long\ unsigned\ int)\ i_105;\l\
+|_23\ =\ _22\ *\ 8;\l\
+|_24\ =\ _21\ +\ _23;\l\
+|nd_183\ =\ *_24;\l\
+|nd_183-\>position\ =\ pos_104;\l\
+|_25\ =\ nd_183-\>down_degree;\l\
+|_26\ =\ nd_183-\>up_degree;\l\
+|_27\ =\ nd_183-\>innum;\l\
+|rhp_log\ (\"%s():\ node\ %d\ pos\ %d\ in\ level\ %d\ has\ up/down\ degree\ %d/%d\\n\",\ &__func__,\ _27,\ pos_104,\ level_103,\ _26,\ _25);\l\
+|_28\ =\ nd_183-\>up_degree;\l\
+|if\ (_28\ !=\ 0)\l\
+\ \ goto\ \<bb\ 16\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 17\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_16 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 16\>:\l\
+|_29\ =\ nd_183-\>up_degree;\l\
+|_30\ =\ (long\ unsigned\ int)\ _29;\l\
+|_31\ =\ _30\ *\ 8;\l\
+|_32\ =\ rhp_malloc\ (_31,\ &__func__,\ 2402);\l\
+|nd_183-\>up_edges\ =\ _32;\l\
+|_33\ =\ nd_183-\>up_degree;\l\
+|_34\ =\ (long\ unsigned\ int)\ _33;\l\
+|_35\ =\ _34\ *\ 8;\l\
+|bt_188\ =\ bt_110\ +\ _35;\l\
+}"];
+
+	fn_46_basic_block_17 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 17\>:\l\
+|#\ bt_108\ =\ PHI\ \<bt_110(15),\ bt_188(16)\>\l\
+|_36\ =\ nd_183-\>down_degree;\l\
+|if\ (_36\ !=\ 0)\l\
+\ \ goto\ \<bb\ 18\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 19\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_18 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 18\>:\l\
+|_37\ =\ nd_183-\>down_degree;\l\
+|_38\ =\ (long\ unsigned\ int)\ _37;\l\
+|_39\ =\ _38\ *\ 8;\l\
+|_40\ =\ rhp_malloc\ (_39,\ &__func__,\ 2409);\l\
+|nd_183-\>down_edges\ =\ _40;\l\
+|_41\ =\ nd_183-\>down_degree;\l\
+|_42\ =\ (long\ unsigned\ int)\ _41;\l\
+|_43\ =\ _42\ *\ 8;\l\
+|bt_191\ =\ bt_108\ +\ _43;\l\
+}"];
+
+	fn_46_basic_block_19 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 19\>:\l\
+|#\ bt_109\ =\ PHI\ \<bt_108(17),\ bt_191(18)\>\l\
+|pos_192\ =\ pos_104\ +\ 1;\l\
+|nd_183-\>up_degree\ =\ 0;\l\
+|nd_183-\>down_degree\ =\ 0;\l\
+|i_195\ =\ i_105\ +\ 1;\l\
+}"];
+
+	}
+	fn_46_basic_block_22 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 22\>:\l\
+|#\ level_103\ =\ PHI\ \<level_144(10),\ level_196(21)\>\l\
+|#\ bt_112\ =\ PHI\ \<bt_143(10),\ bt_111(21)\>\l\
+|rhp_nlevels.175_45\ =\ rhp_nlevels;\l\
+|if\ (level_103\ \<\ rhp_nlevels.175_45)\l\
+\ \ goto\ \<bb\ 11\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 23\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_11 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 11\>:\l\
+|_17\ =\ (long\ long\ int)\ level_103;\l\
+|rhp_sp_layers.174_18\ =\ rhp_sp_layers;\l\
+|spn_179\ =\ rhp_sp_lookup\ (rhp_sp_layers.174_18,\ _17);\l\
+|if\ (spn_179\ ==\ 0B)\l\
+\ \ goto\ \<bb\ 12\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 13\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_13 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 13\>:\l\
+|pos_180\ =\ 0;\l\
+|_19\ =\ spn_179-\>value;\l\
+|rl_181\ =\ (struct\ rhplevel\ *)\ _19;\l\
+|_20\ =\ rl_181-\>nodes;\l\
+|if\ (_20\ !=\ 0B)\l\
+\ \ goto\ \<bb\ 14\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 21\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_14 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 14\>:\l\
+|i_182\ =\ 0;\l\
+goto\ \<bb\ 20\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_21 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 21\>:\l\
+|#\ bt_111\ =\ PHI\ \<bt_112(13),\ bt_110(20)\>\l\
+|level_196\ =\ level_103\ +\ 1;\l\
+}"];
+
+	}
+	subgraph cluster_46_1 {
+	style="filled";
+	color="darkgreen";
+	fillcolor="grey88";
+	label="loop 1";
+	labeljust=l;
+	penwidth=2;
+	fn_46_basic_block_9 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 9\>:\l\
+|#\ spn_96\ =\ PHI\ \<spn_142(4),\ spn_208(8)\>\l\
+|if\ (spn_96\ !=\ 0B)\l\
+\ \ goto\ \<bb\ 5\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 10\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_5 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 5\>:\l\
+|_4\ =\ spn_96-\>value;\l\
+|re_198\ =\ (struct\ rhpedge\ *)\ _4;\l\
+|rhp_number_of_edges.172_5\ =\ rhp_number_of_edges;\l\
+|_6\ =\ rhp_number_of_edges.172_5\ +\ 1;\l\
+|rhp_number_of_edges\ =\ _6;\l\
+|_7\ =\ re_198-\>fn;\l\
+|_8\ =\ _7-\>level;\l\
+|_9\ =\ re_198-\>tn;\l\
+|_10\ =\ _9-\>level;\l\
+|if\ (_8\ \>\ _10)\l\
+\ \ goto\ \<bb\ 6\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 7\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_6 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 6\>:\l\
+|rhp_log\ (\"%s():\ uppernode\ is\ above\ lowernode\ shouldnothappen!\\n\",\ &__func__);\l\
+|upper_node_203\ =\ re_198-\>fn;\l\
+|lower_node_204\ =\ re_198-\>tn;\l\
+goto\ \<bb\ 8\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_7 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 7\>:\l\
+|upper_node_200\ =\ re_198-\>tn;\l\
+|lower_node_201\ =\ re_198-\>fn;\l\
+}"];
+
+	fn_46_basic_block_8 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 8\>:\l\
+|#\ upper_node_99\ =\ PHI\ \<upper_node_203(6),\ upper_node_200(7)\>\l\
+|#\ lower_node_101\ =\ PHI\ \<lower_node_204(6),\ lower_node_201(7)\>\l\
+|_11\ =\ upper_node_99-\>down_degree;\l\
+|_12\ =\ _11\ +\ 1;\l\
+|upper_node_99-\>down_degree\ =\ _12;\l\
+|_13\ =\ lower_node_101-\>up_degree;\l\
+|_14\ =\ _13\ +\ 1;\l\
+|lower_node_101-\>up_degree\ =\ _14;\l\
+|_15\ =\ spn_96-\>key;\l\
+|rhp_sp_master_edge_list.173_16\ =\ rhp_sp_master_edge_list;\l\
+|spn_208\ =\ rhp_sp_next\ (rhp_sp_master_edge_list.173_16,\ _15);\l\
+}"];
+
+	}
+	fn_46_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_46_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_46_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 2\>:\l\
+|spn_128\ =\ 0B;\l\
+|re_129\ =\ 0B;\l\
+|upper_node_130\ =\ 0B;\l\
+|lower_node_131\ =\ 0B;\l\
+|nd_132\ =\ 0B;\l\
+|rl_133\ =\ 0B;\l\
+|level_134\ =\ 0;\l\
+|pos_135\ =\ 0;\l\
+|i_136\ =\ 0;\l\
+|bt_137\ =\ 0;\l\
+|rhp_number_of_edges\ =\ 0;\l\
+|rhp_sp_master_edge_list.170_1\ =\ rhp_sp_master_edge_list;\l\
+|_2\ =\ rhp_sp_has_data\ (rhp_sp_master_edge_list.170_1);\l\
+|if\ (_2\ ==\ 0)\l\
+\ \ goto\ \<bb\ 3\>;\ [INV]\l\
+else\l\
+\ \ goto\ \<bb\ 4\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_3 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 3\>:\l\
+|//\ predicted\ unlikely\ by\ early\ return\ (on\ trees)\ predictor.\l\
+goto\ \<bb\ 41\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_4 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 4\>:\l\
+|rhp_sp_master_edge_list.171_3\ =\ rhp_sp_master_edge_list;\l\
+|spn_142\ =\ rhp_sp_min\ (rhp_sp_master_edge_list.171_3);\l\
+goto\ \<bb\ 9\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_10 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 10\>:\l\
+|bt_143\ =\ 0;\l\
+|level_144\ =\ 0;\l\
+goto\ \<bb\ 22\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_12 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 12\>:\l\
+|rhp_log\ (\"%s():\ no\ spn\ level\ %d\ shouldnothappen!\\n\",\ &__func__,\ level_103);\l\
+|//\ predicted\ unlikely\ by\ early\ return\ (on\ trees)\ predictor.\l\
+goto\ \<bb\ 41\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_23 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 23\>:\l\
+|rhp_number_of_nodes.176_46\ =\ rhp_number_of_nodes;\l\
+|_47\ =\ (long\ unsigned\ int)\ rhp_number_of_nodes.176_46;\l\
+|_48\ =\ _47\ *\ 80;\l\
+|_49\ =\ bt_112\ +\ _48;\l\
+|_50\ =\ (long\ long\ int)\ _49;\l\
+|bt.177_51\ =\ (long\ long\ int)\ bt_112;\l\
+|rhp_log\ (\"%s():\ using\ %lu\ additional\ more\ bytes\ for\ the\ node\ data\ and\ total\ now\ %lu\ bytes\\n\",\ &__func__,\ bt.177_51,\ _50);\l\
+|rhp_sp_master_edge_list.178_52\ =\ rhp_sp_master_edge_list;\l\
+|spn_147\ =\ rhp_sp_min\ (rhp_sp_master_edge_list.178_52);\l\
+goto\ \<bb\ 28\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_29 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 29\>:\l\
+|rhp_number_of_edges.180_74\ =\ rhp_number_of_edges;\l\
+|rhp_log\ (\"%s():\ number_of_edges\ is\ %d\\n\",\ &__func__,\ rhp_number_of_edges.180_74);\l\
+|rhp_sp_master_node_list.181_75\ =\ rhp_sp_master_node_list;\l\
+|spn_150\ =\ rhp_sp_min\ (rhp_sp_master_node_list.181_75);\l\
+goto\ \<bb\ 39\>;\ [INV]\l\
+}"];
+
+	fn_46_basic_block_40 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 40\>:\l\
+}"];
+
+	fn_46_basic_block_41 [shape=record,style=filled,fillcolor=lightgrey,label="{\<bb\ 41\>:\l\
+|\<L41\>:\l\
+|return;\l\
+}"];
+
+	fn_46_basic_block_0:s -> fn_46_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_2:s -> fn_46_basic_block_3:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_2:s -> fn_46_basic_block_4:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_3:s -> fn_46_basic_block_41:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_4:s -> fn_46_basic_block_9:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_5:s -> fn_46_basic_block_6:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_5:s -> fn_46_basic_block_7:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_6:s -> fn_46_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_7:s -> fn_46_basic_block_8:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_8:s -> fn_46_basic_block_9:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_9:s -> fn_46_basic_block_5:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_9:s -> fn_46_basic_block_10:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_10:s -> fn_46_basic_block_22:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_11:s -> fn_46_basic_block_12:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_11:s -> fn_46_basic_block_13:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_12:s -> fn_46_basic_block_41:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_13:s -> fn_46_basic_block_14:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_13:s -> fn_46_basic_block_21:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_14:s -> fn_46_basic_block_20:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_15:s -> fn_46_basic_block_16:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_15:s -> fn_46_basic_block_17:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_16:s -> fn_46_basic_block_17:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_17:s -> fn_46_basic_block_18:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_17:s -> fn_46_basic_block_19:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_18:s -> fn_46_basic_block_19:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_19:s -> fn_46_basic_block_20:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_20:s -> fn_46_basic_block_15:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_20:s -> fn_46_basic_block_21:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_21:s -> fn_46_basic_block_22:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_22:s -> fn_46_basic_block_11:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_22:s -> fn_46_basic_block_23:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_23:s -> fn_46_basic_block_28:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_24:s -> fn_46_basic_block_25:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_24:s -> fn_46_basic_block_26:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_25:s -> fn_46_basic_block_27:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_26:s -> fn_46_basic_block_27:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_27:s -> fn_46_basic_block_28:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_28:s -> fn_46_basic_block_24:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_28:s -> fn_46_basic_block_29:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_29:s -> fn_46_basic_block_39:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_30:s -> fn_46_basic_block_31:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_30:s -> fn_46_basic_block_34:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_31:s -> fn_46_basic_block_33:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_32:s -> fn_46_basic_block_33:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_33:s -> fn_46_basic_block_32:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_33:s -> fn_46_basic_block_34:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_34:s -> fn_46_basic_block_35:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_34:s -> fn_46_basic_block_38:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_35:s -> fn_46_basic_block_37:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_36:s -> fn_46_basic_block_37:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_37:s -> fn_46_basic_block_36:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_37:s -> fn_46_basic_block_38:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_38:s -> fn_46_basic_block_39:n [style="dotted,bold",color=blue,weight=10,constraint=false];
+	fn_46_basic_block_39:s -> fn_46_basic_block_30:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_39:s -> fn_46_basic_block_40:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_40:s -> fn_46_basic_block_41:n [style="solid,bold",color=blue,weight=100,constraint=true];
+	fn_46_basic_block_41:s -> fn_46_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true];
+	fn_46_basic_block_0:s -> fn_46_basic_block_1:n [style="invis",constraint=true];
+}
+}

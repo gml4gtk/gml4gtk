@@ -1,0 +1,18 @@
+graph: { title: "src/vcgus.c"
+node: { title: "vcg_clear_uniqstr" label: "vcg_clear_uniqstr\nsrc/vcgus.c:57:6\n16 bytes (static)\n0 dynamic objects" }
+node: { title: "splay_tree_delete" label: "splay_tree_delete\nsrc/splay-tree.h:93:19" shape : ellipse }
+edge: { sourcename: "vcg_clear_uniqstr" targetname: "splay_tree_delete" label: "src/vcgus.c:59:22" }
+node: { title: "vcg_uniqstr" label: "vcg_uniqstr\nsrc/vcgus.c:63:7\n48 bytes (static)\n0 dynamic objects" }
+node: { title: "splay_tree_lookup" label: "splay_tree_lookup\nsrc/splay-tree.h:97:24" shape : ellipse }
+edge: { sourcename: "vcg_uniqstr" targetname: "splay_tree_lookup" label: "src/vcgus.c:73:8" }
+node: { title: "splay_tree_new" label: "splay_tree_new\nsrc/splay-tree.h:92:19" shape : ellipse }
+edge: { sourcename: "vcg_uniqstr" targetname: "splay_tree_new" label: "src/vcgus.c:78:23" }
+node: { title: "strlen" label: "strlen\n/usr/include/string.h:384:15" shape : ellipse }
+edge: { sourcename: "vcg_uniqstr" targetname: "strlen" label: "src/vcgus.c:80:17" }
+node: { title: "calloc" label: "calloc\n/usr/include/stdlib.h:541:14" shape : ellipse }
+edge: { sourcename: "vcg_uniqstr" targetname: "calloc" label: "src/vcgus.c:80:6" }
+node: { title: "strcpy" label: "strcpy\n/usr/include/string.h:121:14" shape : ellipse }
+edge: { sourcename: "vcg_uniqstr" targetname: "strcpy" label: "src/vcgus.c:84:2" }
+node: { title: "splay_tree_insert" label: "splay_tree_insert\nsrc/splay-tree.h:94:13" shape : ellipse }
+edge: { sourcename: "vcg_uniqstr" targetname: "splay_tree_insert" label: "src/vcgus.c:85:2" }
+}

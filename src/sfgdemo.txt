@@ -1,0 +1,5 @@
+# this is a comment line starting with '#'
+# first all nodes must be in this graph with single uniq number
+# then edges with two numbers as from/to node
+# example: '10 12' means edge from node 10 to 12
+#

@@ -1,0 +1,34 @@
+digraph "a.c.279r.alignments" {
+overlap=false;
+subgraph "cluster_main" {
+	style="dashed";
+	color="black";
+	label="main ()";
+	fn_0_basic_block_0 [shape=Mdiamond,style=filled,fillcolor=white,label="ENTRY"];
+
+	fn_0_basic_block_2 [shape=record,style=filled,fillcolor=lightgrey,label="{ FREQ:0 |\ \ \ \ 5:\ NOTE_INSN_BASIC_BLOCK\ 2\l\
+|\ \ \ 21:\ [--sp:DI]=bp:DI\l\
+|\ \ \ 22:\ bp:DI=sp:DI\l\
+|\ \ \ 23:\ \{sp:DI=sp:DI-0x10;clobber\ flags:CC;clobber\ [scratch];\}\l\
+|\ \ \ 24:\ NOTE_INSN_PROLOGUE_END\l\
+|\ \ \ \ 2:\ [bp:DI-0x4]=di:SI\l\
+|\ \ \ \ 3:\ [bp:DI-0x10]=si:DI\l\
+|\ \ \ \ 4:\ NOTE_INSN_FUNCTION_BEG\l\
+|\ \ \ \ 7:\ di:DI=`*.LC0'\l\
+|\ \ \ \ 8:\ ax:QI=0\l\
+|\ \ \ \ 9:\ ax:SI=call\ [`printf']\ argc:0\l\
+|\ \ \ 10:\ ax:SI=0\l\
+|\ \ \ 18:\ use\ ax:SI\l\
+|\ \ \ 25:\ NOTE_INSN_EPILOGUE_BEG\l\
+|\ \ \ 26:\ \{sp:DI=bp:DI+0x8;bp:DI=[bp:DI];clobber\ [scratch];\}\l\
+\ \ \ \ \ \ REG_CFA_DEF_CFA\ sp:DI+0x8\l\
+|\ \ \ 27:\ simple_return\l\
+}"];
+
+	fn_0_basic_block_1 [shape=Mdiamond,style=filled,fillcolor=white,label="EXIT"];
+
+	fn_0_basic_block_0:s -> fn_0_basic_block_2:n [style="solid,bold",color=blue,weight=100,constraint=true, label="[0%]"];
+	fn_0_basic_block_2:s -> fn_0_basic_block_1:n [style="solid,bold",color=black,weight=10,constraint=true, label="[100%]"];
+	fn_0_basic_block_0:s -> fn_0_basic_block_1:n [style="invis",constraint=true];
+}
+}
