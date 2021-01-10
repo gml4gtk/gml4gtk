@@ -188,6 +188,7 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				        q++;
 				        p = p + 2;
 				      } else if (*(p+1) == '\\') {
+				        /* \\ is translated into a single \ */
 				        *q = '\\';
 				        q++;
 				        p = p + 2;

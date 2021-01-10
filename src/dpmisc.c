@@ -190,6 +190,7 @@ int dp_chknum(char *str)
 		case ' ':
 		case ',':
 		case '.':
+		case '-':	/* for negative numbers */
 			break;
 		default:
 			c++;

@@ -39,6 +39,12 @@
 #  */
 #
 
+# this is c source checking using smatch c checker on sourceforge
+# this uses Linux kernel sparse compiler but with many extra checks
+#./configure --enable-gcc-warnings CC=$HOME/misc/src/smatch/smatch/cgcc
+#make CHECK="~/misc/src/smatch/smatch --full-path" CC=~/misc/src/smatch/smatch/cgcc
+#exit 0
+
 # GCC development snapshot in home directory called mygcc
 $HOME/mygcc/bin/gcc --version
 
@@ -93,5 +99,8 @@ $HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=su,da src/dpif.c
 #./configure CC="sparse"
 #sparse --version
 # easier: cd src; make CC=sparse
+
+./configure --enable-gcc-warnings CC=$HOME/misc/src/smatch/smatch/cgcc
+make CHECK="~/misc/src/smatch/smatch --full-path" CC=~/misc/src/smatch/smatch/cgcc | tee warns.txt
 
 exit 0

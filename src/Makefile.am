@@ -30,6 +30,7 @@ gml4gtk_SOURCES = \
 	main.c \
 	bubbling.c \
 	sugi2.c \
+	sugi3.c \
 	pos.c \
 	pos2.c \
 	pos3.c \

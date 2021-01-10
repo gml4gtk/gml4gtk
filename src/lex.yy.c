@@ -1068,6 +1068,7 @@ do_action:			/* This label is used only to access EOF actions. */
 								q++;
 								p = p + 2;
 							} else if (*(p + 1) == '\\') {
+								/* \\ is translated into a single \ */
 								*q = '\\';
 								q++;
 								p = p + 2;
@@ -1091,28 +1092,28 @@ do_action:			/* This label is used only to access EOF actions. */
 					return (TOKEN_QTEXT);
 				}
 				YY_BREAK case 30:YY_RULE_SETUP
-#line 214 "dot.l"
+#line 215 "dot.l"
 				{
 					p = dp_uniqstr(yytext);
 					yylval.string = p;
 					return (TOKEN_TEXT);
 				}
 				YY_BREAK case 31:YY_RULE_SETUP
-#line 220 "dot.l"
+#line 221 "dot.l"
 				{
 					p = dp_uniqstr(yytext);
 					yylval.string = p;
 					return (TOKEN_NUM);
 				}
 				YY_BREAK case 32:YY_RULE_SETUP
-#line 226 "dot.l"
+#line 227 "dot.l"
 				{
 					BEGIN(htmlstr);
 					htmlnest = 1;
 					yylval.string = "<";
 				}
 				YY_BREAK case 33:YY_RULE_SETUP
-#line 227 "dot.l"
+#line 228 "dot.l"
 				{
 					htmlnest--;
 					if (htmlnest) {
@@ -1124,43 +1125,43 @@ do_action:			/* This label is used only to access EOF actions. */
 					}
 				}
 				YY_BREAK case 34:YY_RULE_SETUP
-#line 228 "dot.l"
+#line 229 "dot.l"
 				{
 					htmlnest++;
 					yylval.string = dp_ccat(yylval.string, yytext);
 				}
 				YY_BREAK case 35:YY_RULE_SETUP
-#line 229 "dot.l"
+#line 230 "dot.l"
 				{
 					yylval.string = dp_ccat(yylval.string, "&lt;");
 				}
 				YY_BREAK case 36:YY_RULE_SETUP
-#line 230 "dot.l"
+#line 231 "dot.l"
 				{
 					yylval.string = dp_ccat(yylval.string, "&gt;");
 				}
 				YY_BREAK case 37:
 /* rule 37 can match eol */
 				 YY_RULE_SETUP
-#line 231 "dot.l"
+#line 232 "dot.l"
 				{ /* yylineno++ is update by lexer code */ ;
 				}
 				YY_BREAK case 38:
 /* rule 38 can match eol */
 				 YY_RULE_SETUP
-#line 232 "dot.l"
+#line 233 "dot.l"
 				{
 					yylval.string = dp_ccat(yylval.string, yytext);
 				}
 				YY_BREAK case 39:YY_RULE_SETUP
-#line 235 "dot.l"
+#line 236 "dot.l"
 				{
 					return ((int)yytext[0]);
 				} YY_BREAK case 40:YY_RULE_SETUP
-#line 237 "dot.l"
+#line 238 "dot.l"
 				 ECHO;
 				YY_BREAK
-#line 1190 "lex.yy.c"
+#line 1191 "lex.yy.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(htmlstr):
 				yyterminate();
@@ -2088,7 +2089,7 @@ void yyfree(void *ptr)
 
 #define YYTABLES_NAME "yytables"
 
-#line 237 "dot.l"
+#line 238 "dot.l"
 
 /* */
 void dp_lex_init(FILE * f, int debugflag)

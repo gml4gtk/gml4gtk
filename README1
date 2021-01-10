@@ -56,6 +56,13 @@ digraph "example"
 To create a callgraph using gcc use gcc option -fcallgraph-info
 and the output.ci file is a vcg graph file to open with file->open vcg
 
+The file sfg.c is a single file graph layout library with the user api
+described in sfg.h and there is a python, php interface possible with
+example code at https://notabug.org/mooigraph/sfgraph
+
+Most dot language details are parsed but not implemented yet.
+Also a->b,c is not supported but a->{b,c} works as expected.
+
 The windows gml4gtk.exe program is a 64 bits program.
 It is cross-compiled on a GNU/Linux computer.
 It is tested using wine64 windows emulator on Linux.

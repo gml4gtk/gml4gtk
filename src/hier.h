@@ -37,6 +37,9 @@
 /* the graph data rootgraph */
 extern struct gml_graph *maingraph;
 
+/* barycenter type, 1,2,3 */
+extern int barytype;
+
 /* if 1 allow incremental layout for clusters if any */
 extern int incrlayout;
 

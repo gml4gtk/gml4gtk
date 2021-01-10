@@ -37,6 +37,9 @@
 /* run barycenter */
 extern void reduce_crossings2(struct gml_graph *g, int it1val, int it2val);
 
+/* run barycenter */
+extern void reduce_crossings3(struct gml_graph *g, int it1val, int it2val);
+
 #endif
 
 /* end */

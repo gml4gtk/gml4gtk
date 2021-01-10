@@ -55,8 +55,8 @@ int incrlayout = 0;		/* 1 */
 /* if set do topological placement */
 int topological = 0;
 
-/* type of barycenter, 0 is sugi2, 1 is rhp */
-int barytype = 0;
+/* type of barycenter, 1 is sugi2, 2 is sugi3, 3 is is rhp */
+int barytype = 1;
 
 /* edgelabels on/off */
 int edgelabelsonoff = 1;	/* default show edgelabels (1) */
@@ -122,11 +122,13 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 	struct gml_nlist *lnl = NULL;
 	struct gml_elist *enl = NULL;
 	int layer = 0;
-	/* type of barycenter, 0 is sugi2.c, 1 is rhp.c */
-	if (barytype == 0) {
+	/* type of barycenter, 1 is sugi2.c, 2 is sugi3, else is rhp.c */
+	if (barytype == 1) {
 		reduce_crossings2(g, it1val, it2val);
+	} else if (barytype == 2) {
+		reduce_crossings3(g, it1val, it2val);
 	} else {
-
+		/* using rhp.c */
 		/* number of crossing edges at level */
 		if (g->numce == NULL) {
 			g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
@@ -2749,12 +2751,21 @@ void shorteredges(struct gml_graph *g)
 void doublespacey(struct gml_graph *g)
 {
 	struct gml_nlist *lnll = NULL;
+	int miniy = 0;
 	/* same edges now will have different dummy nodes resulting in 2 lines */
 	g->maxlevel = 0;
+	/* correct for start level */
+	if (g->startnodeslevel > 0) {
+		miniy = 1;
+	}
 	/* at the odd levels the edge labels will be placed. */
 	lnll = g->nodelist;
 	while (lnll) {
 		lnll->node->y = (2 * lnll->node->y);
+		/* where the actual drawing starts at y-level */
+		if (lnll->node->y > g->startnodeslevel) {
+			lnll->node->y = lnll->node->y - miniy;
+		}
 		if (lnll->node->y > g->maxlevel) {
 			g->maxlevel = lnll->node->y;
 		}

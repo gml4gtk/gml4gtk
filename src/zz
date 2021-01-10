@@ -12,4 +12,5 @@ valgrind -v --leak-check=full ./gml4gtk 1>O1 2>O2
 # --track-fds=yes show open file descriptors
 # --trace-children=yes trace forked children
 # --log-file=00valgrindlog.txt write to log file
+# gml4gtk uses monly calloc() and free() to check in the log file
 

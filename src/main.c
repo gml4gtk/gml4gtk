@@ -220,10 +220,10 @@ static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer 
 static void pos1_clicked(GtkWidget * widget, gpointer window);
 static void xspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void yspin_changed(GtkWidget * widget, gpointer spinbutton);
+static void bary_changed(GtkWidget * widget, gpointer spinbutton);
 static void check1_toggle(GtkWidget * widget, gpointer window);
 static void dummy1_toggle(GtkWidget * widget, gpointer window);
 static void topo1_toggle(GtkWidget * widget, gpointer window);
-static void bary1_toggle(GtkWidget * widget, gpointer window);
 static void elabel1_toggle(GtkWidget * widget, gpointer window);
 
 static void on_top_level_window_drawingarea1_expose_event_edges(cairo_t * crp);
@@ -317,7 +317,9 @@ int main(int argc, char *argv[])
 	GtkWidget *dummy1;
 	GtkWidget *topo1;
 	GtkWidget *entry1;
-	GtkWidget *bary1;
+	GtkWidget *barylabel;
+	GtkAdjustment *baryadjustment;
+	GtkWidget *barybutton;
 	GtkWidget *elabel1;
 
 	argv0 = argv[0];
@@ -787,21 +789,32 @@ int main(int argc, char *argv[])
 	gtk_widget_show(topo1);
 
 	/* barycenter */
-	bary1 = gtk_check_button_new_with_label("bary");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ bary1,
+	barylabel = gtk_label_new("bary");
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ barylabel,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(barylabel, "barycenter type");
+	gtk_widget_show(barylabel);
+
+	/* spin to change barycenter type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	baryadjustment = (GtkAdjustment *) gtk_adjustment_new(barytype /* initial value */ ,
+							      1 /* minimum value */ ,
+							      3 /* maximum value */ ,
+							      1 /* step increment */ ,
+							      1 /* page increment */ ,
+							      0	/* page size now *must* be zero */
+	    );
+
+	barybutton = gtk_spin_button_new(baryadjustment, 1 /* climb rate */ ,
+					 0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ barybutton,
 			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
 			   PACKPADDING);
 
-	/* */
-	if (barytype) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bary1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(bary1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(bary1), "clicked", G_CALLBACK(bary1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(bary1, "barycenter type");
-	gtk_widget_show(bary1);
+	g_signal_connect(G_OBJECT(baryadjustment), "value-changed", G_CALLBACK(bary_changed), (gpointer) barybutton);
+	gtk_widget_show(barybutton);
 
 	/* edgelabels on/off */
 	elabel1 = gtk_check_button_new_with_label("elabel");
@@ -3718,33 +3731,6 @@ static void topo1_toggle(GtkWidget * widget, gpointer window)
 	return;
 }
 
-/* checkbox 4 is switch barycenter placement */
-static void bary1_toggle(GtkWidget * widget, gpointer window)
-{
-	if (widget) {
-	}
-	if (window) {
-	}
-	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		barytype = 1;
-	} else {
-		barytype = 0;
-	}
-	/* nop if no data */
-	if (validdata == 0) {
-		return;
-	}
-
-	/* re-layout */
-	do_relayout_all(maingraph);
-
-	/* now a re-draw needed */
-	gtk_widget_queue_draw(drawingarea1);
-
-	return;
-}
-
 /* checkbox 5 is switch edge labels */
 static void elabel1_toggle(GtkWidget * widget, gpointer window)
 {
@@ -3843,6 +3829,35 @@ static void yspin_changed(GtkWidget * widget, gpointer spinbutton)
 	update_status_text(NULL);
 
 	/* only a re-draw needed */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+static void bary_changed(GtkWidget * widget, gpointer spinbutton)
+{
+	gfloat val = 0.0;
+
+	if (widget) {
+	}
+	if (spinbutton) {
+	}
+
+	/* get the value for the new bary type */
+	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+	/* set new bary type, 1,2 or 3 */
+	barytype = (int)val;
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* re-layout */
+	do_relayout_all(maingraph);
+
+	/* now a re-draw needed */
 	gtk_widget_queue_draw(drawingarea1);
 
 	return;
@@ -4675,6 +4690,7 @@ static void finalxy2(struct gml_graph *g)
 		my = 0;
 		lnl = maingraph->singlenodelist;
 		while (lnl) {
+
 			if (lnl->node->bby > my) {
 				my = lnl->node->bby;
 			}
@@ -4683,8 +4699,8 @@ static void finalxy2(struct gml_graph *g)
 		/* update level data for single nodes */
 		lnl = maingraph->singlenodelist;
 		while (lnl) {
-			my = lnl->node->ly0 = 0;
-			my = lnl->node->ly1 = my;
+			lnl->node->ly0 = 0;
+			lnl->node->ly1 = my;
 			lnl = lnl->next;
 		}
 

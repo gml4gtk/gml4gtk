@@ -270,8 +270,6 @@ static void do_down(struct gml_graph *g, int l)
 	int optimal_position = 0;
 	int distance = 0;
 	int possible_distance = 0;
-	int d = 0;
-	int k = 0;
 
 	for (i = 0; i < g->nnodes_of_level[l]; i++) {
 		index = find_next(g->nnodes_of_level[l]);
@@ -305,8 +303,8 @@ static void do_down(struct gml_graph *g, int l)
 
 			j = index;
 			while (distance > 0) {
-				d = 0;
-				k = 0;
+				int d = 0;
+				int k = 0;
 
 				if (j == 0) {
 					d = distance;
@@ -348,8 +346,8 @@ static void do_down(struct gml_graph *g, int l)
 
 			j = index;
 			while (distance > 0) {
-				d = 0;
-				k = 0;
+				int d = 0;
+				int k = 0;
 
 				if (j == g->nnodes_of_level[l] - 1) {
 					d = distance;
@@ -383,8 +381,6 @@ static void do_up(struct gml_graph *g, int l)
 	int optimal_position = 0;
 	int distance = 0;
 	int possible_distance = 0;
-	int d = 0;
-	int k = 0;
 
 	for (i = 0; i < g->nnodes_of_level[l]; i++) {
 		index = find_next(g->nnodes_of_level[l]);
@@ -417,8 +413,8 @@ static void do_up(struct gml_graph *g, int l)
 
 			j = index;
 			while (distance > 0) {
-				d = 0;
-				k = 0;
+				int d = 0;
+				int k = 0;
 
 				if (j == 0) {
 					d = distance;
@@ -460,8 +456,8 @@ static void do_up(struct gml_graph *g, int l)
 
 			j = index;
 			while (distance > 0) {
-				d = 0;
-				k = 0;
+				int d = 0;
+				int k = 0;
 
 				if (j == g->nnodes_of_level[l] - 1) {
 					d = distance;
@@ -521,7 +517,7 @@ static void improve_positions1(struct gml_graph *g)
 		gnl = gnl->next;
 	}
 
-/* XXX tofix todo these params */
+	/* XXX tofix todo these params */
 
 	/* min. node dist, minimum 1 */
 	mindist = 1;

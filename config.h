@@ -68,7 +68,7 @@
 #define PACKAGE_NAME "gml4gtk"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "gml4gtk 6.6"
+#define PACKAGE_STRING "gml4gtk 6.7"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gml4gtk.tar.gz"
@@ -77,7 +77,7 @@
 #define PACKAGE_URL "https://sourceforge.net/projects/gml4gtk"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "6.6"
+#define PACKAGE_VERSION "6.7"
 
 /* The size of `uintptr_t', as computed by sizeof. */
 #define SIZEOF_UINTPTR_T 8
@@ -89,4 +89,4 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "6.6"
+#define VERSION "6.7"

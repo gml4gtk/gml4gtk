@@ -56,7 +56,7 @@ AC_PROG_MAKE_SET
 # using -fno-inline when testing with valgrind
 #CFLAGS="$CFLAGS -g -std=c99 -fno-builtin-memset -DFORTIFY_SOURCE=2"
 #CFLAGS="$CFLAGS -g -std=c99 -O0"
-CFLAGS="-g -std=c99 -O2"
+CFLAGS="-g -std=c99 -O2 "
 
 # Gcc compiler options
 # the option -frecord-gcc-switches puts the compiler options
