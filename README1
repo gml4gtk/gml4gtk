@@ -113,6 +113,13 @@ zlib1.dll
 
 Read also the Kozo Sugiyama book isbn 981-02-4879-2
 
+If you want a good sugiyama barycenter javascript routine, see:
+https://github.com/speich/dGraph
+
+Todo: dot does incremental layout for the cluster subgraphs
+and gml4gtk can do that, but need to find a way to combine
+the results in a single drawing.
+
 And donations of samples of graph data to layout are needed
 or financial means to buy programming and graph books.
 

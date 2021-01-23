@@ -540,7 +540,7 @@ static void pos3init(struct gml_graph *g)
 		szy[i] = my;
 		/* place the nodes */
 		for (j = 0; j < g->nnodes_of_level[i]; j++) {
-			/* node places centered halwy of level */
+			/* node places centered halfway of level */
 			nl[j].node->absy = yoff + ((szy[i] / 2) - (nl[j].node->bby / 2));
 			nl[j].node->ly0 = yoff;
 			nl[j].node->ly1 = (yoff + szy[i] /* XXX + ymindist */ );
@@ -789,7 +789,7 @@ static void improve_positions_3(struct gml_graph *g)
 /* switched between different modes */
 void improve_positions3(struct gml_graph *g)
 {
-	printf("%s(): positioning mode is %d\n", __func__, posmode);
+	printf("%s(): positioning mode is %d\n", __func__, postype);
 	fflush(stdout);
 
 	/* this can happen */

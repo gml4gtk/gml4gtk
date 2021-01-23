@@ -50,7 +50,7 @@ extern int barytype;
 extern int edgelabelsonoff;
 
 /* positioning mode */
-extern int posmode;
+extern int postype;
 
 /* parser messages */
 extern char parsermessage[256];
@@ -70,8 +70,8 @@ extern int bgcr;
 extern int bgcg;
 extern int bgcb;
 
-/* if set do topological placement */
-extern int topological;
+/* type of level placement */
+extern int ranktype;
 
 /* run barycenter */
 extern void barycenter(struct gml_graph *g, int it1val, int it2val);

@@ -152,6 +152,21 @@ static int number_of_crossings2(struct mmatrix *m, int r, int c)
 	return (result);
 }
 
+/*
+ * crossings
+ * computes the number of crossings
+ * algorithm:
+ * matrix[i][j] represents the number of edges between position i on the upper
+ * level and position j on the lower level, call it (i,j).
+ * The edges crossing edge (i,j) from right to left are exactly those
+ * edges (k,l) with k > i and l < j. You get the number of those edges
+ * by adding all elements of the submatrix[k][l] with k > i and l < j.
+ * The product of the elements of the submatrix and m[i][j] yields the
+ * number of crossings.
+ * To compute all crossings you must iterate over all elements of the matrix.
+ * This computation time is linear in the size of the matrix.
+ */
+
 static int number_of_crossings3(struct mmatrix *m, int r, int c)
 {
 	int j = 0;
@@ -1508,6 +1523,9 @@ void reduce_crossings2(struct gml_graph *g, int it1v, int it2v)
 	/* number of crossing edges at level */
 	if (g->numce == NULL) {
 		g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+		if (g->numce == NULL) {
+			return;
+		}
 	}
 
 	if (g->maxlevel == 0) {

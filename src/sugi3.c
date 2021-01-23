@@ -44,7 +44,7 @@
 #include "sugi.h"
 
 /* how much double values may differ when seen as same */
-#define LOWVAL (0.1)
+#define LOWVAL (0.01)
 
 /* set to 1 for debug output */
 static int s3debug = 0;
@@ -156,7 +156,14 @@ static int levellength(int level)
 	return (nglevelnodes[level]);
 }
 
-/* median value of one node */
+/* median barycenter value of one node.
+ * often the average is used of the positions of connecting nodes.
+ * the median value is the middle number in a sorted list of positions:
+ * example: 1 2 6 7 12
+ * the median is the number 6 in the middle.
+ * the average is 1+2+6+7+12/5 = 5.6
+ * some tools have options to changed the way this barycenter is determined for different layouts.
+*/
 static void medianvalue(struct vertex *a)
 {
 	int la = 0;
@@ -304,7 +311,7 @@ static int twovertcross(struct vertex *a, struct vertex *b, int *sorted, int k)
 }
 
 /* */
-int levelcross(struct vertex *a)
+static int levelcross(struct vertex *a)
 {
 	int lb = 0;
 	int i = 0;
@@ -503,7 +510,7 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 
 	/* sort on barycenter value if more then 1 member */
 	if (t > 1) {
-		qsort(a, t, sizeof(struct vertex), comparevalue);
+		qsort(tree[a[0].level], t, sizeof(struct vertex), comparevalue);
 	}
 
 	la = levelcross(a);
@@ -516,6 +523,12 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 	/* save this crossing count */
 	g->numce[a[0].level] = la;
 
+	if (la == 0) {
+		free(dummy2);
+		dummy2 = NULL;
+		return;
+	}
+
 	/* if crossings in a > in dummy, use dummy backup */
 	if (la > ld) {
 		/* dummy bacup is better: less crossings */
@@ -526,6 +539,11 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 		dummy = temp;
 		/* save this crossing count */
 		g->numce[a[0].level] = ld;
+		if (ld == 0) {
+			free(dummy2);
+			dummy2 = NULL;
+			return;
+		}
 	}
 
 	for (p = 0; p < 15; p++) {
@@ -539,6 +557,11 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 		}
 
 		la = levelcross(a);
+
+		if (la == 0) {
+			break;
+		}
+
 		ld = levelcross(dummy);
 
 		/* save this crossing count */
@@ -553,6 +576,9 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 			dummy = temp;
 			/* save this crossing count */
 			g->numce[a[0].level] = ld;
+			if (ld == 0) {
+				break;
+			}
 		}
 	}
 
@@ -560,6 +586,20 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 	dummy2 = NULL;
 
 	return;
+}
+
+/* return 0 if graph has no crossings */
+static int check0(struct gml_graph *g)
+{
+	int sum = 0;
+	int i = 0;
+	for (i = 0; i < (g->maxlevel + 1); i++) {
+		sum += g->numce[i];
+		if (sum) {
+			break;
+		}
+	}
+	return (sum);
 }
 
 /* create lists of nodes per level */
@@ -718,14 +758,18 @@ static void cp_data(struct gml_graph *g)
 				k = 0;
 				el = lnll->node->incoming_e;
 				while (el) {
-					/* set number of to node */
-					tree[i][count].parent[k] = el->edge->from_node->nr;
-					if (el->edge->to_node->nr != lnll->node->nr) {
-						printf("%s(): fixme(1)\n", __func__);
+					/* skip hor. edges */
+					if (el->edge->hedge == 0) {
+						/* set number of to node */
+						tree[i][count].parent[k] = el->edge->from_node->nr;
+						if (el->edge->to_node->nr != lnll->node->nr) {
+							printf("%s(): fixme(1)\n", __func__);
+						}
+						k++;
 					}
-					k++;
 					el = el->next;
 				}
+				tree[i][count].no_of_parent = k;
 			} else {
 				tree[i][count].no_of_parent = 0;
 				tree[i][count].parent = NULL;
@@ -740,14 +784,18 @@ static void cp_data(struct gml_graph *g)
 				k = 0;
 				el = lnll->node->outgoing_e;
 				while (el) {
-					/* set number of from node */
-					tree[i][count].child[k] = el->edge->to_node->nr;
-					if (el->edge->from_node->nr != lnll->node->nr) {
-						printf("%s(): fixme(2)\n", __func__);
+					/* skip hor. edges */
+					if (el->edge->hedge == 0) {
+						/* set number of from node */
+						tree[i][count].child[k] = el->edge->to_node->nr;
+						if (el->edge->from_node->nr != lnll->node->nr) {
+							printf("%s(): fixme(2)\n", __func__);
+						}
+						k++;
 					}
-					k++;
 					el = el->next;
 				}
+				tree[i][count].no_of_child = k;
 			} else {
 				tree[i][count].no_of_child = 0;
 				tree[i][count].child = NULL;
@@ -860,6 +908,10 @@ static void barycenter_3(struct gml_graph *g, int it1v, int it2v)
 		for (j = i - 1; j > 0; j--) {
 			mediansort(g, tree[j - 1], tree[j]);
 		}
+		if (check0(g) == 0) {
+			/* no edge crossings */
+			break;
+		}
 		/* from top to bottom */
 		for (j = 1; j < i; j++) {
 			mediansort(g, tree[j - 1], tree[j]);
@@ -868,10 +920,14 @@ static void barycenter_3(struct gml_graph *g, int it1v, int it2v)
 		for (j = i - 1; j > 0; j--) {
 			mediansort(g, tree[j], tree[j - 1]);
 		}
+		if (check0(g) == 0) {
+			/* no edge crossings */
+			break;
+		}
 	}
 
 	/* copy new node positions */
-	for (i = 0; i <= g->maxlevel; i++) {
+	for (i = 0; i < (g->maxlevel + 1); i++) {
 		/* scan nodes at level [i] */
 		j = 0;
 		while (tree[i][j].id != 0) {
@@ -911,6 +967,9 @@ void reduce_crossings3(struct gml_graph *g, int it1v, int it2v)
 	/* number of crossing edges at level */
 	if (g->numce == NULL) {
 		g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+		if (g->numce == NULL) {
+			return;
+		}
 	}
 
 	if (g->maxlevel == 0) {

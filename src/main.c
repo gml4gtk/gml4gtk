@@ -217,13 +217,13 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer user_data);
-static void pos1_clicked(GtkWidget * widget, gpointer window);
 static void xspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void yspin_changed(GtkWidget * widget, gpointer spinbutton);
+static void pos_changed(GtkWidget * widget, gpointer spinbutton);
 static void bary_changed(GtkWidget * widget, gpointer spinbutton);
+static void rank_changed(GtkWidget * widget, gpointer spinbutton);
 static void check1_toggle(GtkWidget * widget, gpointer window);
 static void dummy1_toggle(GtkWidget * widget, gpointer window);
-static void topo1_toggle(GtkWidget * widget, gpointer window);
 static void elabel1_toggle(GtkWidget * widget, gpointer window);
 
 static void on_top_level_window_drawingarea1_expose_event_edges(cairo_t * crp);
@@ -313,9 +313,13 @@ int main(int argc, char *argv[])
 	GtkAdjustment *yspinadjustment;
 	GtkWidget *yspinbutton;
 	GtkWidget *pos1;
+	GtkAdjustment *posadjustment;
+	GtkWidget *posbutton;
 	GtkWidget *check1;
 	GtkWidget *dummy1;
-	GtkWidget *topo1;
+	GtkWidget *rank1;
+	GtkAdjustment *rankadjustment;
+	GtkWidget *rankbutton;
 	GtkWidget *entry1;
 	GtkWidget *barylabel;
 	GtkAdjustment *baryadjustment;
@@ -692,17 +696,30 @@ int main(int argc, char *argv[])
 	gtk_widget_show(yspinbutton);
 
 	/* at every click, advance positioning mode */
-	pos1 = gtk_button_new_with_label("pos");
-
+	pos1 = gtk_label_new("pos");
 	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ pos1,
 			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
 			   PACKPADDING);
-
-	g_signal_connect(G_OBJECT(pos1), "clicked", G_CALLBACK(pos1_clicked), G_OBJECT(mainwindow1));
-
-	gtk_widget_set_tooltip_text(pos1, "toggle layout modus");
-
+	gtk_widget_set_tooltip_text(pos1, "positioning mode");
 	gtk_widget_show(pos1);
+
+	posadjustment = (GtkAdjustment *) gtk_adjustment_new(postype /* initial value */ ,
+							     1 /* minimum value */ ,
+							     3 /* maximum value */ ,
+							     1 /* step increment */ ,
+							     1 /* page increment */ ,
+							     0	/* page size now *must* be zero */
+	    );
+
+	posbutton = gtk_spin_button_new(posadjustment, 1 /* climb rate */ ,
+					0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ posbutton,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	g_signal_connect(G_OBJECT(posadjustment), "value-changed", G_CALLBACK(pos_changed), (gpointer) posbutton);
+	gtk_widget_show(posbutton);
 
 	/* draw spline edges or normal */
 	check1 = gtk_check_button_new_with_label("splines");
@@ -771,22 +788,32 @@ int main(int argc, char *argv[])
 	gtk_widget_show(hbox3);
 #endif
 
-	/* topological */
-	topo1 = gtk_check_button_new_with_label("topo");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ topo1,
+	/* level placement */
+	rank1 = gtk_label_new("rank");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ rank1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(rank1, "dfs/bfs/topological levels");
+	gtk_widget_show(rank1);
+
+	/* spin to change rank type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	rankadjustment = (GtkAdjustment *) gtk_adjustment_new(ranktype /* initial value */ ,
+							      1 /* minimum value */ ,
+							      4 /* maximum value */ ,
+							      1 /* step increment */ ,
+							      1 /* page increment */ ,
+							      0	/* page size now *must* be zero */
+	    );
+
+	rankbutton = gtk_spin_button_new(rankadjustment, 1 /* climb rate */ ,
+					 0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ rankbutton,
 			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
 			   PACKPADDING);
 
-	/* */
-	if (topological) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(topo1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(topo1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(topo1), "clicked", G_CALLBACK(topo1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(topo1, "topological placement");
-	gtk_widget_show(topo1);
+	g_signal_connect(G_OBJECT(rankadjustment), "value-changed", G_CALLBACK(rank_changed), (gpointer) rankbutton);
+	gtk_widget_show(rankbutton);
 
 	/* barycenter */
 	barylabel = gtk_label_new("bary");
@@ -800,7 +827,7 @@ int main(int argc, char *argv[])
 	/* spin to change barycenter type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
 	baryadjustment = (GtkAdjustment *) gtk_adjustment_new(barytype /* initial value */ ,
 							      1 /* minimum value */ ,
-							      3 /* maximum value */ ,
+							      5 /* maximum value */ ,
 							      1 /* step increment */ ,
 							      1 /* page increment */ ,
 							      0	/* page size now *must* be zero */
@@ -1349,7 +1376,7 @@ static void do_layout_all_r(struct gml_graph *g)
 	barycenter(g, 0, 0);
 
 	/* use position 1 */
-	posmode = 1;
+	postype = 1;
 	improve_positions(g);
 
 	/* print results */
@@ -3632,23 +3659,25 @@ void update_status_text_cross(char *text)
 	return;
 }
 
-/* pos 1 is button when clicked, advance positioning mode */
-static void pos1_clicked(GtkWidget * widget, gpointer window)
+/* changed type */
+static void pos_changed(GtkWidget * widget, gpointer spinbutton)
 {
+	gfloat val = 0.0;
+
 	if (widget) {
 	}
-	if (window) {
+	if (spinbutton) {
 	}
+
+	/* get the value for the new pos type */
+	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+	/* set new pos type, 1,2,3 */
+	postype = (int)val;
+
 	/* check if there is node data to draw */
 	if (validdata == 0) {
 		return;
-	}
-
-	/* advance pos. mode, cycle from 1,2,3 to 1 */
-	posmode++;
-
-	if (posmode > 3) {
-		posmode = 1;
 	}
 
 	/* re-calc positions */
@@ -3701,32 +3730,6 @@ static void dummy1_toggle(GtkWidget * widget, gpointer window)
 		drawdummy = 0;
 	}
 	/* only a re-draw needed */
-	gtk_widget_queue_draw(drawingarea1);
-	return;
-}
-
-/* checkbox 3 is use topological placement */
-static void topo1_toggle(GtkWidget * widget, gpointer window)
-{
-	if (widget) {
-	}
-	if (window) {
-	}
-	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		topological = 1;
-	} else {
-		topological = 0;
-	}
-	/* nop if no data */
-	if (validdata == 0) {
-		return;
-	}
-
-	/* re-layout */
-	do_relayout_all(maingraph);
-
-	/* now a re-draw needed */
 	gtk_widget_queue_draw(drawingarea1);
 	return;
 }
@@ -3834,6 +3837,7 @@ static void yspin_changed(GtkWidget * widget, gpointer spinbutton)
 	return;
 }
 
+/* changed type */
 static void bary_changed(GtkWidget * widget, gpointer spinbutton)
 {
 	gfloat val = 0.0;
@@ -3846,8 +3850,38 @@ static void bary_changed(GtkWidget * widget, gpointer spinbutton)
 	/* get the value for the new bary type */
 	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
 
-	/* set new bary type, 1,2 or 3 */
+	/* set new bary type, 1,2,3 or 4 */
 	barytype = (int)val;
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* re-layout */
+	do_relayout_all(maingraph);
+
+	/* now a re-draw needed */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+/* changed type */
+static void rank_changed(GtkWidget * widget, gpointer spinbutton)
+{
+	gfloat val = 0.0;
+
+	if (widget) {
+	}
+	if (spinbutton) {
+	}
+
+	/* get the value for the new bary type */
+	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+	/* set new rank type, 1,2,3 or 4 */
+	ranktype = (int)val;
 
 	/* check if there is node data to draw */
 	if (validdata == 0) {
@@ -4774,7 +4808,7 @@ static void finalxy(struct gml_graph *g)
 
 	/* depends on positioning modus */
 
-	switch (posmode) {
+	switch (postype) {
 	case 1:
 		finalxy1(g);
 		break;

@@ -31,20 +31,11 @@
  *        "-"
  */
 
-#ifndef SUGI_H
-#define SUGI_H 1
+#ifndef POS4_H
+#define POS4_H 1
 
-/* run barycenter */
-extern void reduce_crossings2(struct gml_graph *g, int it1val, int it2val);
-
-/* run barycenter */
-extern void reduce_crossings3(struct gml_graph *g, int it1val, int it2val);
-
-/* run barycenter */
-extern void reduce_crossings4(struct gml_graph *g, int it1val, int it2val);
-
-/* run barycenter */
-extern void reduce_crossings5(struct gml_graph *g, int it1val, int it2val);
+/* */
+extern void improve_positions4(struct gml_graph *g);
 
 #endif
 

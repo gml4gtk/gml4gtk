@@ -122,7 +122,7 @@ struct gml_glist {
 
 struct gml_node {
 	struct gml_graph *rootedon;	/* graph where node is located */
-	int nr;			/* node number starting at 1 */
+	int nr;			/* uniq node number starting at 1 */
 	int type;		/* type of node */
 	int id;			/* id number as in gml graph */
 	char *name;		/* name of node or label */

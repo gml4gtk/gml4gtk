@@ -31,9 +31,12 @@ gml4gtk_SOURCES = \
 	bubbling.c \
 	sugi2.c \
 	sugi3.c \
+	sugi4.c \
+	sugi5.c \
 	pos.c \
 	pos2.c \
 	pos3.c \
+	pos4.c \
 	hier.c \
 	splay-tree.c \
 	uniqstr.c \

@@ -52,8 +52,8 @@ struct gml_graph *maingraph = NULL;
 /* if 1 allow incremental layout for clusters if any */
 int incrlayout = 0;		/* 1 */
 
-/* if set do topological placement */
-int topological = 0;
+/* level placement, 1=dfs, 2=bfs, 3=topological */
+int ranktype = 1;
 
 /* type of barycenter, 1 is sugi2, 2 is sugi3, 3 is is rhp */
 int barytype = 1;
@@ -61,8 +61,8 @@ int barytype = 1;
 /* edgelabels on/off */
 int edgelabelsonoff = 1;	/* default show edgelabels (1) */
 
-/* positioning mode of drawing used in pos.c, value 1 or 2 */
-int posmode = 1;
+/* positioning mode of drawing used in pos.c, value 1 or 2 or 3 */
+int postype = 2;
 
 /* parser messages */
 char parsermessage[256];
@@ -127,6 +127,10 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 		reduce_crossings2(g, it1val, it2val);
 	} else if (barytype == 2) {
 		reduce_crossings3(g, it1val, it2val);
+	} else if (barytype == 3) {
+		reduce_crossings4(g, it1val, it2val);
+	} else if (barytype == 4) {
+		reduce_crossings5(g, it1val, it2val);
 	} else {
 		/* using rhp.c */
 		/* number of crossing edges at level */
@@ -2036,6 +2040,144 @@ void edgesdownwards(struct gml_graph *g, int modes)
 	return;
 }
 
+struct bfsqueue {
+	int item;
+	struct bfsqueue *child;
+};
+
+static struct bfsqueue *bfsfrontpointer = NULL;
+static struct bfsqueue *bfsrearpointer = NULL;
+
+static void bfsinsertq(int v)
+{
+	struct bfsqueue *p = NULL;
+	p = (struct bfsqueue *)calloc(1, sizeof(struct bfsqueue));
+	if (p == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+	p->item = v;
+	p->child = NULL;
+	bfsrearpointer->child = p;
+	bfsrearpointer = bfsrearpointer->child;
+	return;
+}
+
+static int bfsremoveq(void)
+{
+	struct bfsqueue *p = NULL;
+	p = bfsfrontpointer;
+	bfsfrontpointer = p->child;
+	free(p);
+	p = NULL;
+	return (bfsfrontpointer->item);
+}
+
+/* return 1 if no items anymore */
+static int bfsemptyq(void)
+{
+	if (bfsfrontpointer == bfsrearpointer) {
+		return (1);
+	} else {
+		return (0);
+	}
+}
+
+/* use bfs to set level, start at node n, at level i with startnode number startnode */
+static void set_bfslevel(struct gml_graph *g, struct gml_node *n, int i, int startnode)
+{
+	int flag = 0;
+	int v = 0;
+	int counter = 0;
+	int o = 0;
+	int t = 0;
+	int po = 0;
+	struct gml_elist *el = NULL;
+	struct gml_node *target = NULL;
+	struct gml_edge *edge = NULL;
+	struct gml_node *vt = NULL;
+
+	/* set graph max. level to start level */
+	g->maxlevel = i;
+
+	/* startlevel */
+	counter = i;
+
+	/* unused high node nr as marker */
+	flag = (g->nodenum * 2);
+
+	/* outdegree of start node */
+	po = n->outdegree;
+
+	bfsfrontpointer = (struct bfsqueue *)calloc(1, sizeof(struct bfsqueue));
+	bfsrearpointer = bfsfrontpointer;
+
+	/* set first node at start level */
+	if (n->y == (-1)) {
+		n->y = i;
+		n->startnode = startnode;
+	}
+
+	bfsinsertq(flag);
+	bfsinsertq(n->nr);
+	bfsinsertq(flag);
+
+	/* while q has data */
+	while (!bfsemptyq()) {
+		v = bfsremoveq();
+		if (v == flag) {
+			/* increment level */
+			counter++;
+		} else {
+			/* follow outgoing edges */
+			vt = uniqnode2(g, v);
+			if (vt) {
+				el = vt->outgoing_e;
+				while (el) {
+					edge = el->edge;
+					target = edge->to_node;
+					o++;
+					t += target->outdegree;
+					if (target->y < counter) {
+						target->y = counter;
+						if (counter > g->maxlevel) {
+							g->maxlevel = counter;
+						}
+						target->startnode = startnode;
+						if (yydebug || 0) {
+							printf("%s(): node \"%s\" set at level %d\n", __func__, target->name,
+							       counter);
+						}
+					}
+					bfsinsertq(target->nr);
+					if (o == po) {
+						bfsinsertq(flag);
+						o = 0;
+						po = t;
+						t = 0;
+					}
+					el = el->next;
+				}
+			} else {
+				/* shouldnothappen */
+				printf("%s(): cannot find node with number %d\n", __func__, v);
+			}
+		}
+	}
+
+	/* empty q */
+	if (bfsfrontpointer->child) {
+		free(bfsfrontpointer->child);
+		bfsfrontpointer->child = NULL;
+	}
+	free(bfsfrontpointer);
+
+	bfsrearpointer = NULL;
+	bfsfrontpointer = NULL;
+
+	return;
+}
+
 /*
  * See also https://en.wikipedia.org/wiki/Topological_sorting
  * L ← Empty list that will contain the sorted nodes
@@ -2060,8 +2202,9 @@ void edgesdownwards(struct gml_graph *g, int modes)
  */
 
 static int span = 0;
-/* topological set rel. y level of nodes */
-static void set_tlevel(struct gml_graph *g, struct gml_node *n, int i, int startnode)
+
+/* topological set rel. y level of nodes with optional mirror in y-direction */
+static void set_tlevel0(struct gml_graph *g, struct gml_node *n, int i, int startnode)
 {
 	struct gml_node *target = NULL;
 	struct gml_edge *edge = NULL;
@@ -2078,7 +2221,7 @@ static void set_tlevel(struct gml_graph *g, struct gml_node *n, int i, int start
 	while (el) {
 		edge = el->edge;
 		target = edge->to_node;
-		set_tlevel(g, target, span, startnode);
+		set_tlevel0(g, target, span, startnode);
 		el = el->next;
 	}
 
@@ -2094,6 +2237,26 @@ static void set_tlevel(struct gml_graph *g, struct gml_node *n, int i, int start
 	}
 
 	n->done = 1;
+
+	return;
+}
+
+/* topological set rel. y level of nodes with optional mirror in y-direction */
+static void set_tlevel(struct gml_graph *g, struct gml_node *n, int i, int startnode, int mirror)
+{
+	struct gml_nlist *lnll = NULL;
+	set_tlevel0(g, n, i, startnode);
+	if (mirror) {
+		lnll = g->nodelist;
+		while (lnll) {
+			/* only nodes done above */
+			if (lnll->node->startnode == startnode) {
+				/* mirror y, i is startlevel */
+				lnll->node->y = (((g->maxlevel - i) - lnll->node->y) + i);
+			}
+			lnll = lnll->next;
+		}
+	}
 	return;
 }
 
@@ -2186,7 +2349,8 @@ static void set_level(struct gml_graph *g, struct gml_node *n, int i, int startn
 		n->grey = 1;
 		n->y = i;	/* set y level of node */
 		if (yydebug || 0) {
-			printf("%s(): node %d set at level %d maxlevel is %d\n", __func__, n->nr, n->y, g->maxlevel);
+			printf("%s(): node %d \"%s\" set at level %d maxlevel is %d\n", __func__, n->nr, n->name, n->y,
+			       g->maxlevel);
 		}
 
 		/* node belongs to part of graph with this startnumber */
@@ -2261,7 +2425,7 @@ static void nscompass(struct gml_graph *g)
 	char *dir = NULL;
 	int changed = 0;
 	/* the gcc data n/s compass points are for a dfs only layout */
-	if (topological) {
+	if (ranktype != 1) {
 		return;
 	}
 
@@ -2396,8 +2560,16 @@ void ylevels(struct gml_graph *g)
 		start2 = 0;
 	}
 
-	if (topological) {
+	if (ranktype == 4) {
+		printf("%s(): doing mirrored topological placement\n", __func__);
+	}
+
+	if (ranktype == 3) {
 		printf("%s(): doing topological placement\n", __func__);
+	}
+
+	if (ranktype == 2) {
+		printf("%s(): doing bfs placement\n", __func__);
 	}
 
 	/* number of start nodes in the graph */
@@ -2413,10 +2585,18 @@ void ylevels(struct gml_graph *g)
 			/* select start nodes */
 			if (lnll->node->indegree == 0 && lnll->node->outdegree != 0) {
 				g->nstartnodes++;
-				if (topological) {
+				if (ranktype == 4) {
+					/* topological sort to set y level and mirror y direction */
+					span = start2;
+					set_tlevel(g, lnll->node, start2, lnll->node->nr, 1);
+				} else if (ranktype == 3) {
 					/* topological sort to set y level */
 					span = start2;
-					set_tlevel(g, lnll->node, start2, lnll->node->nr);
+					set_tlevel(g, lnll->node, start2, lnll->node->nr, 0);
+				} else if (ranktype == 2) {
+					/* bfs */
+					span = start2;
+					set_bfslevel(g, lnll->node, start2, lnll->node->nr);
 				} else {
 					/* dfs type must be level2() */
 					if (0) {
@@ -2439,24 +2619,24 @@ void ylevels(struct gml_graph *g)
 	 * changed: always start with pos2, and pos1 can be done using pos button.
 	 * if (g->nstartnodes > 1)
 	 * {
-	 * posmode = 2;
+	 * postype = 2;
 	 * }
 	 * else
 	 * {
-	 * posmode = 1;
+	 * postype = 1;
 	 * }
 	 * new: always use pos mode 2
 	 */
-	posmode = 2;
+	postype = 2;
 	/* check that all nodes have y position now */
 	lnll = g->nodelist;
 	while (lnll) {
 		if (lnll->node->y == -1) {
-			posmode = 1;
+			postype = 1;
 			/* doeshappen */
 			if (yydebug || 1) {
 				printf
-				    ("%s(): node \"%s\" updating level indegree=%d outdegree=%d\n",
+				    ("%s(): node \"%s\" updating level (-1) indegree=%d outdegree=%d\n",
 				     __func__, lnll->node->name, lnll->node->indegree, lnll->node->outdegree);
 			}
 			if (1) {
@@ -2519,6 +2699,8 @@ void ylevels(struct gml_graph *g)
 			printf("%s(): found %d startnodes, should be %d shouldnothappen\n", __func__, i, g->nstartnodes);
 		}
 	}
+
+	fflush(stdout);
 
 	return;
 }

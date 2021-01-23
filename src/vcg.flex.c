@@ -3656,94 +3656,75 @@ do_action:			/* This label is used only to access EOF actions. */
 				YY_BREAK case 2:YY_RULE_SETUP
 #line 90 "vcg.l"
 				{	/* start of c comment but no end of c comment */
-				}
-				YY_BREAK case 3:YY_RULE_SETUP
+				} YY_BREAK case 3:YY_RULE_SETUP
 #line 91 "vcg.l"
 				{	/* end of c comment but no start of c comment */
-				}
-				YY_BREAK case 4:YY_RULE_SETUP
+				} YY_BREAK case 4:YY_RULE_SETUP
 #line 92 "vcg.l"
 				{	/* c++ comment style *//* lexer does update yylineno */
-				}
-				YY_BREAK case 5:YY_RULE_SETUP
+				} YY_BREAK case 5:YY_RULE_SETUP
 #line 94 "vcg.l"
 				{	/* skip form feed chars and spaces */
-				}
-				YY_BREAK case 6:YY_RULE_SETUP
+				} YY_BREAK case 6:YY_RULE_SETUP
 #line 95 "vcg.l"
 				{	/* skip tabs */
-				}
-				YY_BREAK case 7:
+				} YY_BREAK case 7:
 /* rule 7 can match eol */
 				 YY_RULE_SETUP
 #line 96 "vcg.l"
 				{	/* skip new line *//* lexer does update yylineno */
-				}
-				YY_BREAK case 8:YY_RULE_SETUP
+				} YY_BREAK case 8:YY_RULE_SETUP
 #line 97 "vcg.l"
 				{	/* skip carriage return */
-				}
-				YY_BREAK case 9:YY_RULE_SETUP
+				} YY_BREAK case 9:YY_RULE_SETUP
 #line 99 "vcg.l"
 				{
 					return (VCG_COLON);
-				}
-				YY_BREAK case 10:YY_RULE_SETUP
+				} YY_BREAK case 10:YY_RULE_SETUP
 #line 100 "vcg.l"
 				{
 					return (VCG_BO);
-				}
-				YY_BREAK case 11:YY_RULE_SETUP
+				} YY_BREAK case 11:YY_RULE_SETUP
 #line 101 "vcg.l"
 				{
 					return (VCG_BC);
-				}
-				YY_BREAK case 12:YY_RULE_SETUP
+				} YY_BREAK case 12:YY_RULE_SETUP
 #line 103 "vcg.l"
 				{
 					return (VCG_GRAPH);
-				}
-				YY_BREAK case 13:YY_RULE_SETUP
+				} YY_BREAK case 13:YY_RULE_SETUP
 #line 104 "vcg.l"
 				{
 					return (VCG_EDGE);
-				}
-				YY_BREAK case 14:YY_RULE_SETUP
+				} YY_BREAK case 14:YY_RULE_SETUP
 #line 105 "vcg.l"
 				{
 					return (VCG_ELLIPSE);
-				}
-				YY_BREAK case 15:YY_RULE_SETUP
+				} YY_BREAK case 15:YY_RULE_SETUP
 #line 106 "vcg.l"
 				{
 					return (VCG_LABEL);
-				}
-				YY_BREAK case 16:YY_RULE_SETUP
+				} YY_BREAK case 16:YY_RULE_SETUP
 #line 107 "vcg.l"
 				{
 					return (VCG_NODE);
-				}
-				YY_BREAK case 17:YY_RULE_SETUP
+				} YY_BREAK case 17:YY_RULE_SETUP
 #line 108 "vcg.l"
 				{
 					return (VCG_SHAPE);
-				}
-				YY_BREAK case 18:YY_RULE_SETUP
+				} YY_BREAK case 18:YY_RULE_SETUP
 #line 109 "vcg.l"
 				{
 					return (VCG_SOURCENAME);
-				}
-				YY_BREAK case 19:YY_RULE_SETUP
+				} YY_BREAK case 19:YY_RULE_SETUP
 #line 110 "vcg.l"
 				{
 					return (VCG_TARGETNAME);
-				}
-				YY_BREAK case 20:YY_RULE_SETUP
+				} YY_BREAK case 20:YY_RULE_SETUP
 #line 111 "vcg.l"
 				{
 					return (VCG_TITLE);
-				}
-				YY_BREAK case 21:
+				} YY_BREAK case 21:
 /* rule 21 can match eol */
 				 YY_RULE_SETUP
 #line 113 "vcg.l"
