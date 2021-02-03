@@ -1,0 +1,39 @@
+digraph "svgdag"
+{
+bgcolor=lightyellow;
+"tho"[label="shell\ltho" fontcolor="#ff0000"];
+"bou"[color="#0fff0f" style=filled];
+"tho"->"bou";
+"tho"->"mas";
+"tho"->"csh";
+
+"bou"->"v9s";
+"bou"->"ksh";
+"bou"->"esh";
+"bou"->"vsh";
+"bou"->"for";
+"bou"->"bas";
+"bou"->"sys";
+
+"for"->"ksh";
+
+"csh"->"ksh";
+"csh"->"tcsh";
+
+"esh"->"ksh";
+
+"vsh"->"ksh";
+
+"sys"->"pos";
+
+"v9s"->"rc";
+
+"ksh"->"ksh-i";
+
+"kor"->"ksh-pos";
+"kor"->"pos";
+"kor"->"bas";
+
+"ksh-i"->"kor";
+"ksh-i"->"bas";
+}

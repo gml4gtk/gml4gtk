@@ -42,6 +42,7 @@
 #include "hier.h"
 #include "pos.h"
 #include "pos2.h"
+#include "dot.tab.h"
 
 /* min. distance between 2 nodes */
 static int mindist = 1;
@@ -799,6 +800,10 @@ static void make_cposnodes(void)
 	while (lnl) {
 		i = lnl->node->absx;
 
+		if (yydebug || 0) {
+			printf("%s(): node \"%s\" at absx %d\n", __func__, lnl->node->nlabel, lnl->node->absx);
+		}
+
 		newl = (struct gml_nlist *)calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
@@ -895,6 +900,10 @@ static void make_clevelnodes(struct gml_graph *g)
 	while (lnl) {
 		i = lnl->node->absy;
 
+		if (yydebug || 0) {
+			printf("%s(): at \"%s\" absx %d absy %d\n", __func__, lnl->node->nlabel, lnl->node->absx, lnl->node->absy);
+		}
+
 		newl = calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
@@ -923,6 +932,9 @@ static void make_clevelnodes(struct gml_graph *g)
 		lnl = clevelnodes[i];
 
 		while (lnl) {
+			if (yydebug || 0) {
+				printf("%s(): scan \"%s\"\n", __func__, lnl->node->nlabel);
+			}
 			if (lnl->node->bby > lmaxh) {
 				lmaxh = lnl->node->bby;
 			}
@@ -1070,6 +1082,11 @@ static void cfinalxy(struct gml_graph *g)
 
 			/* center the node around the half-way */
 			lnl->node->finy = (hw - (lnl->node->bby / 2));
+
+			if (yydebug || 0) {
+				printf("%s(): node \"%s\" at y %d level %d\n", __func__, lnl->node->nlabel, lnl->node->finy,
+				       lnl->node->rely);
+			}
 
 			/* update drawing max y pos used */
 			if ((lnl->node->finy + lnl->node->bby) > cmaxy) {
@@ -1227,6 +1244,10 @@ void improve_positions2(struct gml_graph *g)
 		gnl->node->absy = gnl->node->rely;
 		gnl->node->finx = 0;
 		gnl->node->finy = 0;
+		if (yydebug || 0) {
+			printf("%s(): node \"%s\" is at level %d position %d startnode %d\n", __func__, gnl->node->nlabel,
+			       gnl->node->rely, gnl->node->relx, gnl->node->startnode);
+		}
 		gnl = gnl->next;
 	}
 

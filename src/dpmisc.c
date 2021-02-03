@@ -1369,8 +1369,11 @@ struct dprank *dp_getrank(char *s)
 		return (ret);
 	}
 
+	/* added: rank=none */
 	if (strcasecmp(s, "same") == 0) {
 		ret->mode = DP_RANK_SAME;
+	} else if (strcasecmp(s, "none") == 0) {
+		ret->mode = DP_RANK_NONE;
 	} else if (strcasecmp(s, "min") == 0) {
 		ret->mode = DP_RANK_MIN;
 	} else if (strcasecmp(s, "source") == 0) {

@@ -61,6 +61,9 @@ int barytype = 1;
 /* edgelabels on/off */
 int edgelabelsonoff = 1;	/* default show edgelabels (1) */
 
+/* labels on/off */
+int labels = 1;			/* default show labels (1) */
+
 /* positioning mode of drawing used in pos.c, value 1 or 2 or 3 */
 int postype = 2;
 
@@ -1959,6 +1962,11 @@ void edgesdownwards(struct gml_graph *g, int modes)
 	struct gml_edge *edge = NULL;
 	int changed0 = 0;
 	int changed1 = 0;
+
+	if (yydebug || 1) {
+		printf("%s(): mode=%d\n", __func__, modes);
+	}
+
 	if (modes == 0) {
 
 		el = g->edgelist;
@@ -1996,24 +2004,33 @@ void edgesdownwards(struct gml_graph *g, int modes)
 			edge = el->edge;
 			sn = edge->from_node;
 			tn = edge->to_node;
+			if (yydebug || 0) {
+				printf("%s(): edge \"%s\"->\"%s\" rev=%d\n", __func__, sn->nlabel, tn->nlabel, edge->reversed);
+			}
 			if ((tn->y - sn->y) < 0) {
 				if (yydebug || 0) {
 					printf
-					    ("%s(%d): edge length < 0 (%d) at nodes %d->%d at level %d->%d swapping\n",
-					     __func__, modes, (tn->y - sn->y), sn->id, tn->id, sn->y, tn->y);
+					    ("%s(%d): edge length < 0 (%d) at nodes %d->%d \"%s\"->\"%s\" at level %d->%d swapping\n",
+					     __func__, modes, (tn->y - sn->y), sn->id, tn->id, sn->nlabel, tn->nlabel, sn->y,
+					     tn->y);
 				}
 
 				/* swap */
 				tmpnode = tn;
-				el->edge->to_node = el->edge->from_node;
-				el->edge->from_node = tmpnode;
+				edge->to_node = edge->from_node;
+				edge->from_node = tmpnode;
 				/* toggle the edge is reversed bit */
-				if (el->edge->reversed) {
-					el->edge->reversed = 0;
+				if (edge->reversed) {
+					edge->reversed = 0;
 				} else {
-					el->edge->reversed = 1;
+					edge->reversed = 1;
 				}
 				changed1++;
+				if (yydebug || 0) {
+					printf("%s(): changed into edge \"%s\"->\"%s\" rev=%d\n", __func__, sn->nlabel, tn->nlabel,
+					       edge->reversed);
+				}
+
 			}
 
 			el = el->next;
@@ -2269,6 +2286,7 @@ static void set_level2(struct gml_graph *g, struct gml_node *n, int i, int start
 	if (n->done) {
 		if (i > n->y && n->grey == 0) {
 			n->y = i;
+			n->startnode = startnode;
 		}
 		if (n->grey) {
 			return;
@@ -2283,7 +2301,7 @@ static void set_level2(struct gml_graph *g, struct gml_node *n, int i, int start
 	n->y = span;
 	n->startnode = startnode;
 	if (yydebug || 0) {
-		printf("%s(): setting `%s' to level %d\n", __func__, n->name, n->y);
+		printf("%s(): setting \"%s\" to level %d startnode %d\n", __func__, n->nlabel, n->y, n->startnode);
 	}
 
 	if (span > g->maxlevel) {
@@ -2602,6 +2620,9 @@ void ylevels(struct gml_graph *g)
 					if (0) {
 						set_level(g, lnll->node, start2, lnll->node->nr);
 					} else {
+						if (yydebug || 0) {
+							printf("%s(): startnode %d\n", __func__, lnll->node->nr);
+						}
 						set_level2(g, lnll->node, start2, lnll->node->nr);
 					}
 				}
@@ -2631,6 +2652,9 @@ void ylevels(struct gml_graph *g)
 	/* check that all nodes have y position now */
 	lnll = g->nodelist;
 	while (lnll) {
+		if (yydebug || 0) {
+			printf("%s(): node \"%s\" is at level %d\n", __func__, lnll->node->nlabel, lnll->node->y);
+		}
 		if (lnll->node->y == -1) {
 			postype = 1;
 			/* doeshappen */

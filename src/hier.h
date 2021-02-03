@@ -49,6 +49,9 @@ extern int barytype;
 /* edgelabels on/off */
 extern int edgelabelsonoff;
 
+/* labels on/off */
+extern int labels;
+
 /* positioning mode */
 extern int postype;
 

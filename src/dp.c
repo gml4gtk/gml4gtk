@@ -249,7 +249,7 @@ void dp_nsubg(struct dpgraph *sg, char *gname, int type)
 		/* no graphname, make it "" */
 		sg->graphname = NULL;
 	} else {
-		/* name or "" and type named subgraph */
+		/* name or "" */
 		sg->graphname = gname;
 		sg->type = DP_SG_NM;
 		/*

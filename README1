@@ -63,6 +63,9 @@ example code at https://notabug.org/mooigraph/sfgraph
 Most dot language details are parsed but not implemented yet.
 Also a->b,c is not supported but a->{b,c} works as expected.
 
+On sourceforge at the "files" tab there is gml4win.exe with
+less features but smaller and does not need extra dll's to run.
+
 The windows gml4gtk.exe program is a 64 bits program.
 It is cross-compiled on a GNU/Linux computer.
 It is tested using wine64 windows emulator on Linux.
@@ -75,7 +78,7 @@ The gml4gtk.exe program is checked to be virus free.
 
 To compile gml4gtk on windows it needs the mingw compiler and gtk+ runtime and gtk+ development files.
 
-This are the needed dll's to run this gtk+3 program:
+This are the needed dll's to run this gml4gtk.exe gtk+3 program:
 libatk-1.0-0.dll
 libcairo-2.dll
 libcairo-gobject-2.dll

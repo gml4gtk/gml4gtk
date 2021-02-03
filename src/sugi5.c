@@ -615,6 +615,9 @@ static void clr_levelnodes(struct gml_graph *g)
 	struct gml_nlist *nlnext = NULL;
 	int i = 0;
 
+	if (g) {
+	}
+
 	if (glevelnodes == NULL) {
 		return;
 	}
@@ -775,6 +778,9 @@ static void clr_data(struct gml_graph *g)
 {
 	int i = 0;
 	int j = 0;
+
+	if (g) {
+	}
 
 	/* copy new node positions */
 	for (i = 0; i < gnlevels; i++) {

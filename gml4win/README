@@ -1,0 +1,9 @@
+This is a simplified gml/dot graph viewer programmed in native windows gui interface.
+Then this windows version gml4win.exe does not need 28 Mbytes GTK-3 dll's to run it.
+It is compiled on Linux using gcc mingw 64bits compiler and tested using wine64 on Linux.
+This has minimal gui features compared to the GTK+ Linux gui version gml4gtk but is usable.
+For more graph features there is gml4gtk windows version at https://gml4gtk.sourceforge.io
+The gml4win.exe does not need extra dll's or configuration files and does not create files.
+To install gml4win.exe copy the program gml4win.exe to any directory folder of own choice.
+Only the program gml4win.exe is needed and the other files are example graph data and src.
+To un-install gml4win.exe delete the file.

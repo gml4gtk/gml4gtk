@@ -1,0 +1,26 @@
+/* some different ways to set colors in a dot graph
+ * The colors can be in different ways like colornames or html style colors
+ * A htmlstyle color is #rrggbb as red in #ff0000
+ */
+digraph "colors"
+{
+  /* this sets the background color of the whole drawing */
+  graph [bgcolor=azure];
+  /* this sets the textcolor of all nodes in the graph */
+  node [fontcolor="#0000ff"];
+  /* this sets the node background color */
+  "aa" [style=filled fillcolor="#00ff00"];
+  /* this sets the node background color and border color */
+  "ab" [style=filled fillcolor="#00ff00" color="#ff0000"];
+  /* this sets the fontcolor of the node */
+  "ac" [fontcolor="#ff0000"];
+  /* this sets the bordercolor to green */
+  /* to set bordercolor, both fillcolor and color must be used */
+  "ad" [fillcolor=white color=green];
+  /* this sets the edgeline color */
+  "aa"->"ab" [color="#ff0000"];
+  /* this is default edgeline color black */
+  "aa"->"ac";
+  "aa"->"ad";
+}
+

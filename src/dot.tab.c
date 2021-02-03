@@ -297,11 +297,11 @@ static const unsigned short yyrline[] = {
 	0, 109, 109, 109, 110, 111, 115, 116, 120, 121,
 	122, 123, 127, 128, 133, 134, 138, 139, 140, 141,
 	145, 146, 152, 153, 154, 164, 165, 166, 167, 167,
-	171, 171, 182, 183, 184, 194, 195, 196, 201, 205,
-	206, 210, 211, 212, 213, 217, 221, 222, 226, 226,
-	226, 227, 227, 227, 232, 233, 233, 234, 235, 235,
-	240, 241, 245, 246, 247, 251, 255, 256, 256, 261,
-	262
+	171, 171, 182, 183, 184, 194, 195, 196, 200, 204,
+	205, 209, 210, 211, 212, 216, 220, 221, 225, 225,
+	225, 226, 226, 226, 231, 232, 232, 233, 234, 234,
+	239, 240, 244, 245, 246, 250, 254, 255, 255, 260,
+	261
 };
 #endif
 
@@ -1177,7 +1177,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 38:
-#line 201 "dot.y"		/* glr.c:880  */
+#line 200 "dot.y"		/* glr.c:880  */
 		{
 			dp_aset((((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				(((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
@@ -1186,7 +1186,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 40:
-#line 206 "dot.y"		/* glr.c:880  */
+#line 205 "dot.y"		/* glr.c:880  */
 		{
 			dp_aset((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string), "true");
 		}
@@ -1194,7 +1194,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 48:
-#line 226 "dot.y"		/* glr.c:880  */
+#line 225 "dot.y"		/* glr.c:880  */
 		{
 			dp_starte1((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
@@ -1202,7 +1202,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 49:
-#line 226 "dot.y"		/* glr.c:880  */
+#line 225 "dot.y"		/* glr.c:880  */
 		{
 			dp_newe();
 		}
@@ -1210,7 +1210,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 50:
-#line 226 "dot.y"		/* glr.c:880  */
+#line 225 "dot.y"		/* glr.c:880  */
 		{
 			dp_ende();
 			dp_clrep();
@@ -1219,7 +1219,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 51:
-#line 227 "dot.y"		/* glr.c:880  */
+#line 226 "dot.y"		/* glr.c:880  */
 		{
 			dp_starte2((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
@@ -1227,7 +1227,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 52:
-#line 227 "dot.y"		/* glr.c:880  */
+#line 226 "dot.y"		/* glr.c:880  */
 		{
 			dp_newe();
 		}
@@ -1235,7 +1235,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 53:
-#line 227 "dot.y"		/* glr.c:880  */
+#line 226 "dot.y"		/* glr.c:880  */
 		{
 			dp_ende();
 			dp_clrep();
@@ -1244,7 +1244,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 54:
-#line 232 "dot.y"		/* glr.c:880  */
+#line 231 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
@@ -1253,7 +1253,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 55:
-#line 233 "dot.y"		/* glr.c:880  */
+#line 232 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
@@ -1262,7 +1262,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 57:
-#line 234 "dot.y"		/* glr.c:880  */
+#line 233 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
@@ -1271,7 +1271,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 58:
-#line 235 "dot.y"		/* glr.c:880  */
+#line 234 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
@@ -1280,7 +1280,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 60:
-#line 240 "dot.y"		/* glr.c:880  */
+#line 239 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graph();
 		}
@@ -1288,7 +1288,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 61:
-#line 241 "dot.y"		/* glr.c:880  */
+#line 240 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graph();
 		}
@@ -1296,7 +1296,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 62:
-#line 245 "dot.y"		/* glr.c:880  */
+#line 244 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graphdef();
 		}
@@ -1304,7 +1304,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 63:
-#line 246 "dot.y"		/* glr.c:880  */
+#line 245 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_nodedef();
 		}
@@ -1312,7 +1312,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 64:
-#line 247 "dot.y"		/* glr.c:880  */
+#line 246 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_edgedef();
 		}
@@ -1320,7 +1320,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 65:
-#line 251 "dot.y"		/* glr.c:880  */
+#line 250 "dot.y"		/* glr.c:880  */
 		{
 			dp_aset((((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				(((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
@@ -1329,7 +1329,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 66:
-#line 255 "dot.y"		/* glr.c:880  */
+#line 254 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) = dp_endss();
 		}
@@ -1337,15 +1337,15 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 67:
-#line 256 "dot.y"		/* glr.c:880  */
+#line 255 "dot.y"		/* glr.c:880  */
 		{
-			dp_namedsubg( /* name */ NULL, /* type compound */ DP_SG_CO);
+			dp_namedsubg(NULL, DP_SG_CO);
 		}
 #line 1276 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 68:
-#line 256 "dot.y"		/* glr.c:880  */
+#line 255 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) = dp_endss();
 		}
@@ -1353,18 +1353,17 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		break;
 
 	case 69:
-#line 261 "dot.y"		/* glr.c:880  */
+#line 260 "dot.y"		/* glr.c:880  */
 		{
-			dp_namedsubg( /* name */ (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string),
-				     /* type named subgraph */ DP_SG_NM);
+			dp_namedsubg((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string), DP_SG_NM);
 		}
 #line 1288 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 70:
-#line 262 "dot.y"		/* glr.c:880  */
+#line 261 "dot.y"		/* glr.c:880  */
 		{
-			dp_namedsubg( /* name */ NULL, /* type unnamed subgraph */ DP_SG_NN);
+			dp_namedsubg(NULL, DP_SG_NN);
 		}
 #line 1294 "dot.tab.c"		/* glr.c:880  */
 		break;
@@ -2747,6 +2746,6 @@ static void yypdumpstack(yyGLRStack * yystackp)
 #undef yychar
 #undef yynerrs
 
-#line 265 "dot.y"		/* glr.c:2603  */
+#line 264 "dot.y"		/* glr.c:2603  */
 
 /* end. */

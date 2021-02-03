@@ -381,6 +381,7 @@ int dotparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 		/* node fill color white and bordercolor black */
 		ncolor = 0x00ffffff;
 		nbcolor = 0;
+		fontcolor = 0;
 
 		/* color for text label */
 		if (node->bitflags0.fontcolorset) {

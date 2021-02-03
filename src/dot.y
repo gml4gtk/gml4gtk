@@ -196,7 +196,6 @@ nid:
 	| text TOKEN_COLON text TOKEN_COLON text { $$ = dp_mknid ($1,$3,$5); }
 	;
 
-/* attribute as in foo=bar */
 sattr:
 	  text TOKEN_IS text  { dp_aset ($1,$3); }
 	;
@@ -253,13 +252,13 @@ aset:
 
 sstatement:
 	  shead TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE %prec TOKEN_BRACEOPEN { $$=dp_endss (); }
-	| TOKEN_BRACEOPEN { dp_namedsubg (/* name */ NULL, /* type compound */ DP_SG_CO); } statements TOKEN_BRACECLOSE { $$=dp_endss (); }
+	| TOKEN_BRACEOPEN { dp_namedsubg (NULL,DP_SG_CO); } statements TOKEN_BRACECLOSE { $$=dp_endss (); }
 	;
 
 /* allow subgraph foo {} or subgraph {} */
 shead:
-	  TOKEN_SUBGRAPH text { dp_namedsubg (/* name */ $2, /* type named subgraph */ DP_SG_NM); }
-	| TOKEN_SUBGRAPH { dp_namedsubg (/* name */ NULL, /* type unnamed subgraph */ DP_SG_NN); }
+	  TOKEN_SUBGRAPH text { dp_namedsubg ($2,DP_SG_NM); }
+	| TOKEN_SUBGRAPH { dp_namedsubg (NULL,DP_SG_NN); }
 	;
 
 %%

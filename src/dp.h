@@ -51,12 +51,13 @@
 #define DP_RANKDIR_BT 3
 #define DP_RANKDIR_RL 4
 
-/* graph rank */
+/* graph rank added rank=none */
 #define DP_RANK_SAME 1
 #define DP_RANK_MIN 2
 #define DP_RANK_SRC 3
 #define DP_RANK_MAX 4
 #define DP_RANK_SINK 5
+#define DP_RANK_NONE 6
 
 /* graph output order modes, 0 means undefined */
 #define DP_OO_BF 1		/* breadthfirst */

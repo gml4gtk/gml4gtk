@@ -184,6 +184,9 @@ static GtkWidget *mainwindow1 = (GtkWidget *) 0;
 /* where to draw */
 static GtkWidget *drawingarea1 = (GtkWidget *) 0;
 
+/* edge label tickbox */
+static GtkWidget *elabel1 = (GtkWidget *) 0;
+
 /* status line gtk buffers */
 static GtkTextBuffer *entry1buffer = NULL;
 static char charentry1buffer[80];
@@ -225,6 +228,7 @@ static void rank_changed(GtkWidget * widget, gpointer spinbutton);
 static void check1_toggle(GtkWidget * widget, gpointer window);
 static void dummy1_toggle(GtkWidget * widget, gpointer window);
 static void elabel1_toggle(GtkWidget * widget, gpointer window);
+static void label1_toggle(GtkWidget * widget, gpointer window);
 
 static void on_top_level_window_drawingarea1_expose_event_edges(cairo_t * crp);
 
@@ -324,7 +328,7 @@ int main(int argc, char *argv[])
 	GtkWidget *barylabel;
 	GtkAdjustment *baryadjustment;
 	GtkWidget *barybutton;
-	GtkWidget *elabel1;
+	GtkWidget *label1;
 
 	argv0 = argv[0];
 
@@ -859,6 +863,23 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(elabel1), "clicked", G_CALLBACK(elabel1_toggle), (gpointer) mainwindow1);
 	gtk_widget_set_tooltip_text(elabel1, "edgelabels on/off");
 	gtk_widget_show(elabel1);
+
+	/* labels on/off */
+	label1 = gtk_check_button_new_with_label("labels");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ label1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (labels) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(label1), "clicked", G_CALLBACK(label1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(label1, "labels on/off");
+	gtk_widget_show(label1);
 
 	/*
 	 * here additional gtk elements
@@ -2181,6 +2202,9 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 
 	fclose(f);
 
+	/* XXX todo maybe this basename does not work on windows
+	 * and it depends on mingw compiler and glib dll. to check.
+	 */
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
 	g_free(bname);
@@ -2838,6 +2862,16 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 			} else {
 				/* this is a edge label, no outline */
 			}
+
+			/* draw no text labels if labels==0 */
+			if (labels == 0) {
+				nl = nl->next;
+				continue;
+			}
+
+			/*
+			 * now draw text of label as ususal or record style label
+			 */
 
 			/* calculate the scaled font size */
 			dfs = (zfactor * atoi(default_fontsize));
@@ -3741,6 +3775,10 @@ static void elabel1_toggle(GtkWidget * widget, gpointer window)
 	}
 	if (window) {
 	}
+	/* when no labels do not draw edge labels */
+	if (labels == 0) {
+		return;
+	}
 	/* toggle the splines option */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
 		edgelabelsonoff = 1;
@@ -3755,6 +3793,33 @@ static void elabel1_toggle(GtkWidget * widget, gpointer window)
 	if (maingraph->tnedgelabels == 0) {
 		return;
 	}
+	/* do re-layout */
+	do_relayout_all(maingraph);
+	/* now a re-draw needed */
+	gtk_widget_queue_draw(drawingarea1);
+	return;
+}
+
+/* checkbox 6 is switch labels */
+static void label1_toggle(GtkWidget * widget, gpointer window)
+{
+	if (widget) {
+	}
+	if (window) {
+	}
+	/* toggle the splines option */
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+		labels = 1;
+	} else {
+		labels = 0;
+	}
+	/* nop if no data */
+	if (validdata == 0) {
+		return;
+	}
+	/* force edgelabels off */
+	edgelabelsonoff = 0;
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
 	/* do re-layout */
 	do_relayout_all(maingraph);
 	/* now a re-draw needed */
@@ -4417,6 +4482,47 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 	return;
 }
 
+/* translate \n \l \r in dot string */
+static char *unesc(char *str)
+{
+	char *buf = NULL;
+	char *p = NULL;
+	char *q = NULL;
+	if (strchr(str, '\\') == NULL) {
+		/* string has no esc chars */
+		return (str);
+	}
+	buf = calloc(1, (strlen(str) + 1));
+	p = str;
+	q = buf;
+	while (*p) {
+		/* check for \n \l \r to change */
+		if ((*p) == '\\') {
+			if (*(p + 1) == 'n' || *(p + 1) == 'l' || *(p + 1) == 'r') {
+				(*q) = '\n';
+				q++;
+				p++;
+				p++;
+			} else {
+				/* copy other esc char */
+				(*q) = (*p);
+				p++;
+				q++;
+				(*q) = (*p);
+				p++;
+				q++;
+			}
+		} else {
+			/* regular char to copy */
+			(*q) = (*p);
+			q++;
+			p++;
+		}
+	}
+	p = uniqstr(buf);
+	return (p);
+}
+
 /*zzz
  * update the (x,y) size of text in the nodes
  *
@@ -4437,6 +4543,7 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
  * there are nodes with labels whicj is a piece of text on display
  * and nodes with a record type with multiple small text to layout
  * in multiple steps for the different fields.
+ * if option labels is 0 then no label text is draw
  */
 static void static_maingtk_textsizes(void)
 {
@@ -4482,69 +4589,84 @@ static void static_maingtk_textsizes(void)
 				nl->node->nlabel = uniqstr("  ");
 			}
 
-			/* calculate the text area */
-			if (surface == NULL) {
-				surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
-			}
+			/* change esc chars if any */
+			nl->node->nlabel = unesc(nl->node->nlabel);
 
-			/* */
-			if (crdraw == NULL) {
-				crdraw = cairo_create(surface);
-			}
+			if (labels) {
+				/* calculate the text area */
+				if (surface == NULL) {
+					surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
+				}
 
-			/* */
-			layout = pango_cairo_create_layout(crdraw);
-			/* set the text to draw which is 0 terminated */
-			pango_layout_set_text(layout, nl->node->nlabel, -1);
-			/* create the fontname description */
-			memset(buf, 0, 128);
-			/* name of font to use */
-			default_fontname = uniqstr((char *)DEFAULT_FONTNAME);
-			/* check if node has a specified font slant */
-			default_fontslant = uniqstr((char *)DEFAULT_FONTSLANT);
-			/* check if node has a specified font weight */
-			default_fontweight = uniqstr((char *)DEFAULT_FONTWEIGHT);
-			/* check if node has a specified font size */
-			default_fontsize = uniqstr((char *)DEFAULT_FONTSIZE);
-			/* create the font name string */
-			snprintf(buf, (128 - 1), "%s %s %s %s %s",
-				 default_fontname, default_fontslant, default_fontweight, default_fontcondensed, default_fontsize);
-			/* copy string buffer */
-			s = uniqstr(buf);
-			/* */
-			desc = pango_font_description_from_string(s);
-			/* */
-			pango_layout_set_font_description(layout, desc);
-			/* */
-			pango_font_description_free(desc);
-			/* */
-			pango_cairo_update_layout(crdraw, layout);
-			/* */
-			w = 0;
-			h = 0;
-			/* */
-			pango_layout_get_size(layout, &w, &h);
-			/* */
-			g_object_unref(G_OBJECT(layout));
-			/* */
-			if (option_gdebug > 1) {
-				printf("%s(): size (%d,%d) for \"%s\"\n",
-				       __func__, (w / PANGO_SCALE), (h / PANGO_SCALE), nl->node->nlabel);
-				fflush(stdout);
-			}
+				/* */
+				if (crdraw == NULL) {
+					crdraw = cairo_create(surface);
+				}
 
-			/* set in unode the text area size */
-			nl->node->tx = (w / PANGO_SCALE);
-			nl->node->ty = (h / PANGO_SCALE);
+				/* */
+				layout = pango_cairo_create_layout(crdraw);
+				/* set the text to draw which is 0 terminated */
+				pango_layout_set_text(layout, nl->node->nlabel, -1);
+				/* create the fontname description */
+				memset(buf, 0, 128);
+				/* name of font to use */
+				default_fontname = uniqstr((char *)DEFAULT_FONTNAME);
+				/* check if node has a specified font slant */
+				default_fontslant = uniqstr((char *)DEFAULT_FONTSLANT);
+				/* check if node has a specified font weight */
+				default_fontweight = uniqstr((char *)DEFAULT_FONTWEIGHT);
+				/* check if node has a specified font size */
+				default_fontsize = uniqstr((char *)DEFAULT_FONTSIZE);
+				/* create the font name string */
+				snprintf(buf, (128 - 1), "%s %s %s %s %s",
+					 default_fontname, default_fontslant, default_fontweight, default_fontcondensed,
+					 default_fontsize);
+				/* copy string buffer */
+				s = uniqstr(buf);
+				/* */
+				desc = pango_font_description_from_string(s);
+				/* */
+				pango_layout_set_font_description(layout, desc);
+				/* */
+				pango_font_description_free(desc);
+				/* */
+				pango_cairo_update_layout(crdraw, layout);
+				/* */
+				w = 0;
+				h = 0;
+				/* */
+				pango_layout_get_size(layout, &w, &h);
+				/* */
+				g_object_unref(G_OBJECT(layout));
+				/* */
+				if (option_gdebug > 1) {
+					printf("%s(): size (%d,%d) for \"%s\"\n",
+					       __func__, (w / PANGO_SCALE), (h / PANGO_SCALE), nl->node->nlabel);
+					fflush(stdout);
+				}
 
-			/* for a box */
-			nl->node->bbx = nl->node->tx + 4;
-			nl->node->bby = nl->node->ty + 4;
+				/* set in unode the text area size */
+				nl->node->tx = (w / PANGO_SCALE);
+				nl->node->ty = (h / PANGO_SCALE);
 
-			/* record node label */
-			if ((nl->node->rlabel != NULL) && (nl->node->rlabeldone == 0)) {
-				static_maingtk_textsizes1n(nl->node);
-				nl->node->rlabeldone = 1;
+				/* for a box */
+				nl->node->bbx = nl->node->tx + 4;
+				nl->node->bby = nl->node->ty + 4;
+
+				/* record node label */
+				if ((nl->node->rlabel != NULL) && (nl->node->rlabeldone == 0)) {
+					static_maingtk_textsizes1n(nl->node);
+					nl->node->rlabeldone = 1;
+				}
+			} else {
+				/* label==0 then do not draw text label of a node and set small size */
+				nl->node->tx = 10;
+				nl->node->ty = 10;
+
+				/* for a box */
+				nl->node->bbx = nl->node->tx + 4;
+				nl->node->bby = nl->node->ty + 4;
+
 			}
 
 			nl->node->txsize = 1;	/* text size is set */
