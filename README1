@@ -63,6 +63,10 @@ example code at https://notabug.org/mooigraph/sfgraph
 Most dot language details are parsed but not implemented yet.
 Also a->b,c is not supported but a->{b,c} works as expected.
 
+When the "popup" checkbutton is active then a popup window with the
+node label text will appear when the mouse is at a node and this is
+usable with large graph layout drawings. And it can be turned off.
+
 On sourceforge at the "files" tab there is gml4win.exe with
 less features but smaller and does not need extra dll's to run.
 

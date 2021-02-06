@@ -37,6 +37,12 @@
 /* the graph data rootgraph */
 extern struct gml_graph *maingraph;
 
+/* type of graph data 0=gml 1=dot 2=vcg */
+extern int graphtype;
+
+/* if set do node label popup */
+extern int option_popup;
+
 /* barycenter type, 1,2,3 */
 extern int barytype;
 
@@ -47,10 +53,10 @@ extern int incrlayout;
 extern int barytype;
 
 /* edgelabels on/off */
-extern int edgelabelsonoff;
+extern int option_edgelabels;
 
 /* labels on/off */
-extern int labels;
+extern int option_labels;
 
 /* positioning mode */
 extern int postype;

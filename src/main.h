@@ -136,6 +136,8 @@ struct gml_node {
 	int absy;		/* absolute y pos. */
 	int bbx;		/* bounding box xsize */
 	int bby;		/* bounding box ysize */
+	int fbbx;		/* bounding box xsize full sized */
+	int fbby;		/* bounding box ysize full sized */
 	int finx;		/* final x pos */
 	int finy;		/* final y pos */
 	int tx;			/* text xsize */

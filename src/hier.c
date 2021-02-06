@@ -49,6 +49,12 @@
 /* the graph data root graph */
 struct gml_graph *maingraph = NULL;
 
+/* type of graph data 0=gml 1=dot 2=vcg */
+int graphtype = 0;
+
+/* if set do node label popup */
+int option_popup = 1;
+
 /* if 1 allow incremental layout for clusters if any */
 int incrlayout = 0;		/* 1 */
 
@@ -59,10 +65,10 @@ int ranktype = 1;
 int barytype = 1;
 
 /* edgelabels on/off */
-int edgelabelsonoff = 1;	/* default show edgelabels (1) */
+int option_edgelabels = 1;	/* default show edgelabels (1) */
 
 /* labels on/off */
-int labels = 1;			/* default show labels (1) */
+int option_labels = 1;		/* default show labels (1) */
 
 /* positioning mode of drawing used in pos.c, value 1 or 2 or 3 */
 int postype = 2;
@@ -338,7 +344,8 @@ void prep(struct gml_graph *g)
 			ga->tnedgelabels++;
 		}
 
-		if (edgelabelsonoff == 0) {
+		/* set to zero if no edgelabels wanted */
+		if (option_edgelabels == 0) {
 			edge2->elabel = NULL;
 			ga->nedgelabels = 0;
 		} else {

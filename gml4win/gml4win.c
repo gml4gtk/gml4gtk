@@ -49,7 +49,7 @@
 #include "dot.tab.h"
 
 /* version string */
-#define HEADLINE L"gml4win version 1.0"
+#define HEADLINE L"gml4win version 2.0"
 
 /* icon number defined in gml4win.rc file */
 #define IDI_ICON1 101
@@ -112,9 +112,6 @@ static int drwysize = 0;
 
 /* set if there is data to draw */
 static int validdata = 0;
-
-/* type of graph data 0=gml 1=dot */
-static int graphtype = 0;
 
 /* zoom scaling factor changed by zoom slider */
 static double zfactor = 1.0;
@@ -762,6 +759,9 @@ static char *unesc_gml(char *str)
 	char *p = NULL;
 	char *q = NULL;
 	buf = calloc(1, (strlen(str) + 1));
+	if (buf == NULL) {
+		return (str);
+	}
 	p = str;
 	q = buf;
 	while (*p) {
@@ -788,6 +788,8 @@ static char *unesc_gml(char *str)
 		}
 	}
 	p = uniqstr(buf);
+	free(buf);
+	buf = NULL;
 	return (p);
 }
 
@@ -798,6 +800,9 @@ static char *unesc_dot(char *str)
 	char *p = NULL;
 	char *q = NULL;
 	buf = calloc(1, (strlen(str) + 1));
+	if (buf == NULL) {
+		return (str);
+	}
 	p = str;
 	q = buf;
 	while (*p) {
@@ -825,6 +830,8 @@ static char *unesc_dot(char *str)
 		}
 	}
 	p = uniqstr(buf);
+	free(buf);
+	buf = NULL;
 	return (p);
 }
 

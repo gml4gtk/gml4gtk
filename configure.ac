@@ -34,7 +34,7 @@
 #
 
 AC_PREREQ([2.69])
-AC_INIT([gml4gtk], [6.9], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
+AC_INIT([gml4gtk], [7.0], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
 AC_CONFIG_SRCDIR([src/main.h])
 AC_CONFIG_HEADERS([config.h])
 

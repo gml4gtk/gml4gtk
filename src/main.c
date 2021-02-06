@@ -184,6 +184,9 @@ static GtkWidget *mainwindow1 = (GtkWidget *) 0;
 /* where to draw */
 static GtkWidget *drawingarea1 = (GtkWidget *) 0;
 
+/* popup level window also used in maingtk2.c */
+static GtkWidget *popupwindow1 = (GtkWidget *) 0;
+
 /* edge label tickbox */
 static GtkWidget *elabel1 = (GtkWidget *) 0;
 
@@ -229,6 +232,7 @@ static void check1_toggle(GtkWidget * widget, gpointer window);
 static void dummy1_toggle(GtkWidget * widget, gpointer window);
 static void elabel1_toggle(GtkWidget * widget, gpointer window);
 static void label1_toggle(GtkWidget * widget, gpointer window);
+static void popup1_toggle(GtkWidget * widget, gpointer window);
 
 static void on_top_level_window_drawingarea1_expose_event_edges(cairo_t * crp);
 
@@ -260,6 +264,16 @@ static gboolean on_top_level_window_drawingarea1_expose_event(GtkWidget * widget
 #if GTK_HAVE_API_VERSION_3 == 1
 /* redraw drawing area */
 static gboolean on_top_level_window_drawingarea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpointer user_data);
+#endif
+
+#if GTK_HAVE_API_VERSION_2 == 1
+/* redraw drawing area */
+static gboolean popuparea1_expose_event(GtkWidget * widget, GdkEventExpose * event, gpointer user_data);
+#endif
+
+#if GTK_HAVE_API_VERSION_3 == 1
+/* redraw drawing area */
+static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpointer user_data);
 #endif
 
 /* fit drawing in window */
@@ -329,6 +343,7 @@ int main(int argc, char *argv[])
 	GtkAdjustment *baryadjustment;
 	GtkWidget *barybutton;
 	GtkWidget *label1;
+	GtkWidget *popup1;
 
 	argv0 = argv[0];
 
@@ -573,8 +588,11 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(drawingarea1), "button-press-event", G_CALLBACK(on_mouse_clicked), NULL);
 	g_signal_connect(G_OBJECT(drawingarea1), "motion_notify_event", G_CALLBACK(on_motion_notify_event), NULL);
 
-	/* */
-	gtk_widget_set_events((drawingarea1), (GDK_BUTTON_PRESS_MASK | GDK_BUTTON1_MOTION_MASK));
+	/* get button press events to above callback() routines
+	 * get button 1 press events
+	 * get mouse pointer movement events
+	 */
+	gtk_widget_set_events((drawingarea1), (GDK_BUTTON_PRESS_MASK | GDK_BUTTON1_MOTION_MASK | GDK_POINTER_MOTION_MASK));
 
 	/* vertical slider in hbox1 for the y position range 0...100% of full image size */
 	adjvscale2 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
@@ -854,7 +872,7 @@ int main(int argc, char *argv[])
 			   PACKPADDING);
 
 	/* */
-	if (edgelabelsonoff) {
+	if (option_edgelabels) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), TRUE);
 	} else {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
@@ -871,7 +889,7 @@ int main(int argc, char *argv[])
 			   PACKPADDING);
 
 	/* */
-	if (labels) {
+	if (option_labels) {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), TRUE);
 	} else {
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), FALSE);
@@ -880,6 +898,23 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(label1), "clicked", G_CALLBACK(label1_toggle), (gpointer) mainwindow1);
 	gtk_widget_set_tooltip_text(label1, "labels on/off");
 	gtk_widget_show(label1);
+
+	/* popup labels on/off */
+	popup1 = gtk_check_button_new_with_label("popup");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ popup1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_popup) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(popup1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(popup1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(popup1), "clicked", G_CALLBACK(popup1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(popup1, "popup labels on/off");
+	gtk_widget_show(popup1);
 
 	/*
 	 * here additional gtk elements
@@ -903,6 +938,9 @@ int main(int argc, char *argv[])
 					/* assume this is a gcc vcg file */
 					f = fopen(fnam, "r");
 					if (f) {
+						/* type of graph data 0=gml 1=dot 2=vcg */
+						graphtype = 2;
+
 						/* create root graph */
 						create_maingraph();
 
@@ -966,6 +1004,9 @@ int main(int argc, char *argv[])
 					/* assume this is a dot file */
 					f = fopen(fnam, "r");
 					if (f) {
+						/* type of graph data 0=gml 1=dot 2=vcg */
+						graphtype = 1;
+
 						/* create root graph */
 						create_maingraph();
 
@@ -1029,6 +1070,9 @@ int main(int argc, char *argv[])
 					/* assume gml file */
 					f = fopen(fnam, "r");
 					if (f) {
+						/* type of graph data 0=gml 1=dot 2=vcg */
+						graphtype = 0;
+
 						/* create root graph */
 						create_maingraph();
 
@@ -1102,6 +1146,427 @@ int main(int argc, char *argv[])
 	return (0);
 }
 
+/* scale pos to zvalue */
+static int doscaleit(int val)
+{
+	int ret = 0;
+	double x = 0.0;
+	x = (double)val;
+	x = x * zfactor;
+	x = round(x);
+	ret = (int)x;
+	return (ret);
+}
+
+/* check if a node at mouse pointer position */
+static struct gml_node *is_node_at_xy(int x, int y)
+{
+	struct gml_node *found = NULL;
+	struct gml_nlist *nl = NULL;
+	int x0 = 0;
+	int y0 = 0;
+	int xs = 0;
+	int ys = 0;
+	/* first parameters check */
+	if (x < 0) {
+		return (NULL);
+	}
+	if (y < 0) {
+		return (NULL);
+	}
+	if (x > drawing_area_xsize) {
+		return (NULL);
+	}
+	if (y > drawing_area_ysize) {
+		return (NULL);
+	}
+
+	nl = maingraph->nodelist;
+
+	while (nl) {
+		/* skip dummy nodes */
+		if (nl->node->dummy == 1) {
+			nl = nl->next;
+			continue;
+		}
+		/* skip edgelabel nodes */
+		if (nl->node->elabel) {
+			nl = nl->next;
+			continue;
+		}
+		/* this is a real node and calc screen coords */
+		x0 = doscaleit(nl->node->finx - vxmin);
+		y0 = doscaleit(nl->node->finy - vymin);
+		xs = doscaleit(nl->node->bbx);
+		ys = doscaleit(nl->node->bby);
+		/* check if on-screen */
+		if (x0 < 0 && (x0 + xs) < 0) {
+			nl = nl->next;
+			continue;
+		}
+		if (y0 < 0 && (y0 + ys) < 0) {
+			nl = nl->next;
+			continue;
+		}
+		if (x0 > drawing_area_xsize) {
+			nl = nl->next;
+			continue;
+		}
+		if (y0 > drawing_area_ysize) {
+			nl = nl->next;
+			continue;
+		}
+		/* node is on-screen and check wit mouse pointer */
+		if ((x > x0 && x < (x0 + xs)) && (y > y0 && y < (y0 + ys))) {
+			found = nl->node;
+			break;
+		}
+		/* try other node in drawing */
+		nl = nl->next;
+	}
+	return (found);
+}
+
+/* make sure there is no popup windows */
+static void no_popup(void)
+{
+	if (popupwindow1) {
+		gtk_widget_destroy(popupwindow1);
+		popupwindow1 = NULL;
+	}
+	return;
+}
+
+/* popup the node label text, vars are checked */
+static void popup_nodelabel(struct gml_node *n, cairo_t * crp, int xsize, int ysize)
+{
+	int cr = 0;
+	int cg = 0;
+	int cb = 0;
+	int xo = 0;
+	int yo = 0;
+	PangoLayout *layout = NULL;
+	PangoFontDescription *desc = NULL;
+	char buf[128];
+	char *s = NULL;
+	/* name of font to use, example "Sans" */
+	const char *default_fontname = DEFAULT_FONTNAME;
+	/* name of slant to use, example "Italic", "Oblique", "Roman" */
+	const char *default_fontslant = DEFAULT_FONTSLANT;
+	/* name of weight to use, example "Bold", "Book", "Light", "Medium", "Semi-bold", "Ultra-light" */
+	const char *default_fontweight = DEFAULT_FONTWEIGHT;
+	/* name of condensed to use, example "Semi-Condensed", "Condensed" */
+	const char *default_fontcondensed = DEFAULT_FONTCONDENSED;
+	/* font size to use, example "10", "18", "20" etc. */
+	const char *default_fontsize = DEFAULT_FONTSIZE;
+
+	/* fillcolor of node white default or color */
+	cr = (n->ncolor & 0x00ff0000) >> 16;
+	cg = (n->ncolor & 0x0000ff00) >> 8;
+	cb = (n->ncolor & 0x000000ff);
+
+	cairo_set_source_rgb(crp, cr / 255.0, cg / 255.0, cb / 255.0);
+	cairo_rectangle(crp, 0, 0, xsize, ysize);
+	cairo_fill(crp);
+	cairo_stroke(crp);
+
+	/* bordercolor of node black default or color */
+	cr = (n->nbcolor & 0x00ff0000) >> 16;
+	cg = (n->nbcolor & 0x0000ff00) >> 8;
+	cb = (n->nbcolor & 0x000000ff);
+
+	cairo_set_source_rgb(crp, cr / 255.0, cg / 255.0, cb / 255.0);
+	cairo_rectangle(crp, 0, 0, xsize, ysize);
+	cairo_stroke(crp);
+
+	if (n->rlabel) {
+		/* record label */
+
+		/* draw record label */
+		on_top_level_window_drawingarea1_expose_event_nodes_record(crp, n);
+
+	} else {
+
+		/* fontcolor of node black default or color */
+		cr = (n->fontcolor & 0x00ff0000) >> 16;
+		cg = (n->fontcolor & 0x0000ff00) >> 8;
+		cb = (n->fontcolor & 0x000000ff);
+
+		/* draw in text color of node */
+		cairo_set_source_rgb(crp, cr / 255.0, cg / 255.0, cb / 255.0);
+
+		xo = 2;
+		yo = 2;
+
+		/* set start position of text */
+		cairo_move_to(crp, n->finx - vxmin + xo, n->finy - vymin + yo);
+
+		layout = pango_cairo_create_layout(crp);
+
+		/* set the text to draw which is 0 terminated */
+		pango_layout_set_text(layout, n->nlabel, -1);
+
+		/* set font parameters */
+
+		/* create the fontname description */
+		memset(buf, 0, 128);
+
+		default_fontname = DEFAULT_FONTNAME;
+
+		/* check if node has a specified font slant */
+		default_fontslant = DEFAULT_FONTSLANT;
+
+		/* check if node has a specified font weight */
+		default_fontweight = DEFAULT_FONTWEIGHT;
+
+		/* check if node has a specified font size */
+		default_fontsize = DEFAULT_FONTSIZE;
+
+		/* create the font name string */
+		snprintf(buf, (128 - 1), "%s %s %s %s %s", default_fontname,
+			 default_fontslant, default_fontweight, default_fontcondensed, default_fontsize);
+
+		/* copy string buffer */
+		s = uniqstr(buf);
+
+		/* */
+		desc = pango_font_description_from_string(s);
+
+		/* */
+		pango_layout_set_font_description(layout, desc);
+
+		/* */
+		pango_font_description_free(desc);
+
+		/* */
+		pango_cairo_update_layout(crp, layout);
+
+		/* draw the text */
+		pango_cairo_show_layout(crp, layout);
+
+		/* */
+		cairo_stroke(crp);
+
+		g_object_unref(G_OBJECT(layout));
+	}
+
+	return;
+}
+
+#if GTK_HAVE_API_VERSION_2 == 1
+/* redraw drawing area */
+static gboolean popuparea1_expose_event(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
+{
+	struct gml_node *n = NULL;
+	cairo_t *crp = NULL;
+	gint w = 0;		/* xsize of drawing area */
+	gint h = 0;		/* ysize of drawing area */
+	double zfactor_saved = 0.0;
+	int vxmin_saved = 0;
+	int vymin_saved = 0;
+
+	if (popupwindow1 == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
+	if (widget) {
+	}
+
+	if (event == NULL) {
+		return (FALSE);
+	}
+
+	/* the user data has the node to draw */
+	n = (struct gml_node *)user_data;
+
+	/* get cairo drawing context */
+	crp = gdk_cairo_create(event->window);
+
+	if (crp == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
+	/* how large drawing area is */
+	(void)gdk_drawable_get_size(event->window, &w, &h);
+
+	if (option_gdebug > 1 || 0) {
+		printf("%s(): drawing area size is (%d,%d) node %p\n", __func__, w, h, (void *)n);
+		fflush(stdout);
+	}
+
+	if (n == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
+	/* save mainwindow settings */
+	zfactor_saved = zfactor;
+	vxmin_saved = vxmin;
+	vymin_saved = vymin;
+
+	/* draw node label text at 1:1 100% scale */
+	zfactor = 1.0;
+	vxmin = n->finx;
+	vymin = n->finy;
+
+	cairo_scale(crp, zfactor, zfactor);
+
+	/* popup the node label text */
+	popup_nodelabel(n, crp, w, h);
+
+	/* restore mainwindow settings */
+	zfactor = zfactor_saved;
+	vxmin = vxmin_saved;
+	vymin = vymin_saved;
+
+	return (FALSE);
+}
+#endif
+
+#if GTK_HAVE_API_VERSION_3
+/* redraw drawing area */
+static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpointer user_data)
+{
+	struct gml_node *n = NULL;
+	gint w = 0;		/* xsize of drawing area */
+	gint h = 0;		/* ysize of drawing area */
+	cairo_t *crp = NULL;
+	double zfactor_saved = 0.0;
+	int vxmin_saved = 0;
+	int vymin_saved = 0;
+
+	if (popupwindow1 == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
+	if (widget) {
+	}
+
+	/* the user data has the node to draw */
+	n = (struct gml_node *)user_data;
+
+	/* this is a workaround for issue in cairo-lib 1.14.0 with gtk3,
+	 * cairo.c cairo_destroy() line 305 assert(), (with gtk2 no problem) */
+	crp = cairo_reference(crdraw);
+
+	if (crp == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
+	/* how large drawing area is */
+	w = gtk_widget_get_allocated_width(popupwindow1);
+	h = gtk_widget_get_allocated_height(popupwindow1);
+
+	if (option_gdebug > 1 || 0) {
+		printf("%s(): drawing area size is (%d,%d) node %p\n", __func__, w, h, (void *)n);
+		fflush(stdout);
+	}
+
+	if (n == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
+	/* save mainwindow settings */
+	zfactor_saved = zfactor;
+	vxmin_saved = vxmin;
+	vymin_saved = vymin;
+
+	/* draw node label text at 1:1 100% scale */
+	zfactor = 1.0;
+	vxmin = n->finx;
+	vymin = n->finy;
+
+	cairo_scale(crp, zfactor, zfactor);
+
+	/* popup the node label text */
+	popup_nodelabel(n, crp, w, h);
+
+	/* restore mainwindow settings */
+	zfactor = zfactor_saved;
+	vxmin = vxmin_saved;
+	vymin = vymin_saved;
+
+	return (FALSE);
+}
+#endif
+
+/* popup window with node label text */
+static void do_popup(struct gml_node *n)
+{
+	GtkWidget *vbox1 = (GtkWidget *) 0;
+	GtkWidget *popuparea1 = (GtkWidget *) 0;
+
+	/* if there is alreay a popup, keep it that way */
+	if (popupwindow1) {
+		return;
+	}
+
+	/* top level outer window
+	 * can also be GTK_WINDOW_POPUP but then window is
+	 * not managed by window manager
+	 */
+	popupwindow1 = gtk_window_new( /* GTK_WINDOW_POPUP or */ GTK_WINDOW_TOPLEVEL);
+
+	/* make sure to exit oke. */
+	g_signal_connect(G_OBJECT(popupwindow1), "destroy", G_CALLBACK(no_popup), NULL);
+
+	/* needed for the cairo drawing */
+	gtk_widget_set_app_paintable(popupwindow1, TRUE);
+
+	/* set some title */
+	gtk_window_set_title(GTK_WINDOW(popupwindow1), "label");
+
+	/* pre-set size of full sized label text */
+	gtk_window_set_default_size(GTK_WINDOW(popupwindow1), (n->fbbx + 5) /* XSIZE */ ,
+				    n->fbby + 5 /* YSIZE */ );
+
+	/* decorate the window */
+	gtk_window_set_decorated(GTK_WINDOW(popupwindow1), FALSE);
+
+	/* vbox1 */
+#if GTK_HAVE_API_VERSION_2 == 1
+	vbox1 = gtk_vbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
+	gtk_widget_show(vbox1);
+	gtk_container_add(GTK_CONTAINER(popupwindow1), vbox1);
+#endif
+
+#if GTK_HAVE_API_VERSION_3 == 1
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+	gtk_widget_show(vbox1);
+	gtk_container_add(GTK_CONTAINER(popupwindow1), vbox1);
+#endif
+
+#if GTK_HAVE_API_VERSION_4 == 1
+	/* todo add gtk-4 support */
+#endif
+
+	/* where to draw in hbox1 */
+	popuparea1 = gtk_drawing_area_new();
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ popuparea1,
+			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_show(popuparea1);
+
+#if GTK_HAVE_API_VERSION_2 == 1
+	g_signal_connect(G_OBJECT(popuparea1), "expose_event", G_CALLBACK(popuparea1_expose_event), (gpointer) n);
+#endif
+
+#if GTK_HAVE_API_VERSION_3 == 1
+	g_signal_connect(G_OBJECT(popuparea1), "draw", G_CALLBACK(popuparea1_draw_event), (gpointer) n);
+#endif
+
+	/* the label text drawing is in the expose/draw event */
+
+	gtk_widget_show(popupwindow1);
+
+	return;
+}
+
 /* dragging drawing when left button 1 is held down */
 static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * event)
 {
@@ -1119,9 +1584,12 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 	double hw = 0.0;
 	double hh = 0.0;
 	GdkModifierType state;
+	struct gml_node *n = NULL;
 
 	/* check if there is node data to draw */
 	if (validdata == 0) {
+		/* make sure there is no popup windows */
+		no_popup();
 		return (TRUE);
 	}
 
@@ -1210,28 +1678,51 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 		gtk_widget_queue_draw(drawingarea1);
 	}
 
+	/* show popup window with node label text if option is set */
+	if (option_popup) {
+
+		/* only if there is no popup */
+
+		/* check if node is at mouse location */
+		n = is_node_at_xy(x, y);
+		if (n) {
+			/* node text must have a size */
+			if (n->fbbx && n->fbby) {
+				/* popup window with node label text */
+				do_popup(n);
+			}
+		} else {
+			/* make sure there is no popup windows */
+			no_popup();
+		}
+
+	} else {
+		/* make sure there is no popup windows */
+		no_popup();
+	}
+
 	return (TRUE);
 }
 
 /* mouse click on drawing area
- *
- * guint event->type has this info
- * enum GdkEventType
- * {
- * .
- * GDK_BUTTON_PRESS	= 4, (single click)
- * GDK_2BUTTON_PRESS	= 5, (double click)
- * GDK_3BUTTON_PRESS	= 6, (triple click)
- * GDK_BUTTON_RELEASE	= 7, (released)
- * ...
- * };
- * which button is clicked is in guint event->button;
- * the button which was pressed or released, numbered from 1 to 5.
- * Normally button 1 is the left mouse button,
- * 2 is the middle button, and 3 is the right button.
- * On 2-button mice, the middle button can often be simulated
- * by pressing both mouse buttons together.
- * for dragging the mouse (x,y) is saved.
+	 *
+	 * guint event->type has this info
+	 * enum GdkEventType
+	 * {
+	 * .
+	 * GDK_BUTTON_PRESS    = 4, (single click)
+	 * GDK_2BUTTON_PRESS   = 5, (double click)
+	 * GDK_3BUTTON_PRESS   = 6, (triple click)
+	 * GDK_BUTTON_RELEASE  = 7, (released)
+	 * ...
+	 * };
+	 * which button is clicked is in guint event->button;
+	 * the button which was pressed or released, numbered from 1 to 5.
+	 * Normally button 1 is the left mouse button,
+	 * 2 is the middle button, and 3 is the right button.
+	 * On 2-button mice, the middle button can often be simulated
+	 * by pressing both mouse buttons together.
+	 * for dragging the mouse (x,y) is saved.
  */
 static gboolean on_mouse_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 {
@@ -1732,6 +2223,9 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		return;
 	}
 
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 0;
+
 	do_clear_all(0);
 
 	/* background r/g/b of drawing */
@@ -1945,6 +2439,9 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
 
 	do_clear_all(0);
 
@@ -2164,6 +2661,9 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 2;
 
 	do_clear_all(0);
 
@@ -2864,7 +3364,7 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 			}
 
 			/* draw no text labels if labels==0 */
-			if (labels == 0) {
+			if (option_labels == 0) {
 				nl = nl->next;
 				continue;
 			}
@@ -3776,14 +4276,14 @@ static void elabel1_toggle(GtkWidget * widget, gpointer window)
 	if (window) {
 	}
 	/* when no labels do not draw edge labels */
-	if (labels == 0) {
+	if (option_labels == 0) {
 		return;
 	}
 	/* toggle the splines option */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		edgelabelsonoff = 1;
+		option_edgelabels = 1;
 	} else {
-		edgelabelsonoff = 0;
+		option_edgelabels = 0;
 	}
 	/* nop if no data */
 	if (validdata == 0) {
@@ -3809,21 +4309,42 @@ static void label1_toggle(GtkWidget * widget, gpointer window)
 	}
 	/* toggle the splines option */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
-		labels = 1;
+		option_labels = 1;
 	} else {
-		labels = 0;
+		option_labels = 0;
 	}
 	/* nop if no data */
 	if (validdata == 0) {
 		return;
 	}
 	/* force edgelabels off */
-	edgelabelsonoff = 0;
+	option_edgelabels = 0;
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
 	/* do re-layout */
 	do_relayout_all(maingraph);
 	/* now a re-draw needed */
 	gtk_widget_queue_draw(drawingarea1);
+	return;
+}
+
+/* checkbox 7 is switch popup labels */
+static void popup1_toggle(GtkWidget * widget, gpointer window)
+{
+	if (widget) {
+	}
+	if (window) {
+	}
+	/* toggle the splines option */
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+		option_popup = 1;
+	} else {
+		option_popup = 0;
+	}
+	/* nop if no data */
+	if (validdata == 0) {
+		return;
+	}
+	/* no redraw needed */
 	return;
 }
 
@@ -4477,6 +4998,11 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 	node->bbx = d.x;
 	node->bby = d.y;
 
+	/* save copy of full size */
+	node->fbbx = d.x;
+	node->fbby = d.y;
+
+	/* relocate the parts */
 	static_maingtk_textsizes2rl(node->rlabel, 0, 0, 0, node->bbx, node->bby);
 
 	return;
@@ -4493,6 +5019,9 @@ static char *unesc(char *str)
 		return (str);
 	}
 	buf = calloc(1, (strlen(str) + 1));
+	if (buf == NULL) {
+		return (str);
+	}
 	p = str;
 	q = buf;
 	while (*p) {
@@ -4520,6 +5049,8 @@ static char *unesc(char *str)
 		}
 	}
 	p = uniqstr(buf);
+	free(buf);
+	buf = NULL;
 	return (p);
 }
 
@@ -4592,81 +5123,84 @@ static void static_maingtk_textsizes(void)
 			/* change esc chars if any */
 			nl->node->nlabel = unesc(nl->node->nlabel);
 
-			if (labels) {
-				/* calculate the text area */
-				if (surface == NULL) {
-					surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
-				}
+			/* calculate the text area */
+			if (surface == NULL) {
+				surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
+			}
 
-				/* */
-				if (crdraw == NULL) {
-					crdraw = cairo_create(surface);
-				}
+			/* */
+			if (crdraw == NULL) {
+				crdraw = cairo_create(surface);
+			}
 
-				/* */
-				layout = pango_cairo_create_layout(crdraw);
-				/* set the text to draw which is 0 terminated */
-				pango_layout_set_text(layout, nl->node->nlabel, -1);
-				/* create the fontname description */
-				memset(buf, 0, 128);
-				/* name of font to use */
-				default_fontname = uniqstr((char *)DEFAULT_FONTNAME);
-				/* check if node has a specified font slant */
-				default_fontslant = uniqstr((char *)DEFAULT_FONTSLANT);
-				/* check if node has a specified font weight */
-				default_fontweight = uniqstr((char *)DEFAULT_FONTWEIGHT);
-				/* check if node has a specified font size */
-				default_fontsize = uniqstr((char *)DEFAULT_FONTSIZE);
-				/* create the font name string */
-				snprintf(buf, (128 - 1), "%s %s %s %s %s",
-					 default_fontname, default_fontslant, default_fontweight, default_fontcondensed,
-					 default_fontsize);
-				/* copy string buffer */
-				s = uniqstr(buf);
-				/* */
-				desc = pango_font_description_from_string(s);
-				/* */
-				pango_layout_set_font_description(layout, desc);
-				/* */
-				pango_font_description_free(desc);
-				/* */
-				pango_cairo_update_layout(crdraw, layout);
-				/* */
-				w = 0;
-				h = 0;
-				/* */
-				pango_layout_get_size(layout, &w, &h);
-				/* */
-				g_object_unref(G_OBJECT(layout));
-				/* */
-				if (option_gdebug > 1) {
-					printf("%s(): size (%d,%d) for \"%s\"\n",
-					       __func__, (w / PANGO_SCALE), (h / PANGO_SCALE), nl->node->nlabel);
-					fflush(stdout);
-				}
+			/* */
+			layout = pango_cairo_create_layout(crdraw);
+			/* set the text to draw which is 0 terminated */
+			pango_layout_set_text(layout, nl->node->nlabel, -1);
+			/* create the fontname description */
+			memset(buf, 0, 128);
+			/* name of font to use */
+			default_fontname = uniqstr((char *)DEFAULT_FONTNAME);
+			/* check if node has a specified font slant */
+			default_fontslant = uniqstr((char *)DEFAULT_FONTSLANT);
+			/* check if node has a specified font weight */
+			default_fontweight = uniqstr((char *)DEFAULT_FONTWEIGHT);
+			/* check if node has a specified font size */
+			default_fontsize = uniqstr((char *)DEFAULT_FONTSIZE);
+			/* create the font name string */
+			snprintf(buf, (128 - 1), "%s %s %s %s %s",
+				 default_fontname, default_fontslant, default_fontweight, default_fontcondensed, default_fontsize);
+			/* copy string buffer */
+			s = uniqstr(buf);
+			/* */
+			desc = pango_font_description_from_string(s);
+			/* */
+			pango_layout_set_font_description(layout, desc);
+			/* */
+			pango_font_description_free(desc);
+			/* */
+			pango_cairo_update_layout(crdraw, layout);
+			/* */
+			w = 0;
+			h = 0;
+			/* */
+			pango_layout_get_size(layout, &w, &h);
+			/* */
+			g_object_unref(G_OBJECT(layout));
+			/* */
+			if (option_gdebug > 1) {
+				printf("%s(): size (%d,%d) for \"%s\"\n",
+				       __func__, (w / PANGO_SCALE), (h / PANGO_SCALE), nl->node->nlabel);
+				fflush(stdout);
+			}
 
-				/* set in unode the text area size */
-				nl->node->tx = (w / PANGO_SCALE);
-				nl->node->ty = (h / PANGO_SCALE);
+			/* set in unode the text area size */
+			nl->node->tx = (w / PANGO_SCALE);
+			nl->node->ty = (h / PANGO_SCALE);
 
-				/* for a box */
-				nl->node->bbx = nl->node->tx + 4;
-				nl->node->bby = nl->node->ty + 4;
+			/* for a box */
+			nl->node->bbx = nl->node->tx + 4;
+			nl->node->bby = nl->node->ty + 4;
 
-				/* record node label */
-				if ((nl->node->rlabel != NULL) && (nl->node->rlabeldone == 0)) {
-					static_maingtk_textsizes1n(nl->node);
-					nl->node->rlabeldone = 1;
-				}
-			} else {
-				/* label==0 then do not draw text label of a node and set small size */
+			/* full sized copy */
+			nl->node->fbbx = nl->node->bbx;
+			nl->node->fbby = nl->node->bby;
+
+			/* record node label */
+			if ((nl->node->rlabel != NULL) && (nl->node->rlabeldone == 0)) {
+				static_maingtk_textsizes1n(nl->node);
+				nl->node->rlabeldone = 1;
+			}
+
+			/* label==0 then do not draw text label of a node and set small size */
+			if (option_labels == 0) {
 				nl->node->tx = 10;
 				nl->node->ty = 10;
 
 				/* for a box */
 				nl->node->bbx = nl->node->tx + 4;
 				nl->node->bby = nl->node->ty + 4;
-
+				/* keep fbbx and fbby intact */
 			}
 
 			nl->node->txsize = 1;	/* text size is set */
