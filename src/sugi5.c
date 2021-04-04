@@ -42,6 +42,7 @@
 #include "hier.h"
 #include "uniqnode.h"
 #include "sugi.h"
+#include "dpmem.h"
 
 /* how much double values may differ when seen as same */
 #define LOWVAL (0.01)
@@ -314,7 +315,7 @@ static int equals(struct suginode *a, int t)
 	struct suginode *temp = NULL;
 	double baryx = 0.0;
 	double baryy = 0.0;
-	temp = calloc(1, sizeof(struct suginode));
+	temp = dp_calloc(1, sizeof(struct suginode));
 	if (temp == NULL) {
 		return (0);
 	}
@@ -339,7 +340,7 @@ static int equals(struct suginode *a, int t)
 			res++;
 		}
 	}
-	free(temp);
+	dp_free(temp);
 	temp = NULL;
 	/* return 0 if no changes made, <>0 if changed */
 	return (res);
@@ -417,7 +418,7 @@ static int mediansort(struct gml_graph *g, struct suginode *a, struct suginode *
 	}
 
 	/* buffer for test result */
-	dummy = calloc(1, (t * sizeof(struct suginode)));
+	dummy = dp_calloc(1, (t * sizeof(struct suginode)));
 
 	if (dummy == NULL) {
 		/* shouldnothappen */
@@ -466,7 +467,7 @@ static int mediansort(struct gml_graph *g, struct suginode *a, struct suginode *
 
 	if (la == 0) {
 		/* no edge crossings anymore */
-		free(dummy);
+		dp_free(dummy);
 		dummy = NULL;
 		return (ch);
 	}
@@ -480,7 +481,7 @@ static int mediansort(struct gml_graph *g, struct suginode *a, struct suginode *
 		/* save this crossing count */
 		g->numce[a[0].level] = ld;
 		if (ld == 0) {
-			free(dummy);
+			dp_free(dummy);
 			dummy = NULL;
 			return (ch);
 		}
@@ -488,7 +489,7 @@ static int mediansort(struct gml_graph *g, struct suginode *a, struct suginode *
 
 	/* in phase I, do not swap and stop here. */
 	if (swap == 0) {
-		free(dummy);
+		dp_free(dummy);
 		dummy = NULL;
 		return (ch);
 	}
@@ -537,7 +538,7 @@ static int mediansort(struct gml_graph *g, struct suginode *a, struct suginode *
 		}
 	}
 
-	free(dummy);
+	dp_free(dummy);
 	dummy = NULL;
 
 	return (ch);
@@ -550,19 +551,19 @@ static void cp_make_levelnodes(struct gml_graph *g)
 	struct gml_nlist *newl = NULL;
 	int i = 0;
 
-	glevelnodes = calloc(1, (gnlevels * sizeof(struct gml_nlist *)));
+	glevelnodes = dp_calloc(1, (gnlevels * sizeof(struct gml_nlist *)));
 
 	if (glevelnodes == NULL) {
 		return;
 	}
 
-	glevelnodesend = calloc(1, (gnlevels * sizeof(struct gml_nlist *)));
+	glevelnodesend = dp_calloc(1, (gnlevels * sizeof(struct gml_nlist *)));
 
 	if (glevelnodesend == NULL) {
 		return;
 	}
 
-	nglevelnodes = calloc(1, (gnlevels * sizeof(int)));
+	nglevelnodes = dp_calloc(1, (gnlevels * sizeof(int)));
 
 	if (nglevelnodes == NULL) {
 		return;
@@ -574,7 +575,7 @@ static void cp_make_levelnodes(struct gml_graph *g)
 		/* rel. y level set by dfs/bfs */
 		i = lnll->node->rely;
 
-		newl = calloc(1, sizeof(struct gml_nlist));
+		newl = dp_calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
 			return;
@@ -627,7 +628,7 @@ static void clr_levelnodes(struct gml_graph *g)
 		lnll = glevelnodes[i];
 		while (lnll) {
 			nlnext = lnll->next;
-			free(lnll);
+			dp_free(lnll);
 			lnll = NULL;
 			lnll = nlnext;
 		}
@@ -636,10 +637,10 @@ static void clr_levelnodes(struct gml_graph *g)
 		glevelnodesend[i] = NULL;
 	}
 
-	free(glevelnodes);
+	dp_free(glevelnodes);
 	glevelnodes = NULL;
 
-	free(glevelnodesend);
+	dp_free(glevelnodesend);
 	glevelnodesend = NULL;
 
 	return;
@@ -649,7 +650,7 @@ static void clr_levelnodes(struct gml_graph *g)
 static void clr_nglevelnodes(void)
 {
 
-	free(nglevelnodes);
+	dp_free(nglevelnodes);
 	nglevelnodes = NULL;
 
 	return;
@@ -664,7 +665,7 @@ static void cp_data(struct gml_graph *g)
 	int count = 0;
 	int k = 0;
 
-	sugidata = calloc(1, (gnlevels * sizeof(struct suginode *)));
+	sugidata = dp_calloc(1, (gnlevels * sizeof(struct suginode *)));
 
 	if (sugidata == NULL) {
 		return;
@@ -679,7 +680,7 @@ static void cp_data(struct gml_graph *g)
 			printf("%s(): level %d has %d nodes\n", __func__, i, nglevelnodes[i]);
 		}
 
-		sugidata[i] = calloc(1, (nglevelnodes[i] * sizeof(struct suginode)));
+		sugidata[i] = dp_calloc(1, (nglevelnodes[i] * sizeof(struct suginode)));
 
 		if (sugidata[i] == NULL) {
 			return;
@@ -703,7 +704,7 @@ static void cp_data(struct gml_graph *g)
 			/* set incoming edges if any */
 			if (lnll->node->indegree) {
 				sugidata[i][count].indegree = lnll->node->indegree;
-				sugidata[i][count].incoming = calloc(1, (lnll->node->indegree * sizeof(int)));
+				sugidata[i][count].incoming = dp_calloc(1, (lnll->node->indegree * sizeof(int)));
 				if (sugidata[i][count].incoming == NULL) {
 					return;
 				}
@@ -730,7 +731,7 @@ static void cp_data(struct gml_graph *g)
 			/* set outgoing edges if any */
 			if (lnll->node->outdegree) {
 				sugidata[i][count].outdegree = lnll->node->outdegree;
-				sugidata[i][count].outgoing = calloc(1, (lnll->node->outdegree * sizeof(int)));
+				sugidata[i][count].outgoing = dp_calloc(1, (lnll->node->outdegree * sizeof(int)));
 				if (sugidata[i][count].outgoing == NULL) {
 					return;
 				}
@@ -787,19 +788,19 @@ static void clr_data(struct gml_graph *g)
 		/* scan nodes at level [i] */
 		for (j = 0; j < nglevelnodes[i]; j++) {
 			if (sugidata[i][j].outdegree) {
-				free(sugidata[i][j].outgoing);
+				dp_free(sugidata[i][j].outgoing);
 				sugidata[i][j].outgoing = NULL;
 			}
 			if (sugidata[i][j].indegree) {
-				free(sugidata[i][j].incoming);
+				dp_free(sugidata[i][j].incoming);
 				sugidata[i][j].incoming = NULL;
 			}
 		}
-		free(sugidata[i]);
+		dp_free(sugidata[i]);
 		sugidata[i] = NULL;
 	}
 
-	free(sugidata);
+	dp_free(sugidata);
 	sugidata = NULL;
 
 	/* clear number of nodes at level */
@@ -947,7 +948,7 @@ void reduce_crossings5(struct gml_graph *g, int it1v, int it2v)
 
 	/* number of crossing edges at level */
 	if (g->numce == NULL) {
-		g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 		if (g->numce == NULL) {
 			return;
 		}

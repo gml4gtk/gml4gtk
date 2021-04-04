@@ -1,3 +1,5 @@
+https://graphviewer.nl/
+
 To run this program on windows it needs the 64bits gtk-3 dll's to be installed
 and these are available from: https://sourceforge.net/projects/gtk3win/
 The file with 64bits gtk3 dll's is gtk3-runtime x84_64
@@ -37,6 +39,7 @@ When compiled for windows it needs all gtk dll's to run the program.
 
 The gml4gtk reads most GML files and partial DOT graph files,
 and DOT data from gcc,bison,llvm,radare2 and more can be used.
+The dot language node html table labels are not yet supported.
 
 In the data directory are few sample graph files to try it.
 
@@ -55,6 +58,10 @@ digraph "example"
 
 To create a callgraph using gcc use gcc option -fcallgraph-info
 and the output.ci file is a vcg graph file to open with file->open vcg
+
+Some other gcc options generating dot graph are -fdump-rtl-all-graph,
+-fdump-tree-all-graph, -fdump-ipa-all-graph, -fdump-analyzer-callgraph,
+-fdump-analyzer-exploded-graph -fdump-analyzer-state-purge -fdump-analyzer-supergraph
 
 The file sfg.c is a single file graph layout library with the user api
 described in sfg.h and there is a python, php interface possible with
@@ -122,6 +129,10 @@ Read also the Kozo Sugiyama book isbn 981-02-4879-2
 
 If you want a good sugiyama barycenter javascript routine, see:
 https://github.com/speich/dGraph
+
+For free pdf's about graph layout topics search also here:
+https://scholar.archive.org/
+Use for example "graph barycenter" as search.
 
 Todo: dot does incremental layout for the cluster subgraphs
 and gml4gtk can do that, but need to find a way to combine

@@ -17,9 +17,6 @@
  * License-Filename: LICENSE
  */
 
-/* todo in record label string a char as &nbsp is used for ` ' to implement */
-/* todo <<>> html strings */
-
 %{
 
 #include "config.h"
@@ -32,6 +29,7 @@
 #include "dot.tab.h"
 #include "dp.h"
 #include "dpus.h"
+#include "dpmem.h"
 
 /* use GNU GCC compiler builtin strlen */
 #undef YY_NEED_STRLEN
@@ -58,8 +56,23 @@ static char *q = NULL;
 static int htmlnest = 0;
 
 extern void dp_lex_init (FILE *f, int debug);
-extern void dp_lex_clear (void);
 
+/* own yyalloc */
+void *yyalloc (size_t n)
+{
+  return(dp_calloc(1,n));
+}
+
+void yyfree (void *ptr)
+{
+  dp_free (ptr);
+  return;
+}
+
+void *yyrealloc (void *ptr, size_t n)
+{
+  return (dp_realloc(ptr,n));
+}
 
 %}
 
@@ -72,6 +85,10 @@ extern void dp_lex_clear (void);
 /* node label="" is two chars in output drawing */
 /* allow in fnum1,2,3 also numbers as "23.1" or "23." and ".23" */
 
+/* use own yyalloc */
+%option noyyalloc
+%option noyyfree
+%option noyyrealloc
 %option noinput
 %option nounput
 %option noyywrap
@@ -79,6 +96,7 @@ extern void dp_lex_clear (void);
 %option never-interactive
 %option yylineno
 %option noread
+%option debug
 
 ISTR	[^\\\"]|\\.|\\\n
 STR	\"({ISTR}*)\"
@@ -140,7 +158,7 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				  }
 				  /* copy and filter the text, and clear last " */
 				  yytext[yyleng-1] = 0;
-				  tmpp = (char *) calloc (1, yyleng);
+				  tmpp = (char *) dp_calloc (1, yyleng);
 				  p = yytext;
 				  p++; /* skip first " */
 				  q = tmpp;
@@ -192,6 +210,11 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				        *q = '\\';
 				        q++;
 				        p = p + 2;
+				      } else if (*(p+1) == '"') {
+				        /* \" becomes " */
+				        *q = '"';
+				        q++;
+				        p = p + 2;
 				      } else {
 				        *q = *p; /* copy other esc sequences */
 				        p++;
@@ -205,7 +228,7 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				  }
 				  p = dp_uniqstr (tmpp);
 				  yylval.string = p;
-				  free (tmpp);
+				  dp_free (tmpp);
 				  tmpp = NULL;
 				  p = NULL;
 				  q = NULL;
@@ -224,8 +247,9 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				  return (TOKEN_NUM);
 				}
 
+	/* html label, but if it is <> return "" */
 [<]				{ BEGIN(htmlstr); htmlnest = 1; yylval.string = "<"; }
-<htmlstr>[>]			{ htmlnest--; if(htmlnest) { yylval.string = dp_ccat(yylval.string,yytext); } else { yylval.string = dp_ccat(yylval.string,">"); BEGIN(INITIAL); return (TOKEN_HTEXT); } }
+<htmlstr>[>]			{ htmlnest--; if(htmlnest) { yylval.string = dp_ccat(yylval.string,yytext); } else { yylval.string = dp_ccat(yylval.string,">"); BEGIN(INITIAL); if (strlen(yylval.string) == 2) { yylval.string = ""; } return (TOKEN_HTEXT); } }
 <htmlstr>[<]			{ htmlnest++; yylval.string = dp_ccat(yylval.string,yytext); }
 <htmlstr>[\\][<]		{ yylval.string = dp_ccat(yylval.string,"&lt;"); }
 <htmlstr>[\\][>]		{ yylval.string = dp_ccat(yylval.string,"&gt;"); }
@@ -251,16 +275,24 @@ void dp_lex_init (FILE *f, int debugflag)
 }
 
 /* */
-void dp_lex_clear (void)
+static void dp_lex_clear (void)
 {
   if (tmpp) {
-    free (tmpp);
+    dp_free (tmpp);
   }
   tmpp = NULL;
   p = NULL;
   q = NULL;
   htmlnest = 0;
 
+  return;
+}
+
+void dp_lex_deinit (void)
+{
+  yy_flex_debug = 0;
+  dp_lex_clear ();
+  yylex_destroy ();
   return;
 }
 

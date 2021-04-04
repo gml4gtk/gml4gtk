@@ -8981,6 +8981,7 @@ static void hsv2rgb(float *r, float *g, float *b, float h, float s, float v)
   * bgcolor="#ff0000;0.3:#00ff00";
   * return -2 for color "none"
   */
+/* todo gradientangle */
 /* todo /xxx/yyy and //yyy colors */
 int dp_colorcode(const char *name)
 {
@@ -9076,7 +9077,7 @@ int dp_colorcode(const char *name)
 		}
 
 		if (0) {
-			printf("%s(): found aa=%02x rgb=#%02x%02x%02x\n", __func__, aa, red, green, blue);
+			printf("dot %s(): found aa=%02x rgb=#%02x%02x%02x\n", __func__, aa, red, green, blue);
 		}
 
 		return ((red << 16) | (green << 8) | blue);
@@ -9121,7 +9122,7 @@ int dp_colorcode(const char *name)
 		blue = (int)bf;
 
 		if (0) {
-			printf("%s(): found aa=%02x rgb=%02x%02x%02x %f,%f,%f from `%s'\n",
+			printf("dot %s(): found aa=%02x rgb=%02x%02x%02x %f,%f,%f from `%s'\n",
 			       __func__, aa, red, green, blue, rf, gf, bf, name);
 		}
 

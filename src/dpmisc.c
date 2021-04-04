@@ -46,6 +46,8 @@
 #include "dpus.h"
 #include "dot.tab.h"
 #include "dpcolor.h"
+#include "dphl.h"
+#include "dpmem.h"
 
 /* parse edge arrow style todo:
  * name = aname[anema[anema[aname]]]
@@ -69,7 +71,7 @@ struct dparrow *dp_getarrow(char *s)
 	struct dparrow *ret = NULL;
 	int t = 0;
 
-	ret = calloc(1, sizeof(struct dparrow));
+	ret = dp_calloc(1, sizeof(struct dparrow));
 
 	if (ret == NULL) {
 		return (ret);
@@ -129,7 +131,7 @@ struct dpdir *dp_getdir(char *s)
 {
 	struct dpdir *ret = NULL;
 
-	ret = calloc(1, sizeof(struct dpdir));
+	ret = dp_calloc(1, sizeof(struct dpdir));
 
 	if (ret == NULL) {
 		return (ret);
@@ -419,9 +421,10 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	char *lastfield = NULL;
 	int hassub = 0;
 
-	nrec = (struct dppart *)calloc(1, sizeof(struct dppart));
+	nrec = (struct dppart *)dp_calloc(1, sizeof(struct dppart));
 
 	if (nrec == NULL) {
+		/* shouldnothappen */
 		return (nrec);
 	}
 
@@ -460,7 +463,7 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	/* tmp fix (nrec->ndpparts + 1) */
 	nrec->dir = dir;
 	nrec->ndpparts = (nf + 1);
-	nrec->parts = calloc(1, ((nrec->ndpparts + 0) * sizeof(struct dppart *)));
+	nrec->parts = dp_calloc(1, ((nrec->ndpparts + 0) * sizeof(struct dppart *)));
 	maxpos = (nf + 1);
 
 	if (nrec->parts == NULL) {
@@ -468,12 +471,12 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	}
 
 	if (yydebug || 0) {
-		printf("%s(): %d parts with direction %d\n", __func__, nrec->ndpparts, nrec->dir);
+		printf("dot %s(): %d parts with direction %d\n", __func__, nrec->ndpparts, nrec->dir);
 		fflush(stdout);
 	}
 
 	/* tmp buffer for string and port */
-	rs1 = (char *)calloc(1, clblen + 1);
+	rs1 = (char *)dp_calloc(1, clblen + 1);
 
 	if (rs1 == NULL) {
 		return (NULL);
@@ -482,7 +485,7 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	prs = rs1;
 	lastfield = NULL;
 
-	prt = (char *)calloc(1, clblen + 1);
+	prt = (char *)dp_calloc(1, clblen + 1);
 
 	if (prt == NULL) {
 		return (NULL);
@@ -536,7 +539,7 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 			nrec->parts[pos1] = fp;
 			pos1++;
 		} else if ((*clb) == '}' || (*clb) == '|') {
-			fp = (struct dppart *)calloc(1, sizeof(struct dppart));
+			fp = (struct dppart *)dp_calloc(1, sizeof(struct dppart));
 
 			if (fp == NULL) {
 				return (NULL);
@@ -563,18 +566,18 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 			if (fp->hd || fp->id || fp->lp) {
 				if (hassub == 0) {
 					if (pos1 >= maxpos) {
-						printf("%s(): pos1=%d maxpos=%d fixme (1)\n", __func__, pos1, maxpos);
+						printf("dot %s(): pos1=%d maxpos=%d fixme (1)\n", __func__, pos1, maxpos);
 					}
 					nrec->parts[pos1] = fp;
 					pos1++;
 				} else {
 					/* nothing if at "...}|..." */
-					free(fp);
+					dp_free(fp);
 					fp = NULL;
 				}
 				hassub = 0;
 			} else {
-				free(fp);
+				dp_free(fp);
 				fp = NULL;
 			}
 			lastfield = NULL;
@@ -583,11 +586,11 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 				clb++;
 
 				if (rs1) {
-					free(rs1);
+					dp_free(rs1);
 					rs1 = NULL;
 				}
 				if (prt) {
-					free(prt);
+					dp_free(prt);
 					prt = NULL;
 				}
 				return (nrec);
@@ -627,7 +630,7 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	}
 
 	/* */
-	fp = (struct dppart *)calloc(1, sizeof(struct dppart));
+	fp = (struct dppart *)dp_calloc(1, sizeof(struct dppart));
 
 	if (fp == NULL) {
 		return (NULL);
@@ -652,25 +655,25 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 			/* this happens normally */
 			if (0) {
 				printf
-				    ("%s(): pos1=%d maxpos=%d fixme (2) id=\"%s\" lp=\"%s\"\n",
+				    ("dot %s(): pos1=%d maxpos=%d fixme (2) id=\"%s\" lp=\"%s\"\n",
 				     __func__, pos1, maxpos, lastfield, lastport);
 			}
-			free(fp);
+			dp_free(fp);
 			fp = NULL;
 		} else {
 			nrec->parts[pos1] = fp;
 		}
 	} else {
-		free(fp);
+		dp_free(fp);
 		fp = NULL;
 	}
 
 	if (rs1) {
-		free(rs1);
+		dp_free(rs1);
 		rs1 = NULL;
 	}
 	if (prt) {
-		free(prt);
+		dp_free(prt);
 		prt = NULL;
 	}
 
@@ -686,7 +689,7 @@ static void dp_1chkrecpr(struct dppart *info)
 	int i = 0;
 
 	if (info == NULL) {
-		printf("%s(): nil info\n", __func__);
+		printf("dot %s(): nil info\n", __func__);
 		return;
 	}
 	for (i = 0; i < ind; i++) {
@@ -758,7 +761,8 @@ static int dp_1chkrec(struct dpnode *node)
 		/* todo change in parse error */
 		memset(dp_errmsg, 0, (256 - 1));
 		snprintf(dp_errmsg, (256 - 1),
-			 "%s(): mismatch in record label string in node `%s' at line %d\n", __func__, node->name, node->yylineno);
+			 "dot %s(): mismatch in record label string in node `%s' at line %d\n", __func__, node->name,
+			 node->yylineno);
 		return (1);
 	}
 
@@ -779,14 +783,19 @@ static int dp_1chkrec(struct dpnode *node)
 }
 
 /* check nodes with record labels */
-int dp_chkrec(void)
+static int dp_chkrec(void)
 {
 	int status = 0;
 	struct dpnlink *nl = NULL;
 	nl = dp_anodes;
 	while (nl) {
 		if (nl->n->shape == DPSHAPE_RECORD || nl->n->shape == DPSHAPE_MRECORD) {
-			status = dp_1chkrec(nl->n);
+			/* if this is html string */
+			if (nl->n->htmllabel) {
+				nl->n->labelinfo = NULL;
+			} else {
+				status = dp_1chkrec(nl->n);
+			}
 		}
 		if (status) {
 			break;
@@ -797,12 +806,83 @@ int dp_chkrec(void)
 	return (status);
 }
 
+/* check one node html label starting with '<' */
+static int dp1_chkhmln(struct dpnode *node)
+{
+	int status = 0;
+	status = htmlparse(node);
+	if (status) {		/*parse error */
+	}
+	return (status);
+}
+
+/* check nodes with html labels */
+static int dp_chkhtmln(void)
+{
+	int status = 0;
+	struct dpnlink *nl = NULL;
+	nl = dp_anodes;
+	while (nl) {
+		if (nl->n->name == NULL) {
+			/* shouldnothappen */
+			printf("%s(): nil node name for node with label \"%s\"\n", __func__, nl->n->label);
+		}
+		if (nl->n->label) {
+			if (strlen(nl->n->label) > 0) {
+				if (nl->n->shape == DPSHAPE_RECORD || nl->n->shape == DPSHAPE_MRECORD) {
+					/* html labels do not apply to record shapes */
+					/* todo, html labels are used in record labels */
+				}
+				/* non-record shape node with optional <> html label */
+				if (nl->n->htmllabel) {
+					status = dp1_chkhmln(nl->n);
+				}
+				if (yydebug || 0) {
+					printf("%s(): node \"%s\" html-label=%d ", __func__, nl->n->name, nl->n->htmllabel);
+					if (nl->n->htmllabel) {
+						if (nl->n->hlinfo) {
+							printf("hlinfo=%p mode=%d il=%p tl=%p\n", (void *)nl->n->hlinfo,
+							       nl->n->hlinfo->mode, (void *)nl->n->hlinfo->il,
+							       (void *)nl->n->hlinfo->tl);
+						} else {
+							printf("hlinfo=nil\n");
+						}
+					} else {
+						printf("\n");
+					}
+				}
+				if (status) {
+					break;
+				}
+			}
+		}
+		nl = nl->next;
+	}
+
+	return (status);
+}
+
 /* check data, return 0 if oke. */
 int dp_datachk(void)
 {
-	int status = 0;
-	status = dp_chkrec();
-	return (status);
+	int status1 = 0;
+	int status2 = 0;
+	/* check nodes with record labels */
+	status1 = dp_chkrec();
+	if (yydebug || 0) {
+		printf("%s(): status=%d dp_chkrec();\n", __func__, status1);
+	}
+	/* check nodes with html labels */
+	status2 = dp_chkhtmln();
+	if (yydebug || 0) {
+		printf("%s(): status=%d dp_chkhtmln();\n", __func__, status2);
+	}
+	/* check edges with html labels */
+	/* todo */
+	if (yydebug || 0) {
+		printf("%s(): status=%d\n", __func__, status1 + status2);
+	}
+	return (status1 + status2);
 }
 
 /* parse number, use default at "" string */
@@ -812,7 +892,7 @@ struct dpnum *dp_getnum(char *s)
 	double n = 0.0;
 	char *ep = NULL;
 
-	ret = calloc(1, sizeof(struct dpnum));
+	ret = dp_calloc(1, sizeof(struct dpnum));
 
 	if (ret == NULL) {
 		return (NULL);
@@ -832,6 +912,7 @@ struct dpnum *dp_getnum(char *s)
 	}
 
 	errno = 0;
+
 	n = strtod(s, &ep);
 
 	if (ep) {
@@ -848,7 +929,73 @@ struct dpnum *dp_getnum(char *s)
 		return (ret);
 	}
 
+	/* check for unusual "-0", different languages handle -0 different, go language does not implement -0 correctly */
+	if (n == 0) {
+		if (strchr(s, '-')) {
+			printf("%s(): number `%s' is negative zero\n", __func__, s);
+		}
+	}
+
 	ret->number = n;
+	ret->pe = 0;
+	ret->es = 0;
+
+	return (ret);
+}
+
+/* parse int number */
+struct dpinum *dp_getinum(char *s)
+{
+	struct dpinum *ret = NULL;
+	long n = 0;
+	char *ep = NULL;
+
+	ret = dp_calloc(1, sizeof(struct dpinum));
+
+	if (ret == NULL) {
+		return (NULL);
+	}
+
+	if (s == NULL) {
+		/* parse error */
+		ret->pe = 1;
+		return (ret);
+	}
+
+	if (strlen(s) == 0) {
+		ret->es = 1;
+		/* parse error */
+		ret->pe = 1;
+		return (ret);
+	}
+
+	errno = 0;
+
+	/* base 10 */
+	n = strtol(s, &ep, 10);
+
+	if (ep) {
+		if (strlen(ep)) {
+			/* parse error */
+			ret->pe = 1;
+			return (ret);
+		}
+	}
+
+	if (errno) {
+		/* parse error */
+		ret->pe = 1;
+		return (ret);
+	}
+
+	/* check for unusual "-0" */
+	if (n == 0) {
+		if (strchr(s, '-')) {
+			printf("%s(): number `%s' is negative zero\n", __func__, s);
+		}
+	}
+
+	ret->number = (int)n;
 	ret->pe = 0;
 	ret->es = 0;
 
@@ -866,7 +1013,7 @@ struct dpbool *dp_getbool(char *s)
 	char *p = NULL;
 	char *q = NULL;
 
-	ret = calloc(1, sizeof(struct dpbool));
+	ret = dp_calloc(1, sizeof(struct dpbool));
 
 	if (ret == NULL) {
 		return (NULL);
@@ -885,7 +1032,7 @@ struct dpbool *dp_getbool(char *s)
 		return (ret);
 	}
 
-	s2 = calloc(1, (strlen(s) + 1));
+	s2 = dp_calloc(1, (strlen(s) + 1));
 
 	if (s2 == NULL) {
 		ret->es = 1;
@@ -936,7 +1083,7 @@ struct dpbool *dp_getbool(char *s)
 		ret->pe = 1;
 	}
 
-	free(s2);
+	dp_free(s2);
 
 	return (ret);
 }
@@ -947,7 +1094,7 @@ struct dpcolor *dp_getcolor(int cs, int csnum, char *s)
 	struct dpcolor *ret = NULL;
 	int tmpi = 0;
 
-	ret = calloc(1, sizeof(struct dpcolor));
+	ret = dp_calloc(1, sizeof(struct dpcolor));
 
 	if (ret == NULL) {
 		return (NULL);
@@ -1004,7 +1151,7 @@ struct dpstyle *dp_getstyle(char *s)
 	double n = 0.0;
 	char *ep = NULL;
 
-	ret = calloc(1, sizeof(struct dpstyle));
+	ret = dp_calloc(1, sizeof(struct dpstyle));
 
 	if (ret == NULL) {
 		return (NULL);
@@ -1025,7 +1172,7 @@ struct dpstyle *dp_getstyle(char *s)
 	}
 
 	/* copy string in tmp buffer */
-	buf = calloc(1, (lens + 1));
+	buf = dp_calloc(1, (lens + 1));
 
 	if (buf == NULL) {
 		ret->pe = 1;
@@ -1040,11 +1187,12 @@ struct dpstyle *dp_getstyle(char *s)
 
 	slwnext = 0;
 
+	/* strsep() is a replacement for old strtok() */
 	token = strtok(buf, sep);
 
 	while (token) {
 		if (0) {
-			printf("%s(): token `%s'\n", __func__, token);
+			printf("dot %s(): token `%s'\n", __func__, token);
 		}
 		if (slwnext) {
 			/* expect number for setlinewidth */
@@ -1086,6 +1234,8 @@ struct dpstyle *dp_getstyle(char *s)
 				ret->solid = 1;
 			} else if (strcasecmp(token, "invis") == 0) {
 				ret->invis = 1;
+			} else if (strcasecmp(token, "invisible") == 0) {
+				ret->invis = 1;
 			} else if (strcasecmp(token, "bold") == 0) {
 				ret->bold = 1;
 			} else if (strcasecmp(token, "tapered") == 0) {
@@ -1103,7 +1253,7 @@ struct dpstyle *dp_getstyle(char *s)
 			} else if (strcasecmp(token, "radial") == 0) {
 				ret->radial = 1;
 			} else if (strncmp(token, "setlinewidth", 12) == 0) {
-				printf("%s(): setlinewidth is depreciated, use penwidth instead\n", __func__);
+				printf("dot %s(): setlinewidth is depreciated, use penwidth instead\n", __func__);
 				/* next token must be the number */
 				slwnext = 1;
 			} else {
@@ -1123,7 +1273,7 @@ struct dpstyle *dp_getstyle(char *s)
 		ret->pe = 1;
 	}
 
-	free(buf);
+	dp_free(buf);
 	buf = NULL;
 
 	return (ret);
@@ -1140,7 +1290,7 @@ struct dppoint *dp_getpoint(char *s)
 	float x = 0.0;
 	float y = 0.0;
 
-	ret = calloc(1, sizeof(struct dppoint));
+	ret = dp_calloc(1, sizeof(struct dppoint));
 
 	if (ret == NULL) {
 		return (ret);
@@ -1156,7 +1306,7 @@ struct dppoint *dp_getpoint(char *s)
 		return (ret);
 	}
 
-	str = calloc(1, (strlen(s) + 1));
+	str = dp_calloc(1, (strlen(s) + 1));
 
 	if (str == NULL) {
 		ret->pe = 1;
@@ -1191,7 +1341,7 @@ struct dppoint *dp_getpoint(char *s)
 		ret->y = y;
 	}
 
-	free(str);
+	dp_free(str);
 	str = NULL;
 
 	return (ret);
@@ -1206,7 +1356,7 @@ struct dprect *dp_getrect(char *s)
 	float x1 = 0;
 	float y1 = 0;
 	int n = 0;
-	ret = calloc(1, sizeof(struct dprect));
+	ret = dp_calloc(1, sizeof(struct dprect));
 	if (ret == NULL) {
 		return (ret);
 	}
@@ -1274,7 +1424,7 @@ struct dpmargin *dp_getmargin(char *s)
 	float x = 0;
 	float y = 0;
 	int n = 0;
-	ret = calloc(1, sizeof(struct dpmargin));
+	ret = dp_calloc(1, sizeof(struct dpmargin));
 	if (ret == NULL) {
 		return (ret);
 	}
@@ -1319,7 +1469,7 @@ struct dpmargin *dp_getmargin(char *s)
 struct dpoo *dp_getoo(char *s)
 {
 	struct dpoo *ret = NULL;
-	ret = calloc(1, sizeof(struct dpoo));
+	ret = dp_calloc(1, sizeof(struct dpoo));
 	if (ret == NULL) {
 		return (ret);
 	}
@@ -1352,7 +1502,7 @@ struct dprank *dp_getrank(char *s)
 {
 	struct dprank *ret = NULL;
 
-	ret = calloc(1, sizeof(struct dprank));
+	ret = dp_calloc(1, sizeof(struct dprank));
 
 	if (ret == NULL) {
 		return (ret);
@@ -1394,7 +1544,7 @@ struct dprankdir *dp_getrankdir(char *s)
 {
 	struct dprankdir *ret = NULL;
 
-	ret = calloc(1, sizeof(struct dprankdir));
+	ret = dp_calloc(1, sizeof(struct dprankdir));
 
 	if (ret == NULL) {
 		return (ret);
@@ -1433,7 +1583,7 @@ struct dpranksep *dp_getranksep(char *s)
 	float f = 0;
 	int n = 0;
 
-	ret = calloc(1, sizeof(struct dpranksep));
+	ret = dp_calloc(1, sizeof(struct dpranksep));
 
 	if (ret == NULL) {
 		return (ret);
@@ -1491,7 +1641,7 @@ struct dpratio *dp_getratio(char *s)
 	float f = 0;
 	int n = 0;
 
-	ret = calloc(1, sizeof(struct dpratio));
+	ret = dp_calloc(1, sizeof(struct dpratio));
 
 	if (ret == NULL) {
 		return (ret);
@@ -1547,7 +1697,7 @@ struct dpsplines *dp_getsplines(char *s)
 {
 	struct dpsplines *ret = NULL;
 
-	ret = calloc(1, sizeof(struct dpsplines));
+	ret = dp_calloc(1, sizeof(struct dpsplines));
 
 	if (ret == NULL) {
 		return (ret);

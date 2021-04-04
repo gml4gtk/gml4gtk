@@ -49,6 +49,7 @@
 #include "dpmisc.h"
 #include "dpcolor.h"
 #include "lex.yy.h"
+#include "dpmem.h"
 
 /* edge[] attribute to check
  * URL arrowhead arrowsize arrowtail color colorscheme comment constraint
@@ -78,7 +79,7 @@ void dp_do_eattr(char *l, char *r)
 	} else if (dp_cclass == DP_TEDGEDEF) {
 		res = dp_curgraph->defedge;
 	} else {
-		printf("%s(): shouldnothappen dp_cclass=%d\n", __func__, dp_cclass);
+		printf("dot %s(): shouldnothappen dp_cclass=%d\n", __func__, dp_cclass);
 		return;
 	}
 
@@ -112,14 +113,14 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown edge arrowhead `%s' at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown edge arrowhead `%s' at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				res->ahnum = arrownum->type;
 				res->ahstring = arrownum->name;
 			}
 			res->bitflags0.ahset = 1;
-			free(arrownum);
+			dp_free(arrownum);
 			arrownum = NULL;
 		} else if (strcmp(l, "arrowsize") == 0) {
 			num = dp_getnum(r);
@@ -130,21 +131,21 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for arrowsize at line %d\n",
+						 "dot %s(): unknown number `%s' for arrowsize at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for arrowsize at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for arrowsize at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->asize = num->number;
 					res->bitflags0.asizeset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "arrowtail") == 0) {
 			/* todo fully parse the arrow combinations */
@@ -156,14 +157,14 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown edge arrowtail `%s' at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown edge arrowtail `%s' at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				res->atnum = arrownum->type;
 				res->atstring = arrownum->name;
 			}
 			res->bitflags0.atset = 1;
-			free(arrownum);
+			dp_free(arrownum);
 			arrownum = NULL;
 		} else {
 		}
@@ -180,27 +181,27 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown edge color `%s' at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown edge color `%s' at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				/* todo */
 				if (colornum->islist) {
 					/* default black color */
 					res->ecolor = 0x00000000;
-					printf("%s(): color list at line %d not supported\n", __func__, res->yylineno);
+					printf("dot %s(): color list at line %d not supported\n", __func__, res->yylineno);
 				} else {
 					res->ecolor = colornum->color;
 				}
 				res->bitflags0.ecolorset = 1;
 			}
-			free(colornum);
+			dp_free(colornum);
 			colornum = NULL;
 		} else if (strcmp(l, "colorscheme") == 0) {
 			tmpi = dp_colorschemecode(r);
 			if (tmpi == (-1)) {
 				memset(dp_errmsg, 0, 256);
 				snprintf(dp_errmsg, (256 - 1),
-					 "%s(): syntax error invalid name of colorscheme `%s' near line %d\n",
+					 "dot %s(): syntax error invalid name of colorscheme `%s' near line %d\n",
 					 __func__, r, yylineno);
 				/* continue and error message will soon appear */
 			} else {
@@ -227,7 +228,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for constraint at line %d\n",
+						 "dot %s(): not a boolean `%s' for constraint at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -238,7 +239,7 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.constrset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else {
 		}
@@ -255,7 +256,8 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for decorate at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for decorate at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -265,7 +267,7 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.decorset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "dir") == 0) {
 			dirnum = dp_getdir(r);
@@ -276,13 +278,14 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown dir type `%s' for dir at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown dir type `%s' for dir at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				res->dir = dirnum->type;
 				res->bitflags0.dirset = 1;
 			}
-			free(dirnum);
+			dp_free(dirnum);
 			dirnum = NULL;
 		} else {
 		}
@@ -341,20 +344,20 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown edge fontcolor `%s' at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown edge fontcolor `%s' at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				/* todo */
 				if (colornum->islist) {
 					/* default black color */
 					res->ecolor = 0x00000000;
-					printf("%s(): color list at line %d not supported\n", __func__, res->yylineno);
+					printf("dot %s(): color list at line %d not supported\n", __func__, res->yylineno);
 				} else {
 					res->fontcolor = colornum->color;
 				}
 				res->bitflags0.focolorset = 1;
 			}
-			free(colornum);
+			dp_free(colornum);
 			colornum = NULL;
 		} else if (strcmp(l, "fontname") == 0) {
 			if (r) {
@@ -376,7 +379,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse fontsize number `%s' at line %d\n",
+						 "dot %s(): cannot parse fontsize number `%s' at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -387,10 +390,11 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): fontsize number `%s' at line %d is too low\n", __func__, r, res->yylineno);
+						 "dot %s(): fontsize number `%s' at line %d is too low\n", __func__, r,
+						 res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else {
 		}
@@ -417,14 +421,14 @@ void dp_do_eattr(char *l, char *r)
 					if (pointnum->pe) {
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): cannot parse head_lp (x,y) number `%s' at line %d\n",
+							 "dot %s(): cannot parse head_lp (x,y) number `%s' at line %d\n",
 							 __func__, r, res->yylineno);
 					} else {
 						res->hlpx = pointnum->x;
 						res->hlpy = pointnum->y;
 						res->hlpflag = pointnum->flag;
 					}
-					free(pointnum);
+					dp_free(pointnum);
 					pointnum = NULL;
 				} else {
 					res->hlpx = 0;
@@ -444,7 +448,8 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for headclip at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for headclip at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -454,7 +459,7 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.hcset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "headhref") == 0) {
 			/* same as headURL */
@@ -488,7 +493,7 @@ void dp_do_eattr(char *l, char *r)
 					if (tmpi == 0) {
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): not a compass point `%s' for headport at line %d\n",
+							 "dot %s(): not a compass point `%s' for headport at line %d\n",
 							 __func__, r, res->yylineno);
 					} else {
 						res->hport = r;
@@ -577,7 +582,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse labelangle number `%s' at line %d\n",
+						 "dot %s(): cannot parse labelangle number `%s' at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -588,11 +593,11 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): labelangle number `%s' at line %d is out-of-range -180...360\n",
+						 "dot %s(): labelangle number `%s' at line %d is out-of-range -180...360\n",
 						 __func__, r, res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "labeldistance") == 0) {
 			/*  */
@@ -605,7 +610,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse labeldistance number `%s' at line %d\n",
+						 "dot %s(): cannot parse labeldistance number `%s' at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -616,11 +621,11 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): labeldistance number `%s' at line %d is too low\n",
+						 "dot %s(): labeldistance number `%s' at line %d is too low\n",
 						 __func__, r, res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "labelfloat") == 0) {
 			boolnum = dp_getbool(r);
@@ -632,7 +637,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for labelfloat at line %d\n",
+						 "dot %s(): not a boolean `%s' for labelfloat at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -643,7 +648,7 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags1.lfloatset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "labelfontcolor") == 0) {
 			colornum = dp_getcolor(res->bitflags0.csnumset, res->csnum, r);
@@ -655,20 +660,20 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown labelfontcolor `%s' at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown labelfontcolor `%s' at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				/* todo */
 				if (colornum->islist) {
 					/* default black color */
 					res->ecolor = 0x00000000;
-					printf("%s(): color list at line %d not supported\n", __func__, res->yylineno);
+					printf("dot %s(): color list at line %d not supported\n", __func__, res->yylineno);
 				} else {
 					res->lfontcolor = colornum->color;
 				}
 				res->bitflags1.lfocolorset = 1;
 			}
-			free(colornum);
+			dp_free(colornum);
 			colornum = NULL;
 		} else if (strcmp(l, "labelfontname") == 0) {
 			if (r) {
@@ -690,7 +695,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse labelfontsize number `%s' at line %d\n",
+						 "dot %s(): cannot parse labelfontsize number `%s' at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -701,11 +706,11 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): labelfontsize number `%s' at line %d is too low\n",
+						 "dot %s(): labelfontsize number `%s' at line %d is too low\n",
 						 __func__, r, res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "labelhref") == 0) {
 			/* url same as labelURL */
@@ -760,7 +765,7 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse len number `%s' at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): cannot parse len number `%s' at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number >= 0) {
@@ -770,10 +775,10 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): len number `%s' at line %d is negative\n", __func__, r, res->yylineno);
+						 "dot %s(): len number `%s' at line %d is negative\n", __func__, r, res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "lhead") == 0) {
 			if (r) {
@@ -793,14 +798,14 @@ void dp_do_eattr(char *l, char *r)
 					if (pointnum->pe) {
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): cannot parse lp (x,y) number `%s' at line %d\n",
+							 "dot %s(): cannot parse lp (x,y) number `%s' at line %d\n",
 							 __func__, r, res->yylineno);
 					} else {
 						res->lpx = pointnum->x;
 						res->lpy = pointnum->y;
 						res->lpflag = pointnum->flag;
 					}
-					free(pointnum);
+					dp_free(pointnum);
 					pointnum = NULL;
 				} else {
 					res->lp = NULL;
@@ -831,20 +836,21 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for penwidth at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for penwidth at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for minlen at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for minlen at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->minlen = rint(num->number);
 					res->bitflags1.minlenset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else {
 			/* something else */
@@ -862,7 +868,8 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for nojustify at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for nojustify at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -872,7 +879,7 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags1.nojustset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else {
 		}
@@ -888,20 +895,21 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for penwidth at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for penwidth at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for penwidth at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for penwidth at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->penwidth = num->number;
 					res->bitflags0.penwidthset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "pos") == 0) {
 			/* example:[pos="e,1110,867.67 1110,904.33 1110,896.26 1110,886.65 1110,877.71"];
@@ -968,25 +976,25 @@ void dp_do_eattr(char *l, char *r)
 						/* parse error at unknown token */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): unknown token `%s' in `%s' for style at line %d\n",
+							 "dot %s(): unknown token `%s' in `%s' for style at line %d\n",
 							 __func__, stylenum->unknown, r, res->yylineno);
 					} else if (stylenum->pe_slw) {
 						/* parse error at setlinewidth number */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): wrong number or negative number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
+							 "dot %s(): wrong number or negative number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
 							 __func__, r, res->yylineno);
 					} else if (stylenum->pe_exp) {
 						/* missing number at setlinewidth */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): missing number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
+							 "dot %s(): missing number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
 							 __func__, r, res->yylineno);
 					} else {
 						/* other parse error */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): unknown error in `%s' for style at line %d\n",
+							 "dot %s(): unknown error in `%s' for style at line %d\n",
 							 __func__, r, res->yylineno);
 					}
 				}
@@ -1002,32 +1010,32 @@ void dp_do_eattr(char *l, char *r)
 				if (stylenum->filled) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): filled does not apply to edge in `%s' for style at line %d\n",
+						 "dot %s(): filled does not apply to edge in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else if (stylenum->striped) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): striped does not apply to edge in `%s' for style at line %d\n",
+						 "dot %s(): striped does not apply to edge in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else if (stylenum->wedged) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): wedged does not apply to edge in `%s' for style at line %d\n",
+						 "dot %s(): wedged does not apply to edge in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else if (stylenum->diagonals) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): diagonals does not apply to edge in `%s' for style at line %d\n",
+						 "dot %s(): diagonals does not apply to edge in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else if (stylenum->rounded) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): rounded does not apply to edge in `%s' for style at line %d\n",
+						 "dot %s(): rounded does not apply to edge in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else if (stylenum->radial) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): radial does not apply to edge in `%s' for style at line %d\n",
+						 "dot %s(): radial does not apply to edge in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->bitflags0.styleset = 1;
@@ -1061,7 +1069,7 @@ void dp_do_eattr(char *l, char *r)
 					}
 				}
 			}
-			free(stylenum);
+			dp_free(stylenum);
 			stylenum = NULL;
 		} else {
 		}
@@ -1089,14 +1097,14 @@ void dp_do_eattr(char *l, char *r)
 					if (pointnum->pe) {
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): cannot parse tail_lp (x,y) number `%s' at line %d\n",
+							 "dot %s(): cannot parse tail_lp (x,y) number `%s' at line %d\n",
 							 __func__, r, res->yylineno);
 					} else {
 						res->tlpx = pointnum->x;
 						res->tlpy = pointnum->y;
 						res->tlpflag = pointnum->flag;
 					}
-					free(pointnum);
+					dp_free(pointnum);
 					pointnum = NULL;
 				} else {
 					res->hlp = NULL;
@@ -1113,7 +1121,8 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for tailclip at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for tailclip at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -1123,7 +1132,7 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags2.tailcset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "tailhref") == 0) {
 			/* same as headURL */
@@ -1157,7 +1166,7 @@ void dp_do_eattr(char *l, char *r)
 					if (tmpi == 0) {
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): not a compass point `%s' for tailport at line %d\n",
+							 "dot %s(): not a compass point `%s' for tailport at line %d\n",
 							 __func__, r, res->yylineno);
 					} else {
 						res->tlport = r;
@@ -1216,20 +1225,21 @@ void dp_do_eattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for weight at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for weight at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for weight at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for weight at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->weight = num->number;
 					res->bitflags2.weightset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else {
 			/* something else */
@@ -1256,14 +1266,14 @@ void dp_do_eattr(char *l, char *r)
 					if (pointnum->pe) {
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): cannot parse xlp (x,y) number `%s' at line %d\n",
+							 "dot %s(): cannot parse xlp (x,y) number `%s' at line %d\n",
 							 __func__, r, res->yylineno);
 					} else {
 						res->xlpx = pointnum->x;
 						res->xlpy = pointnum->y;
 						res->xlpflag = pointnum->flag;
 					}
-					free(pointnum);
+					dp_free(pointnum);
 					pointnum = NULL;
 				} else {
 					res->xlp = NULL;

@@ -24,14 +24,6 @@
 #include <stdint.h>
 
 /* how many bytes can a splay key to index on have max. */
-/* The size of `void *', as computed by sizeof.
- * #define SIZEOF_VOID_P 8
- * in configure.ac is:
- * AC_CHECK_SIZEOF([void *])
- * The size of `uintptr_t', as computed by sizeof.
- * #define SIZEOF_UINTPTR_T 8
- */
-
 /* typedef unsigned long long int splay_tree_key; */
 typedef uintptr_t splay_tree_key;
 

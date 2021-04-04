@@ -53,16 +53,29 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "splay-tree.h"
 #include "main.h"
 #include "dp.h"
 #include "lex.yy.h"
+#include "dpmem.h"
 
 #define YY_DEBUG 1
 
 #define YYERROR_VERBOSE 1
+
+/* memory usage wrapping feature */
+#ifndef YYFREE
+#define YYFREE dp_free
+#endif
+#ifndef YYMALLOC
+#define YYMALLOC dp_malloc
+#endif
+#ifndef YYREALLOC
+#define YYREALLOC dp_realloc
+#endif
 
 /* utf8 code at start if 1 */
 static int utfseen = 0;
@@ -72,18 +85,18 @@ static int isstrict = 0;
 
 extern int yylex(void);
 
-void yyerror(const char *msg)
+static void yyerror(const char *msg)
 {
 	if (strlen(dp_errmsg) == 0) {
-		snprintf(dp_errmsg, 256 - 1, "%s(): %s at line %d yytext is %s'\n", __func__, msg, yylineno, yytext);
+		snprintf(dp_errmsg, 256 - 1, "dot %s(): %s at line %d yytext is %s'\n", __func__, msg, yylineno, yytext);
 	}
-	printf("%s(): %s at line %d yytext is `%s'\n", __func__, msg, yylineno, yytext);
+	printf("dot %s(): %s at line %d yytext is `%s'\n", __func__, msg, yylineno, yytext);
 	fflush(stdout);
 	fflush(stderr);
 	return;
 }
 
-#line 94 "dot.tab.c"		/* glr.c:237  */
+#line 107 "dot.tab.c"		/* glr.c:237  */
 
 #ifndef YY_NULLPTR
 #if defined __cplusplus
@@ -294,14 +307,14 @@ static const unsigned char yytranslate[] = {
 #if YYDEBUG
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const unsigned short yyrline[] = {
-	0, 109, 109, 109, 110, 111, 115, 116, 120, 121,
-	122, 123, 127, 128, 133, 134, 138, 139, 140, 141,
-	145, 146, 152, 153, 154, 164, 165, 166, 167, 167,
-	171, 171, 182, 183, 184, 194, 195, 196, 200, 204,
-	205, 209, 210, 211, 212, 216, 220, 221, 225, 225,
-	225, 226, 226, 226, 231, 232, 232, 233, 234, 234,
-	239, 240, 244, 245, 246, 250, 254, 255, 255, 260,
-	261
+	0, 122, 122, 122, 123, 124, 128, 129, 133, 134,
+	135, 136, 140, 141, 146, 147, 151, 152, 153, 154,
+	158, 159, 165, 166, 167, 177, 178, 179, 180, 180,
+	184, 184, 195, 196, 197, 207, 208, 209, 213, 217,
+	218, 222, 223, 224, 225, 229, 233, 234, 238, 238,
+	238, 239, 239, 239, 244, 245, 245, 246, 247, 247,
+	252, 253, 257, 258, 259, 263, 267, 268, 268, 273,
+	274
 };
 #endif
 
@@ -348,8 +361,8 @@ static const unsigned char yydefact[] = {
 	0, 4, 6, 0, 0, 1, 0, 9, 11, 13,
 	8, 10, 16, 17, 14, 18, 2, 19, 12, 0,
 	0, 0, 15, 67, 62, 70, 63, 64, 32, 0,
-	20, 22, 25, 30, 48, 26, 27, 0, 61, 28,
-	0, 0, 69, 0, 0, 3, 21, 24, 23, 47,
+	21, 22, 25, 30, 48, 26, 27, 0, 61, 28,
+	0, 0, 69, 0, 0, 3, 20, 24, 23, 47,
 	0, 44, 60, 47, 0, 0, 0, 33, 65, 47,
 	31, 0, 49, 40, 39, 44, 0, 29, 52, 0,
 	68, 0, 46, 35, 54, 57, 47, 0, 44, 44,
@@ -437,7 +450,7 @@ static const unsigned char yyr1[] = {
 static const unsigned char yyr2[] = {
 	0, 2, 0, 7, 1, 0, 1, 0, 2, 1,
 	2, 1, 1, 0, 1, 3, 1, 1, 1, 1,
-	1, 2, 1, 2, 2, 1, 1, 1, 0, 3,
+	2, 1, 1, 2, 2, 1, 1, 1, 0, 3,
 	0, 3, 1, 3, 5, 1, 3, 5, 3, 1,
 	1, 2, 3, 3, 0, 3, 2, 0, 0, 0,
 	5, 0, 0, 5, 2, 0, 4, 2, 0, 4,
@@ -908,467 +921,466 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		*yyvalp = yyvsp[YYFILL(1 - yyrhslen)].yystate.yysemantics.yysval;
 	switch (yyn) {
 	case 2:
-#line 109 "dot.y"		/* glr.c:880  */
+#line 122 "dot.y"		/* glr.c:880  */
 		{
 			dp_sg((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string),
 			      (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 976 "dot.tab.c"		/* glr.c:880  */
+#line 989 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 3:
-#line 109 "dot.y"		/* glr.c:880  */
+#line 122 "dot.y"		/* glr.c:880  */
 		{
 			dp_eg();
 		}
-#line 982 "dot.tab.c"		/* glr.c:880  */
+#line 995 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 4:
-#line 110 "dot.y"		/* glr.c:880  */
+#line 123 "dot.y"		/* glr.c:880  */
 		{
 			dp_eg();
 		}
-#line 988 "dot.tab.c"		/* glr.c:880  */
+#line 1001 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 5:
-#line 111 "dot.y"		/* glr.c:880  */
+#line 124 "dot.y"		/* glr.c:880  */
 		{
 			dp_eg();
 		}
-#line 994 "dot.tab.c"		/* glr.c:880  */
+#line 1007 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 6:
-#line 115 "dot.y"		/* glr.c:880  */
+#line 128 "dot.y"		/* glr.c:880  */
 		{
 			utfseen = 1;
 		}
-#line 1000 "dot.tab.c"		/* glr.c:880  */
+#line 1013 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 7:
-#line 116 "dot.y"		/* glr.c:880  */
+#line 129 "dot.y"		/* glr.c:880  */
 		{
 			utfseen = 0;
 		}
-#line 1006 "dot.tab.c"		/* glr.c:880  */
+#line 1019 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 8:
-#line 120 "dot.y"		/* glr.c:880  */
+#line 133 "dot.y"		/* glr.c:880  */
 		{
 			isstrict = 1;
 			((*yyvalp).string) = "--";
 		}
-#line 1012 "dot.tab.c"		/* glr.c:880  */
+#line 1025 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 9:
-#line 121 "dot.y"		/* glr.c:880  */
+#line 134 "dot.y"		/* glr.c:880  */
 		{
 			isstrict = 0;
 			((*yyvalp).string) = "--";
 		}
-#line 1018 "dot.tab.c"		/* glr.c:880  */
+#line 1031 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 10:
-#line 122 "dot.y"		/* glr.c:880  */
+#line 135 "dot.y"		/* glr.c:880  */
 		{
 			isstrict = 1;
 			((*yyvalp).string) = "->";
 		}
-#line 1024 "dot.tab.c"		/* glr.c:880  */
+#line 1037 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 11:
-#line 123 "dot.y"		/* glr.c:880  */
+#line 136 "dot.y"		/* glr.c:880  */
 		{
 			isstrict = 0;
 			((*yyvalp).string) = "->";
 		}
-#line 1030 "dot.tab.c"		/* glr.c:880  */
+#line 1043 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 12:
-#line 127 "dot.y"		/* glr.c:880  */
+#line 140 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1036 "dot.tab.c"		/* glr.c:880  */
+#line 1049 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 13:
-#line 128 "dot.y"		/* glr.c:880  */
+#line 141 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = NULL;
 		}
-#line 1042 "dot.tab.c"		/* glr.c:880  */
+#line 1055 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 14:
-#line 133 "dot.y"		/* glr.c:880  */
+#line 146 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1048 "dot.tab.c"		/* glr.c:880  */
+#line 1061 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 15:
-#line 134 "dot.y"		/* glr.c:880  */
+#line 147 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) =
 			    dp_ccat((((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				    (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1054 "dot.tab.c"		/* glr.c:880  */
+#line 1067 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 16:
-#line 138 "dot.y"		/* glr.c:880  */
+#line 151 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1060 "dot.tab.c"		/* glr.c:880  */
+#line 1073 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 17:
-#line 139 "dot.y"		/* glr.c:880  */
+#line 152 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1066 "dot.tab.c"		/* glr.c:880  */
+#line 1079 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 18:
-#line 140 "dot.y"		/* glr.c:880  */
+#line 153 "dot.y"		/* glr.c:880  */
 		{
-			printf("%s(): html label at line %d is not supported yet\n", __func__, yylineno);
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1072 "dot.tab.c"		/* glr.c:880  */
+#line 1085 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 19:
-#line 141 "dot.y"		/* glr.c:880  */
+#line 154 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1078 "dot.tab.c"		/* glr.c:880  */
+#line 1091 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 22:
-#line 152 "dot.y"		/* glr.c:880  */
+#line 165 "dot.y"		/* glr.c:880  */
 		{
 			if (dp_chkerr()) {
 				YYERROR;	/* YYABORT; does not work as expected */
 			}
 		}
-#line 1084 "dot.tab.c"		/* glr.c:880  */
+#line 1097 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 23:
-#line 153 "dot.y"		/* glr.c:880  */
+#line 166 "dot.y"		/* glr.c:880  */
 		{
 			if (dp_chkerr()) {
 				YYERROR;	/* YYABORT; does not work as expected */
 			}
 		}
-#line 1090 "dot.tab.c"		/* glr.c:880  */
+#line 1103 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 24:
-#line 154 "dot.y"		/* glr.c:880  */
+#line 167 "dot.y"		/* glr.c:880  */
 		{
 			if (dp_chkerr()) {
 				YYERROR;	/* YYABORT; does not work as expected */
 			}
 		}
-#line 1096 "dot.tab.c"		/* glr.c:880  */
+#line 1109 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 28:
-#line 167 "dot.y"		/* glr.c:880  */
+#line 180 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_sgraph();
 		}
-#line 1102 "dot.tab.c"		/* glr.c:880  */
+#line 1115 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 29:
-#line 167 "dot.y"		/* glr.c:880  */
+#line 180 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graph();
 		}
-#line 1108 "dot.tab.c"		/* glr.c:880  */
+#line 1121 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 30:
-#line 171 "dot.y"		/* glr.c:880  */
+#line 184 "dot.y"		/* glr.c:880  */
 		{
 			dp_mknode0((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 			dp_atype_node();
 		}
-#line 1114 "dot.tab.c"		/* glr.c:880  */
+#line 1127 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 31:
-#line 171 "dot.y"		/* glr.c:880  */
+#line 184 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graph();
 		}
-#line 1120 "dot.tab.c"		/* glr.c:880  */
+#line 1133 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 32:
-#line 182 "dot.y"		/* glr.c:880  */
+#line 195 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string);
 		}
-#line 1126 "dot.tab.c"		/* glr.c:880  */
+#line 1139 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 33:
-#line 183 "dot.y"		/* glr.c:880  */
+#line 196 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string);	/* ignore $3 */
 		}
-#line 1132 "dot.tab.c"		/* glr.c:880  */
+#line 1145 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 34:
-#line 184 "dot.y"		/* glr.c:880  */
+#line 197 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).string) = (((yyGLRStackItem const *)yyvsp)[YYFILL(-4)].yystate.yysemantics.yysval.string);	/* ignore $3 $5 */
 		}
-#line 1138 "dot.tab.c"		/* glr.c:880  */
+#line 1151 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 35:
-#line 194 "dot.y"		/* glr.c:880  */
+#line 207 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) =
 			    dp_mknid((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string), NULL, NULL);
 		}
-#line 1144 "dot.tab.c"		/* glr.c:880  */
+#line 1157 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 36:
-#line 195 "dot.y"		/* glr.c:880  */
+#line 208 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) =
 			    dp_mknid((((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				     (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string), NULL);
 		}
-#line 1150 "dot.tab.c"		/* glr.c:880  */
+#line 1163 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 37:
-#line 196 "dot.y"		/* glr.c:880  */
+#line 209 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) =
 			    dp_mknid((((yyGLRStackItem const *)yyvsp)[YYFILL(-4)].yystate.yysemantics.yysval.string),
 				     (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				     (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1156 "dot.tab.c"		/* glr.c:880  */
+#line 1169 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 38:
-#line 200 "dot.y"		/* glr.c:880  */
+#line 213 "dot.y"		/* glr.c:880  */
 		{
 			dp_aset((((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				(((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1162 "dot.tab.c"		/* glr.c:880  */
+#line 1175 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 40:
-#line 205 "dot.y"		/* glr.c:880  */
+#line 218 "dot.y"		/* glr.c:880  */
 		{
 			dp_aset((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string), "true");
 		}
-#line 1168 "dot.tab.c"		/* glr.c:880  */
+#line 1181 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 48:
-#line 225 "dot.y"		/* glr.c:880  */
+#line 238 "dot.y"		/* glr.c:880  */
 		{
 			dp_starte1((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
-#line 1174 "dot.tab.c"		/* glr.c:880  */
+#line 1187 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 49:
-#line 225 "dot.y"		/* glr.c:880  */
+#line 238 "dot.y"		/* glr.c:880  */
 		{
 			dp_newe();
 		}
-#line 1180 "dot.tab.c"		/* glr.c:880  */
+#line 1193 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 50:
-#line 225 "dot.y"		/* glr.c:880  */
+#line 238 "dot.y"		/* glr.c:880  */
 		{
 			dp_ende();
 			dp_clrep();
 		}
-#line 1186 "dot.tab.c"		/* glr.c:880  */
+#line 1199 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 51:
-#line 226 "dot.y"		/* glr.c:880  */
+#line 239 "dot.y"		/* glr.c:880  */
 		{
 			dp_starte2((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
-#line 1192 "dot.tab.c"		/* glr.c:880  */
+#line 1205 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 52:
-#line 226 "dot.y"		/* glr.c:880  */
+#line 239 "dot.y"		/* glr.c:880  */
 		{
 			dp_newe();
 		}
-#line 1198 "dot.tab.c"		/* glr.c:880  */
+#line 1211 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 53:
-#line 226 "dot.y"		/* glr.c:880  */
+#line 239 "dot.y"		/* glr.c:880  */
 		{
 			dp_ende();
 			dp_clrep();
 		}
-#line 1204 "dot.tab.c"		/* glr.c:880  */
+#line 1217 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 54:
-#line 231 "dot.y"		/* glr.c:880  */
+#line 244 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
-#line 1210 "dot.tab.c"		/* glr.c:880  */
+#line 1223 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 55:
-#line 232 "dot.y"		/* glr.c:880  */
+#line 245 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
-#line 1216 "dot.tab.c"		/* glr.c:880  */
+#line 1229 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 57:
-#line 233 "dot.y"		/* glr.c:880  */
+#line 246 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
-#line 1222 "dot.tab.c"		/* glr.c:880  */
+#line 1235 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 58:
-#line 234 "dot.y"		/* glr.c:880  */
+#line 247 "dot.y"		/* glr.c:880  */
 		{
 			dp_cke((((yyGLRStackItem const *)yyvsp)[YYFILL(-1)].yystate.yysemantics.yysval.string));
 			dp_ine((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.dp));
 		}
-#line 1228 "dot.tab.c"		/* glr.c:880  */
+#line 1241 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 60:
-#line 239 "dot.y"		/* glr.c:880  */
+#line 252 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graph();
 		}
-#line 1234 "dot.tab.c"		/* glr.c:880  */
+#line 1247 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 61:
-#line 240 "dot.y"		/* glr.c:880  */
+#line 253 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graph();
 		}
-#line 1240 "dot.tab.c"		/* glr.c:880  */
+#line 1253 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 62:
-#line 244 "dot.y"		/* glr.c:880  */
+#line 257 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_graphdef();
 		}
-#line 1246 "dot.tab.c"		/* glr.c:880  */
+#line 1259 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 63:
-#line 245 "dot.y"		/* glr.c:880  */
+#line 258 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_nodedef();
 		}
-#line 1252 "dot.tab.c"		/* glr.c:880  */
+#line 1265 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 64:
-#line 246 "dot.y"		/* glr.c:880  */
+#line 259 "dot.y"		/* glr.c:880  */
 		{
 			dp_atype_edgedef();
 		}
-#line 1258 "dot.tab.c"		/* glr.c:880  */
+#line 1271 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 65:
-#line 250 "dot.y"		/* glr.c:880  */
+#line 263 "dot.y"		/* glr.c:880  */
 		{
 			dp_aset((((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				(((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1264 "dot.tab.c"		/* glr.c:880  */
+#line 1277 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 66:
-#line 254 "dot.y"		/* glr.c:880  */
+#line 267 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) = dp_endss();
 		}
-#line 1270 "dot.tab.c"		/* glr.c:880  */
+#line 1283 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 67:
-#line 255 "dot.y"		/* glr.c:880  */
+#line 268 "dot.y"		/* glr.c:880  */
 		{
 			dp_namedsubg(NULL, DP_SG_CO);
 		}
-#line 1276 "dot.tab.c"		/* glr.c:880  */
+#line 1289 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 68:
-#line 255 "dot.y"		/* glr.c:880  */
+#line 268 "dot.y"		/* glr.c:880  */
 		{
 			((*yyvalp).dp) = dp_endss();
 		}
-#line 1282 "dot.tab.c"		/* glr.c:880  */
+#line 1295 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 69:
-#line 260 "dot.y"		/* glr.c:880  */
+#line 273 "dot.y"		/* glr.c:880  */
 		{
 			dp_namedsubg((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string), DP_SG_NM);
 		}
-#line 1288 "dot.tab.c"		/* glr.c:880  */
+#line 1301 "dot.tab.c"		/* glr.c:880  */
 		break;
 
 	case 70:
-#line 261 "dot.y"		/* glr.c:880  */
+#line 274 "dot.y"		/* glr.c:880  */
 		{
 			dp_namedsubg(NULL, DP_SG_NN);
 		}
-#line 1294 "dot.tab.c"		/* glr.c:880  */
+#line 1307 "dot.tab.c"		/* glr.c:880  */
 		break;
 
-#line 1298 "dot.tab.c"		/* glr.c:880  */
+#line 1311 "dot.tab.c"		/* glr.c:880  */
 	default:
 		break;
 	}
@@ -2746,6 +2758,6 @@ static void yypdumpstack(yyGLRStack * yystackp)
 #undef yychar
 #undef yynerrs
 
-#line 264 "dot.y"		/* glr.c:2603  */
+#line 277 "dot.y"		/* glr.c:2603  */
 
 /* end. */

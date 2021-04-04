@@ -42,6 +42,7 @@
 #include "hier.h"
 #include "pos.h"
 #include "pos3.h"
+#include "dpmem.h"
 
 /* min. distance between 2 nodes */
 static int xmindist = 1;
@@ -478,20 +479,20 @@ static void pos3init(struct gml_graph *g)
 	int my = 0;
 	int yoff = 0;
 
-	dl = calloc(1, ((g->maxlevel + 1) * sizeof(struct node_data *)));
+	dl = dp_calloc(1, ((g->maxlevel + 1) * sizeof(struct node_data *)));
 
 	if (dl == NULL) {
 		return;
 	}
 
 	for (i = 0; i <= g->maxlevel; i++) {
-		dl[i] = calloc(1, ((g->nnodes_of_level[i] + 1) * sizeof(struct node_data)));
+		dl[i] = dp_calloc(1, ((g->nnodes_of_level[i] + 1) * sizeof(struct node_data)));
 		if (dl[i] == NULL) {
 			return;
 		}
 	}
 
-	cix = calloc(1, ((g->maxlevel + 1) * sizeof(int)));
+	cix = dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
 
 	if (cix == NULL) {
 		return;
@@ -517,7 +518,7 @@ static void pos3init(struct gml_graph *g)
 	}
 
 	/* calc max y-size at every level */
-	szy = calloc(1, ((g->maxlevel + 1) * sizeof(int)));
+	szy = dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
 
 	if (szy == NULL) {
 		return;
@@ -564,21 +565,21 @@ static void pos3clear(struct gml_graph *g)
 		for (i = 0; i <= g->maxlevel; i++) {
 			pnl = dl[i];
 			if (pnl) {
-				free(pnl);
+				dp_free(pnl);
 				dl[i] = NULL;
 			}
 		}
-		free(dl);
+		dp_free(dl);
 	}
 
 	if (cix) {
-		free(cix);
+		dp_free(cix);
 	}
 
 	cix = NULL;
 
 	if (szy) {
-		free(szy);
+		dp_free(szy);
 	}
 
 	szy = NULL;

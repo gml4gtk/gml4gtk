@@ -7,6 +7,9 @@ rm lex.yy.c
 echo "generating dot lexer and parser"
 flex dot.l
 bison -d --graph -x dot.y
+echo "generating dot html lexer and parser"
+flex dphl.l
+bison -d --graph dphl.y
 echo "generating vcg lexer"
 # -d   == add debug code
 # -8   == generate 8 bits scanner

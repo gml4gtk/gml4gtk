@@ -27,57 +27,50 @@
 #include <string.h>
 
 #include "splay-tree.h"
-
-/*
- * #defineSIZEOF_VOID_P 8
- * in configure.ac is:
- * AC_CHECK_SIZEOF([void *])
- * on 64 bits Linux both should be 8 bytes
- * see also splay-tree.h
- */
-#if SIZEOF_UINTPTR_T < SIZEOF_VOID_P
-#warning "problem with size of unitptr_t see splay-tree.h"
-#endif
+#include "dpmem.h"
 
 /* forward decl. */
 static struct splay_tree_node_n *splay(splay_tree sp, splay_tree_key key);
 
-/* Deallocate NODE (a member of SP), and all its sub-trees.  */
-static void splay_tree_delete_helper(splay_tree sp, splay_tree_node node)
-{
-
-	if (node == NULL) {
-		return;
-	}
-
-	/* recurse */
-	splay_tree_delete_helper(sp, node->left);
-	splay_tree_delete_helper(sp, node->right);
-
-	/* free() key if needed */
-	if (sp->delete_key) {
-		(*sp->delete_key) (node->key);
-		node->key = (splay_tree_key) 0;
-	}
-
-	/* free() value if needed */
-	if (sp->delete_value) {
-		(*sp->delete_value) (node->value);
-		node->value = (splay_tree_value) 0;
-	}
-
-	free((void *)node);
-
-	return;
-}
-
 /* delete whole sp tree */
 splay_tree splay_tree_delete(splay_tree sp)
 {
-	if (sp) {
-		splay_tree_delete_helper(sp, sp->root);
-		free((void *)sp);
+	splay_tree_node spn = (splay_tree_node) 0;
+	splay_tree_node spn2 = (splay_tree_node) 0;
+
+	if (sp == (splay_tree) 0) {
+		return ((splay_tree) 0);
 	}
+
+	/* if there is data */
+	if (sp->root) {
+		/* for every node, this can not cause stack smashing.
+		 * this is slowest way possible but splay_tree_delete() does almost never happen.
+		 * gcc realloc()'s array with pointers to free() but using realloc()
+		 * may cause unexpected high memory usage, thats why avoiding realloc() use.
+		 */
+		spn = splay_tree_min(sp);
+		while (spn) {
+			spn2 = splay_tree_successor(sp, spn->key);
+			splay_tree_remove(sp, spn->key);
+			spn = spn2;
+		}
+	}
+
+	/* wipe the pointers in the struct to make valgrind happy */
+	sp->root = (splay_tree_node) 0;
+
+	/* The comparision function.  */
+	sp->comp = (splay_tree_compare_fn) 0;
+
+	/* The deallocate-key function.  NULL if no cleanup is necessary.  */
+	sp->delete_key = (splay_tree_delete_key_fn) 0;
+
+	/* The deallocate-value function.  NULL if no cleanup is necessary.  */
+	sp->delete_value = (splay_tree_delete_value_fn) 0;
+
+	dp_free((void *)sp);
+
 	return ((splay_tree) 0);
 }
 
@@ -95,7 +88,7 @@ splay_tree_new(splay_tree_compare_fn compare_fn, splay_tree_delete_key_fn delete
 		return ((splay_tree) 0);
 	}
 
-	sp = (splay_tree) calloc(1, sizeof(struct splay_tree_t));
+	sp = (splay_tree) dp_calloc(1, sizeof(struct splay_tree_t));
 
 	if (sp == (splay_tree) 0) {
 		return ((splay_tree) 0);
@@ -132,7 +125,7 @@ void splay_tree_insert(splay_tree sp, splay_tree_key key, splay_tree_value value
 	}
 
 	/* Create a new node, and insert it at the root.  */
-	spn = (splay_tree_node) calloc(1, sizeof(struct splay_tree_node_n));
+	spn = (splay_tree_node) dp_calloc(1, sizeof(struct splay_tree_node_n));
 
 	if (spn == (splay_tree_node) 0) {
 		/* shouldnothappen */
@@ -249,7 +242,7 @@ void splay_tree_remove(splay_tree sp, splay_tree_key key)
 	node->left = (splay_tree_node) 0;
 	node->right = (splay_tree_node) 0;
 
-	free((void *)node);
+	dp_free((void *)node);
 
 	return;
 }
@@ -448,7 +441,7 @@ splay_tree_node splay_tree_successor(splay_tree sp, splay_tree_key key)
 void splay_tree_free_value(splay_tree_value value)
 {
 	if (value) {
-		free((void *)value);
+		dp_free((void *)value);
 	}
 	return;
 }
@@ -456,7 +449,7 @@ void splay_tree_free_value(splay_tree_value value)
 void splay_tree_free_key(splay_tree_key key)
 {
 	if (key) {
-		free((void *)key);
+		dp_free((void *)key);
 	}
 	return;
 }

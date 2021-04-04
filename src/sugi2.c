@@ -46,6 +46,7 @@
 #include "hier.h"
 #include "uniqnode.h"
 #include "sugi.h"
+#include "dpmem.h"
 
 struct mmatrix {
 	int level;		/* upper level */
@@ -900,17 +901,17 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 	}
 
 	/* the whole graph structures */
-	a = calloc(1, g->maxlevel * sizeof(struct mmatrix *));
-	a1 = calloc(1, g->maxlevel * sizeof(struct mmatrix *));
-	a2 = calloc(1, g->maxlevel * sizeof(struct mmatrix *));
-	as = calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	a = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	a1 = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	a2 = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	as = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
 
 	/* get matrix struct */
 	for (i = 0; i < g->maxlevel; i++) {
-		a[i] = calloc(1, sizeof(struct mmatrix));
-		a1[i] = calloc(1, sizeof(struct mmatrix));
-		a2[i] = calloc(1, sizeof(struct mmatrix));
-		as[i] = calloc(1, sizeof(struct mmatrix));
+		a[i] = dp_calloc(1, sizeof(struct mmatrix));
+		a1[i] = dp_calloc(1, sizeof(struct mmatrix));
+		a2[i] = dp_calloc(1, sizeof(struct mmatrix));
+		as[i] = dp_calloc(1, sizeof(struct mmatrix));
 	}
 
 	/* get data inside struct */
@@ -946,10 +947,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 			as[i]->bbytes = ((as[i]->ncols + 1) * sizeof(double));
 		}
 
-		a[i]->b = calloc(1, a[i]->bbytes);
-		a1[i]->b = calloc(1, a1[i]->bbytes);
-		a2[i]->b = calloc(1, a2[i]->bbytes);
-		as[i]->b = calloc(1, as[i]->bbytes);
+		a[i]->b = dp_calloc(1, a[i]->bbytes);
+		a1[i]->b = dp_calloc(1, a1[i]->bbytes);
+		a2[i]->b = dp_calloc(1, a2[i]->bbytes);
+		as[i]->b = dp_calloc(1, as[i]->bbytes);
 
 		/* number of bytes used */
 		a[i]->nmi0 = ((a[i]->nrows + 1) * sizeof(int));
@@ -958,10 +959,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 		as[i]->nmi0 = ((a[i]->nrows + 1) * sizeof(int));
 
 		/* row node id's (int's) */
-		a[i]->mi0 = calloc(1, a[i]->nmi0);
-		a1[i]->mi0 = calloc(1, a1[i]->nmi0);
-		a2[i]->mi0 = calloc(1, a2[i]->nmi0);
-		as[i]->mi0 = calloc(1, as[i]->nmi0);
+		a[i]->mi0 = dp_calloc(1, a[i]->nmi0);
+		a1[i]->mi0 = dp_calloc(1, a1[i]->nmi0);
+		a2[i]->mi0 = dp_calloc(1, a2[i]->nmi0);
+		as[i]->mi0 = dp_calloc(1, as[i]->nmi0);
 
 		/* number of bytes used */
 		a[i]->nm0i = ((a[i]->ncols + 1) * sizeof(int));
@@ -970,10 +971,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 		as[i]->nm0i = ((a[i]->ncols + 1) * sizeof(int));
 
 		/* col node id's (int's) */
-		a[i]->m0i = calloc(1, a[i]->nm0i);
-		a1[i]->m0i = calloc(1, a1[i]->nm0i);
-		a2[i]->m0i = calloc(1, a2[i]->nm0i);
-		as[i]->m0i = calloc(1, as[i]->nm0i);
+		a[i]->m0i = dp_calloc(1, a[i]->nm0i);
+		a1[i]->m0i = dp_calloc(1, a1[i]->nm0i);
+		a2[i]->m0i = dp_calloc(1, a2[i]->nm0i);
+		as[i]->m0i = dp_calloc(1, as[i]->nm0i);
 
 		/* bits array for the matrix */
 		a[i]->nbytes = 1 + ((((a[i]->nrows + 1) * (a[i]->ncols + 1)) + CHAR_BIT) / CHAR_BIT);
@@ -981,10 +982,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 		a2[i]->nbytes = 1 + ((((a2[i]->nrows + 1) * (a2[i]->ncols + 1)) + CHAR_BIT) / CHAR_BIT);
 		as[i]->nbytes = 1 + ((((as[i]->nrows + 1) * (as[i]->ncols + 1)) + CHAR_BIT) / CHAR_BIT);
 
-		a[i]->bits = calloc(1, a[i]->nbytes);
-		a1[i]->bits = calloc(1, a1[i]->nbytes);
-		a2[i]->bits = calloc(1, a2[i]->nbytes);
-		as[i]->bits = calloc(1, as[i]->nbytes);
+		a[i]->bits = dp_calloc(1, a[i]->nbytes);
+		a1[i]->bits = dp_calloc(1, a1[i]->nbytes);
+		a2[i]->bits = dp_calloc(1, a2[i]->nbytes);
+		as[i]->bits = dp_calloc(1, as[i]->nbytes);
 	}
 
 	/* fill the matrix with data for all levels */
@@ -1213,45 +1214,45 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 
 	for (i = 0; i < g->maxlevel; i++) {
 		if (a[i]) {
-			free(a[i]->b);
-			free(a[i]->mi0);
-			free(a[i]->m0i);
-			free(a[i]->bits);
+			dp_free(a[i]->b);
+			dp_free(a[i]->mi0);
+			dp_free(a[i]->m0i);
+			dp_free(a[i]->bits);
 		}
 		if (a1[i]) {
-			free(a1[i]->b);
-			free(a1[i]->mi0);
-			free(a1[i]->m0i);
-			free(a1[i]->bits);
+			dp_free(a1[i]->b);
+			dp_free(a1[i]->mi0);
+			dp_free(a1[i]->m0i);
+			dp_free(a1[i]->bits);
 		}
 		if (a2[i]) {
-			free(a2[i]->b);
-			free(a2[i]->mi0);
-			free(a2[i]->m0i);
-			free(a2[i]->bits);
+			dp_free(a2[i]->b);
+			dp_free(a2[i]->mi0);
+			dp_free(a2[i]->m0i);
+			dp_free(a2[i]->bits);
 		}
 		if (as[i]) {
-			free(as[i]->b);
+			dp_free(as[i]->b);
 
-			free(as[i]->mi0);
+			dp_free(as[i]->mi0);
 
-			free(as[i]->m0i);
+			dp_free(as[i]->m0i);
 
-			free(as[i]->bits);
+			dp_free(as[i]->bits);
 		}
 	}
 
 	for (i = 0; i < g->maxlevel; i++) {
-		free(a[i]);
-		free(a1[i]);
-		free(a2[i]);
-		free(as[i]);
+		dp_free(a[i]);
+		dp_free(a1[i]);
+		dp_free(a2[i]);
+		dp_free(as[i]);
 	}
 
-	free(a);
-	free(a1);
-	free(a2);
-	free(as);
+	dp_free(a);
+	dp_free(a1);
+	dp_free(a2);
+	dp_free(as);
 
 	return;
 }
@@ -1522,7 +1523,7 @@ void reduce_crossings2(struct gml_graph *g, int it1v, int it2v)
 
 	/* number of crossing edges at level */
 	if (g->numce == NULL) {
-		g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 		if (g->numce == NULL) {
 			return;
 		}

@@ -27,8 +27,8 @@ Grammar
    17     | TOKEN_HTEXT
    18     | ctext
 
-   19 statements: statement
-   20           | statements statement
+   19 statements: statements statement
+   20           | statement
 
    21 statement: statement2
    22          | statement2 TOKEN_SC
@@ -157,7 +157,7 @@ ctext <string> (30)
 text <string> (31)
     on left: 15 16 17 18, on right: 11 31 32 33 34 35 36 37 39 64 68
 statements (32)
-    on left: 19 20, on right: 2 20 65 67
+    on left: 19 20, on right: 2 19 65 67
 statement (33)
     on left: 21 22 23, on right: 19 20
 statement2 (34)
@@ -491,7 +491,7 @@ State 28
 State 29
 
     2 startdot: utf thetype thename $@1 TOKEN_BRACEOPEN statements . TOKEN_BRACECLOSE
-   20 statements: statements . statement
+   19 statements: statements . statement
 
     TOKEN_BRACEOPEN   shift, and go to state 23
     TOKEN_BRACECLOSE  shift, and go to state 45
@@ -521,9 +521,9 @@ State 29
 
 State 30
 
-   19 statements: statement .
+   20 statements: statement .
 
-    $default  reduce using rule 19 (statements)
+    $default  reduce using rule 20 (statements)
 
 
 State 31
@@ -687,9 +687,9 @@ State 45
 
 State 46
 
-   20 statements: statements statement .
+   19 statements: statements statement .
 
-    $default  reduce using rule 20 (statements)
+    $default  reduce using rule 19 (statements)
 
 
 State 47
@@ -805,7 +805,7 @@ State 55
 
 State 56
 
-   20 statements: statements . statement
+   19 statements: statements . statement
    67 sstatement: TOKEN_BRACEOPEN $@10 statements . TOKEN_BRACECLOSE
 
     TOKEN_BRACEOPEN   shift, and go to state 23
@@ -967,7 +967,7 @@ State 68
 
 State 69
 
-   20 statements: statements . statement
+   19 statements: statements . statement
    65 sstatement: shead TOKEN_BRACEOPEN statements . TOKEN_BRACECLOSE
 
     TOKEN_BRACEOPEN   shift, and go to state 23

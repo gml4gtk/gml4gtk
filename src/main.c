@@ -77,6 +77,9 @@
 #include "dpif.h"
 #include "dot.tab.h"
 #include "vcg.h"
+#include "dpmem.h"
+
+/* todo the pango font routines can be improved */
 
 /*
  * a GTK font pattern. These have the syntax
@@ -100,7 +103,7 @@
 /* pango on wine has issues with font options, so use only a font name */
 
 /* name of font to use, example "Sans" */
-#define DEFAULT_FONTNAME "Sans"
+#define DEFAULT_FONTNAME "sans"
 
 /* name of slant to use, example "Italic", "Oblique" or "Roman" */
 #define DEFAULT_FONTSLANT " "
@@ -113,6 +116,7 @@
 
 /* font size to use, example "10", "18", "20" etc. */
 #define DEFAULT_FONTSIZE "14"
+#define DEFAULT_FONTSIZE_INT 14
 
 #endif
 #endif
@@ -120,19 +124,20 @@
 /* Linux defaults */
 
 /* name of font to use, example "Sans" */
-#define DEFAULT_FONTNAME "Sans"
+#define DEFAULT_FONTNAME "sans"
 
 /* name of slant to use, example "Italic", "Oblique" or "Roman" */
-#define DEFAULT_FONTSLANT "ROMAN"
+#define DEFAULT_FONTSLANT "roman"
 
 /* name of weight to use, example "Bold", "Book", "Light", "Medium", "Semi-bold", "Ultra-light" */
-#define DEFAULT_FONTWEIGHT "Light"
+#define DEFAULT_FONTWEIGHT "light"
 
 /* name of condensed to use, example "Semi-Condensed", "Condensed" */
-#define DEFAULT_FONTCONDENSED "Condensed"
+#define DEFAULT_FONTCONDENSED "condensed"
 
 /* font size to use, example "10", "18", "20" etc. */
 #define DEFAULT_FONTSIZE "12"
+#define DEFAULT_FONTSIZE_INT 12
 
 /* edge line thickness double value for example 0.5, 1.0, 1.5 */
 #define DEFAULT_EDGE_THICKNESS 1.0
@@ -143,6 +148,9 @@
 /* window initial (x,y) size in pixels */
 #define TOP_LEVEL_WINDOW_XSIZE 700
 #define TOP_LEVEL_WINDOW_YSIZE 600
+
+/* probed once to check if pango lib support markup overline="single" attribute */
+static int pango_overline = -1;
 
 /* last open/save dir */
 static char *lastopendir = NULL;
@@ -190,6 +198,9 @@ static GtkWidget *popupwindow1 = (GtkWidget *) 0;
 /* edge label tickbox */
 static GtkWidget *elabel1 = (GtkWidget *) 0;
 
+/* position mode button */
+static GtkWidget *posbutton = (GtkWidget *) 0;
+
 /* status line gtk buffers */
 static GtkTextBuffer *entry1buffer = NULL;
 static char charentry1buffer[80];
@@ -232,7 +243,9 @@ static void check1_toggle(GtkWidget * widget, gpointer window);
 static void dummy1_toggle(GtkWidget * widget, gpointer window);
 static void elabel1_toggle(GtkWidget * widget, gpointer window);
 static void label1_toggle(GtkWidget * widget, gpointer window);
+static void nnames1_toggle(GtkWidget * widget, gpointer window);
 static void popup1_toggle(GtkWidget * widget, gpointer window);
+static void mirrory1_toggle(GtkWidget * widget, gpointer window);
 
 static void on_top_level_window_drawingarea1_expose_event_edges(cairo_t * crp);
 
@@ -242,6 +255,8 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_record_r(cairo_t
 
 static void on_top_level_window_drawingarea1_expose_event_nodes_record(cairo_t * crp, struct gml_node
 								       *node);
+static void on_top_level_window_drawingarea1_expose_event_nodes_html(cairo_t * crp, struct gml_node
+								     *node);
 
 static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp);
 
@@ -332,7 +347,6 @@ int main(int argc, char *argv[])
 	GtkWidget *yspinbutton;
 	GtkWidget *pos1;
 	GtkAdjustment *posadjustment;
-	GtkWidget *posbutton;
 	GtkWidget *check1;
 	GtkWidget *dummy1;
 	GtkWidget *rank1;
@@ -343,18 +357,20 @@ int main(int argc, char *argv[])
 	GtkAdjustment *baryadjustment;
 	GtkWidget *barybutton;
 	GtkWidget *label1;
+	GtkWidget *nnames1;
 	GtkWidget *popup1;
+	GtkWidget *mirrory1;
 
 	argv0 = argv[0];
 
 	/* get the home dir */
 	s = getenv("HOME");
 	if (s) {
-		lastopendir = calloc(1, (strlen(s) + 1));
+		lastopendir = dp_calloc(1, (strlen(s) + 1));
 		if (lastopendir) {
 			strcpy(lastopendir, s);
 		}
-		lastsavedir = calloc(1, (strlen(s) + 1));
+		lastsavedir = dp_calloc(1, (strlen(s) + 1));
 		if (lastsavedir) {
 			strcpy(lastsavedir, s);
 		}
@@ -821,7 +837,7 @@ int main(int argc, char *argv[])
 	/* spin to change rank type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
 	rankadjustment = (GtkAdjustment *) gtk_adjustment_new(ranktype /* initial value */ ,
 							      1 /* minimum value */ ,
-							      4 /* maximum value */ ,
+							      3 /* maximum value */ ,
 							      1 /* step increment */ ,
 							      1 /* page increment */ ,
 							      0	/* page size now *must* be zero */
@@ -899,6 +915,23 @@ int main(int argc, char *argv[])
 	gtk_widget_set_tooltip_text(label1, "labels on/off");
 	gtk_widget_show(label1);
 
+	/* node names on/off */
+	nnames1 = gtk_check_button_new_with_label("names");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ nnames1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_nnames) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(nnames1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(nnames1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(nnames1), "clicked", G_CALLBACK(nnames1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(nnames1, "node names instead of labels");
+	gtk_widget_show(nnames1);
+
 	/* popup labels on/off */
 	popup1 = gtk_check_button_new_with_label("popup");
 	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ popup1,
@@ -915,6 +948,23 @@ int main(int argc, char *argv[])
 	g_signal_connect(G_OBJECT(popup1), "clicked", G_CALLBACK(popup1_toggle), (gpointer) mainwindow1);
 	gtk_widget_set_tooltip_text(popup1, "popup labels on/off");
 	gtk_widget_show(popup1);
+
+	/* mirror y on/off */
+	mirrory1 = gtk_check_button_new_with_label("mirror");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ mirrory1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_mirrory) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(mirrory1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(mirrory1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(mirrory1), "clicked", G_CALLBACK(mirrory1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(mirrory1, "mirror drawing in y direction");
+	gtk_widget_show(mirrory1);
 
 	/*
 	 * here additional gtk elements
@@ -1279,7 +1329,10 @@ static void popup_nodelabel(struct gml_node *n, cairo_t * crp, int xsize, int ys
 	cairo_rectangle(crp, 0, 0, xsize, ysize);
 	cairo_stroke(crp);
 
-	if (n->rlabel) {
+	if (n->hlabel) {
+		/* html label */
+		on_top_level_window_drawingarea1_expose_event_nodes_html(crp, n);
+	} else if (n->rlabel) {
 		/* record label */
 
 		/* draw record label */
@@ -1392,7 +1445,7 @@ static gboolean popuparea1_expose_event(GtkWidget * widget, GdkEventExpose * eve
 	(void)gdk_drawable_get_size(event->window, &w, &h);
 
 	if (option_gdebug > 1 || 0) {
-		printf("%s(): drawing area size is (%d,%d) node %p\n", __func__, w, h, (void *)n);
+		printf("%s(): drawing area size is (%d,%d) node=%p nlabel=\"%s\"\n", __func__, w, h, (void *)n, n->nlabel);
 		fflush(stdout);
 	}
 
@@ -1495,11 +1548,15 @@ static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpoi
 }
 #endif
 
-/* popup window with node label text */
-static void do_popup(struct gml_node *n)
+/* popup window with node label text, (x,y) current mouse pointer */
+static void do_popup(struct gml_node *n, int x, int y)
 {
+	GdkWindow *window = NULL;
 	GtkWidget *vbox1 = (GtkWidget *) 0;
 	GtkWidget *popuparea1 = (GtkWidget *) 0;
+	int xx = 0;
+	int yy = 0;
+	int pop = 1;
 
 	/* if there is alreay a popup, keep it that way */
 	if (popupwindow1) {
@@ -1509,8 +1566,16 @@ static void do_popup(struct gml_node *n)
 	/* top level outer window
 	 * can also be GTK_WINDOW_POPUP but then window is
 	 * not managed by window manager
+	 * with POPUP the popup window is at (0,0) on the screen
+	 * with TOPLEVEL the window can be at mouse position
+	 * instead of next to mouse position
+	 *the positioning of the popup window can be optimized
 	 */
-	popupwindow1 = gtk_window_new( /* GTK_WINDOW_POPUP or */ GTK_WINDOW_TOPLEVEL);
+	if (pop) {
+		popupwindow1 = gtk_window_new(GTK_WINDOW_POPUP /* or GTK_WINDOW_TOPLEVEL */ );
+	} else {
+		popupwindow1 = gtk_window_new( /* GTK_WINDOW_POPUP or */ GTK_WINDOW_TOPLEVEL);
+	}
 
 	/* make sure to exit oke. */
 	g_signal_connect(G_OBJECT(popupwindow1), "destroy", G_CALLBACK(no_popup), NULL);
@@ -1561,6 +1626,13 @@ static void do_popup(struct gml_node *n)
 #endif
 
 	/* the label text drawing is in the expose/draw event */
+	if (pop) {
+		/* get position of window drawarea where mouse is */
+		window = gtk_widget_get_window(drawingarea1);
+		gdk_window_get_origin(window, &xx, &yy);
+		/* move popup right at node */
+		gtk_window_move(GTK_WINDOW(popupwindow1), xx + x + 15, yy + y + 0);
+	}
 
 	gtk_widget_show(popupwindow1);
 
@@ -1689,7 +1761,7 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 			/* node text must have a size */
 			if (n->fbbx && n->fbby) {
 				/* popup window with node label text */
-				do_popup(n);
+				do_popup(n, x, y);
 			}
 		} else {
 			/* make sure there is no popup windows */
@@ -1887,8 +1959,11 @@ static void do_layout_all_r(struct gml_graph *g)
 	/* run barycenter using defaults (0,0) or a value */
 	barycenter(g, 0, 0);
 
-	/* use position 1 */
+	/* force postype */
 	postype = 1;
+	/* set the value for the new pos type */
+	gtk_spin_button_set_value((GtkSpinButton *) posbutton, postype);
+
 	improve_positions(g);
 
 	/* print results */
@@ -2052,9 +2127,10 @@ static void do_clear_all(int mode)
 		/* clear count of crossing edges at level */
 		clear_numce_r(maingraph);
 
-		/* clear optional record label of node */
+		/* clear optional record label and html of node */
 		if (mode == 0) {
 			clear_rlabel_r(maingraph);
+			clear_hlabel_r(maingraph);
 		}
 
 		/* clear self-edges list */
@@ -2090,7 +2166,7 @@ static void do_clear_all(int mode)
 			clear_rawedgelist(maingraph);
 
 			/* clear main graph structure */
-			free(maingraph);
+			dp_free(maingraph);
 
 			maingraph = NULL;
 		}
@@ -2177,33 +2253,33 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)g_free(lastopendir);
+			(void)dp_free(lastopendir);
 		}
-		lastopendir = calloc(1, (strlen(file_chooser_dir) + 1));
+		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		if (lastopendir) {
 			strcpy(lastopendir, file_chooser_dir);
 		}
-		(void)g_free(file_chooser_dir);
+		(void)dp_free(file_chooser_dir);
 	}
 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
-		inputfilename = calloc(1, (strlen(file_chooser_filename) + 1));
+		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
 		if (inputfilename) {
 			strcpy(inputfilename, file_chooser_filename);
 		}
-		(void)g_free(file_chooser_filename);
+		(void)dp_free(file_chooser_filename);
 	} else {
 		return;
 	}
 
 	/* set filename in window */
 	bname = g_path_get_basename(inputfilename);
-	baseinputfilename2 = calloc(1, (strlen(bname) + 1));
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));
 	if (baseinputfilename2) {
 		strcpy(baseinputfilename2, bname);
 	}
-	g_free(bname);
+	dp_free(bname);
 
 	/* open file to parse */
 	errno = 0;
@@ -2217,8 +2293,8 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		free(inputfilename);
-		free(baseinputfilename2);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2247,8 +2323,8 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		free(inputfilename);
-		free(baseinputfilename2);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		fclose(f);
 		/* data is invalid at this point */
 		validdata = 0;
@@ -2263,7 +2339,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	fclose(f);
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
-	g_free(bname);
+	dp_free(bname);
 
 	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
 
@@ -2306,8 +2382,8 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		(void)g_free(inputfilename);
-		free(baseinputfilename2);
+		(void)dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 
 		/* fit drawing in window */
 		dofit();
@@ -2315,8 +2391,8 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		(void)g_free(inputfilename);
-		free(baseinputfilename2);
+		(void)dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -2394,33 +2470,33 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)g_free(lastopendir);
+			(void)dp_free(lastopendir);
 		}
-		lastopendir = calloc(1, (strlen(file_chooser_dir) + 1));
+		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		if (lastopendir) {
 			strcpy(lastopendir, file_chooser_dir);
 		}
-		(void)g_free(file_chooser_dir);
+		(void)dp_free(file_chooser_dir);
 	}
 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
-		inputfilename = calloc(1, (strlen(file_chooser_filename) + 1));
+		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
 		if (inputfilename) {
 			strcpy(inputfilename, file_chooser_filename);
 		}
-		(void)g_free(file_chooser_filename);
+		(void)dp_free(file_chooser_filename);
 	} else {
 		return;
 	}
 
 	/* set filename in window */
 	bname = g_path_get_basename(inputfilename);
-	baseinputfilename2 = calloc(1, (strlen(bname) + 1));;
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));;
 	if (baseinputfilename2) {
 		strcpy(baseinputfilename2, bname);
 	}
-	g_free(bname);
+	dp_free(bname);
 
 	/* open file to parse */
 	errno = 0;
@@ -2434,8 +2510,8 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		free(inputfilename);
-		free(baseinputfilename2);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2464,8 +2540,8 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		free(inputfilename);
-		free(baseinputfilename2);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		fflush(stdout);
 		fclose(f);
 		/* data is invalid at this point */
@@ -2482,7 +2558,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
-	g_free(bname);
+	dp_free(bname);
 
 	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
 
@@ -2529,8 +2605,8 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		(void)g_free(inputfilename);
-		free(baseinputfilename2);
+		(void)dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 
 		/* fit drawing in window */
 		dofit();
@@ -2538,8 +2614,8 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		(void)g_free(inputfilename);
-		free(baseinputfilename2);
+		(void)dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -2616,33 +2692,33 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)g_free(lastopendir);
+			(void)dp_free(lastopendir);
 		}
-		lastopendir = calloc(1, (strlen(file_chooser_dir) + 1));
+		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		if (lastopendir) {
 			strcpy(lastopendir, file_chooser_dir);
 		}
-		(void)g_free(file_chooser_dir);
+		(void)dp_free(file_chooser_dir);
 	}
 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
-		inputfilename = calloc(1, (strlen(file_chooser_filename) + 1));
+		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
 		if (inputfilename) {
 			strcpy(inputfilename, file_chooser_filename);
 		}
-		(void)g_free(file_chooser_filename);
+		(void)dp_free(file_chooser_filename);
 	} else {
 		return;
 	}
 
 	/* set filename in window */
 	bname = g_path_get_basename(inputfilename);
-	baseinputfilename2 = calloc(1, (strlen(bname) + 1));;
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));;
 	if (baseinputfilename2) {
 		strcpy(baseinputfilename2, bname);
 	}
-	g_free(bname);
+	dp_free(bname);
 
 	/* open file to parse */
 	errno = 0;
@@ -2656,8 +2732,8 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		free(inputfilename);
-		free(baseinputfilename2);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2686,8 +2762,8 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		free(inputfilename);
-		free(baseinputfilename2);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		fflush(stdout);
 		fclose(f);
 		/* data is invalid at this point */
@@ -2707,7 +2783,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	 */
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
-	g_free(bname);
+	dp_free(bname);
 
 	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
 
@@ -2746,8 +2822,8 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		(void)g_free(inputfilename);
-		free(baseinputfilename2);
+		(void)dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 
 		/* fit drawing in window */
 		dofit();
@@ -2755,8 +2831,8 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		(void)g_free(inputfilename);
-		free(baseinputfilename2);
+		(void)dp_free(inputfilename);
+		dp_free(baseinputfilename2);
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -2828,12 +2904,12 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 
 	/* */
 	if (file_chooser_filename) {
-		svgfilename = calloc(1, (strlen(file_chooser_filename) + 1));
+		svgfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
 		if (svgfilename) {
 			strcpy(svgfilename, file_chooser_filename);
 		}
 		/* */
-		(void)g_free(file_chooser_filename);
+		(void)dp_free(file_chooser_filename);
 	} else {
 		/* no filename */
 		return;
@@ -2851,7 +2927,7 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 						 "Cannot open file %s for writing (%s)", svgfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		free(svgfilename);
+		dp_free(svgfilename);
 		return;
 	}
 
@@ -2894,7 +2970,7 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 	vymin = saved_vymin;
 
 	fclose(fstream);
-	free(svgfilename);
+	dp_free(svgfilename);
 
 	return;
 }
@@ -2953,12 +3029,12 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 
 	/* */
 	if (file_chooser_filename) {
-		diafilename = calloc(1, (strlen(file_chooser_filename) + 1));
+		diafilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
 		if (diafilename) {
 			strcpy(diafilename, file_chooser_filename);
 		}
 		/* */
-		(void)g_free(file_chooser_filename);
+		(void)dp_free(file_chooser_filename);
 	} else {
 		/* no filename */
 		return;
@@ -2976,7 +3052,7 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 						 "Cannot open file %s for writing (%s)", diafilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		free(diafilename);
+		dp_free(diafilename);
 		return;
 	}
 
@@ -2984,7 +3060,7 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 	graph2dia(maingraph, fstream);
 
 	fclose(fstream);
-	free(diafilename);
+	dp_free(diafilename);
 
 	return;
 }
@@ -3282,6 +3358,330 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_record(cairo_t *
 	return;
 }
 
+/* html 1 item node drawing */
+static void on_top_level_window_drawingarea1_expose_event_nodes_html1item(cairo_t * crp, struct gml_node
+									  *node, struct gml_hitem *item, int xplus, int yplus)
+{
+	PangoLayout *layout = NULL;
+	PangoFontDescription *desc = NULL;
+	char buf[128];
+	int x0 = 0;
+	int y0 = 0;
+	int r = 0;
+	int b = 0;
+	int g = 0;
+	int fontcolor = 0;
+	int bgcolor = 0;
+	int bgr = 0;
+	int bgb = 0;
+	int bgg = 0;
+	int xxo = 0;
+	int yyo = 0;
+	char *s = NULL;
+	char *fontstr = NULL;
+	PangoAttrList *pattrs = NULL;
+	GError *errorpos = NULL;
+	int status = 0;
+	char *ptext = NULL;
+	char *em = NULL;
+	char *fnam = NULL;
+	char *fslant = NULL;
+	char *fweight = NULL;
+	char *ful = NULL;
+	char *fol = NULL;
+	char spans[128];
+	char spane[64];
+	char *fsubs = NULL;
+	char *fsube = NULL;
+	char *fsups = NULL;
+	char *fsupe = NULL;
+	char *fstr = NULL;
+	int fsize = 0;
+	int flen = 0;
+
+	if (item == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+	if (item->text == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+	if (strlen(item->text) == 0) {
+		/* shouldnothappen */
+		return;
+	}
+
+	/* start positions */
+	x0 = node->finx - vxmin;
+	y0 = node->finy - vymin;
+	x0 = x0 + xplus;
+	y0 = y0 + yplus;
+
+	layout = pango_cairo_create_layout(crp);
+
+	/* background color */
+	if (item->ncolor < 0) {
+		/* shouldnothappen */
+		bgcolor = 0x00ffff;
+	} else {
+		bgcolor = item->ncolor;
+	}
+
+	/* backgroundcolor of node white default or color */
+	bgr = (bgcolor & 0x00ff0000) >> 16;
+	bgg = (bgcolor & 0x0000ff00) >> 8;
+	bgb = (bgcolor & 0x000000ff);
+
+	if (item->fontcolor < 0) {
+		/* shouldnothappen */
+		fontcolor = 0;	/* black */
+	} else {
+		fontcolor = item->fontcolor;
+	}
+
+	/* fontcolor of node black default or color */
+	r = (fontcolor & 0x00ff0000) >> 16;
+	g = (fontcolor & 0x0000ff00) >> 8;
+	b = (fontcolor & 0x000000ff);
+
+	/* re-use pango font format string */
+	if (item->fontstr) {
+		fontstr = item->fontstr;
+	} else {
+		/* create new string */
+		if (item->fontname) {
+			fnam = item->fontname;
+		} else {
+			fnam = DEFAULT_FONTNAME;
+		}
+		if (item->fontslant) {
+			fslant = item->fontslant;
+		} else {
+			fslant = DEFAULT_FONTSLANT;
+		}
+		if (item->bitflags.i) {
+			fslant = "italic";
+		}
+		if (item->fontweight) {
+			fweight = item->fontweight;
+		} else {
+			fweight = DEFAULT_FONTWEIGHT;
+		}
+		if (item->bitflags.b) {
+			fweight = "bold";
+		}
+		if (item->bitflags.u || 0) {
+			ful = " underline=\"single\"";
+			/* also option to set underline color */
+		} else {
+			ful = "";
+		}
+		/* also option to set overline color */
+		if (item->bitflags.o || 0) {
+			if (pango_overline < 0) {
+				/* probe pango lib for support at runtime */
+				status =
+				    pango_parse_markup("<span overline=\"single\">text</span>", -1, 0, &pattrs, &ptext, NULL,
+						       &errorpos);
+				if (status == 0) {
+					printf("%s(): overline <o> in html string is not supported with current pango library\n",
+					       __func__);
+					pango_overline = 0;
+				} else {
+					/* supported */
+					pango_overline = 1;
+				}
+			}
+			/* it depends on pango version if overline s allowed, if not then no text */
+			if (pango_overline) {
+				fol = " overline=\"single\"";
+			} else {
+				fol = "";
+			}
+		} else {
+			fol = "";
+		}
+		if (item->bitflags.s || 0) {
+			fstr = " strikethrough=\"true\"";
+		} else {
+			fstr = "";
+		}
+		if (item->fontsize < 0) {
+			fsize = DEFAULT_FONTSIZE_INT;
+		} else {
+			fsize = item->fontsize;
+		}
+		/* sub and superscript */
+		if (item->bitflags.sub || 0) {
+			fsubs = "<sub>";
+			fsube = "</sub>";
+		} else {
+			fsubs = "";
+			fsube = "";
+		}
+		if (item->bitflags.sup || 0) {
+			fsups = "<sup>";
+			fsupe = "</sup>";
+		} else {
+			fsups = "";
+			fsupe = "";
+		}
+
+		memset(spans, 0, 128);
+
+		/* start of format string */
+		snprintf(spans, (128 - 1), "<span foreground=\"#%02x%02x%02x\" background=\"#%02x%02x%02x\"%s%s%s>%s%s", r, g, b,
+			 bgr, bgg, bgb, ful, fstr, fol, fsups, fsubs);
+
+		/* end of format string */
+		memset(spane, 0, 64);
+		snprintf(spane, (64 - 1), "%s%s</span>", fsube, fsupe);
+
+		flen = strlen(spans) + strlen(spane) + strlen(item->otext) + 1;
+		fontstr = dp_calloc(1, flen);
+		if (fontstr == NULL) {
+			/* shouldnothappen */
+			g_object_unref(G_OBJECT(layout));
+			return;
+		}
+		/* create new full format string */
+		strcpy(fontstr, spans);
+		strcat(fontstr, item->otext);
+		strcat(fontstr, spane);
+		/* save for re-use */
+		item->fontstr = uniqstr(fontstr);
+		dp_free(fontstr);
+		fontstr = item->fontstr;
+	}
+
+	status = pango_parse_markup(fontstr, -1, 0, &pattrs, &ptext, NULL, &errorpos);
+
+	if (status == 0) {
+		if (errorpos) {
+			em = errorpos->message;
+		} else {
+			em = "";
+		}
+		printf("%s(): pango_parse_markup() of '%s' has error status %d \"%s\"\n", __func__, fontstr, status, em);
+		pattrs = NULL;
+	}
+
+	/* oke */
+	pango_layout_set_text(layout, item->text, -1);
+
+	pango_layout_set_attributes(layout, pattrs);
+
+	if (pango_layout_get_character_count(layout) == 0) {
+		/* shouldnothappen */
+		g_object_unref(G_OBJECT(layout));
+		return;
+	}
+
+	/* start text inside rectangle */
+	xxo = 1;
+	yyo = 1;
+
+	/* set start position of text */
+	cairo_move_to(crp, x0 + item->txoff + xxo, y0 + item->tyoff + yyo);
+
+	/* set font parameters */
+
+	/* create the fontname description or re-use */
+	if (item->fontdesc) {
+		s = item->fontdesc;
+	} else {
+		memset(buf, 0, 128);
+
+		/* create the font name string */
+		snprintf(buf, (128 - 1), "%s %s %s %s %d", fnam, fslant, fweight, DEFAULT_FONTCONDENSED, fsize);
+
+		s = uniqstr(buf);
+		item->fontdesc = s;
+	}
+
+	/* */
+	desc = pango_font_description_from_string(s);
+
+	/* */
+	pango_layout_set_font_description(layout, desc);
+
+	/* */
+	pango_font_description_free(desc);
+
+	/* */
+	pango_cairo_update_layout(crp, layout);
+
+	/* draw the text */
+	pango_cairo_show_layout(crp, layout);
+
+	/* */
+	cairo_stroke(crp);
+
+	g_object_unref(G_OBJECT(layout));
+
+	return;
+}
+
+/* html items node drawing */
+static void on_top_level_window_drawingarea1_expose_event_nodes_htmlitems(cairo_t * crp, struct gml_node
+									  *node, struct gml_hilist *il, int xplus, int yplus)
+{
+	struct gml_hitem *pitem = NULL;
+	struct gml_hilist *pi = NULL;
+
+	if (il == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+
+	/* scan the text elements */
+	pi = il;
+	while (pi) {
+		pitem = pi->items;
+		if (pitem) {
+			if (pi->items->bitflags.br) {
+			} else if (pi->items->bitflags.hr) {
+			} else if (pi->items->bitflags.vr) {
+			} else if (pi->items->bitflags.img) {
+			} else {
+				on_top_level_window_drawingarea1_expose_event_nodes_html1item(crp, node, pitem, xplus, yplus);
+			}
+		}
+		pi = pi->next;
+	}
+
+	return;
+}
+
+/* html tables node drawing */
+static void on_top_level_window_drawingarea1_expose_event_nodes_htmltables(cairo_t * crp, struct gml_node
+									   *node)
+{
+	/* todo */
+	if (crp) {
+	}
+	if (node->hlabel->tl == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+	return;
+}
+
+/* html node drawing */
+static void on_top_level_window_drawingarea1_expose_event_nodes_html(cairo_t * crp, struct gml_node
+								     *node)
+{
+	if (node->hlabel->mode == 0) {
+		/* items */
+		on_top_level_window_drawingarea1_expose_event_nodes_htmlitems(crp, node, node->hlabel->il, 0, 0);
+	} else {
+		/* tables */
+		on_top_level_window_drawingarea1_expose_event_nodes_htmltables(crp, node);
+	}
+	return;
+}
+
 /* draw all nodes z
 zzz*/
 static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
@@ -3373,6 +3773,8 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 			 * now draw text of label as ususal or record style label
 			 */
 
+			/* this below is not oke, todo to fix */
+
 			/* calculate the scaled font size */
 			dfs = (zfactor * atoi(default_fontsize));
 
@@ -3385,9 +3787,86 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 				continue;
 			}
 
-			/* draw regular text in node, or record label */
-			if (nl->node->rlabel == NULL) {
+			if (nl->node->drawrh) {
+				/* draw regular text in node, or record label */
+				if (nl->node->hlabel) {
+					/* draw html label */
+					on_top_level_window_drawingarea1_expose_event_nodes_html(crp, nl->node);
+				} else if (nl->node->rlabel) {
+					/* draw record label */
+					on_top_level_window_drawingarea1_expose_event_nodes_record(crp, nl->node);
+				} else {
+					/* draw regular text */
+					/* fontcolor of node black default or color */
+					r = (nl->node->fontcolor & 0x00ff0000) >> 16;
+					g = (nl->node->fontcolor & 0x0000ff00) >> 8;
+					b = (nl->node->fontcolor & 0x000000ff);
 
+					/* draw in text color of node */
+					cairo_set_source_rgb(crp, r / 255.0, g / 255.0, b / 255.0);
+
+					xo = 2;
+					yo = 2;
+
+					/* set start position of text */
+					cairo_move_to(crp, nl->node->finx - vxmin + xo, nl->node->finy - vymin + yo);
+
+					layout = pango_cairo_create_layout(crp);
+
+					if (nl->node->nlabel == NULL) {
+						printf("%s(): nil nlabel\n", __func__);
+						/* shouldnothappen */
+						nl->node->nlabel = nl->node->name;
+					}
+
+					/* set the text to draw which is 0 terminated */
+					pango_layout_set_text(layout, nl->node->nlabel, -1);
+					/* set font parameters */
+
+					/* create the fontname description */
+					memset(buf, 0, 128);
+
+					default_fontname = DEFAULT_FONTNAME;
+
+					/* check if node has a specified font slant */
+					default_fontslant = DEFAULT_FONTSLANT;
+
+					/* check if node has a specified font weight */
+					default_fontweight = DEFAULT_FONTWEIGHT;
+
+					/* check if node has a specified font size */
+					default_fontsize = DEFAULT_FONTSIZE;
+
+					/* create the font name string */
+					snprintf(buf, (128 - 1), "%s %s %s %s %s", default_fontname,
+						 default_fontslant, default_fontweight, default_fontcondensed, default_fontsize);
+
+					/* copy string buffer */
+					s = uniqstr(buf);
+
+					/* */
+					desc = pango_font_description_from_string(s);
+
+					/* */
+					pango_layout_set_font_description(layout, desc);
+
+					/* */
+					pango_font_description_free(desc);
+
+					/* */
+					pango_cairo_update_layout(crp, layout);
+
+					/* draw the text */
+					pango_cairo_show_layout(crp, layout);
+
+					/* */
+					cairo_stroke(crp);
+
+					g_object_unref(G_OBJECT(layout));
+				}
+			} else {
+
+				/* draw regular text */
 				/* fontcolor of node black default or color */
 				r = (nl->node->fontcolor & 0x00ff0000) >> 16;
 				g = (nl->node->fontcolor & 0x0000ff00) >> 8;
@@ -3405,8 +3884,7 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 				layout = pango_cairo_create_layout(crp);
 
 				/* set the text to draw which is 0 terminated */
-				pango_layout_set_text(layout, nl->node->nlabel, -1);
-
+				pango_layout_set_text(layout, nl->node->name, -1);
 				/* set font parameters */
 
 				/* create the fontname description */
@@ -3449,9 +3927,7 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 				cairo_stroke(crp);
 
 				g_object_unref(G_OBJECT(layout));
-			} else {
-				/* draw record label */
-				on_top_level_window_drawingarea1_expose_event_nodes_record(crp, nl->node);
+
 			}
 
 		}
@@ -4203,16 +4679,27 @@ static void pos_changed(GtkWidget * widget, gpointer spinbutton)
 	if (spinbutton) {
 	}
 
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* at mirrory option force to keep postype 1 because type 2 does not work anymore. */
+	if (option_mirrory) {
+		/* message why pos value does not changes */
+		printf("%s(): because mirror option is active pos mode is fixed to 1 or turn off mirror option\n", __func__);
+		fflush(stdout);
+		postype = 1;
+		/* set the value for the new pos type */
+		gtk_spin_button_set_value((GtkSpinButton *) posbutton, postype);
+		return;
+	}
+
 	/* get the value for the new pos type */
 	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
 
 	/* set new pos type, 1,2,3 */
 	postype = (int)val;
-
-	/* check if there is node data to draw */
-	if (validdata == 0) {
-		return;
-	}
 
 	/* re-calc positions */
 	improve_positions(maingraph);
@@ -4320,6 +4807,58 @@ static void label1_toggle(GtkWidget * widget, gpointer window)
 	/* force edgelabels off */
 	option_edgelabels = 0;
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
+	/* do re-layout */
+	do_relayout_all(maingraph);
+	/* now a re-draw needed */
+	gtk_widget_queue_draw(drawingarea1);
+	return;
+}
+
+/* checkbox 7 is node names instead of labels */
+static void nnames1_toggle(GtkWidget * widget, gpointer window)
+{
+	if (widget) {
+	}
+	if (window) {
+	}
+	/* toggle the splines option */
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+		option_nnames = 1;
+	} else {
+		option_nnames = 0;
+	}
+	/* nop if no data */
+	if (validdata == 0) {
+		return;
+	}
+	/* do re-layout */
+	do_relayout_all(maingraph);
+	/* now a re-draw needed */
+	gtk_widget_queue_draw(drawingarea1);
+	return;
+}
+
+/* checkbox 8 is mirror in y direction */
+static void mirrory1_toggle(GtkWidget * widget, gpointer window)
+{
+	if (widget) {
+	}
+	if (window) {
+	}
+	/* toggle the splines option */
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+		option_mirrory = 1;
+	} else {
+		option_mirrory = 0;
+	}
+	/* nop if no data */
+	if (validdata == 0) {
+		return;
+	}
+	/* force postype */
+	postype = 1;
+	/* set the value for the new pos type */
+	gtk_spin_button_set_value((GtkSpinButton *) posbutton, postype);
 	/* do re-layout */
 	do_relayout_all(maingraph);
 	/* now a re-draw needed */
@@ -4552,8 +5091,8 @@ static void dofit(void)
 /* size of fields */
 static struct gml_p static_maingtk_textsizes1sz(struct gml_rl *info)
 {
-	struct gml_p d;
-	struct gml_p dsub;
+	struct gml_p d = { 0, 0 };
+	struct gml_p dsub = { 0, 0 };
 	int i = 0;
 
 	d.x = 0;
@@ -4703,6 +5242,7 @@ static void static_maingtk_textsizes1eq(struct gml_rl *info)
 	return;
 }
 
+/* text size 1 record label */
 static void static_maingtk_textsizes1rl(struct gml_rl *info)
 {
 	int i = 0;
@@ -4742,7 +5282,7 @@ static void static_maingtk_textsizes1rl(struct gml_rl *info)
 			}
 			len = strlen(info->label);
 			if (len) {
-				tmpb = (char *)calloc(1, (len + 1));
+				tmpb = (char *)dp_calloc(1, (len + 1));
 				p = info->label;
 				q = tmpb;
 				/* un-escape the string */
@@ -4776,7 +5316,7 @@ static void static_maingtk_textsizes1rl(struct gml_rl *info)
 					info->ulabel = uniqstr("  ");
 				}
 				info->ulabel = uniqstr(tmpb);
-				free(tmpb);
+				dp_free(tmpb);
 				tmpb = NULL;
 				/* calculate the text area */
 				if (surface == NULL) {
@@ -5008,17 +5548,379 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 	return;
 }
 
+/* size of one 1 html item
+ * the item has fontsize, name and bitflags of type
+ */
+static struct gml_p static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
+{
+	struct gml_p d = { 0, 0 };
+	int fsz = 0;
+	char *slant = NULL;
+	char *weight = NULL;
+	char *fn = NULL;
+	cairo_surface_t *surface = NULL;
+	cairo_t *crdraw = NULL;
+	PangoLayout *layout = NULL;
+	PangoFontDescription *desc = NULL;
+	char buf[128];
+	char *s = NULL;
+	int w = 0;
+	int h = 0;
+
+	if (item == NULL) {
+		/* shouldnothappen */
+		return (d);
+	}
+
+	if (0) {
+		printf("%s(): item->text is \"%s\"\n", __func__, item->text);
+	}
+
+	if (item->text == NULL) {
+		/* shouldnothappen */
+		return (d);
+	}
+
+	if (strlen(item->text) == 0) {
+		/* shouldnothappen */
+		return (d);
+	}
+
+	/* get fontsize */
+	if (item->fontsize < 0) {
+		/* not specified */
+		fsz = DEFAULT_FONTSIZE_INT;
+		item->fontsize = fsz;
+	} else {
+		/* check fontsize */
+		if (item->fontsize < 5) {
+			/* too small text */
+			return (d);
+		}
+		fsz = item->fontsize;
+	}
+
+	/* italic slant */
+	if (item->bitflags.i) {
+		slant = "italic";
+	} else {
+		slant = DEFAULT_FONTSLANT;
+	}
+
+	item->fontslant = uniqstr(slant);
+
+	/* bold weight */
+	if (item->bitflags.b) {
+		weight = "bold";
+	} else {
+		weight = DEFAULT_FONTWEIGHT;
+	}
+
+	item->fontweight = uniqstr(weight);
+
+	/* check if fontname set */
+	if (item->fontname) {
+		/* at unknown fontname, default is used without warning */
+		fn = item->fontname;
+	} else {
+		fn = DEFAULT_FONTNAME;
+	}
+
+	if (surface == NULL) {
+		surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
+	}
+
+	/* */
+	if (crdraw == NULL) {
+		crdraw = cairo_create(surface);
+	}
+
+	/* */
+	layout = pango_cairo_create_layout(crdraw);
+
+	/* set the text to draw which is 0 terminated */
+	pango_layout_set_text(layout, item->text, -1);
+
+	/* create the fontname description */
+	memset(buf, 0, 128);
+
+	/* create the font name string */
+	snprintf(buf, (128 - 1), "%s %s %s %s %d", fn, slant, weight, DEFAULT_FONTCONDENSED, fsz);
+
+	s = uniqstr(buf);
+
+	/* */
+	desc = pango_font_description_from_string(s);
+
+	/* */
+	pango_layout_set_font_description(layout, desc);
+
+	/* */
+	pango_font_description_free(desc);
+
+	/* */
+	pango_cairo_update_layout(crdraw, layout);
+
+	/* */
+	w = 0;
+	h = 0;
+
+	/* */
+	pango_layout_get_size(layout, &w, &h);
+
+	/* set text (x,y) size */
+	item->txsize = (w / PANGO_SCALE);
+	item->tysize = (h / PANGO_SCALE);
+
+	if (0) {
+		printf("%s(): \"%s\" has size (%d,%d)\n", __func__, item->text, item->txsize, item->tysize);
+	}
+
+	/* */
+	g_object_unref(G_OBJECT(layout));
+
+	cairo_destroy(crdraw);
+	crdraw = NULL;
+	/* */
+	cairo_surface_destroy(surface);
+	surface = NULL;
+
+	d.x = item->txsize;
+	d.y = item->tysize;
+
+	return (d);
+}
+
+/* size of html items */
+static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, struct gml_hl *info)
+{
+	struct gml_p d = { 0, 0 };
+	struct gml_p ditem = { 0, 0 };
+	struct gml_hitem *pitem = NULL;
+	struct gml_hitem *pitem2 = NULL;
+	struct gml_hilist *pi = NULL;
+	struct gml_hilist *pi2 = NULL;
+	struct gml_hilist *sl = NULL;
+	struct gml_hilist *el = NULL;
+	int mxl = 0;
+	int mxl2 = 0;
+	int myl = 0;
+	int my = 0;
+	int mx = 0;
+	int tof = 0;
+
+	if (node) {
+	}
+
+	if (info->il == NULL) {
+		/* shouldnothappen */
+		return (d);
+	}
+
+	/* get size of the text elements */
+	pi = info->il;
+
+	while (pi) {
+		pitem = pi->items;
+		if (pitem) {
+			if (pi->items->bitflags.br) {
+			} else if (pi->items->bitflags.hr) {
+			} else if (pi->items->bitflags.vr) {
+			} else if (pi->items->bitflags.img) {
+			} else {
+				ditem = static_maingtk_textsizes1htmlsz1item(pitem);
+				if (ditem.x == 0 || ditem.y == 0) {
+					/* zero sized text */
+				}
+				pitem->txsize = ditem.x;
+				pitem->tysize = ditem.y;
+			}
+		}
+		if (0) {
+			printf("\"%s\" ", pi->items->text);
+		}
+		pi = pi->next;
+	}
+	if (0) {
+		printf("\n");
+	}
+
+	/* determine the size of these lines */
+	mx = 0;
+	my = 0;
+	mxl = 0;
+	myl = 0;
+	pi = info->il;
+	tof = 0;
+	while (pi) {
+		pitem = pi->items;
+		/* set start/end line */
+		sl = pi;
+		el = pi;
+		pi2 = pi;
+		mxl2 = 0;
+		myl = 0;
+		while (pi2) {
+			pitem2 = pi2->items;
+			el = pi2;
+			if (pi2->items->bitflags.br) {
+				/* newline */
+				if (myl == 0) {
+					/* a <br/> can have a fontsize set */
+					if (pi2->items->fontsize > 0) {
+						myl = pi2->items->fontsize;
+					} else {
+						myl = DEFAULT_FONTSIZE_INT;
+					}
+				}
+				/* set x at start of line */
+				mxl = 0;
+				break;
+			} else if (pi2->items->bitflags.hr) {
+			} else if (pi2->items->bitflags.vr) {
+			} else if (pi2->items->bitflags.img) {
+			} else {
+				/* text x offset in this line */
+				mxl2 = mxl2 + pitem2->txsize;
+				if (mxl2 > mx) {
+					mx = mxl2;
+				}
+				if (pitem2->tysize > myl) {
+					myl = pitem2->tysize;
+				}
+			}
+			pi2 = pi2->next;
+		}
+		/* update */
+
+		mxl = 0;
+
+		pi2 = sl;
+		while (pi2) {
+			pitem2 = pi2->items;
+			/* text x offset in this line */
+			pitem2->txoff = mxl;
+			mxl = mxl + pitem2->txsize;
+			if (mxl > mx) {
+				mx = mxl;
+			}
+			/* y size of this text line */
+			pitem2->lysize = myl;
+			/* text y offset in this line */
+			pitem2->tyoff = (myl - pitem2->tysize) + tof;
+			if (pi2 == el) {
+				break;
+			}
+			pi2 = pi2->next;
+		}
+		tof = tof + myl;
+		if (tof > my) {
+			my = tof;
+		}
+		/* continue scan other parts of item */
+		if (pi2) {
+			pi = pi2->next;
+		} else {
+			break;
+		}
+	}
+
+	/* set node text (x,y) */
+	node->tx = mx;
+	node->ty = my;
+
+	/* here update text x pos for br align statements if any todo */
+
+	node->txsize = 1;
+
+	return (d);
+}
+
+/* size of html tables */
+static struct gml_p static_maingtk_textsizes1htmlsztables(struct gml_node *node, struct gml_hl *info)
+{
+	struct gml_p d = { 0, 0 };
+	if (node) {
+	}
+	printf("%s(): todo\n", __func__);
+	if (info->tl == NULL) {
+		/* shouldnothappen */
+		return (d);
+	}
+	return (d);
+}
+
+/* size of html */
+static struct gml_p static_maingtk_textsizes1htmlsz(struct gml_node *node, struct gml_hl *info)
+{
+	struct gml_p d = { 0, 0 };
+
+	if (info == NULL) {
+		/* shouldnothappen */
+		return (d);
+	}
+	if (info->mode == 0) {
+		/* html items */
+		static_maingtk_textsizes1htmlszitems(node, info);
+	} else {
+		/* html tables */
+		static_maingtk_textsizes1htmlsztables(node, info);
+	}
+
+	return (d);
+}
+
+/* handle html label sizes for one node */
+static void static_maingtk_textsizes1htmln(struct gml_node *node)
+{
+	struct gml_p d = { 10, 10 };
+
+	/* preset with small value */
+	node->tx = 0;
+	node->ty = 0;
+
+	node->bbx = d.x;
+	node->bby = d.y;
+
+	/* save copy of full size */
+	node->fbbx = d.x;
+	node->fbby = d.y;
+
+	d = static_maingtk_textsizes1htmlsz(node, node->hlabel);
+
+	if (d.x) {
+	}
+	if (d.y) {
+	}
+
+	/* for a box */
+	node->bbx = node->tx + 4;
+	node->bby = node->ty + 4;
+
+	/* save copy of full size */
+	node->fbbx = node->bbx;
+	node->fbby = node->bby;
+
+	return;
+}
+
 /* translate \n \l \r in dot string */
 static char *unesc(char *str)
 {
 	char *buf = NULL;
 	char *p = NULL;
 	char *q = NULL;
+	if (str == NULL) {
+		return (NULL);
+	}
+	if (strlen(str) == 0) {
+		return (str);
+	}
 	if (strchr(str, '\\') == NULL) {
 		/* string has no esc chars */
 		return (str);
 	}
-	buf = calloc(1, (strlen(str) + 1));
+	buf = dp_calloc(1, (strlen(str) + 1));
 	if (buf == NULL) {
 		return (str);
 	}
@@ -5049,7 +5951,7 @@ static char *unesc(char *str)
 		}
 	}
 	p = uniqstr(buf);
-	free(buf);
+	dp_free(buf);
 	buf = NULL;
 	return (p);
 }
@@ -5086,6 +5988,10 @@ static void static_maingtk_textsizes(void)
 	int h = 0;
 	char buf[128];
 	char *s = NULL;
+	int txname = 0;
+	int tyname = 0;
+	int bbxname = 0;
+	int bbyname = 0;
 	/* name of font to use, example "Sans" */
 	const char *default_fontname = DEFAULT_FONTNAME;
 	/* name of slant to use, example "Italic", "Oblique", "Roman" */
@@ -5108,17 +6014,70 @@ static void static_maingtk_textsizes(void)
 			nl->node->bby = 0;
 			nl->node->txsize = 1;	/* text size is set */
 		} else {
-			/* node or edgelabel text */
-			if (nl->node->nlabel == NULL) {
-				/* shouldnothappen */
-				nl->node->nlabel = uniqstr("  ");
+			/* first get size of node name */
+
+			if (nl->node->name == NULL) {
+				/* shouldnothapen */
+				nl->node->name = "fixme-nil-node-name";
 			}
 
-			/* if the labeltext is "" replace it with " " */
-			if (strlen(nl->node->nlabel) == 0) {
-				/* to avoid cairo assert */
-				nl->node->nlabel = uniqstr("  ");
+			/* calculate the text area */
+			if (surface == NULL) {
+				surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
 			}
+
+			/* */
+			if (crdraw == NULL) {
+				crdraw = cairo_create(surface);
+			}
+			/* */
+			layout = pango_cairo_create_layout(crdraw);
+			/* set the text to draw which is 0 terminated */
+			pango_layout_set_text(layout, nl->node->name, -1);
+			/* create the fontname description */
+			memset(buf, 0, 128);
+			/* name of font to use */
+			default_fontname = uniqstr((char *)DEFAULT_FONTNAME);
+			/* check if node has a specified font slant */
+			default_fontslant = uniqstr((char *)DEFAULT_FONTSLANT);
+			/* check if node has a specified font weight */
+			default_fontweight = uniqstr((char *)DEFAULT_FONTWEIGHT);
+			/* check if node has a specified font size */
+			default_fontsize = uniqstr((char *)DEFAULT_FONTSIZE);
+			/* create the font name string */
+			snprintf(buf, (128 - 1), "%s %s %s %s %s",
+				 default_fontname, default_fontslant, default_fontweight, default_fontcondensed, default_fontsize);
+			/* copy string buffer */
+			s = uniqstr(buf);
+			/* */
+			desc = pango_font_description_from_string(s);
+			/* */
+			pango_layout_set_font_description(layout, desc);
+			/* */
+			pango_font_description_free(desc);
+			/* */
+			pango_cairo_update_layout(crdraw, layout);
+			/* */
+			w = 0;
+			h = 0;
+			/* */
+			pango_layout_get_size(layout, &w, &h);
+			/* */
+			g_object_unref(G_OBJECT(layout));
+			/* */
+			if (option_gdebug > 1 || 0) {
+				printf("%s(): size (%d,%d) for node name \"%s\"\n",
+				       __func__, (w / PANGO_SCALE), (h / PANGO_SCALE), nl->node->name);
+				fflush(stdout);
+			}
+
+			/* set in unode the text area size */
+			txname = (w / PANGO_SCALE);
+			tyname = (h / PANGO_SCALE);
+
+			/* for a box */
+			bbxname = txname + 4;
+			bbyname = tyname + 4;
 
 			/* change esc chars if any */
 			nl->node->nlabel = unesc(nl->node->nlabel);
@@ -5169,7 +6128,7 @@ static void static_maingtk_textsizes(void)
 			g_object_unref(G_OBJECT(layout));
 			/* */
 			if (option_gdebug > 1) {
-				printf("%s(): size (%d,%d) for \"%s\"\n",
+				printf("%s(): size (%d,%d) for node nlabel \"%s\"\n",
 				       __func__, (w / PANGO_SCALE), (h / PANGO_SCALE), nl->node->nlabel);
 				fflush(stdout);
 			}
@@ -5186,10 +6145,47 @@ static void static_maingtk_textsizes(void)
 			nl->node->fbbx = nl->node->bbx;
 			nl->node->fbby = nl->node->bby;
 
-			/* record node label */
-			if ((nl->node->rlabel != NULL) && (nl->node->rlabeldone == 0)) {
-				static_maingtk_textsizes1n(nl->node);
-				nl->node->rlabeldone = 1;
+			if (option_gdebug > 1 || 0) {
+				printf("%s(): hlabel=%p done=%d and rlabel=%p done=%d\n", __func__, (void *)nl->node->hlabel,
+				       nl->node->hlabeldone, (void *)nl->node->rlabel, nl->node->rlabeldone);
+			}
+
+			/* html label or record label */
+			if ((nl->node->hlabel != NULL) && (nl->node->hlabeldone == 0)) {
+				/* html label */
+				static_maingtk_textsizes1htmln(nl->node);
+				nl->node->hlabeldone = 1;
+			} else {
+				/* record node label */
+				if ((nl->node->rlabel != NULL) && (nl->node->rlabeldone == 0)) {
+					static_maingtk_textsizes1n(nl->node);
+					nl->node->rlabeldone = 1;
+				}
+			}
+
+			if (option_nnames == 1) {
+				/* use node names instead of labels and do not draw r/h style labels */
+				nl->node->drawrh = 0;
+
+				nl->node->tx = txname;
+				nl->node->ty = tyname;
+
+				/* for a box */
+				nl->node->bbx = bbxname;
+				nl->node->bby = bbyname;
+
+				/* old:
+				 * if(bbxname>nl->node->fbbx){
+				 * nl->node->fbbx=bbxname;
+				 * }
+				 * if(bbyname>nl->node->fbby)
+				 * {
+				 * nl->node->fbby=bbyname;
+				 * }
+				 */
+
+			} else {
+				nl->node->drawrh = 1;
 			}
 
 			/* label==0 then do not draw text label of a node and set small size */
@@ -5293,7 +6289,7 @@ static void finalxy1(struct gml_graph *g)
 	yoff = 0;
 
 	/* number of edges between level n and n+1 */
-	g->nume = (int *)calloc(1, (maingraph->maxlevel + 1) * sizeof(int));
+	g->nume = (int *)dp_calloc(1, (maingraph->maxlevel + 1) * sizeof(int));
 
 	/* scan vert. to adjust the y positions. */
 	for (i = 0; i < (maingraph->maxlevel + 1); i++) {
@@ -5394,6 +6390,9 @@ static void finalxy2(struct gml_graph *g)
 			lnl = lnl->next;
 		}
 
+	} else {
+		/* no singlenodes, start at top of drawing */
+		my = 0;
 	}
 
 	/* determine max. x pos in use */
@@ -5524,7 +6523,10 @@ static void show_about(GtkWidget * widget, gpointer data)
 				      "This is a GML (Graph-Markup_Language) graph viewer program.\n"
 				      "This program is free to share, copy, use, modify or fork.\n"
 				      "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n");
-	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
+	if (0) {
+		/* does not always work when there is a url link in a dialog window */
+		gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
+	}
 	/* suppress warning */
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
 	gtk_dialog_run(GTK_DIALOG(dialog));

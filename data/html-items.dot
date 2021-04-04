@@ -1,0 +1,40 @@
+/* html labels with only items, not tables */
+digraph "items"
+{
+ /* to specify '&' use &amp; */
+ "1"[label=<&amp;amp;>];
+ "2"[label=<this is a &amp;amp;>];
+ /* point-size set the font size */
+ "3"[label=<text<font point-size="6">small</font><font point-size="20">big</font>>];
+ /* wrong font name but no warnings */
+ "4"[label=<sans-font<font face="xyz">xyz-font</font>>];
+ /* set font color to "blue" or rgb "#0000ff" */
+ "5"[label=<<font color="blue">BlueColor</font>>];
+ /* set background color */
+ "6"[fillcolor="lightgreen" style="filled" label=<lightgreen>];
+ /* <o> overline text depends on pango lib version for it to work */
+ "7"[label=<is <o>overline</o>>];
+ /* <u> underline text */
+ "8"[label=<is <u>underline</u>>];
+ /* <i> italic text */
+ "9"[label=<is <i>italic</i>>];
+ 1->2->3->4->5->6->7->8->9;
+ /* <b> bold text */
+ "10"[label=<is <b>bold</b>>];
+ /* <sub> subscript text */
+ "11"[label=<is <sub>subscript</sub>>];
+ /* <sup> superscript text */
+ "12"[label=<is <sup>superscript</sup>>];
+ /* <br/> is newline */
+ "13"[label=<line 1<br/>line two>];
+ "14"[label=<line one<br/>line 2>];
+ "15"[label=<line 1<br/><br/><br/>line 4>];
+ /* align is parsed but not yet implemented */
+ "16"[label=<top longer line<br/>line<br align="right"/>l2<br align="center"/>bottom<br align="left"/>end>];
+ "17"[label=<<br/>middle<br/><br/>>];
+ /* a <br/> can have a font size set */
+ "18"[shape="box" label=<<font point-size="40"><br/>middle<br/></font><br/>>];
+ /* <i> can be nested */
+ "19"[label=<<br/><i><i><b>middle</b></i></i><br/><br/>>];
+ 1->10->11->12->13->14->15->16->17->18->19;
+}

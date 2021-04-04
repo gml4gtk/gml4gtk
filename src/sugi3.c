@@ -42,6 +42,7 @@
 #include "hier.h"
 #include "uniqnode.h"
 #include "sugi.h"
+#include "dpmem.h"
 
 /* how much double values may differ when seen as same */
 #define LOWVAL (0.01)
@@ -203,7 +204,7 @@ static void medianvalue(struct vertex *a)
 		return;
 	}
 
-	orders = calloc(1, ((ll + 1) * sizeof(int)));
+	orders = dp_calloc(1, ((ll + 1) * sizeof(int)));
 
 	if (orders == NULL) {
 		return;
@@ -237,7 +238,7 @@ static void medianvalue(struct vertex *a)
 		} else {
 			a->baryup = (-1.0);
 		}
-		free(orders);
+		dp_free(orders);
 		orders = NULL;
 		return;
 	}
@@ -248,7 +249,7 @@ static void medianvalue(struct vertex *a)
 		} else {
 			a->baryup = ((double)orders[(j - 1) / 2]);
 		}
-		free(orders);
+		dp_free(orders);
 		orders = NULL;
 		return;
 	}
@@ -259,7 +260,7 @@ static void medianvalue(struct vertex *a)
 		} else {
 			a->baryup = (((double)orders[0] + (double)orders[1]) / 2.0);
 		}
-		free(orders);
+		dp_free(orders);
 		orders = NULL;
 		return;
 	}
@@ -275,7 +276,7 @@ static void medianvalue(struct vertex *a)
 		a->baryup = m;
 	}
 
-	free(orders);
+	dp_free(orders);
 	orders = NULL;
 
 	return;
@@ -336,7 +337,7 @@ static int levelcross(struct vertex *a)
 			return (0);
 		}
 		k = levellength(a[0].level);
-		sorted = (int *)calloc(1, ((k + 2) * sizeof(int)));
+		sorted = (int *)dp_calloc(1, ((k + 2) * sizeof(int)));
 		if (sorted == NULL) {
 			return (0);
 		}
@@ -349,7 +350,7 @@ static int levelcross(struct vertex *a)
 				sum += twovertcross(b + i, b + j, sorted, k);
 			}
 		}
-		free(sorted);
+		dp_free(sorted);
 		sorted = NULL;
 		if (s3debug) {
 			printf("%s(): sum(1) is %d\n", __func__, sum);
@@ -361,7 +362,7 @@ static int levelcross(struct vertex *a)
 		lb = a[0].level + 1;
 		b = tree[lb];
 		k = levellength(b[0].level);
-		sorted = (int *)calloc(1, ((k + 2) * sizeof(int)));
+		sorted = (int *)dp_calloc(1, ((k + 2) * sizeof(int)));
 		if (sorted == NULL) {
 			return (0);
 		}
@@ -374,7 +375,7 @@ static int levelcross(struct vertex *a)
 				sum += twovertcross(a + i, a + j, sorted, k);
 			}
 		}
-		free(sorted);
+		dp_free(sorted);
 		sorted = NULL;
 		if (s3debug) {
 			printf("%s(): sum(2) is %d\n", __func__, sum);
@@ -394,7 +395,7 @@ static int equals(struct vertex *a, int t)
 	int res = 0;
 	int i = 0;
 	struct vertex *temp = NULL;
-	temp = calloc(1, sizeof(struct vertex));
+	temp = dp_calloc(1, sizeof(struct vertex));
 	if (temp == NULL) {
 		return (0);
 	}
@@ -411,7 +412,7 @@ static int equals(struct vertex *a, int t)
 			}
 		}
 	}
-	free(temp);
+	dp_free(temp);
 	temp = NULL;
 	/* return 0 if no changes made, <>0 if changed */
 	return (res);
@@ -479,7 +480,7 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 	}
 
 	/* buffer for test result */
-	dummy = calloc(1, ((t + 1) * sizeof(struct vertex)));
+	dummy = dp_calloc(1, ((t + 1) * sizeof(struct vertex)));
 
 	if (dummy == NULL) {
 		/* shouldnothappen */
@@ -524,7 +525,7 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 	g->numce[a[0].level] = la;
 
 	if (la == 0) {
-		free(dummy2);
+		dp_free(dummy2);
 		dummy2 = NULL;
 		return;
 	}
@@ -540,7 +541,7 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 		/* save this crossing count */
 		g->numce[a[0].level] = ld;
 		if (ld == 0) {
-			free(dummy2);
+			dp_free(dummy2);
 			dummy2 = NULL;
 			return;
 		}
@@ -582,7 +583,7 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 		}
 	}
 
-	free(dummy2);
+	dp_free(dummy2);
 	dummy2 = NULL;
 
 	return;
@@ -609,19 +610,19 @@ static void cp_make_levelnodes(struct gml_graph *g)
 	struct gml_nlist *newl = NULL;
 	int i = 0;
 
-	glevelnodes = calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
+	glevelnodes = dp_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
 
 	if (glevelnodes == NULL) {
 		return;
 	}
 
-	glevelnodesend = calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
+	glevelnodesend = dp_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
 
 	if (glevelnodesend == NULL) {
 		return;
 	}
 
-	nglevelnodes = calloc(1, (g->maxlevel + 1) * sizeof(int));
+	nglevelnodes = dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	if (nglevelnodes == NULL) {
 		return;
@@ -633,7 +634,7 @@ static void cp_make_levelnodes(struct gml_graph *g)
 		/* rel. y level set by dfs/bfs */
 		i = lnll->node->rely;
 
-		newl = calloc(1, sizeof(struct gml_nlist));
+		newl = dp_calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
 			return;
@@ -683,7 +684,7 @@ static void clr_levelnodes(struct gml_graph *g)
 		lnll = glevelnodes[i];
 		while (lnll) {
 			nlnext = lnll->next;
-			free(lnll);
+			dp_free(lnll);
 			lnll = NULL;
 			lnll = nlnext;
 		}
@@ -692,13 +693,13 @@ static void clr_levelnodes(struct gml_graph *g)
 		glevelnodesend[i] = NULL;
 	}
 
-	free(glevelnodes);
+	dp_free(glevelnodes);
 	glevelnodes = NULL;
 
-	free(glevelnodesend);
+	dp_free(glevelnodesend);
 	glevelnodesend = NULL;
 
-	free(nglevelnodes);
+	dp_free(nglevelnodes);
 	nglevelnodes = NULL;
 
 	return;
@@ -713,7 +714,7 @@ static void cp_data(struct gml_graph *g)
 	int count = 0;
 	int k = 0;
 
-	tree = calloc(1, ((g->maxlevel + 2) * sizeof(struct vertex *)));
+	tree = dp_calloc(1, ((g->maxlevel + 2) * sizeof(struct vertex *)));
 
 	if (tree == NULL) {
 		return;
@@ -728,7 +729,7 @@ static void cp_data(struct gml_graph *g)
 			printf("%s(): level %d has %d nodes\n", __func__, i, nglevelnodes[i]);
 		}
 
-		tree[i] = calloc(1, ((nglevelnodes[i] + 1) * sizeof(struct vertex)));
+		tree[i] = dp_calloc(1, ((nglevelnodes[i] + 1) * sizeof(struct vertex)));
 
 		if (tree[i] == NULL) {
 			return;
@@ -751,7 +752,7 @@ static void cp_data(struct gml_graph *g)
 			/* set incoming edges if any */
 			if (lnll->node->indegree) {
 				tree[i][count].no_of_parent = lnll->node->indegree;
-				tree[i][count].parent = calloc(1, ((lnll->node->indegree + 0) * sizeof(int)));
+				tree[i][count].parent = dp_calloc(1, ((lnll->node->indegree + 0) * sizeof(int)));
 				if (tree[i][count].parent == NULL) {
 					return;
 				}
@@ -777,7 +778,7 @@ static void cp_data(struct gml_graph *g)
 			/* set outgoing edges if any */
 			if (lnll->node->outdegree) {
 				tree[i][count].no_of_child = lnll->node->outdegree;
-				tree[i][count].child = calloc(1, ((lnll->node->outdegree + 0) * sizeof(int)));
+				tree[i][count].child = dp_calloc(1, ((lnll->node->outdegree + 0) * sizeof(int)));
 				if (tree[i][count].child == NULL) {
 					return;
 				}
@@ -835,24 +836,24 @@ static void clr_data(struct gml_graph *g)
 			j = 0;
 			while (tree[i][j].id != 0) {
 				if (tree[i][j].child) {
-					free(tree[i][j].child);
+					dp_free(tree[i][j].child);
 					tree[i][j].child = NULL;
 				}
 				if (tree[i][j].parent) {
-					free(tree[i][j].parent);
+					dp_free(tree[i][j].parent);
 					tree[i][j].parent = NULL;
 				}
 				/* to next x pos */
 				j++;
 			}
-			free(tree[i]);
+			dp_free(tree[i]);
 			tree[i] = NULL;
 		}
 
 	}
 
 	if (tree) {
-		free(tree);
+		dp_free(tree);
 		tree = NULL;
 	}
 
@@ -966,7 +967,7 @@ void reduce_crossings3(struct gml_graph *g, int it1v, int it2v)
 
 	/* number of crossing edges at level */
 	if (g->numce == NULL) {
-		g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 		if (g->numce == NULL) {
 			return;
 		}

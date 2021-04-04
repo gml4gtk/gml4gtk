@@ -1,0 +1,3254 @@
+Grammar
+
+    0 $accept: begin $end
+
+    1 begin: htmlparser
+
+    2 htmlparser: HL_HTML HL_C htmlparser2 HL_C_HTML HL_C
+    3           | htmlparser2
+
+    4 htmlparser2: items
+    5            | fonttab2
+
+    6 items: items item
+    7      | item
+
+    8 item: HL_DATA
+
+    9 $@1: %empty
+
+   10 item: HL_BR $@1 br_arg HL_SC
+
+   11 $@2: %empty
+
+   12 item: HL_BR HL_C $@2 HL_C_BR HL_C
+   13     | font items HL_C_FONT HL_C
+   14     | italic items HL_C_I HL_C
+   15     | bold items HL_C_B HL_C
+   16     | underline items HL_C_U HL_C
+   17     | overline items HL_C_O HL_C
+
+   18 $@3: %empty
+
+   19 item: HL_SUB HL_C $@3 items HL_C_SUB HL_C
+
+   20 $@4: %empty
+
+   21 item: HL_SUP HL_C $@4 items HL_C_SUP HL_C
+
+   22 $@5: %empty
+
+   23 item: HL_S HL_C $@5 items HL_C_S HL_C
+
+   24 fonttab2: tab
+   25         | font tab HL_C_FONT HL_C
+   26         | italic tab HL_C_I HL_C
+   27         | bold tab HL_C_B HL_C
+   28         | underline tab HL_C_U HL_C
+   29         | overline tab HL_C_O HL_C
+
+   30 $@6: %empty
+
+   31 font: HL_FONT $@6 font_arg HL_C
+
+   32 italic: HL_I HL_C
+
+   33 overline: HL_O HL_C
+
+   34 bold: HL_B HL_C
+
+   35 underline: HL_U HL_C
+
+   36 tabe: HL_DATA
+   37     | %empty
+
+   38 $@7: %empty
+
+   39 tab: tabe HL_TABLE $@7 table_arg HL_C rows HL_C_TABLE HL_C tabe
+
+   40 rows: row
+   41     | rows row
+
+   42 $@8: %empty
+
+   43 rows: rows HL_HR HL_SC $@8 row
+
+   44 $@9: %empty
+
+   45 rows: rows HL_HR HL_C HL_C_HR HL_C $@9 row
+
+   46 $@10: %empty
+
+   47 row: HL_TR HL_C $@10 cells HL_C_TR HL_C
+
+   48 cells: cell
+   49      | cells cell
+
+   50 $@11: %empty
+
+   51 cells: cells HL_VR HL_SC $@11 cell
+
+   52 $@12: %empty
+
+   53 cells: cells HL_VR HL_C HL_C_VR HL_C $@12 cell
+
+   54 cell: celltd td_arg HL_C htmlparser HL_C_TD HL_C
+   55     | celltd td_arg HL_C cellimg img_arg HL_SC HL_C_TD HL_C
+   56     | celltd td_arg HL_C cellimg img_arg HL_C HL_C_IMG HL_C HL_C_TD HL_C
+   57     | celltd td_arg HL_C HL_C_TD HL_C
+
+   58 cellimg: HL_IMG
+
+   59 celltd: HL_TD
+
+   60 table_arg: table_arg table_1arg
+   61          | %empty
+
+   62 table_1arg: HL_ALIGN HL_IS HL_QSTR
+   63           | HL_BGCOLOR HL_IS HL_QSTR
+   64           | HL_BORDER HL_IS HL_QSTR
+   65           | HL_CELLBORDER HL_IS HL_QSTR
+   66           | HL_CELLPADDING HL_IS HL_QSTR
+   67           | HL_CELLSPACING HL_IS HL_QSTR
+   68           | HL_COLOR HL_IS HL_QSTR
+   69           | HL_COLUMNS HL_IS HL_QSTR
+   70           | HL_FIXEDSIZE HL_IS HL_QSTR
+   71           | HL_GRADIENTANGLE HL_IS HL_QSTR
+   72           | HL_HEIGHT HL_IS HL_QSTR
+   73           | HL_HREF HL_IS HL_QSTR
+   74           | HL_ID HL_IS HL_QSTR
+   75           | HL_PORT HL_IS HL_QSTR
+   76           | HL_ROWS HL_IS HL_QSTR
+   77           | HL_SIDES HL_IS HL_QSTR
+   78           | HL_STYLE HL_IS HL_QSTR
+   79           | HL_TARGET HL_IS HL_QSTR
+   80           | HL_TITLE HL_IS HL_QSTR
+   81           | HL_TOOLTIP HL_IS HL_QSTR
+   82           | HL_VALIGN HL_IS HL_QSTR
+   83           | HL_WIDTH HL_IS HL_QSTR
+   84           | HL_STR HL_IS HL_QSTR
+
+   85 td_arg: td_arg td_1arg
+   86       | %empty
+
+   87 td_1arg: HL_ALIGN HL_IS HL_QSTR
+   88        | HL_BALIGN HL_IS HL_QSTR
+   89        | HL_BGCOLOR HL_IS HL_QSTR
+   90        | HL_BORDER HL_IS HL_QSTR
+   91        | HL_CELLPADDING HL_IS HL_QSTR
+   92        | HL_CELLSPACING HL_IS HL_QSTR
+   93        | HL_COLOR HL_IS HL_QSTR
+   94        | HL_COLSPAN HL_IS HL_QSTR
+   95        | HL_FIXEDSIZE HL_IS HL_QSTR
+   96        | HL_GRADIENTANGLE HL_IS HL_QSTR
+   97        | HL_HEIGHT HL_IS HL_QSTR
+   98        | HL_HREF HL_IS HL_QSTR
+   99        | HL_ID HL_IS HL_QSTR
+  100        | HL_PORT HL_IS HL_QSTR
+  101        | HL_ROWSPAN HL_IS HL_QSTR
+  102        | HL_SIDES HL_IS HL_QSTR
+  103        | HL_STYLE HL_IS HL_QSTR
+  104        | HL_TARGET HL_IS HL_QSTR
+  105        | HL_TITLE HL_IS HL_QSTR
+  106        | HL_TOOLTIP HL_IS HL_QSTR
+  107        | HL_VALIGN HL_IS HL_QSTR
+  108        | HL_WIDTH HL_IS HL_QSTR
+  109        | HL_STR HL_IS HL_QSTR
+
+  110 img_arg: img_arg img_1arg
+  111        | %empty
+
+  112 img_1arg: HL_SCALE HL_IS HL_QSTR
+  113         | HL_SRC HL_IS HL_QSTR
+  114         | HL_STR HL_IS HL_QSTR
+
+  115 br_arg: br_arg br_1arg
+  116       | %empty
+
+  117 br_1arg: HL_ALIGN HL_IS HL_QSTR
+  118        | HL_STR HL_IS HL_QSTR
+
+  119 font_arg: font_arg font_1arg
+  120         | %empty
+
+  121 font_1arg: HL_COLOR HL_IS HL_QSTR
+  122          | HL_FACE HL_IS HL_QSTR
+  123          | HL_POINTSIZE HL_IS HL_QSTR
+  124          | HL_STR HL_IS HL_QSTR
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+HL_DATA <string> (258) 8 36
+HL_HTML (259) 2
+HL_C_HTML (260) 2
+HL_B (261) 34
+HL_C_B (262) 15 27
+HL_BR (263) 10 12
+HL_C_BR (264) 12
+HL_FONT (265) 31
+HL_C_FONT (266) 13 25
+HL_HR (267) 43 45
+HL_C_HR (268) 45
+HL_I (269) 32
+HL_C_I (270) 14 26
+HL_IMG (271) 58
+HL_C_IMG (272) 56
+HL_O (273) 33
+HL_C_O (274) 17 29
+HL_S (275) 23
+HL_C_S (276) 23
+HL_SUB (277) 19
+HL_C_SUB (278) 19
+HL_SUP (279) 21
+HL_C_SUP (280) 21
+HL_TABLE (281) 39
+HL_C_TABLE (282) 39
+HL_TD (283) 59
+HL_C_TD (284) 54 55 56 57
+HL_TR (285) 47
+HL_C_TR (286) 47
+HL_U (287) 35
+HL_C_U (288) 16 28
+HL_VR (289) 51 53
+HL_C_VR (290) 53
+HL_SC (291) 10 43 51 55
+HL_C (292) 2 12 13 14 15 16 17 19 21 23 25 26 27 28 29 31 32 33 34
+    35 39 45 47 53 54 55 56 57
+HL_IS (293) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
+    81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102
+    103 104 105 106 107 108 109 112 113 114 117 118 121 122 123 124
+HL_QSTR <string> (294) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76
+    77 78 79 80 81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99
+    100 101 102 103 104 105 106 107 108 109 112 113 114 117 118 121
+    122 123 124
+HL_STR <string> (295) 84 109 114 118 124
+HL_ALIGN (296) 62 87 117
+HL_BALIGN (297) 88
+HL_BGCOLOR (298) 63 89
+HL_BORDER (299) 64 90
+HL_CELLBORDER (300) 65
+HL_CELLPADDING (301) 66 91
+HL_CELLSPACING (302) 67 92
+HL_COLOR (303) 68 93 121
+HL_COLUMNS (304) 69
+HL_COLSPAN (305) 94
+HL_FACE (306) 122
+HL_FIXEDSIZE (307) 70 95
+HL_GRADIENTANGLE (308) 71 96
+HL_HEIGHT (309) 72 97
+HL_HREF (310) 73 98
+HL_ID (311) 74 99
+HL_PORT (312) 75 100
+HL_POINTSIZE (313) 123
+HL_ROWS (314) 76
+HL_ROWSPAN (315) 101
+HL_SCALE (316) 112
+HL_SIDES (317) 77 102
+HL_SRC (318) 113
+HL_STYLE (319) 78 103
+HL_TARGET (320) 79 104
+HL_TITLE (321) 80 105
+HL_TOOLTIP (322) 81 106
+HL_VALIGN (323) 82 107
+HL_WIDTH (324) 83 108
+
+
+Nonterminals, with rules where they appear
+
+$accept (70)
+    on left: 0
+begin (71)
+    on left: 1, on right: 0
+htmlparser (72)
+    on left: 2 3, on right: 1 54
+htmlparser2 (73)
+    on left: 4 5, on right: 2 3
+items (74)
+    on left: 6 7, on right: 4 6 13 14 15 16 17 19 21 23
+item (75)
+    on left: 8 10 12 13 14 15 16 17 19 21 23, on right: 6 7
+$@1 (76)
+    on left: 9, on right: 10
+$@2 (77)
+    on left: 11, on right: 12
+$@3 (78)
+    on left: 18, on right: 19
+$@4 (79)
+    on left: 20, on right: 21
+$@5 (80)
+    on left: 22, on right: 23
+fonttab2 (81)
+    on left: 24 25 26 27 28 29, on right: 5
+font (82)
+    on left: 31, on right: 13 25
+$@6 (83)
+    on left: 30, on right: 31
+italic (84)
+    on left: 32, on right: 14 26
+overline (85)
+    on left: 33, on right: 17 29
+bold (86)
+    on left: 34, on right: 15 27
+underline (87)
+    on left: 35, on right: 16 28
+tabe (88)
+    on left: 36 37, on right: 39
+tab (89)
+    on left: 39, on right: 24 25 26 27 28 29
+$@7 (90)
+    on left: 38, on right: 39
+rows (91)
+    on left: 40 41 43 45, on right: 39 41 43 45
+$@8 (92)
+    on left: 42, on right: 43
+$@9 (93)
+    on left: 44, on right: 45
+row (94)
+    on left: 47, on right: 40 41 43 45
+$@10 (95)
+    on left: 46, on right: 47
+cells (96)
+    on left: 48 49 51 53, on right: 47 49 51 53
+$@11 (97)
+    on left: 50, on right: 51
+$@12 (98)
+    on left: 52, on right: 53
+cell (99)
+    on left: 54 55 56 57, on right: 48 49 51 53
+cellimg (100)
+    on left: 58, on right: 55 56
+celltd (101)
+    on left: 59, on right: 54 55 56 57
+table_arg (102)
+    on left: 60 61, on right: 39 60
+table_1arg (103)
+    on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+    80 81 82 83 84, on right: 60
+td_arg (104)
+    on left: 85 86, on right: 54 55 56 57 85
+td_1arg (105)
+    on left: 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103
+    104 105 106 107 108 109, on right: 85
+img_arg (106)
+    on left: 110 111, on right: 55 56 110
+img_1arg (107)
+    on left: 112 113 114, on right: 110
+br_arg (108)
+    on left: 115 116, on right: 10 115
+br_1arg (109)
+    on left: 117 118, on right: 115
+font_arg (110)
+    on left: 119 120, on right: 31 119
+font_1arg (111)
+    on left: 121 122 123 124, on right: 119
+
+
+State 0
+
+    0 $accept: . begin $end
+
+    HL_DATA  shift, and go to state 1
+    HL_HTML  shift, and go to state 2
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    begin        go to state 12
+    htmlparser   go to state 13
+    htmlparser2  go to state 14
+    items        go to state 15
+    item         go to state 16
+    fonttab2     go to state 17
+    font         go to state 18
+    italic       go to state 19
+    overline     go to state 20
+    bold         go to state 21
+    underline    go to state 22
+    tabe         go to state 23
+    tab          go to state 24
+
+
+State 1
+
+    8 item: HL_DATA .
+   36 tabe: HL_DATA .
+
+    HL_TABLE  reduce using rule 36 (tabe)
+    $default  reduce using rule 8 (item)
+
+
+State 2
+
+    2 htmlparser: HL_HTML . HL_C htmlparser2 HL_C_HTML HL_C
+
+    HL_C  shift, and go to state 25
+
+
+State 3
+
+   34 bold: HL_B . HL_C
+
+    HL_C  shift, and go to state 26
+
+
+State 4
+
+   10 item: HL_BR . $@1 br_arg HL_SC
+   12     | HL_BR . HL_C $@2 HL_C_BR HL_C
+
+    HL_C  shift, and go to state 27
+
+    $default  reduce using rule 9 ($@1)
+
+    $@1  go to state 28
+
+
+State 5
+
+   31 font: HL_FONT . $@6 font_arg HL_C
+
+    $default  reduce using rule 30 ($@6)
+
+    $@6  go to state 29
+
+
+State 6
+
+   32 italic: HL_I . HL_C
+
+    HL_C  shift, and go to state 30
+
+
+State 7
+
+   33 overline: HL_O . HL_C
+
+    HL_C  shift, and go to state 31
+
+
+State 8
+
+   23 item: HL_S . HL_C $@5 items HL_C_S HL_C
+
+    HL_C  shift, and go to state 32
+
+
+State 9
+
+   19 item: HL_SUB . HL_C $@3 items HL_C_SUB HL_C
+
+    HL_C  shift, and go to state 33
+
+
+State 10
+
+   21 item: HL_SUP . HL_C $@4 items HL_C_SUP HL_C
+
+    HL_C  shift, and go to state 34
+
+
+State 11
+
+   35 underline: HL_U . HL_C
+
+    HL_C  shift, and go to state 35
+
+
+State 12
+
+    0 $accept: begin . $end
+
+    $end  shift, and go to state 36
+
+
+State 13
+
+    1 begin: htmlparser .
+
+    $default  reduce using rule 1 (begin)
+
+
+State 14
+
+    3 htmlparser: htmlparser2 .
+
+    $default  reduce using rule 3 (htmlparser)
+
+
+State 15
+
+    4 htmlparser2: items .
+    6 items: items . item
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 4 (htmlparser2)
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 16
+
+    7 items: item .
+
+    $default  reduce using rule 7 (items)
+
+
+State 17
+
+    5 htmlparser2: fonttab2 .
+
+    $default  reduce using rule 5 (htmlparser2)
+
+
+State 18
+
+   13 item: font . items HL_C_FONT HL_C
+   25 fonttab2: font . tab HL_C_FONT HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    items      go to state 44
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+    tabe       go to state 23
+    tab        go to state 45
+
+
+State 19
+
+   14 item: italic . items HL_C_I HL_C
+   26 fonttab2: italic . tab HL_C_I HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    items      go to state 46
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+    tabe       go to state 23
+    tab        go to state 47
+
+
+State 20
+
+   17 item: overline . items HL_C_O HL_C
+   29 fonttab2: overline . tab HL_C_O HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    items      go to state 48
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+    tabe       go to state 23
+    tab        go to state 49
+
+
+State 21
+
+   15 item: bold . items HL_C_B HL_C
+   27 fonttab2: bold . tab HL_C_B HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    items      go to state 50
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+    tabe       go to state 23
+    tab        go to state 51
+
+
+State 22
+
+   16 item: underline . items HL_C_U HL_C
+   28 fonttab2: underline . tab HL_C_U HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    items      go to state 52
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+    tabe       go to state 23
+    tab        go to state 53
+
+
+State 23
+
+   39 tab: tabe . HL_TABLE $@7 table_arg HL_C rows HL_C_TABLE HL_C tabe
+
+    HL_TABLE  shift, and go to state 54
+
+
+State 24
+
+   24 fonttab2: tab .
+
+    $default  reduce using rule 24 (fonttab2)
+
+
+State 25
+
+    2 htmlparser: HL_HTML HL_C . htmlparser2 HL_C_HTML HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    htmlparser2  go to state 55
+    items        go to state 15
+    item         go to state 16
+    fonttab2     go to state 17
+    font         go to state 18
+    italic       go to state 19
+    overline     go to state 20
+    bold         go to state 21
+    underline    go to state 22
+    tabe         go to state 23
+    tab          go to state 24
+
+
+State 26
+
+   34 bold: HL_B HL_C .
+
+    $default  reduce using rule 34 (bold)
+
+
+State 27
+
+   12 item: HL_BR HL_C . $@2 HL_C_BR HL_C
+
+    $default  reduce using rule 11 ($@2)
+
+    $@2  go to state 56
+
+
+State 28
+
+   10 item: HL_BR $@1 . br_arg HL_SC
+
+    $default  reduce using rule 116 (br_arg)
+
+    br_arg  go to state 57
+
+
+State 29
+
+   31 font: HL_FONT $@6 . font_arg HL_C
+
+    $default  reduce using rule 120 (font_arg)
+
+    font_arg  go to state 58
+
+
+State 30
+
+   32 italic: HL_I HL_C .
+
+    $default  reduce using rule 32 (italic)
+
+
+State 31
+
+   33 overline: HL_O HL_C .
+
+    $default  reduce using rule 33 (overline)
+
+
+State 32
+
+   23 item: HL_S HL_C . $@5 items HL_C_S HL_C
+
+    $default  reduce using rule 22 ($@5)
+
+    $@5  go to state 59
+
+
+State 33
+
+   19 item: HL_SUB HL_C . $@3 items HL_C_SUB HL_C
+
+    $default  reduce using rule 18 ($@3)
+
+    $@3  go to state 60
+
+
+State 34
+
+   21 item: HL_SUP HL_C . $@4 items HL_C_SUP HL_C
+
+    $default  reduce using rule 20 ($@4)
+
+    $@4  go to state 61
+
+
+State 35
+
+   35 underline: HL_U HL_C .
+
+    $default  reduce using rule 35 (underline)
+
+
+State 36
+
+    0 $accept: begin $end .
+
+    $default  accept
+
+
+State 37
+
+    8 item: HL_DATA .
+
+    $default  reduce using rule 8 (item)
+
+
+State 38
+
+    6 items: items item .
+
+    $default  reduce using rule 6 (items)
+
+
+State 39
+
+   13 item: font . items HL_C_FONT HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 44
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 40
+
+   14 item: italic . items HL_C_I HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 46
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 41
+
+   17 item: overline . items HL_C_O HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 48
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 42
+
+   15 item: bold . items HL_C_B HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 50
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 43
+
+   16 item: underline . items HL_C_U HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 52
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 44
+
+    6 items: items . item
+   13 item: font items . HL_C_FONT HL_C
+
+    HL_DATA    shift, and go to state 37
+    HL_B       shift, and go to state 3
+    HL_BR      shift, and go to state 4
+    HL_FONT    shift, and go to state 5
+    HL_C_FONT  shift, and go to state 62
+    HL_I       shift, and go to state 6
+    HL_O       shift, and go to state 7
+    HL_S       shift, and go to state 8
+    HL_SUB     shift, and go to state 9
+    HL_SUP     shift, and go to state 10
+    HL_U       shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 45
+
+   25 fonttab2: font tab . HL_C_FONT HL_C
+
+    HL_C_FONT  shift, and go to state 63
+
+
+State 46
+
+    6 items: items . item
+   14 item: italic items . HL_C_I HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_C_I   shift, and go to state 64
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 47
+
+   26 fonttab2: italic tab . HL_C_I HL_C
+
+    HL_C_I  shift, and go to state 65
+
+
+State 48
+
+    6 items: items . item
+   17 item: overline items . HL_C_O HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_C_O   shift, and go to state 66
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 49
+
+   29 fonttab2: overline tab . HL_C_O HL_C
+
+    HL_C_O  shift, and go to state 67
+
+
+State 50
+
+    6 items: items . item
+   15 item: bold items . HL_C_B HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_C_B   shift, and go to state 68
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 51
+
+   27 fonttab2: bold tab . HL_C_B HL_C
+
+    HL_C_B  shift, and go to state 69
+
+
+State 52
+
+    6 items: items . item
+   16 item: underline items . HL_C_U HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+    HL_C_U   shift, and go to state 70
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 53
+
+   28 fonttab2: underline tab . HL_C_U HL_C
+
+    HL_C_U  shift, and go to state 71
+
+
+State 54
+
+   39 tab: tabe HL_TABLE . $@7 table_arg HL_C rows HL_C_TABLE HL_C tabe
+
+    $default  reduce using rule 38 ($@7)
+
+    $@7  go to state 72
+
+
+State 55
+
+    2 htmlparser: HL_HTML HL_C htmlparser2 . HL_C_HTML HL_C
+
+    HL_C_HTML  shift, and go to state 73
+
+
+State 56
+
+   12 item: HL_BR HL_C $@2 . HL_C_BR HL_C
+
+    HL_C_BR  shift, and go to state 74
+
+
+State 57
+
+   10 item: HL_BR $@1 br_arg . HL_SC
+  115 br_arg: br_arg . br_1arg
+
+    HL_SC     shift, and go to state 75
+    HL_STR    shift, and go to state 76
+    HL_ALIGN  shift, and go to state 77
+
+    br_1arg  go to state 78
+
+
+State 58
+
+   31 font: HL_FONT $@6 font_arg . HL_C
+  119 font_arg: font_arg . font_1arg
+
+    HL_C          shift, and go to state 79
+    HL_STR        shift, and go to state 80
+    HL_COLOR      shift, and go to state 81
+    HL_FACE       shift, and go to state 82
+    HL_POINTSIZE  shift, and go to state 83
+
+    font_1arg  go to state 84
+
+
+State 59
+
+   23 item: HL_S HL_C $@5 . items HL_C_S HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 85
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 60
+
+   19 item: HL_SUB HL_C $@3 . items HL_C_SUB HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 86
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 61
+
+   21 item: HL_SUP HL_C $@4 . items HL_C_SUP HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    items      go to state 87
+    item       go to state 16
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 62
+
+   13 item: font items HL_C_FONT . HL_C
+
+    HL_C  shift, and go to state 88
+
+
+State 63
+
+   25 fonttab2: font tab HL_C_FONT . HL_C
+
+    HL_C  shift, and go to state 89
+
+
+State 64
+
+   14 item: italic items HL_C_I . HL_C
+
+    HL_C  shift, and go to state 90
+
+
+State 65
+
+   26 fonttab2: italic tab HL_C_I . HL_C
+
+    HL_C  shift, and go to state 91
+
+
+State 66
+
+   17 item: overline items HL_C_O . HL_C
+
+    HL_C  shift, and go to state 92
+
+
+State 67
+
+   29 fonttab2: overline tab HL_C_O . HL_C
+
+    HL_C  shift, and go to state 93
+
+
+State 68
+
+   15 item: bold items HL_C_B . HL_C
+
+    HL_C  shift, and go to state 94
+
+
+State 69
+
+   27 fonttab2: bold tab HL_C_B . HL_C
+
+    HL_C  shift, and go to state 95
+
+
+State 70
+
+   16 item: underline items HL_C_U . HL_C
+
+    HL_C  shift, and go to state 96
+
+
+State 71
+
+   28 fonttab2: underline tab HL_C_U . HL_C
+
+    HL_C  shift, and go to state 97
+
+
+State 72
+
+   39 tab: tabe HL_TABLE $@7 . table_arg HL_C rows HL_C_TABLE HL_C tabe
+
+    $default  reduce using rule 61 (table_arg)
+
+    table_arg  go to state 98
+
+
+State 73
+
+    2 htmlparser: HL_HTML HL_C htmlparser2 HL_C_HTML . HL_C
+
+    HL_C  shift, and go to state 99
+
+
+State 74
+
+   12 item: HL_BR HL_C $@2 HL_C_BR . HL_C
+
+    HL_C  shift, and go to state 100
+
+
+State 75
+
+   10 item: HL_BR $@1 br_arg HL_SC .
+
+    $default  reduce using rule 10 (item)
+
+
+State 76
+
+  118 br_1arg: HL_STR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 101
+
+
+State 77
+
+  117 br_1arg: HL_ALIGN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 102
+
+
+State 78
+
+  115 br_arg: br_arg br_1arg .
+
+    $default  reduce using rule 115 (br_arg)
+
+
+State 79
+
+   31 font: HL_FONT $@6 font_arg HL_C .
+
+    $default  reduce using rule 31 (font)
+
+
+State 80
+
+  124 font_1arg: HL_STR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 103
+
+
+State 81
+
+  121 font_1arg: HL_COLOR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 104
+
+
+State 82
+
+  122 font_1arg: HL_FACE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 105
+
+
+State 83
+
+  123 font_1arg: HL_POINTSIZE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 106
+
+
+State 84
+
+  119 font_arg: font_arg font_1arg .
+
+    $default  reduce using rule 119 (font_arg)
+
+
+State 85
+
+    6 items: items . item
+   23 item: HL_S HL_C $@5 items . HL_C_S HL_C
+
+    HL_DATA  shift, and go to state 37
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_C_S   shift, and go to state 107
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_U     shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 86
+
+    6 items: items . item
+   19 item: HL_SUB HL_C $@3 items . HL_C_SUB HL_C
+
+    HL_DATA   shift, and go to state 37
+    HL_B      shift, and go to state 3
+    HL_BR     shift, and go to state 4
+    HL_FONT   shift, and go to state 5
+    HL_I      shift, and go to state 6
+    HL_O      shift, and go to state 7
+    HL_S      shift, and go to state 8
+    HL_SUB    shift, and go to state 9
+    HL_C_SUB  shift, and go to state 108
+    HL_SUP    shift, and go to state 10
+    HL_U      shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 87
+
+    6 items: items . item
+   21 item: HL_SUP HL_C $@4 items . HL_C_SUP HL_C
+
+    HL_DATA   shift, and go to state 37
+    HL_B      shift, and go to state 3
+    HL_BR     shift, and go to state 4
+    HL_FONT   shift, and go to state 5
+    HL_I      shift, and go to state 6
+    HL_O      shift, and go to state 7
+    HL_S      shift, and go to state 8
+    HL_SUB    shift, and go to state 9
+    HL_SUP    shift, and go to state 10
+    HL_C_SUP  shift, and go to state 109
+    HL_U      shift, and go to state 11
+
+    item       go to state 38
+    font       go to state 39
+    italic     go to state 40
+    overline   go to state 41
+    bold       go to state 42
+    underline  go to state 43
+
+
+State 88
+
+   13 item: font items HL_C_FONT HL_C .
+
+    $default  reduce using rule 13 (item)
+
+
+State 89
+
+   25 fonttab2: font tab HL_C_FONT HL_C .
+
+    $default  reduce using rule 25 (fonttab2)
+
+
+State 90
+
+   14 item: italic items HL_C_I HL_C .
+
+    $default  reduce using rule 14 (item)
+
+
+State 91
+
+   26 fonttab2: italic tab HL_C_I HL_C .
+
+    $default  reduce using rule 26 (fonttab2)
+
+
+State 92
+
+   17 item: overline items HL_C_O HL_C .
+
+    $default  reduce using rule 17 (item)
+
+
+State 93
+
+   29 fonttab2: overline tab HL_C_O HL_C .
+
+    $default  reduce using rule 29 (fonttab2)
+
+
+State 94
+
+   15 item: bold items HL_C_B HL_C .
+
+    $default  reduce using rule 15 (item)
+
+
+State 95
+
+   27 fonttab2: bold tab HL_C_B HL_C .
+
+    $default  reduce using rule 27 (fonttab2)
+
+
+State 96
+
+   16 item: underline items HL_C_U HL_C .
+
+    $default  reduce using rule 16 (item)
+
+
+State 97
+
+   28 fonttab2: underline tab HL_C_U HL_C .
+
+    $default  reduce using rule 28 (fonttab2)
+
+
+State 98
+
+   39 tab: tabe HL_TABLE $@7 table_arg . HL_C rows HL_C_TABLE HL_C tabe
+   60 table_arg: table_arg . table_1arg
+
+    HL_C              shift, and go to state 110
+    HL_STR            shift, and go to state 111
+    HL_ALIGN          shift, and go to state 112
+    HL_BGCOLOR        shift, and go to state 113
+    HL_BORDER         shift, and go to state 114
+    HL_CELLBORDER     shift, and go to state 115
+    HL_CELLPADDING    shift, and go to state 116
+    HL_CELLSPACING    shift, and go to state 117
+    HL_COLOR          shift, and go to state 118
+    HL_COLUMNS        shift, and go to state 119
+    HL_FIXEDSIZE      shift, and go to state 120
+    HL_GRADIENTANGLE  shift, and go to state 121
+    HL_HEIGHT         shift, and go to state 122
+    HL_HREF           shift, and go to state 123
+    HL_ID             shift, and go to state 124
+    HL_PORT           shift, and go to state 125
+    HL_ROWS           shift, and go to state 126
+    HL_SIDES          shift, and go to state 127
+    HL_STYLE          shift, and go to state 128
+    HL_TARGET         shift, and go to state 129
+    HL_TITLE          shift, and go to state 130
+    HL_TOOLTIP        shift, and go to state 131
+    HL_VALIGN         shift, and go to state 132
+    HL_WIDTH          shift, and go to state 133
+
+    table_1arg  go to state 134
+
+
+State 99
+
+    2 htmlparser: HL_HTML HL_C htmlparser2 HL_C_HTML HL_C .
+
+    $default  reduce using rule 2 (htmlparser)
+
+
+State 100
+
+   12 item: HL_BR HL_C $@2 HL_C_BR HL_C .
+
+    $default  reduce using rule 12 (item)
+
+
+State 101
+
+  118 br_1arg: HL_STR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 135
+
+
+State 102
+
+  117 br_1arg: HL_ALIGN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 136
+
+
+State 103
+
+  124 font_1arg: HL_STR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 137
+
+
+State 104
+
+  121 font_1arg: HL_COLOR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 138
+
+
+State 105
+
+  122 font_1arg: HL_FACE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 139
+
+
+State 106
+
+  123 font_1arg: HL_POINTSIZE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 140
+
+
+State 107
+
+   23 item: HL_S HL_C $@5 items HL_C_S . HL_C
+
+    HL_C  shift, and go to state 141
+
+
+State 108
+
+   19 item: HL_SUB HL_C $@3 items HL_C_SUB . HL_C
+
+    HL_C  shift, and go to state 142
+
+
+State 109
+
+   21 item: HL_SUP HL_C $@4 items HL_C_SUP . HL_C
+
+    HL_C  shift, and go to state 143
+
+
+State 110
+
+   39 tab: tabe HL_TABLE $@7 table_arg HL_C . rows HL_C_TABLE HL_C tabe
+
+    HL_TR  shift, and go to state 144
+
+    rows  go to state 145
+    row   go to state 146
+
+
+State 111
+
+   84 table_1arg: HL_STR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 147
+
+
+State 112
+
+   62 table_1arg: HL_ALIGN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 148
+
+
+State 113
+
+   63 table_1arg: HL_BGCOLOR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 149
+
+
+State 114
+
+   64 table_1arg: HL_BORDER . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 150
+
+
+State 115
+
+   65 table_1arg: HL_CELLBORDER . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 151
+
+
+State 116
+
+   66 table_1arg: HL_CELLPADDING . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 152
+
+
+State 117
+
+   67 table_1arg: HL_CELLSPACING . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 153
+
+
+State 118
+
+   68 table_1arg: HL_COLOR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 154
+
+
+State 119
+
+   69 table_1arg: HL_COLUMNS . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 155
+
+
+State 120
+
+   70 table_1arg: HL_FIXEDSIZE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 156
+
+
+State 121
+
+   71 table_1arg: HL_GRADIENTANGLE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 157
+
+
+State 122
+
+   72 table_1arg: HL_HEIGHT . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 158
+
+
+State 123
+
+   73 table_1arg: HL_HREF . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 159
+
+
+State 124
+
+   74 table_1arg: HL_ID . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 160
+
+
+State 125
+
+   75 table_1arg: HL_PORT . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 161
+
+
+State 126
+
+   76 table_1arg: HL_ROWS . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 162
+
+
+State 127
+
+   77 table_1arg: HL_SIDES . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 163
+
+
+State 128
+
+   78 table_1arg: HL_STYLE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 164
+
+
+State 129
+
+   79 table_1arg: HL_TARGET . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 165
+
+
+State 130
+
+   80 table_1arg: HL_TITLE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 166
+
+
+State 131
+
+   81 table_1arg: HL_TOOLTIP . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 167
+
+
+State 132
+
+   82 table_1arg: HL_VALIGN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 168
+
+
+State 133
+
+   83 table_1arg: HL_WIDTH . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 169
+
+
+State 134
+
+   60 table_arg: table_arg table_1arg .
+
+    $default  reduce using rule 60 (table_arg)
+
+
+State 135
+
+  118 br_1arg: HL_STR HL_IS HL_QSTR .
+
+    $default  reduce using rule 118 (br_1arg)
+
+
+State 136
+
+  117 br_1arg: HL_ALIGN HL_IS HL_QSTR .
+
+    $default  reduce using rule 117 (br_1arg)
+
+
+State 137
+
+  124 font_1arg: HL_STR HL_IS HL_QSTR .
+
+    $default  reduce using rule 124 (font_1arg)
+
+
+State 138
+
+  121 font_1arg: HL_COLOR HL_IS HL_QSTR .
+
+    $default  reduce using rule 121 (font_1arg)
+
+
+State 139
+
+  122 font_1arg: HL_FACE HL_IS HL_QSTR .
+
+    $default  reduce using rule 122 (font_1arg)
+
+
+State 140
+
+  123 font_1arg: HL_POINTSIZE HL_IS HL_QSTR .
+
+    $default  reduce using rule 123 (font_1arg)
+
+
+State 141
+
+   23 item: HL_S HL_C $@5 items HL_C_S HL_C .
+
+    $default  reduce using rule 23 (item)
+
+
+State 142
+
+   19 item: HL_SUB HL_C $@3 items HL_C_SUB HL_C .
+
+    $default  reduce using rule 19 (item)
+
+
+State 143
+
+   21 item: HL_SUP HL_C $@4 items HL_C_SUP HL_C .
+
+    $default  reduce using rule 21 (item)
+
+
+State 144
+
+   47 row: HL_TR . HL_C $@10 cells HL_C_TR HL_C
+
+    HL_C  shift, and go to state 170
+
+
+State 145
+
+   39 tab: tabe HL_TABLE $@7 table_arg HL_C rows . HL_C_TABLE HL_C tabe
+   41 rows: rows . row
+   43     | rows . HL_HR HL_SC $@8 row
+   45     | rows . HL_HR HL_C HL_C_HR HL_C $@9 row
+
+    HL_HR       shift, and go to state 171
+    HL_C_TABLE  shift, and go to state 172
+    HL_TR       shift, and go to state 144
+
+    row  go to state 173
+
+
+State 146
+
+   40 rows: row .
+
+    $default  reduce using rule 40 (rows)
+
+
+State 147
+
+   84 table_1arg: HL_STR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 174
+
+
+State 148
+
+   62 table_1arg: HL_ALIGN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 175
+
+
+State 149
+
+   63 table_1arg: HL_BGCOLOR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 176
+
+
+State 150
+
+   64 table_1arg: HL_BORDER HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 177
+
+
+State 151
+
+   65 table_1arg: HL_CELLBORDER HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 178
+
+
+State 152
+
+   66 table_1arg: HL_CELLPADDING HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 179
+
+
+State 153
+
+   67 table_1arg: HL_CELLSPACING HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 180
+
+
+State 154
+
+   68 table_1arg: HL_COLOR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 181
+
+
+State 155
+
+   69 table_1arg: HL_COLUMNS HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 182
+
+
+State 156
+
+   70 table_1arg: HL_FIXEDSIZE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 183
+
+
+State 157
+
+   71 table_1arg: HL_GRADIENTANGLE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 184
+
+
+State 158
+
+   72 table_1arg: HL_HEIGHT HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 185
+
+
+State 159
+
+   73 table_1arg: HL_HREF HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 186
+
+
+State 160
+
+   74 table_1arg: HL_ID HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 187
+
+
+State 161
+
+   75 table_1arg: HL_PORT HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 188
+
+
+State 162
+
+   76 table_1arg: HL_ROWS HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 189
+
+
+State 163
+
+   77 table_1arg: HL_SIDES HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 190
+
+
+State 164
+
+   78 table_1arg: HL_STYLE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 191
+
+
+State 165
+
+   79 table_1arg: HL_TARGET HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 192
+
+
+State 166
+
+   80 table_1arg: HL_TITLE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 193
+
+
+State 167
+
+   81 table_1arg: HL_TOOLTIP HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 194
+
+
+State 168
+
+   82 table_1arg: HL_VALIGN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 195
+
+
+State 169
+
+   83 table_1arg: HL_WIDTH HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 196
+
+
+State 170
+
+   47 row: HL_TR HL_C . $@10 cells HL_C_TR HL_C
+
+    $default  reduce using rule 46 ($@10)
+
+    $@10  go to state 197
+
+
+State 171
+
+   43 rows: rows HL_HR . HL_SC $@8 row
+   45     | rows HL_HR . HL_C HL_C_HR HL_C $@9 row
+
+    HL_SC  shift, and go to state 198
+    HL_C   shift, and go to state 199
+
+
+State 172
+
+   39 tab: tabe HL_TABLE $@7 table_arg HL_C rows HL_C_TABLE . HL_C tabe
+
+    HL_C  shift, and go to state 200
+
+
+State 173
+
+   41 rows: rows row .
+
+    $default  reduce using rule 41 (rows)
+
+
+State 174
+
+   84 table_1arg: HL_STR HL_IS HL_QSTR .
+
+    $default  reduce using rule 84 (table_1arg)
+
+
+State 175
+
+   62 table_1arg: HL_ALIGN HL_IS HL_QSTR .
+
+    $default  reduce using rule 62 (table_1arg)
+
+
+State 176
+
+   63 table_1arg: HL_BGCOLOR HL_IS HL_QSTR .
+
+    $default  reduce using rule 63 (table_1arg)
+
+
+State 177
+
+   64 table_1arg: HL_BORDER HL_IS HL_QSTR .
+
+    $default  reduce using rule 64 (table_1arg)
+
+
+State 178
+
+   65 table_1arg: HL_CELLBORDER HL_IS HL_QSTR .
+
+    $default  reduce using rule 65 (table_1arg)
+
+
+State 179
+
+   66 table_1arg: HL_CELLPADDING HL_IS HL_QSTR .
+
+    $default  reduce using rule 66 (table_1arg)
+
+
+State 180
+
+   67 table_1arg: HL_CELLSPACING HL_IS HL_QSTR .
+
+    $default  reduce using rule 67 (table_1arg)
+
+
+State 181
+
+   68 table_1arg: HL_COLOR HL_IS HL_QSTR .
+
+    $default  reduce using rule 68 (table_1arg)
+
+
+State 182
+
+   69 table_1arg: HL_COLUMNS HL_IS HL_QSTR .
+
+    $default  reduce using rule 69 (table_1arg)
+
+
+State 183
+
+   70 table_1arg: HL_FIXEDSIZE HL_IS HL_QSTR .
+
+    $default  reduce using rule 70 (table_1arg)
+
+
+State 184
+
+   71 table_1arg: HL_GRADIENTANGLE HL_IS HL_QSTR .
+
+    $default  reduce using rule 71 (table_1arg)
+
+
+State 185
+
+   72 table_1arg: HL_HEIGHT HL_IS HL_QSTR .
+
+    $default  reduce using rule 72 (table_1arg)
+
+
+State 186
+
+   73 table_1arg: HL_HREF HL_IS HL_QSTR .
+
+    $default  reduce using rule 73 (table_1arg)
+
+
+State 187
+
+   74 table_1arg: HL_ID HL_IS HL_QSTR .
+
+    $default  reduce using rule 74 (table_1arg)
+
+
+State 188
+
+   75 table_1arg: HL_PORT HL_IS HL_QSTR .
+
+    $default  reduce using rule 75 (table_1arg)
+
+
+State 189
+
+   76 table_1arg: HL_ROWS HL_IS HL_QSTR .
+
+    $default  reduce using rule 76 (table_1arg)
+
+
+State 190
+
+   77 table_1arg: HL_SIDES HL_IS HL_QSTR .
+
+    $default  reduce using rule 77 (table_1arg)
+
+
+State 191
+
+   78 table_1arg: HL_STYLE HL_IS HL_QSTR .
+
+    $default  reduce using rule 78 (table_1arg)
+
+
+State 192
+
+   79 table_1arg: HL_TARGET HL_IS HL_QSTR .
+
+    $default  reduce using rule 79 (table_1arg)
+
+
+State 193
+
+   80 table_1arg: HL_TITLE HL_IS HL_QSTR .
+
+    $default  reduce using rule 80 (table_1arg)
+
+
+State 194
+
+   81 table_1arg: HL_TOOLTIP HL_IS HL_QSTR .
+
+    $default  reduce using rule 81 (table_1arg)
+
+
+State 195
+
+   82 table_1arg: HL_VALIGN HL_IS HL_QSTR .
+
+    $default  reduce using rule 82 (table_1arg)
+
+
+State 196
+
+   83 table_1arg: HL_WIDTH HL_IS HL_QSTR .
+
+    $default  reduce using rule 83 (table_1arg)
+
+
+State 197
+
+   47 row: HL_TR HL_C $@10 . cells HL_C_TR HL_C
+
+    HL_TD  shift, and go to state 201
+
+    cells   go to state 202
+    cell    go to state 203
+    celltd  go to state 204
+
+
+State 198
+
+   43 rows: rows HL_HR HL_SC . $@8 row
+
+    $default  reduce using rule 42 ($@8)
+
+    $@8  go to state 205
+
+
+State 199
+
+   45 rows: rows HL_HR HL_C . HL_C_HR HL_C $@9 row
+
+    HL_C_HR  shift, and go to state 206
+
+
+State 200
+
+   39 tab: tabe HL_TABLE $@7 table_arg HL_C rows HL_C_TABLE HL_C . tabe
+
+    HL_DATA  shift, and go to state 207
+
+    $default  reduce using rule 37 (tabe)
+
+    tabe  go to state 208
+
+
+State 201
+
+   59 celltd: HL_TD .
+
+    $default  reduce using rule 59 (celltd)
+
+
+State 202
+
+   47 row: HL_TR HL_C $@10 cells . HL_C_TR HL_C
+   49 cells: cells . cell
+   51      | cells . HL_VR HL_SC $@11 cell
+   53      | cells . HL_VR HL_C HL_C_VR HL_C $@12 cell
+
+    HL_TD    shift, and go to state 201
+    HL_C_TR  shift, and go to state 209
+    HL_VR    shift, and go to state 210
+
+    cell    go to state 211
+    celltd  go to state 204
+
+
+State 203
+
+   48 cells: cell .
+
+    $default  reduce using rule 48 (cells)
+
+
+State 204
+
+   54 cell: celltd . td_arg HL_C htmlparser HL_C_TD HL_C
+   55     | celltd . td_arg HL_C cellimg img_arg HL_SC HL_C_TD HL_C
+   56     | celltd . td_arg HL_C cellimg img_arg HL_C HL_C_IMG HL_C HL_C_TD HL_C
+   57     | celltd . td_arg HL_C HL_C_TD HL_C
+
+    $default  reduce using rule 86 (td_arg)
+
+    td_arg  go to state 212
+
+
+State 205
+
+   43 rows: rows HL_HR HL_SC $@8 . row
+
+    HL_TR  shift, and go to state 144
+
+    row  go to state 213
+
+
+State 206
+
+   45 rows: rows HL_HR HL_C HL_C_HR . HL_C $@9 row
+
+    HL_C  shift, and go to state 214
+
+
+State 207
+
+   36 tabe: HL_DATA .
+
+    $default  reduce using rule 36 (tabe)
+
+
+State 208
+
+   39 tab: tabe HL_TABLE $@7 table_arg HL_C rows HL_C_TABLE HL_C tabe .
+
+    $default  reduce using rule 39 (tab)
+
+
+State 209
+
+   47 row: HL_TR HL_C $@10 cells HL_C_TR . HL_C
+
+    HL_C  shift, and go to state 215
+
+
+State 210
+
+   51 cells: cells HL_VR . HL_SC $@11 cell
+   53      | cells HL_VR . HL_C HL_C_VR HL_C $@12 cell
+
+    HL_SC  shift, and go to state 216
+    HL_C   shift, and go to state 217
+
+
+State 211
+
+   49 cells: cells cell .
+
+    $default  reduce using rule 49 (cells)
+
+
+State 212
+
+   54 cell: celltd td_arg . HL_C htmlparser HL_C_TD HL_C
+   55     | celltd td_arg . HL_C cellimg img_arg HL_SC HL_C_TD HL_C
+   56     | celltd td_arg . HL_C cellimg img_arg HL_C HL_C_IMG HL_C HL_C_TD HL_C
+   57     | celltd td_arg . HL_C HL_C_TD HL_C
+   85 td_arg: td_arg . td_1arg
+
+    HL_C              shift, and go to state 218
+    HL_STR            shift, and go to state 219
+    HL_ALIGN          shift, and go to state 220
+    HL_BALIGN         shift, and go to state 221
+    HL_BGCOLOR        shift, and go to state 222
+    HL_BORDER         shift, and go to state 223
+    HL_CELLPADDING    shift, and go to state 224
+    HL_CELLSPACING    shift, and go to state 225
+    HL_COLOR          shift, and go to state 226
+    HL_COLSPAN        shift, and go to state 227
+    HL_FIXEDSIZE      shift, and go to state 228
+    HL_GRADIENTANGLE  shift, and go to state 229
+    HL_HEIGHT         shift, and go to state 230
+    HL_HREF           shift, and go to state 231
+    HL_ID             shift, and go to state 232
+    HL_PORT           shift, and go to state 233
+    HL_ROWSPAN        shift, and go to state 234
+    HL_SIDES          shift, and go to state 235
+    HL_STYLE          shift, and go to state 236
+    HL_TARGET         shift, and go to state 237
+    HL_TITLE          shift, and go to state 238
+    HL_TOOLTIP        shift, and go to state 239
+    HL_VALIGN         shift, and go to state 240
+    HL_WIDTH          shift, and go to state 241
+
+    td_1arg  go to state 242
+
+
+State 213
+
+   43 rows: rows HL_HR HL_SC $@8 row .
+
+    $default  reduce using rule 43 (rows)
+
+
+State 214
+
+   45 rows: rows HL_HR HL_C HL_C_HR HL_C . $@9 row
+
+    $default  reduce using rule 44 ($@9)
+
+    $@9  go to state 243
+
+
+State 215
+
+   47 row: HL_TR HL_C $@10 cells HL_C_TR HL_C .
+
+    $default  reduce using rule 47 (row)
+
+
+State 216
+
+   51 cells: cells HL_VR HL_SC . $@11 cell
+
+    $default  reduce using rule 50 ($@11)
+
+    $@11  go to state 244
+
+
+State 217
+
+   53 cells: cells HL_VR HL_C . HL_C_VR HL_C $@12 cell
+
+    HL_C_VR  shift, and go to state 245
+
+
+State 218
+
+   54 cell: celltd td_arg HL_C . htmlparser HL_C_TD HL_C
+   55     | celltd td_arg HL_C . cellimg img_arg HL_SC HL_C_TD HL_C
+   56     | celltd td_arg HL_C . cellimg img_arg HL_C HL_C_IMG HL_C HL_C_TD HL_C
+   57     | celltd td_arg HL_C . HL_C_TD HL_C
+
+    HL_DATA  shift, and go to state 1
+    HL_HTML  shift, and go to state 2
+    HL_B     shift, and go to state 3
+    HL_BR    shift, and go to state 4
+    HL_FONT  shift, and go to state 5
+    HL_I     shift, and go to state 6
+    HL_IMG   shift, and go to state 246
+    HL_O     shift, and go to state 7
+    HL_S     shift, and go to state 8
+    HL_SUB   shift, and go to state 9
+    HL_SUP   shift, and go to state 10
+    HL_C_TD  shift, and go to state 247
+    HL_U     shift, and go to state 11
+
+    $default  reduce using rule 37 (tabe)
+
+    htmlparser   go to state 248
+    htmlparser2  go to state 14
+    items        go to state 15
+    item         go to state 16
+    fonttab2     go to state 17
+    font         go to state 18
+    italic       go to state 19
+    overline     go to state 20
+    bold         go to state 21
+    underline    go to state 22
+    tabe         go to state 23
+    tab          go to state 24
+    cellimg      go to state 249
+
+
+State 219
+
+  109 td_1arg: HL_STR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 250
+
+
+State 220
+
+   87 td_1arg: HL_ALIGN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 251
+
+
+State 221
+
+   88 td_1arg: HL_BALIGN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 252
+
+
+State 222
+
+   89 td_1arg: HL_BGCOLOR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 253
+
+
+State 223
+
+   90 td_1arg: HL_BORDER . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 254
+
+
+State 224
+
+   91 td_1arg: HL_CELLPADDING . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 255
+
+
+State 225
+
+   92 td_1arg: HL_CELLSPACING . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 256
+
+
+State 226
+
+   93 td_1arg: HL_COLOR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 257
+
+
+State 227
+
+   94 td_1arg: HL_COLSPAN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 258
+
+
+State 228
+
+   95 td_1arg: HL_FIXEDSIZE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 259
+
+
+State 229
+
+   96 td_1arg: HL_GRADIENTANGLE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 260
+
+
+State 230
+
+   97 td_1arg: HL_HEIGHT . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 261
+
+
+State 231
+
+   98 td_1arg: HL_HREF . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 262
+
+
+State 232
+
+   99 td_1arg: HL_ID . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 263
+
+
+State 233
+
+  100 td_1arg: HL_PORT . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 264
+
+
+State 234
+
+  101 td_1arg: HL_ROWSPAN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 265
+
+
+State 235
+
+  102 td_1arg: HL_SIDES . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 266
+
+
+State 236
+
+  103 td_1arg: HL_STYLE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 267
+
+
+State 237
+
+  104 td_1arg: HL_TARGET . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 268
+
+
+State 238
+
+  105 td_1arg: HL_TITLE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 269
+
+
+State 239
+
+  106 td_1arg: HL_TOOLTIP . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 270
+
+
+State 240
+
+  107 td_1arg: HL_VALIGN . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 271
+
+
+State 241
+
+  108 td_1arg: HL_WIDTH . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 272
+
+
+State 242
+
+   85 td_arg: td_arg td_1arg .
+
+    $default  reduce using rule 85 (td_arg)
+
+
+State 243
+
+   45 rows: rows HL_HR HL_C HL_C_HR HL_C $@9 . row
+
+    HL_TR  shift, and go to state 144
+
+    row  go to state 273
+
+
+State 244
+
+   51 cells: cells HL_VR HL_SC $@11 . cell
+
+    HL_TD  shift, and go to state 201
+
+    cell    go to state 274
+    celltd  go to state 204
+
+
+State 245
+
+   53 cells: cells HL_VR HL_C HL_C_VR . HL_C $@12 cell
+
+    HL_C  shift, and go to state 275
+
+
+State 246
+
+   58 cellimg: HL_IMG .
+
+    $default  reduce using rule 58 (cellimg)
+
+
+State 247
+
+   57 cell: celltd td_arg HL_C HL_C_TD . HL_C
+
+    HL_C  shift, and go to state 276
+
+
+State 248
+
+   54 cell: celltd td_arg HL_C htmlparser . HL_C_TD HL_C
+
+    HL_C_TD  shift, and go to state 277
+
+
+State 249
+
+   55 cell: celltd td_arg HL_C cellimg . img_arg HL_SC HL_C_TD HL_C
+   56     | celltd td_arg HL_C cellimg . img_arg HL_C HL_C_IMG HL_C HL_C_TD HL_C
+
+    $default  reduce using rule 111 (img_arg)
+
+    img_arg  go to state 278
+
+
+State 250
+
+  109 td_1arg: HL_STR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 279
+
+
+State 251
+
+   87 td_1arg: HL_ALIGN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 280
+
+
+State 252
+
+   88 td_1arg: HL_BALIGN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 281
+
+
+State 253
+
+   89 td_1arg: HL_BGCOLOR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 282
+
+
+State 254
+
+   90 td_1arg: HL_BORDER HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 283
+
+
+State 255
+
+   91 td_1arg: HL_CELLPADDING HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 284
+
+
+State 256
+
+   92 td_1arg: HL_CELLSPACING HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 285
+
+
+State 257
+
+   93 td_1arg: HL_COLOR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 286
+
+
+State 258
+
+   94 td_1arg: HL_COLSPAN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 287
+
+
+State 259
+
+   95 td_1arg: HL_FIXEDSIZE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 288
+
+
+State 260
+
+   96 td_1arg: HL_GRADIENTANGLE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 289
+
+
+State 261
+
+   97 td_1arg: HL_HEIGHT HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 290
+
+
+State 262
+
+   98 td_1arg: HL_HREF HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 291
+
+
+State 263
+
+   99 td_1arg: HL_ID HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 292
+
+
+State 264
+
+  100 td_1arg: HL_PORT HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 293
+
+
+State 265
+
+  101 td_1arg: HL_ROWSPAN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 294
+
+
+State 266
+
+  102 td_1arg: HL_SIDES HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 295
+
+
+State 267
+
+  103 td_1arg: HL_STYLE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 296
+
+
+State 268
+
+  104 td_1arg: HL_TARGET HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 297
+
+
+State 269
+
+  105 td_1arg: HL_TITLE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 298
+
+
+State 270
+
+  106 td_1arg: HL_TOOLTIP HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 299
+
+
+State 271
+
+  107 td_1arg: HL_VALIGN HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 300
+
+
+State 272
+
+  108 td_1arg: HL_WIDTH HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 301
+
+
+State 273
+
+   45 rows: rows HL_HR HL_C HL_C_HR HL_C $@9 row .
+
+    $default  reduce using rule 45 (rows)
+
+
+State 274
+
+   51 cells: cells HL_VR HL_SC $@11 cell .
+
+    $default  reduce using rule 51 (cells)
+
+
+State 275
+
+   53 cells: cells HL_VR HL_C HL_C_VR HL_C . $@12 cell
+
+    $default  reduce using rule 52 ($@12)
+
+    $@12  go to state 302
+
+
+State 276
+
+   57 cell: celltd td_arg HL_C HL_C_TD HL_C .
+
+    $default  reduce using rule 57 (cell)
+
+
+State 277
+
+   54 cell: celltd td_arg HL_C htmlparser HL_C_TD . HL_C
+
+    HL_C  shift, and go to state 303
+
+
+State 278
+
+   55 cell: celltd td_arg HL_C cellimg img_arg . HL_SC HL_C_TD HL_C
+   56     | celltd td_arg HL_C cellimg img_arg . HL_C HL_C_IMG HL_C HL_C_TD HL_C
+  110 img_arg: img_arg . img_1arg
+
+    HL_SC     shift, and go to state 304
+    HL_C      shift, and go to state 305
+    HL_STR    shift, and go to state 306
+    HL_SCALE  shift, and go to state 307
+    HL_SRC    shift, and go to state 308
+
+    img_1arg  go to state 309
+
+
+State 279
+
+  109 td_1arg: HL_STR HL_IS HL_QSTR .
+
+    $default  reduce using rule 109 (td_1arg)
+
+
+State 280
+
+   87 td_1arg: HL_ALIGN HL_IS HL_QSTR .
+
+    $default  reduce using rule 87 (td_1arg)
+
+
+State 281
+
+   88 td_1arg: HL_BALIGN HL_IS HL_QSTR .
+
+    $default  reduce using rule 88 (td_1arg)
+
+
+State 282
+
+   89 td_1arg: HL_BGCOLOR HL_IS HL_QSTR .
+
+    $default  reduce using rule 89 (td_1arg)
+
+
+State 283
+
+   90 td_1arg: HL_BORDER HL_IS HL_QSTR .
+
+    $default  reduce using rule 90 (td_1arg)
+
+
+State 284
+
+   91 td_1arg: HL_CELLPADDING HL_IS HL_QSTR .
+
+    $default  reduce using rule 91 (td_1arg)
+
+
+State 285
+
+   92 td_1arg: HL_CELLSPACING HL_IS HL_QSTR .
+
+    $default  reduce using rule 92 (td_1arg)
+
+
+State 286
+
+   93 td_1arg: HL_COLOR HL_IS HL_QSTR .
+
+    $default  reduce using rule 93 (td_1arg)
+
+
+State 287
+
+   94 td_1arg: HL_COLSPAN HL_IS HL_QSTR .
+
+    $default  reduce using rule 94 (td_1arg)
+
+
+State 288
+
+   95 td_1arg: HL_FIXEDSIZE HL_IS HL_QSTR .
+
+    $default  reduce using rule 95 (td_1arg)
+
+
+State 289
+
+   96 td_1arg: HL_GRADIENTANGLE HL_IS HL_QSTR .
+
+    $default  reduce using rule 96 (td_1arg)
+
+
+State 290
+
+   97 td_1arg: HL_HEIGHT HL_IS HL_QSTR .
+
+    $default  reduce using rule 97 (td_1arg)
+
+
+State 291
+
+   98 td_1arg: HL_HREF HL_IS HL_QSTR .
+
+    $default  reduce using rule 98 (td_1arg)
+
+
+State 292
+
+   99 td_1arg: HL_ID HL_IS HL_QSTR .
+
+    $default  reduce using rule 99 (td_1arg)
+
+
+State 293
+
+  100 td_1arg: HL_PORT HL_IS HL_QSTR .
+
+    $default  reduce using rule 100 (td_1arg)
+
+
+State 294
+
+  101 td_1arg: HL_ROWSPAN HL_IS HL_QSTR .
+
+    $default  reduce using rule 101 (td_1arg)
+
+
+State 295
+
+  102 td_1arg: HL_SIDES HL_IS HL_QSTR .
+
+    $default  reduce using rule 102 (td_1arg)
+
+
+State 296
+
+  103 td_1arg: HL_STYLE HL_IS HL_QSTR .
+
+    $default  reduce using rule 103 (td_1arg)
+
+
+State 297
+
+  104 td_1arg: HL_TARGET HL_IS HL_QSTR .
+
+    $default  reduce using rule 104 (td_1arg)
+
+
+State 298
+
+  105 td_1arg: HL_TITLE HL_IS HL_QSTR .
+
+    $default  reduce using rule 105 (td_1arg)
+
+
+State 299
+
+  106 td_1arg: HL_TOOLTIP HL_IS HL_QSTR .
+
+    $default  reduce using rule 106 (td_1arg)
+
+
+State 300
+
+  107 td_1arg: HL_VALIGN HL_IS HL_QSTR .
+
+    $default  reduce using rule 107 (td_1arg)
+
+
+State 301
+
+  108 td_1arg: HL_WIDTH HL_IS HL_QSTR .
+
+    $default  reduce using rule 108 (td_1arg)
+
+
+State 302
+
+   53 cells: cells HL_VR HL_C HL_C_VR HL_C $@12 . cell
+
+    HL_TD  shift, and go to state 201
+
+    cell    go to state 310
+    celltd  go to state 204
+
+
+State 303
+
+   54 cell: celltd td_arg HL_C htmlparser HL_C_TD HL_C .
+
+    $default  reduce using rule 54 (cell)
+
+
+State 304
+
+   55 cell: celltd td_arg HL_C cellimg img_arg HL_SC . HL_C_TD HL_C
+
+    HL_C_TD  shift, and go to state 311
+
+
+State 305
+
+   56 cell: celltd td_arg HL_C cellimg img_arg HL_C . HL_C_IMG HL_C HL_C_TD HL_C
+
+    HL_C_IMG  shift, and go to state 312
+
+
+State 306
+
+  114 img_1arg: HL_STR . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 313
+
+
+State 307
+
+  112 img_1arg: HL_SCALE . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 314
+
+
+State 308
+
+  113 img_1arg: HL_SRC . HL_IS HL_QSTR
+
+    HL_IS  shift, and go to state 315
+
+
+State 309
+
+  110 img_arg: img_arg img_1arg .
+
+    $default  reduce using rule 110 (img_arg)
+
+
+State 310
+
+   53 cells: cells HL_VR HL_C HL_C_VR HL_C $@12 cell .
+
+    $default  reduce using rule 53 (cells)
+
+
+State 311
+
+   55 cell: celltd td_arg HL_C cellimg img_arg HL_SC HL_C_TD . HL_C
+
+    HL_C  shift, and go to state 316
+
+
+State 312
+
+   56 cell: celltd td_arg HL_C cellimg img_arg HL_C HL_C_IMG . HL_C HL_C_TD HL_C
+
+    HL_C  shift, and go to state 317
+
+
+State 313
+
+  114 img_1arg: HL_STR HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 318
+
+
+State 314
+
+  112 img_1arg: HL_SCALE HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 319
+
+
+State 315
+
+  113 img_1arg: HL_SRC HL_IS . HL_QSTR
+
+    HL_QSTR  shift, and go to state 320
+
+
+State 316
+
+   55 cell: celltd td_arg HL_C cellimg img_arg HL_SC HL_C_TD HL_C .
+
+    $default  reduce using rule 55 (cell)
+
+
+State 317
+
+   56 cell: celltd td_arg HL_C cellimg img_arg HL_C HL_C_IMG HL_C . HL_C_TD HL_C
+
+    HL_C_TD  shift, and go to state 321
+
+
+State 318
+
+  114 img_1arg: HL_STR HL_IS HL_QSTR .
+
+    $default  reduce using rule 114 (img_1arg)
+
+
+State 319
+
+  112 img_1arg: HL_SCALE HL_IS HL_QSTR .
+
+    $default  reduce using rule 112 (img_1arg)
+
+
+State 320
+
+  113 img_1arg: HL_SRC HL_IS HL_QSTR .
+
+    $default  reduce using rule 113 (img_1arg)
+
+
+State 321
+
+   56 cell: celltd td_arg HL_C cellimg img_arg HL_C HL_C_IMG HL_C HL_C_TD . HL_C
+
+    HL_C  shift, and go to state 322
+
+
+State 322
+
+   56 cell: celltd td_arg HL_C cellimg img_arg HL_C HL_C_IMG HL_C HL_C_TD HL_C .
+
+    $default  reduce using rule 56 (cell)

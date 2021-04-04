@@ -45,6 +45,7 @@
 #include "dot.tab.h"
 #include "rhp.h"
 #include "sugi.h"
+#include "dpmem.h"
 
 /* the graph data root graph */
 struct gml_graph *maingraph = NULL;
@@ -52,8 +53,14 @@ struct gml_graph *maingraph = NULL;
 /* type of graph data 0=gml 1=dot 2=vcg */
 int graphtype = 0;
 
+/* if set mirror in y direction */
+int option_mirrory = 0;
+
+/* if set do node names instead of node label */
+int option_nnames = 0;
+
 /* if set do node label popup */
-int option_popup = 1;
+int option_popup = 0;
 
 /* if 1 allow incremental layout for clusters if any */
 int incrlayout = 0;		/* 1 */
@@ -144,7 +151,7 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 		/* using rhp.c */
 		/* number of crossing edges at level */
 		if (g->numce == NULL) {
-			g->numce = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+			g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 		}
 
 		if (g->maxlevel == 0) {
@@ -265,13 +272,14 @@ void prep(struct gml_graph *g)
 	lnl = maingraph->rawnodelist;
 	while (lnl) {
 		node = lnl->node;
-		node2 = calloc(1, sizeof(struct gml_node));
+		node2 = dp_calloc(1, sizeof(struct gml_node));
 		if (node2 == NULL) {
 			return;
 		}
 
 		node2->rootedon = node->rootedon;
 		node2->rlabel = node->rlabel;	/* record label */
+		node2->hlabel = node->hlabel;	/* html label */
 		node2->id = node->id;
 		node2->ncolor = node->ncolor;	/* fill color r/g/b */
 		node2->nbcolor = node->nbcolor;	/* border color r/g/b */
@@ -285,11 +293,24 @@ void prep(struct gml_graph *g)
 		if (node2->nr > ga->nodenum) {
 			ga->nodenum = node2->nr;
 		}
-
+		node2->ishtml = node->ishtml;
+		/* option to use node names instead of node labels in gui */
+		/* update now done differently */
+		if (0) {
+			if (option_nnames) {
+				node2->nlabel = node2->name;
+				/* turn off r/h labels */
+				node2->rlabel = NULL;
+				node2->hlabel = NULL;
+				node2->ishtml = 0;
+			} else {
+				/* keep the configuration with using r/h node labels */
+			}
+		}
 		/* add node in work list */
-		lnl2 = calloc(1, sizeof(struct gml_nlist));
+		lnl2 = dp_calloc(1, sizeof(struct gml_nlist));
 		if (lnl2 == NULL) {
-			free(node2);
+			dp_free(node2);
 			return;
 		}
 
@@ -302,6 +323,10 @@ void prep(struct gml_graph *g)
 			ga->nodelisttail = lnl2;
 		}
 
+		if (yydebug || 0) {
+			printf("%s(): adding node \"%s\"\n", __func__, node2->name);
+		}
+
 		uniqnode_add2(g, node2);
 		ga->nnodes++;
 		lnl = lnl->next;
@@ -311,7 +336,7 @@ void prep(struct gml_graph *g)
 	enl = maingraph->rawedgelist;
 	while (enl) {
 		edge = enl->edge;
-		edge2 = calloc(1, sizeof(struct gml_edge));
+		edge2 = dp_calloc(1, sizeof(struct gml_edge));
 		if (edge2 == NULL) {
 			return;
 		}
@@ -378,9 +403,9 @@ void prep(struct gml_graph *g)
 		edge2->from_node->outdegree++;
 		edge2->to_node->indegree++;
 
-		enl2 = calloc(1, sizeof(struct gml_elist));
+		enl2 = dp_calloc(1, sizeof(struct gml_elist));
 		if (enl2 == NULL) {
-			free(edge2);
+			dp_free(edge2);
 			return;
 		}
 
@@ -442,7 +467,7 @@ static void prepincr_addnode(struct gml_graph *g, struct gml_node *node)
 	}
 
 	/* add node to nodelist of cluster graph */
-	node2 = calloc(1, sizeof(struct gml_node));
+	node2 = dp_calloc(1, sizeof(struct gml_node));
 	if (node2 == NULL) {
 		return;
 	}
@@ -459,9 +484,9 @@ static void prepincr_addnode(struct gml_graph *g, struct gml_node *node)
 	node2->incluster = 1;	/* node is part of cluster layout */
 	/* uniq node numbers start at 1 */
 	node2->nr = node->nr;
-	lnl2 = calloc(1, sizeof(struct gml_nlist));
+	lnl2 = dp_calloc(1, sizeof(struct gml_nlist));
 	if (lnl2 == NULL) {
-		free(node2);
+		dp_free(node2);
 		return;
 	}
 
@@ -522,7 +547,7 @@ void prepincr(struct gml_graph *g)
 			prepincr_addnode(g, edge->from_node);
 			prepincr_addnode(g, edge->to_node);
 			/* create copy of the edge */
-			edge2 = calloc(1, sizeof(struct gml_edge));
+			edge2 = dp_calloc(1, sizeof(struct gml_edge));
 			if (edge2 == NULL) {
 				return;
 			}
@@ -556,9 +581,9 @@ void prepincr(struct gml_graph *g)
 			edge2->from_node->outdegree++;
 			edge2->to_node->indegree++;
 
-			enl2 = calloc(1, sizeof(struct gml_elist));
+			enl2 = dp_calloc(1, sizeof(struct gml_elist));
 			if (enl2 == NULL) {
-				free(edge2);
+				dp_free(edge2);
 				return;
 			}
 
@@ -596,7 +621,7 @@ void create_maingraph(void)
 		/* shouldnothappen */
 		printf("%s(): maingraph is %p shouldnothappen\n", __func__, (void *)maingraph);
 	}
-	maingraph = calloc(1, sizeof(struct gml_graph));
+	maingraph = dp_calloc(1, sizeof(struct gml_graph));
 	if (maingraph == NULL) {
 		return;
 	}
@@ -617,7 +642,7 @@ void create_maingraph(void)
 void create_sg(int nr, char *name, char *label, int type)
 {
 	struct gml_graph *gr = NULL;
-	gr = calloc(1, sizeof(struct gml_graph));
+	gr = dp_calloc(1, sizeof(struct gml_graph));
 	if (gr == NULL) {
 		return;
 	}
@@ -1079,8 +1104,8 @@ void edgeconnections(struct gml_graph *g)
 		if (lnl->node->indegree > 1) {
 			/* check if enough size at node for edge placement */
 			if ((lnl->node->indegree * 3 + 15 + 15) < lnl->node->bbx) {
-				lnl->node->iedges = (struct gml_edge **)calloc(1, (sizeof(struct gml_edge *))
-									       * lnl->node->indegree);
+				lnl->node->iedges = (struct gml_edge **)dp_calloc(1, (sizeof(struct gml_edge *))
+										  * lnl->node->indegree);
 				i = 0;
 				ell = lnl->node->incoming_e;
 				while (ell) {
@@ -1099,8 +1124,8 @@ void edgeconnections(struct gml_graph *g)
 
 		if (lnl->node->outdegree > 1) {
 			if ((lnl->node->outdegree * 3 + 15 + 15) < lnl->node->bbx) {
-				lnl->node->oedges = (struct gml_edge **)calloc(1, (sizeof(struct gml_edge *))
-									       * lnl->node->outdegree);
+				lnl->node->oedges = (struct gml_edge **)dp_calloc(1, (sizeof(struct gml_edge *))
+										  * lnl->node->outdegree);
 				i = 0;
 				ell = lnl->node->outgoing_e;
 				while (ell) {
@@ -1138,7 +1163,7 @@ void clear_nume_r(struct gml_graph *g)
 	}
 
 	if (g->nume) {
-		free(g->nume);
+		dp_free(g->nume);
 	}
 
 	g->nume = NULL;
@@ -1149,23 +1174,24 @@ void clear_nume_r(struct gml_graph *g)
 static void clear_rlabel2(struct gml_rl *info)
 {
 	int i = 0;
+
 	if (info == NULL) {
 		return;
 	}
 
+	/* first recursive free the sub-parts of this info, then info itself */
 	if (info->parts) {
 		for (i = 0; i < info->nparts; i++) {
 			clear_rlabel2(info->parts[i]);
 		}
-
-		free(info->parts);
+		dp_free(info->parts);
 	}
 
 	info->parts = NULL;
 	info->label = NULL;
 	info->ulabel = NULL;
 	info->nparts = 0;
-	free(info);
+	dp_free(info);
 	return;
 }
 
@@ -1196,6 +1222,141 @@ void clear_rlabel_r(struct gml_graph *g)
 	return;
 }
 
+/* clear html items list */
+static void clear_hlabel2il(struct gml_hilist *il)
+{
+	struct gml_hilist *ptr = NULL;
+	struct gml_hilist *ptrnext = NULL;
+
+	ptr = il;
+
+	while (ptr) {
+		ptrnext = ptr->next;
+		/* free the html item data */
+		if (ptr->items) {
+			dp_free(ptr->items);
+			ptr->items = NULL;
+		}
+		dp_free(ptr);
+		ptr = NULL;
+		ptr = ptrnext;
+	}
+
+	return;
+}
+
+/* recurse free sub-table data */
+static void clear_hlabel2tl_r(struct gml_titem *titem)
+{
+	struct gml_htlist *ptr = NULL;
+	struct gml_htlist *ptrnext = NULL;
+
+	if (titem == NULL) {
+		return;
+	}
+
+	ptr = titem->tl;
+
+	/* first recurse in sub tables if any */
+	while (ptr) {
+		ptrnext = ptr->next;
+		/* free the table data */
+		if (ptr->titem) {
+			clear_hlabel2tl_r(ptr->titem);
+			dp_free(ptr->titem);
+			ptr->titem = NULL;
+		}
+		dp_free(ptr);
+		ptr = NULL;
+		ptr = ptrnext;
+	}
+
+	titem->tlend = NULL;
+
+	/* clear the titem data */
+
+	return;
+}
+
+/* clear html tables list */
+static void clear_hlabel2tl(struct gml_htlist *titem)
+{
+	struct gml_htlist *ptr = NULL;
+	struct gml_htlist *ptrnext = NULL;
+
+	ptr = titem;
+
+	while (ptr) {
+		ptrnext = ptr->next;
+		/* free the table data */
+		if (ptr->titem) {
+			clear_hlabel2tl_r(ptr->titem);
+			dp_free(ptr->titem);
+			ptr->titem = NULL;
+		}
+		dp_free(ptr);
+		ptr = NULL;
+		ptr = ptrnext;
+	}
+
+	return;
+}
+
+/* free one html label info */
+static void clear_hlabel2(struct gml_hl *info)
+{
+
+	if (info == NULL) {
+		return;
+	}
+
+	/* only il or tl should be set */
+	if (info->il) {
+		clear_hlabel2il(info->il);
+		info->il = NULL;
+		info->ilend = NULL;
+	}
+
+	if (info->tl) {
+		clear_hlabel2tl(info->tl);
+		info->tl = NULL;
+		info->tlend = NULL;
+	}
+
+	info->mode = 0;
+
+	dp_free(info);
+
+	return;
+}
+
+/* clear optional html labels */
+void clear_hlabel_r(struct gml_graph *g)
+{
+	struct gml_nlist *lnll = NULL;
+	struct gml_glist *gl = NULL;
+	if (g == NULL) {
+		return;
+	}
+
+	gl = g->subglist;
+	while (gl) {
+		clear_hlabel_r(gl->sg);
+		gl = gl->next;
+	}
+
+	lnll = g->nodelist;
+	while (lnll) {
+		if (lnll->node->hlabel) {
+			clear_hlabel2(lnll->node->hlabel);
+			lnll->node->hlabel = NULL;
+		}
+		lnll = lnll->next;
+	}
+
+	return;
+}
+
 /* clear arrays in/out edges in nodes
  * and number of edge crossings at level
  */
@@ -1217,13 +1378,13 @@ void clear_ioedges_r(struct gml_graph *g)
 	while (lnll) {
 		/* array with out edges */
 		if (lnll->node->oedges) {
-			free(lnll->node->oedges);
+			dp_free(lnll->node->oedges);
 			lnll->node->oedges = NULL;
 		}
 		lnll->node->dx_oedges = 0;
 		/* array with in edges */
 		if (lnll->node->iedges) {
-			free(lnll->node->iedges);
+			dp_free(lnll->node->iedges);
 			lnll->node->iedges = NULL;
 		}
 		lnll->node->dx_iedges = 0;
@@ -1248,7 +1409,7 @@ void clear_numce_r(struct gml_graph *g)
 	}
 
 	if (g->numce) {
-		free(g->numce);
+		dp_free(g->numce);
 	}
 
 	g->numce = NULL;
@@ -1264,7 +1425,7 @@ void clear_stlist(struct gml_node *node)
 	ell = node->outgoing_e;
 	while (ell) {
 		ellnext = ell->next;
-		free(ell);
+		dp_free(ell);
 		ell = NULL;
 		ell = ellnext;
 	}
@@ -1276,7 +1437,7 @@ void clear_stlist(struct gml_node *node)
 	ell = node->incoming_e;
 	while (ell) {
 		ellnext = ell->next;
-		free(ell);
+		dp_free(ell);
 		ell = NULL;
 		ell = ellnext;
 	}
@@ -1308,9 +1469,9 @@ void clear_rawnodelist(struct gml_graph *g)
 	lnll = g->rawnodelist;
 	while (lnll) {
 		nlnext = lnll->next;
-		free(lnll->node);
+		dp_free(lnll->node);
 		lnll->node = NULL;
-		free(lnll);
+		dp_free(lnll);
 		lnll = NULL;
 		lnll = nlnext;
 	}
@@ -1329,9 +1490,9 @@ void clear_rawedgelist(struct gml_graph *g)
 	el = g->rawedgelist;
 	while (el) {
 		elnext = el->next;
-		free(el->edge);
+		dp_free(el->edge);
 		el->edge = NULL;
-		free(el);
+		dp_free(el);
 		el = NULL;
 		el = elnext;
 	}
@@ -1372,9 +1533,9 @@ void clear_nodelist_r(struct gml_graph *g, int mode)
 				lnll->node->rlabel = NULL;
 			}
 		}
-		free(lnll->node);
+		dp_free(lnll->node);
 		lnll->node = NULL;
-		free(lnll);
+		dp_free(lnll);
 		lnll = NULL;
 		lnll = nlnext;
 	}
@@ -1405,7 +1566,7 @@ void clear_singlenodelist_r(struct gml_graph *g)
 	lnll = g->singlenodelist;
 	while (lnll) {
 		nlnext = lnll->next;
-		free(lnll);
+		dp_free(lnll);
 		lnll = NULL;
 		lnll = nlnext;
 	}
@@ -1434,7 +1595,7 @@ void clear_selfedgesnodelist_r(struct gml_graph *g)
 	lnll = g->selfedgesnodelist;
 	while (lnll) {
 		nlnext = lnll->next;
-		free(lnll);
+		dp_free(lnll);
 		lnll = NULL;
 		lnll = nlnext;
 	}
@@ -1463,9 +1624,9 @@ void clear_edgelist_r(struct gml_graph *g)
 	el = g->edgelist;
 	while (el) {
 		elnext = el->next;
-		free(el->edge);
+		dp_free(el->edge);
 		el->edge = NULL;
-		free(el);
+		dp_free(el);
 		el = NULL;
 		el = elnext;
 	}
@@ -1508,7 +1669,7 @@ void make_stlist(struct gml_graph *g)
 		/* from/to nodes */
 		sn = edge->from_node;
 		tn = edge->to_node;
-		ne = calloc(1, sizeof(struct gml_elist));
+		ne = dp_calloc(1, sizeof(struct gml_elist));
 		if (ne == NULL) {
 			return;
 		}
@@ -1524,7 +1685,7 @@ void make_stlist(struct gml_graph *g)
 		}
 
 		sn->outdegree++;
-		ne = calloc(1, sizeof(struct gml_elist));
+		ne = dp_calloc(1, sizeof(struct gml_elist));
 		if (ne == NULL) {
 			return;
 		}
@@ -1573,9 +1734,9 @@ void del_edge(struct gml_graph *g, struct gml_elist *edgeel)
 			g->edgelisttail = elprev;
 		}
 
-		free(edgeel->edge);
+		dp_free(edgeel->edge);
 		edgeel->edge = NULL;
-		free(edgeel);
+		dp_free(edgeel);
 	} else {
 
 		elto = edgeel->next;
@@ -1594,9 +1755,9 @@ void del_edge(struct gml_graph *g, struct gml_elist *edgeel)
 			g->edgelisttail = elprev;
 		}
 
-		free(edgeel->edge);
+		dp_free(edgeel->edge);
 		edgeel->edge = NULL;
-		free(edgeel);
+		dp_free(edgeel);
 	}
 
 	return;
@@ -1615,6 +1776,7 @@ void edgelabels(struct gml_graph *g)
 	char *tc = NULL;
 	char constraint = 0;
 	int ydiff = 0;
+	int ishtml = 0;
 	if (g->nedgelabels == 0) {
 		/* no edge labels, nothing todo here */
 		return;
@@ -1652,6 +1814,8 @@ void edgelabels(struct gml_graph *g)
 			fc = el->edge->fcompass;
 			tc = el->edge->tcompass;
 			constraint = el->edge->constraint;
+			/* set if html label */
+			ishtml = el->edge->ishtml;
 			maingraph->nodenum++;
 			/* create label node */
 			add_new_dummynode(g, maingraph->nodenum);
@@ -1669,9 +1833,12 @@ void edgelabels(struct gml_graph *g)
 			ln->y = ln->el_fnode->y + (ydiff / 2);
 			ln->elabel = 1;	/* mark this is a edgelabel */
 			ln->dummy = 0;
+			ln->name = el->edge->elabel;
 			ln->nlabel = el->edge->elabel;
 			/* node belongs to graph with this startnode */
 			ln->startnode = el->edge->from_node->startnode;
+			/* set if html label */
+			ln->ishtml = ishtml;
 			/* create new edges with label node in between */
 			add_new_dummyedge(g, el->edge->rootedon, el->edge->from_node->nr,
 					  maingraph->nodenum, rev, ecolor, style, fc, tc, constraint);
@@ -1757,7 +1924,7 @@ void reorg(struct gml_graph *g)
 	while (nl) {
 		/* first the single nodes */
 		if (nl->node->indegree == 0 && nl->node->outdegree == 0) {
-			nn = calloc(1, sizeof(struct gml_nlist));
+			nn = dp_calloc(1, sizeof(struct gml_nlist));
 			if (nn) {
 				nn->node = nl->node;
 				if (nnl == NULL) {
@@ -1776,7 +1943,7 @@ void reorg(struct gml_graph *g)
 	while (nl) {
 		/* second the starter nodes */
 		if (nl->node->indegree == 0 && nl->node->outdegree != 0) {
-			nn = calloc(1, sizeof(struct gml_nlist));
+			nn = dp_calloc(1, sizeof(struct gml_nlist));
 			if (nn) {
 				nn->node = nl->node;
 				if (nnl == NULL) {
@@ -1795,7 +1962,7 @@ void reorg(struct gml_graph *g)
 	while (nl) {
 		/* third the middle nodes */
 		if (nl->node->indegree != 0 && nl->node->outdegree != 0) {
-			nn = calloc(1, sizeof(struct gml_nlist));
+			nn = dp_calloc(1, sizeof(struct gml_nlist));
 			if (nn) {
 				nn->node = nl->node;
 				if (nnl == NULL) {
@@ -1814,7 +1981,7 @@ void reorg(struct gml_graph *g)
 	while (nl) {
 		/* fourth the tail nodes */
 		if (nl->node->indegree != 0 && nl->node->outdegree == 0) {
-			nn = calloc(1, sizeof(struct gml_nlist));
+			nn = dp_calloc(1, sizeof(struct gml_nlist));
 			if (nn) {
 				nn->node = nl->node;
 				if (nnl == NULL) {
@@ -1833,7 +2000,7 @@ void reorg(struct gml_graph *g)
 	nl = g->nodelist;
 	while (nl) {
 		nlnext = nl->next;
-		free(nl);
+		dp_free(nl);
 		nl = NULL;
 		nl = nlnext;
 	}
@@ -2075,7 +2242,7 @@ static struct bfsqueue *bfsrearpointer = NULL;
 static void bfsinsertq(int v)
 {
 	struct bfsqueue *p = NULL;
-	p = (struct bfsqueue *)calloc(1, sizeof(struct bfsqueue));
+	p = (struct bfsqueue *)dp_calloc(1, sizeof(struct bfsqueue));
 	if (p == NULL) {
 		/* shouldnothappen */
 		return;
@@ -2092,7 +2259,7 @@ static int bfsremoveq(void)
 	struct bfsqueue *p = NULL;
 	p = bfsfrontpointer;
 	bfsfrontpointer = p->child;
-	free(p);
+	dp_free(p);
 	p = NULL;
 	return (bfsfrontpointer->item);
 }
@@ -2133,7 +2300,7 @@ static void set_bfslevel(struct gml_graph *g, struct gml_node *n, int i, int sta
 	/* outdegree of start node */
 	po = n->outdegree;
 
-	bfsfrontpointer = (struct bfsqueue *)calloc(1, sizeof(struct bfsqueue));
+	bfsfrontpointer = (struct bfsqueue *)dp_calloc(1, sizeof(struct bfsqueue));
 	bfsrearpointer = bfsfrontpointer;
 
 	/* set first node at start level */
@@ -2191,10 +2358,10 @@ static void set_bfslevel(struct gml_graph *g, struct gml_node *n, int i, int sta
 
 	/* empty q */
 	if (bfsfrontpointer->child) {
-		free(bfsfrontpointer->child);
+		dp_free(bfsfrontpointer->child);
 		bfsfrontpointer->child = NULL;
 	}
-	free(bfsfrontpointer);
+	dp_free(bfsfrontpointer);
 
 	bfsrearpointer = NULL;
 	bfsfrontpointer = NULL;
@@ -2227,7 +2394,7 @@ static void set_bfslevel(struct gml_graph *g, struct gml_node *n, int i, int sta
 
 static int span = 0;
 
-/* topological set rel. y level of nodes with optional mirror in y-direction */
+/* topological set rel. y level of nodes */
 static void set_tlevel0(struct gml_graph *g, struct gml_node *n, int i, int startnode)
 {
 	struct gml_node *target = NULL;
@@ -2249,7 +2416,9 @@ static void set_tlevel0(struct gml_graph *g, struct gml_node *n, int i, int star
 		el = el->next;
 	}
 
-	n->startnode = startnode;
+	if (n->y < 0) {
+		n->startnode = startnode;
+	}
 	n->y = span;
 	span++;
 	if (yydebug || 0) {
@@ -2265,25 +2434,6 @@ static void set_tlevel0(struct gml_graph *g, struct gml_node *n, int i, int star
 	return;
 }
 
-/* topological set rel. y level of nodes with optional mirror in y-direction */
-static void set_tlevel(struct gml_graph *g, struct gml_node *n, int i, int startnode, int mirror)
-{
-	struct gml_nlist *lnll = NULL;
-	set_tlevel0(g, n, i, startnode);
-	if (mirror) {
-		lnll = g->nodelist;
-		while (lnll) {
-			/* only nodes done above */
-			if (lnll->node->startnode == startnode) {
-				/* mirror y, i is startlevel */
-				lnll->node->y = (((g->maxlevel - i) - lnll->node->y) + i);
-			}
-			lnll = lnll->next;
-		}
-	}
-	return;
-}
-
 /* set rel. y level of nodes */
 static void set_level2(struct gml_graph *g, struct gml_node *n, int i, int startnode)
 {
@@ -2293,7 +2443,9 @@ static void set_level2(struct gml_graph *g, struct gml_node *n, int i, int start
 	if (n->done) {
 		if (i > n->y && n->grey == 0) {
 			n->y = i;
-			n->startnode = startnode;
+			if (n->y < 0) {
+				n->startnode = startnode;
+			}
 		}
 		if (n->grey) {
 			return;
@@ -2305,8 +2457,10 @@ static void set_level2(struct gml_graph *g, struct gml_node *n, int i, int start
 
 	n->grey++;
 	n->done++;
+	if (n->y < 0) {
+		n->startnode = startnode;
+	}
 	n->y = span;
-	n->startnode = startnode;
 	if (yydebug || 0) {
 		printf("%s(): setting \"%s\" to level %d startnode %d\n", __func__, n->nlabel, n->y, n->startnode);
 	}
@@ -2406,7 +2560,7 @@ static void set_level(struct gml_graph *g, struct gml_node *n, int i, int startn
 static void add_singlenode(struct gml_graph *g, struct gml_node *node)
 {
 	struct gml_nlist *lnll = NULL;
-	lnll = (struct gml_nlist *)calloc(1, sizeof(struct gml_nlist));
+	lnll = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
 	lnll->node = node;
 	if (g->singlenodelist == NULL) {
 		g->singlenodelist = lnll;
@@ -2423,7 +2577,7 @@ static void add_singlenode(struct gml_graph *g, struct gml_node *node)
 static void add_selfedgenode(struct gml_graph *g, struct gml_node *node)
 {
 	struct gml_nlist *lnll = NULL;
-	lnll = (struct gml_nlist *)calloc(1, sizeof(struct gml_nlist));
+	lnll = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
 	lnll->node = node;
 	if (g->selfedgesnodelist == NULL) {
 		g->selfedgesnodelist = lnll;
@@ -2451,7 +2605,9 @@ static void nscompass(struct gml_graph *g)
 	int changed = 0;
 	/* the gcc data n/s compass points are for a dfs only layout */
 	if (ranktype != 1) {
-		return;
+		if (0) {	/* temp test */
+			return;
+		}
 	}
 
 	el = g->edgelist;
@@ -2585,10 +2741,6 @@ void ylevels(struct gml_graph *g)
 		start2 = 0;
 	}
 
-	if (ranktype == 4) {
-		printf("%s(): doing mirrored topological placement\n", __func__);
-	}
-
 	if (ranktype == 3) {
 		printf("%s(): doing topological placement\n", __func__);
 	}
@@ -2610,14 +2762,10 @@ void ylevels(struct gml_graph *g)
 			/* select start nodes */
 			if (lnll->node->indegree == 0 && lnll->node->outdegree != 0) {
 				g->nstartnodes++;
-				if (ranktype == 4) {
-					/* topological sort to set y level and mirror y direction */
-					span = start2;
-					set_tlevel(g, lnll->node, start2, lnll->node->nr, 1);
-				} else if (ranktype == 3) {
+				if (ranktype == 3) {
 					/* topological sort to set y level */
 					span = start2;
-					set_tlevel(g, lnll->node, start2, lnll->node->nr, 0);
+					set_tlevel0(g, lnll->node, start2, lnll->node->nr);
 				} else if (ranktype == 2) {
 					/* bfs */
 					span = start2;
@@ -2655,15 +2803,20 @@ void ylevels(struct gml_graph *g)
 	 * }
 	 * new: always use pos mode 2
 	 */
-	postype = 2;
-	/* check that all nodes have y position now */
+	if (0) {		/* temp test */
+		postype = 2;
+	}
+	/* check that all nodes have y position now and update maxlevel */
+	g->maxlevel = 0;
 	lnll = g->nodelist;
 	while (lnll) {
 		if (yydebug || 0) {
 			printf("%s(): node \"%s\" is at level %d\n", __func__, lnll->node->nlabel, lnll->node->y);
 		}
 		if (lnll->node->y == -1) {
-			postype = 1;
+			if (0) {	/* temp test */
+				postype = 1;
+			}
 			/* doeshappen */
 			if (yydebug || 1) {
 				printf
@@ -2675,6 +2828,10 @@ void ylevels(struct gml_graph *g)
 			} else {
 				set_level2(g, lnll->node, start2, lnll->node->nr);
 			}
+		}
+		/* make sure maxlevel is updated to correct value */
+		if (lnll->node->y > g->maxlevel) {
+			g->maxlevel = lnll->node->y;
 		}
 		lnll = lnll->next;
 	}
@@ -2700,7 +2857,7 @@ void ylevels(struct gml_graph *g)
 	}
 
 	/* fill the table with startnodes */
-	g->startnodes = calloc(1, g->nstartnodes * sizeof(int));
+	g->startnodes = dp_calloc(1, g->nstartnodes * sizeof(int));
 	if (g->startnodes == NULL) {
 		return;
 	}
@@ -2731,12 +2888,22 @@ void ylevels(struct gml_graph *g)
 		}
 	}
 
+	/* option in the gui to mirror in y the relative node positions. this causes trouble in pos2, so postype=1 is forced. */
+	if (option_mirrory) {
+		/* maxlevel is updated above */
+		lnll = g->nodelist;
+		while (lnll) {
+			lnll->node->y = (g->maxlevel - lnll->node->y);
+			lnll = lnll->next;
+		}
+	}
+
 	fflush(stdout);
 
 	return;
 }
 
-/* dfs check again and revers if needed */
+/* dfs check again and reverse if needed */
 void edgelen(struct gml_graph *g)
 {
 	struct gml_elist *el = NULL;
@@ -3083,7 +3250,7 @@ void nodecounts(struct gml_graph *g)
 	clear_stlist_all(g);
 	make_stlist(g);
 	/* table with number of nodes per level */
-	g->nnodes_of_level = calloc((g->maxlevel + 1), sizeof(int));
+	g->nnodes_of_level = dp_calloc((g->maxlevel + 1), sizeof(int));
 	if (g->nnodes_of_level == NULL) {
 		return;
 	}
@@ -3114,7 +3281,7 @@ void nodecounts(struct gml_graph *g)
  */
 void
 add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
-	     int foundtarget, char *elabel, int ecolor, int style, char *fcompass, char *tcompass, int constraint)
+	     int foundtarget, char *elabel, int ecolor, int style, char *fcompass, char *tcompass, int constraint, int ishtml)
 {
 	struct gml_node *snode = NULL;
 	struct gml_node *tnode = NULL;
@@ -3165,7 +3332,7 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	}
 
 	/* a new edge */
-	edge = calloc(1, sizeof(struct gml_edge));
+	edge = dp_calloc(1, sizeof(struct gml_edge));
 	if (edge == NULL) {
 		return;
 	}
@@ -3177,14 +3344,15 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	edge->from_node = snode;
 	edge->to_node = tnode;
 	edge->elabel = elabel2;	/* "" is set as (char *)0 */
+	edge->ishtml = ishtml;	/* set if elabel is html string */
 	edge->ecolor = ecolor;
 	edge->style = style;
 	edge->fcompass = fcompass;
 	edge->tcompass = tcompass;
 	edge->constraint = constraint;
-	el = calloc(1, sizeof(struct gml_elist));
+	el = dp_calloc(1, sizeof(struct gml_elist));
 	if (el == NULL) {
-		free(edge);
+		dp_free(edge);
 		return;
 	}
 
@@ -3223,7 +3391,7 @@ add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 		return;
 	}
 
-	edge = calloc(1, sizeof(struct gml_edge));
+	edge = dp_calloc(1, sizeof(struct gml_edge));
 	if (edge == NULL) {
 		return;
 	}
@@ -3238,7 +3406,7 @@ add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	edge->fcompass = fcompass;
 	edge->tcompass = tcompass;
 	edge->constraint = constraint;
-	el = calloc(1, sizeof(struct gml_elist));
+	el = dp_calloc(1, sizeof(struct gml_elist));
 	if (el == NULL) {
 		return;
 	}
@@ -3260,12 +3428,13 @@ add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
  */
 void
 add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, char *nodename,
-	     char *nodelabel, int ncolor, int nbcolor, struct gml_rl *rlabel, int fontcolor)
+	     char *nodelabel, int ncolor, int nbcolor, struct gml_rl *rlabel, struct gml_hl *hlabel, int fontcolor, int ishtml)
 {
 	struct gml_node *node = NULL;
 	struct gml_nlist *lnll = NULL;
 	char nlbuf[16];
 	char *lb = NULL;
+	/* check if node exists */
 	node = uniqnodeid(NULL, foundid);
 	if (node) {
 		if (nodelabel) {
@@ -3308,12 +3477,11 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 		snprintf(nlbuf, (16 - 1), "%d", foundid);
 	}
 
-	node = calloc(1, sizeof(struct gml_node));
+	node = dp_calloc(1, sizeof(struct gml_node));
 	if (node == NULL) {
 		return;
 	}
 
-	node->rlabel = rlabel;	/* record label */
 	node->rootedon = ro;	/* graph where node is located */
 	node->nr = nr;		/* uniq node number */
 	node->id = foundid;	/* id of node */
@@ -3321,6 +3489,7 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 	node->nbcolor = nbcolor;	/* border color r/g/b */
 	node->fontcolor = fontcolor;
 	node->name = uniqstr(nodename);
+
 	if (nodelabel) {
 		/* label is the specified label */
 		node->nlabel = uniqstr(nodelabel);
@@ -3328,15 +3497,36 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 		/* label is the numeric string of the node id. */
 		node->nlabel = uniqstr(nlbuf);
 	}
+	/* set if a html <> label */
+	node->ishtml = ishtml;
+
+	if ((ishtml != 0) && (hlabel == NULL)) {
+		/* message shouldnothappen */
+		printf("%s(): missing html-label data in node \"%s\"\n", __func__, node->name);
+		/* turn html label mode off. */
+		node->ishtml = 0;
+	}
+
+	if (hlabel) {
+		node->hlabel = hlabel;	/* html label data */
+	}
+	if (rlabel) {
+		node->rlabel = rlabel;	/* record label data */
+	}
+	if (hlabel && rlabel) {
+		/* shouldnothappen */
+		printf("%s(): node `%s' has html and record label\n", __func__, nodename);
+	}
 
 	uniqnode_add(NULL, node);
-	lnll = calloc(1, sizeof(struct gml_nlist));
+	lnll = dp_calloc(1, sizeof(struct gml_nlist));
 	if (lnll == NULL) {
-		free(node);
+		dp_free(node);
 		return;
 	}
 
 	lnll->node = node;
+
 	if (g->rawnodelist == NULL) {
 		g->rawnodelist = lnll;
 		g->rawnodelisttail = lnll;
@@ -3349,6 +3539,7 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 	g->nnodes++;
 	/* number of total nodes in input graph */
 	maingraph->tnnodes++;
+
 	return;
 }
 
@@ -3363,7 +3554,7 @@ void add_new_dummynode(struct gml_graph *g, int foundid)
 		return;
 	}
 
-	node = calloc(1, sizeof(struct gml_node));
+	node = dp_calloc(1, sizeof(struct gml_node));
 	if (node == NULL) {
 		return;
 	}
@@ -3374,7 +3565,7 @@ void add_new_dummynode(struct gml_graph *g, int foundid)
 	node->ncolor = 0xffffffff;
 	/* dummy nodes are in work list, not raw nodes list */
 	uniqnode_add2(NULL, node);
-	lnll = calloc(1, sizeof(struct gml_nlist));
+	lnll = dp_calloc(1, sizeof(struct gml_nlist));
 	if (lnll == NULL) {
 		return;
 	}
@@ -3413,13 +3604,13 @@ void make_posnodes(struct gml_graph *g)
 	}
 
 	/* x width at position */
-	g->wpos = calloc(1, (g->widestnnodes + 1) * sizeof(int));
+	g->wpos = dp_calloc(1, (g->widestnnodes + 1) * sizeof(int));
 	if (g->wpos == NULL) {
 		return;
 	}
 
 	/* lists with nodes up to down at position */
-	g->posnodes = calloc(1, (g->widestnnodes + 1) * sizeof(struct gml_nlist *));
+	g->posnodes = dp_calloc(1, (g->widestnnodes + 1) * sizeof(struct gml_nlist *));
 	if (g->posnodes == NULL) {
 		return;
 	}
@@ -3428,7 +3619,7 @@ void make_posnodes(struct gml_graph *g)
 	lnll = g->nodelist;
 	while (lnll) {
 		i = lnll->node->absx;
-		newl = calloc(1, sizeof(struct gml_nlist));
+		newl = dp_calloc(1, sizeof(struct gml_nlist));
 		if (newl == NULL) {
 			return;
 		}
@@ -3486,7 +3677,7 @@ void clear_posnodes_r(struct gml_graph *g)
 
 	/* width of positions */
 	if (g->wpos) {
-		free(g->wpos);
+		dp_free(g->wpos);
 		g->wpos = NULL;
 	}
 
@@ -3497,7 +3688,7 @@ void clear_posnodes_r(struct gml_graph *g)
 			lnll = g->posnodes[i];
 			while (lnll) {
 				nlnext = lnll->next;
-				free(lnll);
+				dp_free(lnll);
 				lnll = NULL;
 				lnll = nlnext;
 			}
@@ -3505,7 +3696,7 @@ void clear_posnodes_r(struct gml_graph *g)
 			g->posnodes[i] = NULL;
 		}
 
-		free(g->posnodes);
+		dp_free(g->posnodes);
 	}
 
 	g->posnodes = NULL;
@@ -3519,12 +3710,12 @@ void make_levelnodes(struct gml_graph *g)
 	struct gml_nlist *newl = NULL;
 	int i = 0;
 	int maxh = 0;
-	g->hpos = calloc(1, (g->maxlevel + 1) * sizeof(int));
+	g->hpos = dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 	if (g->hpos == NULL) {
 		return;
 	}
 
-	g->levelnodes = calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
+	g->levelnodes = dp_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
 	if (g->levelnodes == NULL) {
 		return;
 	}
@@ -3532,7 +3723,7 @@ void make_levelnodes(struct gml_graph *g)
 	lnll = g->nodelist;
 	while (lnll) {
 		i = lnll->node->absy;
-		newl = calloc(1, sizeof(struct gml_nlist));
+		newl = dp_calloc(1, sizeof(struct gml_nlist));
 		if (newl == NULL) {
 			return;
 		}
@@ -3587,7 +3778,7 @@ void clear_levelnodes_r(struct gml_graph *g)
 
 	/* width of positions */
 	if (g->hpos) {
-		free(g->hpos);
+		dp_free(g->hpos);
 		g->hpos = NULL;
 	}
 
@@ -3598,7 +3789,7 @@ void clear_levelnodes_r(struct gml_graph *g)
 			lnll = g->levelnodes[i];
 			while (lnll) {
 				nlnext = lnll->next;
-				free(lnll);
+				dp_free(lnll);
 				lnll = NULL;
 				lnll = nlnext;
 			}
@@ -3606,7 +3797,7 @@ void clear_levelnodes_r(struct gml_graph *g)
 			g->levelnodes[i] = NULL;
 		}
 
-		free(g->levelnodes);
+		dp_free(g->levelnodes);
 	}
 
 	g->levelnodes = NULL;
@@ -3628,7 +3819,7 @@ void clear_startnodes_r(struct gml_graph *g)
 	}
 
 	if (g->startnodes) {
-		free(g->startnodes);
+		dp_free(g->startnodes);
 		g->startnodes = NULL;
 	}
 
@@ -3651,7 +3842,7 @@ void clear_nnl_r(struct gml_graph *g)
 	}
 
 	if (g->nnodes_of_level) {
-		free(g->nnodes_of_level);
+		dp_free(g->nnodes_of_level);
 	}
 
 	g->nnodes_of_level = NULL;
@@ -3674,10 +3865,10 @@ void clear_sg(struct gml_graph *sg)
 		if (eg->sg) {
 			/* free optional summary node */
 			/* free subgraph */
-			free(eg->sg);
+			dp_free(eg->sg);
 			eg->sg = NULL;
 		}
-		free(eg);
+		dp_free(eg);
 		eg = NULL;
 		eg = egnext;
 	}

@@ -44,6 +44,7 @@
 #include "splay-tree.h"
 #include "dp.h"
 #include "dpus.h"
+#include "dpmem.h"
 
 /* strdup issue here and gcc-6.3.0
 #ifndef HAVE_STRDUP
@@ -76,7 +77,7 @@ char *dp_uniqstr(char *str)
 	if (uniqstr_splaytree == NULL) {
 		uniqstr_splaytree = splay_tree_new(splay_tree_compare_strings, splay_tree_free_key, NULL);
 	}
-	s = calloc(1, (strlen(str) + 1));
+	s = dp_calloc(1, (strlen(str) + 1));
 	if (s == NULL) {
 		return (NULL);
 	}

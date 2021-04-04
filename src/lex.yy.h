@@ -27,19 +27,16 @@ extern char *yytext;
 extern int yylineno;
 
 /* */
-extern int yyparse (void);
+extern int yyparse(void);
 
 /* */
-extern void dp_lex_init (FILE * f, int debug);
+extern void dp_lex_init(FILE * f, int debug);
 
 /* */
-extern void dp_lex_clear (void);
-
-/* in dot.y */
-extern void yyerror (const char *msg);
+extern void dp_lex_deinit(void);
 
  /* */
-extern void dp_yydebug (int debugflag);
+extern void dp_yydebug(int debugflag);
 
 #endif
 

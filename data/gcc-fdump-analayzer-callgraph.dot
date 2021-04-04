@@ -1,0 +1,93 @@
+/* generated using gcc-11.0.0 using one graph dump option -fdump-analyzer-callgraph */
+digraph "base" {
+overlap=false;
+compound=true;
+vcg_0 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 0: dotparse</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 70
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 105
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 449
+</TD></TR>
+<TR><TD ALIGN="LEFT">[]: 449
+</TD></TR></TABLE>>];
+
+vcg_1 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 1: sp_crsg_r</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 21
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 32
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 386
+</TD></TR>
+<TR><TD ALIGN="LEFT">[(SN: 90 -&gt; SN: 12 in dotparse), (SN: 90 -&gt; SN: 75 in sp_crsg_r), (SN: 90 -&gt; SN: 75 in sp_crsg_r)]: 69
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 90 -&gt; SN: 12 in dotparse), (SN: 90 -&gt; SN: 75 in sp_crsg_r)]: 193
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 90 -&gt; SN: 12 in dotparse)]: 124
+</TD></TR></TABLE>>];
+
+vcg_2 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 2: sp_addsg_r</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 22
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 32
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 1071
+</TD></TR>
+<TR><TD ALIGN="LEFT">[(SN: 112 -&gt; SN: 13 in dotparse), (SN: 112 -&gt; SN: 96 in sp_addsg_r), (SN: 112 -&gt; SN: 96 in sp_addsg_r)]: 216
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 112 -&gt; SN: 13 in dotparse), (SN: 112 -&gt; SN: 96 in sp_addsg_r)]: 494
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 112 -&gt; SN: 13 in dotparse)]: 361
+</TD></TR></TABLE>>];
+
+vcg_3 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 3: rlcheck</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 12
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 17
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 0
+</TD></TR>
+</TABLE>>];
+
+vcg_4 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 4: rlcopy</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 10
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 14
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 84
+</TD></TR>
+<TR><TD ALIGN="LEFT">[(SN: 134 -&gt; SN: 48 in dotparse), (SN: 134 -&gt; SN: 130 in rlcopy)]: 29
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 134 -&gt; SN: 48 in dotparse)]: 22
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 134 -&gt; SN: 48 in dotparse), (SN: 134 -&gt; SN: 130 in rlcopy), (SN: 134 -&gt; SN: 130 in rlcopy)]: 33
+</TD></TR></TABLE>>];
+
+vcg_5 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 5: prrl</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 13
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 18
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 1
+</TD></TR>
+<TR><TD ALIGN="LEFT">[(SN: 147 -&gt; SN: 54 in dotparse)]: 1
+</TD></TR></TABLE>>];
+
+vcg_6 [shape=none,margin=0,style=filled,fillcolor=lightgrey,label=<<TABLE BORDER="0"><TR><TD ALIGN="LEFT">VCG: 6: dolabel</TD></TR>
+<TR><TD ALIGN="LEFT">supernodes: 19
+</TD></TR>
+<TR><TD ALIGN="LEFT">superedges: 27
+</TD></TR>
+<TR><TD ALIGN="LEFT">enodes: 748
+</TD></TR>
+<TR><TD ALIGN="LEFT">[(SN: 166 -&gt; SN: 15 in dotparse)]: 383
+</TD></TR><TR><TD ALIGN="LEFT">[(SN: 166 -&gt; SN: 65 in dotparse)]: 365
+</TD></TR></TABLE>>];
+
+vcg_0 -> vcg_1 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_0 -> vcg_2 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_0 -> vcg_6 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_0 -> vcg_4 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_0 -> vcg_3 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_0 -> vcg_5 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_0 -> vcg_6 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_1 -> vcg_1 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_2 -> vcg_2 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_3 -> vcg_3 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_4 -> vcg_4 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+vcg_5 -> vcg_5 [style="solid,bold", color=black, weight=10, constraint=true, headlabel=""];
+}

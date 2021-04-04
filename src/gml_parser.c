@@ -58,6 +58,7 @@
 #include "uniqnode.h"
 #include "gml_scanner.h"
 #include "gml_parser.h"
+#include "dpmem.h"
 
 /* struct for node graphics */
 struct nodegr {
@@ -371,7 +372,7 @@ void gmlparser_free(void *ptr)
 void *gmlparser_calloc(int nn, size_t sz)
 {
 	void *ret;
-	ret = calloc(nn, sz);
+	ret = dp_calloc(nn, sz);
 	if (gmlparser_splaytree == NULL) {
 		gmlparser_splaytree = splay_tree_new(splay_tree_compare_pointers, splay_tree_free_key, NULL);
 	}
@@ -446,7 +447,7 @@ static struct edgegr *GT_parse_list_edge_graphics(struct GML_pair *pairs)
 					foundecolor = 1;
 				} else {
 					printf
-					    ("%s(): cannot parse edge fillcolor \"%s\" and expected #rrggbb\n",
+					    ("gml %s(): cannot parse edge fillcolor \"%s\" and expected #rrggbb\n",
 					     __func__, pairs->value.string);
 				}
 
@@ -457,7 +458,7 @@ static struct edgegr *GT_parse_list_edge_graphics(struct GML_pair *pairs)
 			break;
 
 		default:
-			printf("%s(): shouldnothappen\n", __func__);
+			printf("gml %s(): shouldnothappen\n", __func__);
 			break;
 		}
 
@@ -465,7 +466,7 @@ static struct edgegr *GT_parse_list_edge_graphics(struct GML_pair *pairs)
 	}
 
 	if (foundecolor) {
-		egr = calloc(1, sizeof(struct edgegr));
+		egr = dp_calloc(1, sizeof(struct edgegr));
 		egr->foundecolor = foundecolor;
 		egr->ecolor = ecolor;
 		return (egr);
@@ -521,7 +522,7 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 				rs = strtol(pairs->value.string, &strtolhelp, 10);
 				if (errno || (*strtolhelp) != 0) {
 					/* error in number */
-					printf("%s(): string found source id but expecting a number and skipped\n", __func__);
+					printf("gml %s(): string found source id but expecting a number and skipped\n", __func__);
 				} else {
 					foundsource = (int)rs;
 					foundsourceset++;
@@ -532,7 +533,7 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 				rs = strtol(pairs->value.string, &strtolhelp, 10);
 				if (errno || (*strtolhelp) != 0) {
 					/* error in number */
-					printf("%s(): string found target id but expecting a number and skipped\n", __func__);
+					printf("gml %s(): string found target id but expecting a number and skipped\n", __func__);
 				} else {
 					foundtarget = (int)rs;
 					foundtargetset++;
@@ -552,7 +553,7 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 			break;
 
 		default:
-			printf("%s(): shouldnothappen\n", __func__);
+			printf("gml %s(): shouldnothappen\n", __func__);
 			break;
 		}
 
@@ -562,7 +563,7 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 			if (egr->foundecolor) {
 				ecolor = egr->ecolor;
 			}
-			free(egr);
+			dp_free(egr);
 			egr = NULL;
 		}
 
@@ -572,7 +573,7 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 	/* a edge must have source and target */
 	if (foundsourceset == 0 || foundtargetset == 0) {
 		printf
-		    ("%s(): edge missing a source and/or target number in edge from %d to %d and skipped\n",
+		    ("gml %s(): edge missing a source and/or target number in edge from %d to %d and skipped\n",
 		     __func__, foundsource, foundtarget);
 		fflush(stdout);
 		return;
@@ -582,27 +583,29 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 	 * this could be a (interesting) feature too. */
 	if (foundsourceset > 1) {
 		printf
-		    ("%s(): edge has multiple source id's in edge from %d to %d and skipped\n", __func__, foundsource, foundtarget);
+		    ("gml %s(): edge has multiple source id's in edge from %d to %d and skipped\n", __func__, foundsource,
+		     foundtarget);
 		fflush(stdout);
 		return;
 	}
 
 	if (foundtargetset > 1) {
 		printf
-		    ("%s(): edge has multiple target id's in edge from %d to %d and skipped\n", __func__, foundsource, foundtarget);
+		    ("gml %s(): edge has multiple target id's in edge from %d to %d and skipped\n", __func__, foundsource,
+		     foundtarget);
 		fflush(stdout);
 		return;
 	}
 
 	/* this happens in radare2 gml data -- todo */
 	if (foundsource < 0) {
-		printf("%s(): edge has negative source number in edge from %d to %d\n", __func__, foundsource, foundtarget);
+		printf("gml %s(): edge has negative source number in edge from %d to %d\n", __func__, foundsource, foundtarget);
 		fflush(stdout);
 	}
 
 	/* in radare2 data */
 	if (foundtarget < 0) {
-		printf("%s(): edge has negative target number in edge from %d to %d\n", __func__, foundsource, foundtarget);
+		printf("gml %s(): edge has negative target number in edge from %d to %d\n", __func__, foundsource, foundtarget);
 		fflush(stdout);
 	}
 
@@ -612,19 +615,19 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 		if (fnn) {
 			fnn->nselfedges++;
 		} else {
-			printf("%s(): from-node not found in selfedge %d->%d\n", __func__, foundsource, foundtarget);
+			printf("gml %s(): from-node not found in selfedge %d->%d\n", __func__, foundsource, foundtarget);
 		}
 	} else {
 		fnn = uniqnodeid(NULL, foundsource);
 		if (fnn == NULL) {
-			printf("%s(): from-node not found in edge %d->%d\n", __func__, foundsource, foundtarget);
+			printf("gml %s(): from-node not found in edge %d->%d\n", __func__, foundsource, foundtarget);
 		}
 		tnn = uniqnodeid(NULL, foundtarget);
 		if (tnn == NULL) {
-			printf("%s(): to-node not found in edge %d->%d\n", __func__, foundsource, foundtarget);
+			printf("gml %s(): to-node not found in edge %d->%d\n", __func__, foundsource, foundtarget);
 		}
 		if (fnn && tnn) {
-			add_new_edge(g, maingraph, fnn->nr, tnn->nr, elabel, ecolor, 0, NULL, NULL, 1);
+			add_new_edge(g, maingraph, fnn->nr, tnn->nr, elabel, ecolor, 0, NULL, NULL, 1, /* ishtml */ 0);
 		}
 	}
 
@@ -695,7 +698,7 @@ static struct nodelgr *GT_parse_list_node_labelgraphics(struct GML_pair *pairs)
 					foundfontcolor = 1;
 				} else {
 					printf
-					    ("%s(): cannot parse node font color %s with %d elements\n",
+					    ("gml %s(): cannot parse node font color %s with %d elements\n",
 					     __func__, pairs->value.string, n);
 				}
 			} else if (strcasecmp(pairs->key, "text") == 0) {
@@ -709,7 +712,7 @@ static struct nodelgr *GT_parse_list_node_labelgraphics(struct GML_pair *pairs)
 			break;
 
 		default:
-			printf("%s(): shouldnothappen\n", __func__);
+			printf("gml %s(): shouldnothappen\n", __func__);
 			break;
 		}
 
@@ -717,7 +720,7 @@ static struct nodelgr *GT_parse_list_node_labelgraphics(struct GML_pair *pairs)
 	}
 
 	if (foundtext || foundfontcolor) {
-		nlgr = calloc(1, sizeof(struct nodelgr));
+		nlgr = dp_calloc(1, sizeof(struct nodelgr));
 		nlgr->foundfontcolor = foundfontcolor;
 		nlgr->fontcolor = fontcolor;
 		nlgr->foundtext = foundtext;
@@ -787,7 +790,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 					ncolor = ((red << 16) | (green << 8) | blue);
 					foundncolor = 1;
 				} else {
-					printf("%s(): cannot parse node background color %s\n", __func__, pairs->value.string);
+					printf("gml %s(): cannot parse node background color %s\n", __func__, pairs->value.string);
 				}
 
 			}
@@ -819,7 +822,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 					nbcolor = ((red << 16) | (green << 8) | blue);
 					foundnbcolor = 1;
 				} else {
-					printf("%s(): cannot parse node bordercolor %s\n", __func__, pairs->value.string);
+					printf("gml %s(): cannot parse node bordercolor %s\n", __func__, pairs->value.string);
 				}
 			}
 			break;
@@ -828,7 +831,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 			break;
 
 		default:
-			printf("%s(): shouldnothappen\n", __func__);
+			printf("gml %s(): shouldnothappen\n", __func__);
 			break;
 		}
 
@@ -836,7 +839,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 	}
 
 	if (foundncolor || foundnbcolor) {
-		ngr = calloc(1, sizeof(struct nodegr));
+		ngr = dp_calloc(1, sizeof(struct nodegr));
 		ngr->foundncolor = foundncolor;
 		ngr->ncolor = ncolor;
 		ngr->foundnbcolor = foundnbcolor;
@@ -896,7 +899,7 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 				rs = strtol(pairs->value.string, &strtolhelp, 10);
 				if (errno || (*strtolhelp) != 0) {
 					/* error in number */
-					printf("%s(): string found at id but expecting a number and skipped\n", __func__);
+					printf("gml %s(): string found at id but expecting a number and skipped\n", __func__);
 				} else {
 					foundid = (int)rs;
 					foundidset++;
@@ -923,7 +926,7 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 			break;
 
 		default:
-			printf("%s(): shouldnothappen\n", __func__);
+			printf("gml %s(): shouldnothappen\n", __func__);
 			break;
 		}
 
@@ -940,7 +943,7 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 				nbcolor = ngr->nbcolor;
 			}
 
-			free(ngr);
+			dp_free(ngr);
 			ngr = NULL;
 		}
 
@@ -952,7 +955,7 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 			if (nlgr->foundtext) {
 				nodelabel = nlgr->text;
 			}
-			free(nlgr);
+			dp_free(nlgr);
 			nlgr = NULL;
 		}
 
@@ -961,21 +964,21 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 
 	/* a node must have a id number */
 	if (foundidset == 0) {
-		printf("%s(): node missing a id number and skipped\n", __func__);
+		printf("gml %s(): node missing a id number and skipped\n", __func__);
 		fflush(stdout);
 		return;
 	}
 
 	/* a node must have a single id number. this can be a feature too. */
 	if (foundidset > 1) {
-		printf("%s(): node has multiple id numbers and skipped\n", __func__);
+		printf("gml %s(): node has multiple id numbers and skipped\n", __func__);
 		fflush(stdout);
 		return;
 	}
 
 	/* happens in radare2 data */
 	if (foundid < 0) {
-		printf("%s(): node with negative id found in node %d\n", __func__, foundid);
+		printf("gml %s(): node with negative id found in node %d\n", __func__, foundid);
 		fflush(stdout);
 	}
 
@@ -986,7 +989,8 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 	nr = maingraph->nodenum;
 
 	/* in gml all nodes are located in rootgraph */
-	add_new_node(g, maingraph, nr, foundid, nodename, nodelabel, ncolor, nbcolor, NULL, fontcolor);
+	add_new_node(g, maingraph, nr, foundid, nodename, nodelabel, ncolor, nbcolor, NULL /* rl */ , NULL /* hl */ , fontcolor,
+		     /* ishtml */ 0);
 
 	return;
 }
@@ -1017,7 +1021,7 @@ static void GT_parse_list(struct gml_graph *g, struct GML_pair *pairs)
 			break;
 
 		default:
-			printf("%s(): shouldnothappen\n", __func__);
+			printf("gml %s(): shouldnothappen\n", __func__);
 			break;
 		}
 
@@ -1032,7 +1036,7 @@ int gmlparse(struct gml_graph *g, FILE * f, char *fname)
 	struct GML_pair *data = NULL;
 	struct GML_stat *status = NULL;
 
-	status = calloc(1, sizeof(struct GML_stat));
+	status = dp_calloc(1, sizeof(struct GML_stat));
 	memset(parsermessage, 0, 256);
 
 	data = GML_parser(f, status, 0);
@@ -1042,44 +1046,46 @@ int gmlparse(struct gml_graph *g, FILE * f, char *fname)
 		switch (status->err.err_num) {
 		case GML_UNEXPECTED:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): unexpected error near line %d:%d file %s",
-				 status->err.line, status->err.column, fname);
+				 "gml %s(): unexpected error near line %d:%d file %s",
+				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_SYNTAX:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): syntax error near line %d:%d file %s", status->err.line, status->err.column, fname);
+				 "gml %s(): syntax error near line %d:%d file %s", __func__, status->err.line, status->err.column,
+				 fname);
 			break;
 		case GML_PREMATURE_EOF:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): early end of file near line %d:%d file %s",
-				 status->err.line, status->err.column, fname);
+				 "gml %s(): early end of file near line %d:%d file %s",
+				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_TOO_MANY_DIGITS:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): too many digits near line %d:%d file %s",
-				 status->err.line, status->err.column, fname);
+				 "gml %s(): too many digits near line %d:%d file %s",
+				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_OPEN_BRACKET:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): open bracket error near line %d:%d file %s",
-				 status->err.line, status->err.column, fname);
+				 "gml %s(): open bracket error near line %d:%d file %s",
+				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_TOO_MANY_BRACKETS:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): too many brackets near line %d:%d file %s",
-				 status->err.line, status->err.column, fname);
+				 "%s(gmlparser)(): too many brackets near line %d:%d file %s",
+				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_OK:
 			/* parsed oke and no message */
 			break;
 		default:
 			snprintf(parsermessage, (256 - 1),
-				 "gmlparse(): unknown error near line %d:%d file %s", status->err.line, status->err.column, fname);
+				 "gml %s(): unknown error near line %d:%d file %s", __func__, status->err.line, status->err.column,
+				 fname);
 			break;
 		}
 
 		/* in the gui in a message dialog */
-		printf("%s(): gml-parsermessage: `%s'\n", __func__, parsermessage);
+		printf("gml %s(): gml-parsermessage: `%s'\n", __func__, parsermessage);
 		fflush(stdout);
 	}
 
@@ -1091,7 +1097,7 @@ int gmlparse(struct gml_graph *g, FILE * f, char *fname)
 
 	GML_free_list(data, 0);
 
-	free(status);
+	dp_free(status);
 
 	if (strlen(parsermessage)) {
 		/* parse error status */

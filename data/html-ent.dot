@@ -1,0 +1,35 @@
+/* test with some html entity chars */
+digraph "ent"
+{
+ /* no parse error at this but it is not translated
+ "7"[label=<&amp>];
+ */
+ /* html char name */
+ "1"[label=<&amp;>];
+ /* parse error at:
+ "6"[label=<&#x3g;>];
+ */
+ /* hex value */
+ "2"[label=<&#x39;>];
+ /* parse error at:
+ "8"[label=<&#9x;>];
+ */
+ /* parse error at:
+ "9"[label=<&#-1;>];
+ */
+ /* decimal value */
+ "3"[label=<&#74;>];
+ /* other html char name */
+ "4"[label=<&aacute;>];
+ /* parse error at:
+ "5"[label=<&aacuteHUH;>];
+ */
+ "10"[label=<&amp;&amp;bar&amp;>];
+ /* warning at 0 char but dot issues error */
+ "11"[label=<bar&#00;bar>];
+ /* this error is checked for: "13"[label=<&;>]; */
+ /* this error is checked for: "14"[label=<&amp>]; */
+ /* this error is checked for: "15"[label=<&>]; */
+ /* this error is checked for: "16"[label=<&amp;&;>]; */
+ 1->2->3->4->10->11;
+}

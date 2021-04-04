@@ -35,10 +35,10 @@
 #define DPUS_H 1
 
 /* */
-extern void dp_clear_uniqstr (void);
+extern void dp_clear_uniqstr(void);
 
 /* */
-extern char *dp_uniqstr (char *str);
+extern char *dp_uniqstr(char *str);
 
 #endif
 

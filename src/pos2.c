@@ -43,6 +43,7 @@
 #include "pos.h"
 #include "pos2.h"
 #include "dot.tab.h"
+#include "dpmem.h"
 
 /* min. distance between 2 nodes */
 static int mindist = 1;
@@ -587,10 +588,10 @@ static void improve_positions2local(struct gml_graph *g)
 		/* DOWN */
 		for (i = sl; i < g->maxlevel; i++) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_down(i);
 				do_down(i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -598,10 +599,10 @@ static void improve_positions2local(struct gml_graph *g)
 		/* UP */
 		for (i = (g->maxlevel - 1); i >= sl; i--) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_up(i);
 				do_up(i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -613,10 +614,10 @@ static void improve_positions2local(struct gml_graph *g)
 
 		for (i = sl + 2; i >= sl; i--) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_up(i);
 				do_up(i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -625,10 +626,10 @@ static void improve_positions2local(struct gml_graph *g)
 	for (i = (g->maxlevel - 2); i <= g->maxlevel; i++) {
 		if (i >= 0) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_down(i);
 				do_down(i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -642,7 +643,7 @@ static void make_cnnodes_at_level(struct gml_graph *g)
 {
 	struct gml_nlist *gnl = NULL;
 
-	cnnodes_of_level = (int *)calloc(1, ((g->maxlevel + 1) * sizeof(int)));
+	cnnodes_of_level = (int *)dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
 
 	gnl = cnodelist;
 
@@ -660,7 +661,7 @@ static void clear_cnnodes_at_level(void)
 
 	/* number of nodes at level */
 	if (cnnodes_of_level) {
-		free(cnnodes_of_level);
+		dp_free(cnnodes_of_level);
 	}
 
 	/* number of nodes at level */
@@ -682,7 +683,7 @@ static void make_cnodelist(struct gml_graph *g)
 		/* check if node belongs to part of graph */
 		if (gnl->node->startnode == csn) {
 			/* copy node in new list */
-			newnl = (struct gml_nlist *)calloc(1, sizeof(struct gml_nlist));
+			newnl = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
 			newnl->node = gnl->node;
 			if (cnodelist == NULL) {
 				cnodelist = newnl;
@@ -692,8 +693,16 @@ static void make_cnodelist(struct gml_graph *g)
 				cnodelisttail = newnl;
 			}
 		}
-
 		gnl = gnl->next;
+	}
+
+	if (yydebug || 0) {
+		printf("%s(): nodes in graph part with startnode %d are:\n", __func__, csn);
+		gnl = cnodelist;
+		while (gnl) {
+			printf("%s(): node \"%s\" level=%d\n", __func__, gnl->node->name, gnl->node->rely);
+			gnl = gnl->next;
+		}
 	}
 
 	return;
@@ -709,7 +718,7 @@ static void clear_cnodelist(void)
 
 	while (gnl) {
 		gnlnext = gnl->next;
-		(void)free(gnl);
+		(void)dp_free(gnl);
 		gnl = gnlnext;
 	}
 
@@ -781,14 +790,14 @@ static void make_cposnodes(void)
 	cwidestnnodes = maxrx;
 
 	/* x width at position */
-	cwpos = (int *)calloc(1, (cwidestnnodes + 1) * sizeof(int));
+	cwpos = (int *)dp_calloc(1, (cwidestnnodes + 1) * sizeof(int));
 
 	if (cwpos == NULL) {
 		return;
 	}
 
 	/* lists with nodes up to down at position */
-	cposnodes = (struct gml_nlist **)calloc(1, (cwidestnnodes + 1) * sizeof(struct gml_nlist *));
+	cposnodes = (struct gml_nlist **)dp_calloc(1, (cwidestnnodes + 1) * sizeof(struct gml_nlist *));
 
 	if (cposnodes == NULL) {
 		return;
@@ -804,7 +813,7 @@ static void make_cposnodes(void)
 			printf("%s(): node \"%s\" at absx %d\n", __func__, lnl->node->nlabel, lnl->node->absx);
 		}
 
-		newl = (struct gml_nlist *)calloc(1, sizeof(struct gml_nlist));
+		newl = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
 			return;
@@ -852,7 +861,7 @@ static void clear_cposnodes(void)
 
 	/* width of positions */
 	if (cwpos) {
-		free(cwpos);
+		dp_free(cwpos);
 		cwpos = NULL;
 	}
 
@@ -862,14 +871,14 @@ static void clear_cposnodes(void)
 
 		while (lnl) {
 			nlnext = lnl->next;
-			free(lnl);
+			dp_free(lnl);
 			lnl = nlnext;
 		}
 
 		cposnodes[i] = NULL;
 	}
 
-	free(cposnodes);
+	dp_free(cposnodes);
 	cposnodes = NULL;
 
 	return;
@@ -883,13 +892,13 @@ static void make_clevelnodes(struct gml_graph *g)
 	int i = 0;
 	int lmaxh = 0;
 
-	chpos = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+	chpos = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	if (chpos == NULL) {
 		return;
 	}
 
-	clevelnodes = calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
+	clevelnodes = dp_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
 
 	if (clevelnodes == NULL) {
 		return;
@@ -904,7 +913,7 @@ static void make_clevelnodes(struct gml_graph *g)
 			printf("%s(): at \"%s\" absx %d absy %d\n", __func__, lnl->node->nlabel, lnl->node->absx, lnl->node->absy);
 		}
 
-		newl = calloc(1, sizeof(struct gml_nlist));
+		newl = dp_calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
 			return;
@@ -955,7 +964,7 @@ static void clear_clevelnodes(struct gml_graph *g)
 
 	/* width of positions */
 	if (chpos) {
-		free(chpos);
+		dp_free(chpos);
 		chpos = NULL;
 	}
 
@@ -965,14 +974,14 @@ static void clear_clevelnodes(struct gml_graph *g)
 
 		while (lnl) {
 			nlnext = lnl->next;
-			free(lnl);
+			dp_free(lnl);
 			lnl = nlnext;
 		}
 
 		clevelnodes[i] = NULL;
 	}
 
-	free(clevelnodes);
+	dp_free(clevelnodes);
 	clevelnodes = NULL;
 
 	return;
@@ -1052,7 +1061,7 @@ static void cfinalxy(struct gml_graph *g)
 	yoff = 0;
 
 	/* number of edges between level n and n+1 */
-	g->nume = (int *)calloc(1, (g->maxlevel + 1) * sizeof(int));
+	g->nume = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	/* scan vert. to adjust the y positions. */
 	for (i = 0; i < (g->maxlevel + 1); i++) {
@@ -1076,6 +1085,11 @@ static void cfinalxy(struct gml_graph *g)
 
 		/* scan the nodes at this y pos. */
 		while (lnl) {
+
+			if (lnl->node->rely != i) {
+				printf("%s(): wrong level for node \"%s\" at level %d versus rely=%d\n", __func__, lnl->node->name,
+				       i, lnl->node->rely);
+			}
 			/* set start, end of y level */
 			lnl->node->ly0 = yoff;
 			lnl->node->ly1 = (yoff + chpos[i]);
@@ -1084,7 +1098,7 @@ static void cfinalxy(struct gml_graph *g)
 			lnl->node->finy = (hw - (lnl->node->bby / 2));
 
 			if (yydebug || 0) {
-				printf("%s(): node \"%s\" at y %d level %d\n", __func__, lnl->node->nlabel, lnl->node->finy,
+				printf("%s(): node \"%s\" at y-pos=%d level %d\n", __func__, lnl->node->name, lnl->node->finy,
 				       lnl->node->rely);
 			}
 
@@ -1259,6 +1273,10 @@ void improve_positions2(struct gml_graph *g)
 	for (i = 0; i < g->nstartnodes; i++) {
 		/* set current startnode */
 		csn = g->startnodes[i];
+
+		if (yydebug || 0) {
+			printf("%s(): step %d for startnode=%d\n", __func__, i, csn);
+		}
 
 		/* print progress info */
 		if ((i == 0) || (i == g->nstartnodes / 2) || (i == g->nstartnodes - 1)) {

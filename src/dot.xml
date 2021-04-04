@@ -134,13 +134,13 @@
       <rule number="19" usefulness="useful">
         <lhs>statements</lhs>
         <rhs>
+          <symbol>statements</symbol>
           <symbol>statement</symbol>
         </rhs>
       </rule>
       <rule number="20" usefulness="useful">
         <lhs>statements</lhs>
         <rhs>
-          <symbol>statements</symbol>
           <symbol>statement</symbol>
         </rhs>
       </rule>
@@ -1159,7 +1159,7 @@
         <item rule-number="16" point="0"/>
         <item rule-number="17" point="0"/>
         <item rule-number="18" point="0"/>
-        <item rule-number="20" point="1"/>
+        <item rule-number="19" point="1"/>
         <item rule-number="21" point="0"/>
         <item rule-number="22" point="0"/>
         <item rule-number="23" point="0"/>
@@ -1221,13 +1221,13 @@
 
     <state number="30">
       <itemset>
-        <item rule-number="19" point="1"/>
+        <item rule-number="20" point="1"/>
       </itemset>
       <actions>
         <transitions/>
         <errors/>
         <reductions>
-          <reduction symbol="$default" rule="19" enabled="true"/>
+          <reduction symbol="$default" rule="20" enabled="true"/>
         </reductions>
       </actions>
       <solved-conflicts/>
@@ -1579,13 +1579,13 @@
 
     <state number="46">
       <itemset>
-        <item rule-number="20" point="2"/>
+        <item rule-number="19" point="2"/>
       </itemset>
       <actions>
         <transitions/>
         <errors/>
         <reductions>
-          <reduction symbol="$default" rule="20" enabled="true"/>
+          <reduction symbol="$default" rule="19" enabled="true"/>
         </reductions>
       </actions>
       <solved-conflicts/>
@@ -1862,7 +1862,7 @@
         <item rule-number="16" point="0"/>
         <item rule-number="17" point="0"/>
         <item rule-number="18" point="0"/>
-        <item rule-number="20" point="1"/>
+        <item rule-number="19" point="1"/>
         <item rule-number="21" point="0"/>
         <item rule-number="22" point="0"/>
         <item rule-number="23" point="0"/>
@@ -2223,7 +2223,7 @@
         <item rule-number="16" point="0"/>
         <item rule-number="17" point="0"/>
         <item rule-number="18" point="0"/>
-        <item rule-number="20" point="1"/>
+        <item rule-number="19" point="1"/>
         <item rule-number="21" point="0"/>
         <item rule-number="22" point="0"/>
         <item rule-number="23" point="0"/>

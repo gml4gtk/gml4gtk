@@ -51,6 +51,7 @@ struct gml_nlist;
 struct gml_glist;
 struct gml_rl;
 struct gml_p;
+struct gml_hl;
 
 struct gml_graph {
 	int id;			/* uniq number and 0 is rootgraph */
@@ -148,9 +149,11 @@ struct gml_node {
 	int ly1;		/* end of level y pos where node is */
 	char txsize;		/* set if node text size is calculated */
 	char incluster;		/* set if node is in a cluster layout */
+	char drawrh;		/* if set draw r/h labels */
 	char dummy;		/* set to 1 if dummy node */
 	char hashedge;		/* set to 1 if node has hor. edges */
 	char elabel;		/* set if node is a edge label */
+	char ishtml;		/* set if label is html label <> */
 	int nselfedges;		/* number of self edges at this node */
 	struct gml_elist *outgoing_e;	/* source list, outgoing edges */
 	struct gml_elist *outgoing_etail;	/* source list, outgoing edges */
@@ -163,6 +166,8 @@ struct gml_node {
 	char *nlabel;		/* optional label or the id */
 	struct gml_rl *rlabel;	/* optional record label data */
 	int rlabeldone;		/* set if textsizes rlabel are set */
+	struct gml_hl *hlabel;	/* optional html label data */
+	int hlabeldone;		/* set if textsizes hlabel are set */
 	int ncolor;		/* r/g/b fill color of node */
 	int nbcolor;		/* r/g/b border color of node */
 	int fontcolor;		/* r/g/b color of label text */
@@ -190,6 +195,7 @@ struct gml_edge {
 	char hedge;		/* set if edge is horizontal line */
 	char vedge;		/* set if edge is vertical */
 	char *elabel;		/* optional edge label */
+	int ishtml;		/* set if elabel is <> html label */
 	int ecolor;		/* r/g/b edge line color */
 	int style;		/* edge line style, solid dotted dashed */
 	char *fcompass;		/* optional from-compass point */
@@ -227,6 +233,119 @@ struct gml_p {
 	int y;
 };
 
+/* one item of text:
+ * bgcolor is default white 0x00ffffff
+ * then set by optional node fillcolor
+ * then set by optional <table> bgcolor
+ * then set by optional <td> bgcolor
+ */
+struct gml_hitem {
+	char *text;		/* text to display modified */
+	char *otext;		/* text to display original */
+	char *fontstr;		/* pango font format string */
+	char *fontdesc;		/* pango font description */
+	char *fontname;		/* optional font name */
+	char *fontslant;	/* font slant */
+	char *fontweight;	/* fontweight */
+	int fontsize;		/* optional pointsize */
+	int fontcolor;		/* optional color of text */
+	int ncolor;		/* optional background color from <td> or <table> */
+	int txsize;		/* text x size of all lines */
+	int tysize;		/* text y size of all lines */
+	int txoff;		/* text x offset in 1 line */
+	int tyoff;		/* text y offset in 1 line */
+	int lysize;		/* y size of this text line */
+	int yoff;		/* y offset of line */
+	struct {
+		unsigned int at:1;	/* set if str has a '&' */
+		unsigned int br:1;	/* set if str is a <br/> token */
+		unsigned int img:1;	/* set if str is a <img> */
+		unsigned int i:1;	/* set if str is <i> italic */
+		unsigned int u:1;	/* set if str is <u> underline */
+		unsigned int o:1;	/* set if str is <o> overline */
+		unsigned int s:1;	/* set if str is <s> strike-through */
+		unsigned int sub:1;	/* set if str is <sub> subscript */
+		unsigned int sup:1;	/* set if str is <sup> superscript */
+		unsigned int hr:1;	/* set if str is a <hr> token */
+
+		unsigned int vr:1;	/* set if str is a <vr> token */
+		unsigned int b:1;	/* set if str is <b> bold */
+		unsigned int bit12:1;
+		unsigned int bit13:1;
+		unsigned int bit14:1;
+		unsigned int bit15:1;
+		unsigned int bit16:1;
+		unsigned int bit17:1;
+		unsigned int bit18:1;
+		unsigned int bit19:1;
+
+		unsigned int bit20:1;
+		unsigned int bit21:1;
+		unsigned int bit22:1;
+		unsigned int bit23:1;
+		unsigned int bit24:1;
+		unsigned int bit25:1;
+		unsigned int bit26:1;
+		unsigned int bit27:1;
+		unsigned int bit28:1;
+		unsigned int bit29:1;
+
+		unsigned int bit30:1;
+		unsigned int bit31:1;
+	} bitflags;
+};
+
+/* list with text items in html string */
+struct gml_hilist {
+	struct gml_hitem *items;
+	struct gml_hilist *next;
+};
+
+/* one <td> */
+struct gml_tditem {
+	struct gml_hilist *il;	/* list of text items */
+	struct gml_hilist *ilend;
+	struct gml_tditem *next;
+};
+
+/* one <tr> item */
+struct gml_tritem {
+	struct gml_tditem *tdi;
+	struct gml_tditem *tdiend;
+};
+
+/* list with <tr> items */
+struct gml_tritemlist {
+	struct gml_tritem *tritem;
+	struct gml_tritemlist *next;
+};
+
+/* table data */
+struct gml_titem {
+	struct gml_htlist *tl;	/* list of sub table items */
+	struct gml_htlist *tlend;
+	struct gml_tritemlist *tr;	/* list of <tr> items in this table */
+	struct gml_tritemlist *trend;
+	/* table data */
+	int bgcolor;		/* background color */
+};
+
+/* list with table elements in html string */
+struct gml_htlist {
+	struct gml_titem *titem;
+	struct gml_htlist *next;
+};
+
+/* html label with items or tables */
+struct gml_hl {
+	int mode;		/* 0=items, 1=tables */
+	struct gml_hilist *il;	/* list of text items */
+	struct gml_hilist *ilend;
+	struct gml_htlist *tl;	/* list of table items */
+	struct gml_htlist *tlend;
+};
+
+/* in gui code, update status text crossings */
 extern void update_status_text_cross(char *text);
 
 #endif

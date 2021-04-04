@@ -46,10 +46,14 @@ extern int dp_isdotshape (char *s);
 /* check data, 0 if oke */
 extern int dp_datachk(void);
 
+/* */
 extern int dp_islabelloc (char *loc);
 
 /* parse number */
 extern struct dpnum *dp_getnum (char *s);
+
+/* parse int number */
+extern struct dpinum *dp_getinum (char *s);
 
 /* parse boolean */
 extern struct dpbool *dp_getbool (char *s);
@@ -95,9 +99,6 @@ extern struct dpratio *dp_getratio (char *s);
 
 /* splines */
 extern struct dpsplines *dp_getsplines (char *s);
-
-/* check nodes with record labels */
-extern int dp_chkrec(void);
 
 #endif
 

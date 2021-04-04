@@ -43,6 +43,8 @@
 #include "pos.h"
 #include "pos2.h"
 #include "pos3.h"
+#include "dpmem.h"
+#include "dot.tab.h"
 
 /* min. distance between 2 nodes */
 static int mindist = 1;
@@ -530,10 +532,10 @@ static void improve_positions1(struct gml_graph *g)
 		/* DOWN */
 		for (i = sl; i <= g->maxlevel; i++) {
 			if (g->nnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(g->nnodes_of_level[i], sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_down(g, i);
 				do_down(g, i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -541,10 +543,10 @@ static void improve_positions1(struct gml_graph *g)
 		/* UP */
 		for (i = (g->maxlevel - 1); i >= sl; i--) {
 			if (g->nnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(g->nnodes_of_level[i], sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_up(g, i);
 				do_up(g, i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -556,10 +558,10 @@ static void improve_positions1(struct gml_graph *g)
 
 		for (i = sl + 2; i >= sl; i--) {
 			if (g->nnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(g->nnodes_of_level[i], sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_up(g, i);
 				do_up(g, i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -568,10 +570,10 @@ static void improve_positions1(struct gml_graph *g)
 	for (i = g->maxlevel - 2; i <= g->maxlevel; i++) {
 		if (i >= 0) {
 			if (g->nnodes_of_level[i]) {
-				nl = (struct node_data *)calloc(g->nnodes_of_level[i], sizeof(struct node_data));
+				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_down(g, i);
 				do_down(g, i);
-				free(nl);
+				dp_free(nl);
 				nl = NULL;
 			}
 		}
@@ -641,6 +643,8 @@ static void improve_positions1(struct gml_graph *g)
  */
 void improve_positions(struct gml_graph *g)
 {
+	struct gml_nlist *gnl = NULL;
+
 	printf("%s(): positioning mode is %d\n", __func__, postype);
 	fflush(stdout);
 
@@ -658,6 +662,18 @@ void improve_positions(struct gml_graph *g)
 		/* shouldnothappen */
 		improve_positions1(g);
 		break;
+	}
+
+	if (yydebug || 0) {
+		gnl = g->nodelist;
+
+		while (gnl) {
+			printf("%s(): node \"%s\" at level %d is at abs(%d,%d) fin(%d,%d) ly0=%d ly1=%d\n", __func__,
+			       gnl->node->name, gnl->node->rely, gnl->node->absx, gnl->node->absy, gnl->node->finx, gnl->node->finy,
+			       gnl->node->ly0, gnl->node->ly1);
+			gnl = gnl->next;
+		}
+
 	}
 
 	return;

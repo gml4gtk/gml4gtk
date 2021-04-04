@@ -3218,9 +3218,9 @@ extern int yy_flex_debug;
 int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[23] = { 0,
-	89, 90, 91, 92, 94, 95, 96, 97, 99, 100,
-	101, 103, 104, 105, 106, 107, 108, 109, 110, 111,
-	113, 166
+	112, 113, 114, 115, 117, 118, 119, 120, 122, 123,
+	124, 126, 127, 128, 129, 130, 131, 132, 133, 134,
+	136, 189
 };
 
 /* The intent behind this definition is that it'll catch
@@ -3273,6 +3273,7 @@ char *yytext;
 #include "vcg.yy.h"
 #include "vcg.tab.h"
 #include "vcgus.h"
+#include "dpmem.h"
 
 /* use GNU GCC compiler builtin strlen */
 #undef YY_NEED_STRLEN
@@ -3298,9 +3299,27 @@ static char *tmpp = NULL;
 
 char *vcglaststring = NULL;
 
-#line 3403 "vcg.flex.c"
+/* own yyalloc */
+void *yyalloc(size_t n)
+{
+	return (dp_calloc(1, n));
+}
+
+void yyfree(void *ptr)
+{
+	dp_free(ptr);
+	return;
+}
+
+void *yyrealloc(void *ptr, size_t n)
+{
+	return (dp_realloc(ptr, n));
+}
+
+#line 3422 "vcg.flex.c"
+/* use own yyalloc */
 #define YY_NO_INPUT 1
-#line 3405 "vcg.flex.c"
+#line 3425 "vcg.flex.c"
 
 #define INITIAL 0
 
@@ -3575,9 +3594,9 @@ YY_DECL {
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 87 "vcg.l"
+#line 110 "vcg.l"
 
-#line 3686 "vcg.flex.c"
+#line 3706 "vcg.flex.c"
 
 		while ( /*CONSTCOND*/ 1) {	/* loops until end-of-file is reached */
 			/* %% [8.0] yymore()-related code goes here */
@@ -3650,92 +3669,130 @@ do_action:			/* This label is used only to access EOF actions. */
 			case 1:
 /* rule 1 can match eol */
 				YY_RULE_SETUP
-#line 89 "vcg.l"
+#line 112 "vcg.l"
 				{	/* c-comment style *//* lexer does update yylineno */
 				}
-				YY_BREAK case 2:YY_RULE_SETUP
-#line 90 "vcg.l"
+			YY_BREAK case 2:
+				YY_RULE_SETUP
+#line 113 "vcg.l"
 				{	/* start of c comment but no end of c comment */
-				} YY_BREAK case 3:YY_RULE_SETUP
-#line 91 "vcg.l"
+				}
+			YY_BREAK case 3:
+				YY_RULE_SETUP
+#line 114 "vcg.l"
 				{	/* end of c comment but no start of c comment */
-				} YY_BREAK case 4:YY_RULE_SETUP
-#line 92 "vcg.l"
+				}
+			YY_BREAK case 4:
+				YY_RULE_SETUP
+#line 115 "vcg.l"
 				{	/* c++ comment style *//* lexer does update yylineno */
-				} YY_BREAK case 5:YY_RULE_SETUP
-#line 94 "vcg.l"
+				}
+			YY_BREAK case 5:
+				YY_RULE_SETUP
+#line 117 "vcg.l"
 				{	/* skip form feed chars and spaces */
-				} YY_BREAK case 6:YY_RULE_SETUP
-#line 95 "vcg.l"
+				}
+			YY_BREAK case 6:
+				YY_RULE_SETUP
+#line 118 "vcg.l"
 				{	/* skip tabs */
-				} YY_BREAK case 7:
+				}
+			YY_BREAK case 7:
 /* rule 7 can match eol */
-				 YY_RULE_SETUP
-#line 96 "vcg.l"
+				YY_RULE_SETUP
+#line 119 "vcg.l"
 				{	/* skip new line *//* lexer does update yylineno */
-				} YY_BREAK case 8:YY_RULE_SETUP
-#line 97 "vcg.l"
+				}
+			YY_BREAK case 8:
+				YY_RULE_SETUP
+#line 120 "vcg.l"
 				{	/* skip carriage return */
-				} YY_BREAK case 9:YY_RULE_SETUP
-#line 99 "vcg.l"
+				}
+			YY_BREAK case 9:
+				YY_RULE_SETUP
+#line 122 "vcg.l"
 				{
 					return (VCG_COLON);
-				} YY_BREAK case 10:YY_RULE_SETUP
-#line 100 "vcg.l"
+				}
+			YY_BREAK case 10:
+				YY_RULE_SETUP
+#line 123 "vcg.l"
 				{
 					return (VCG_BO);
-				} YY_BREAK case 11:YY_RULE_SETUP
-#line 101 "vcg.l"
+				}
+			YY_BREAK case 11:
+				YY_RULE_SETUP
+#line 124 "vcg.l"
 				{
 					return (VCG_BC);
-				} YY_BREAK case 12:YY_RULE_SETUP
-#line 103 "vcg.l"
+				}
+			YY_BREAK case 12:
+				YY_RULE_SETUP
+#line 126 "vcg.l"
 				{
 					return (VCG_GRAPH);
-				} YY_BREAK case 13:YY_RULE_SETUP
-#line 104 "vcg.l"
+				}
+			YY_BREAK case 13:
+				YY_RULE_SETUP
+#line 127 "vcg.l"
 				{
 					return (VCG_EDGE);
-				} YY_BREAK case 14:YY_RULE_SETUP
-#line 105 "vcg.l"
+				}
+			YY_BREAK case 14:
+				YY_RULE_SETUP
+#line 128 "vcg.l"
 				{
 					return (VCG_ELLIPSE);
-				} YY_BREAK case 15:YY_RULE_SETUP
-#line 106 "vcg.l"
+				}
+			YY_BREAK case 15:
+				YY_RULE_SETUP
+#line 129 "vcg.l"
 				{
 					return (VCG_LABEL);
-				} YY_BREAK case 16:YY_RULE_SETUP
-#line 107 "vcg.l"
+				}
+			YY_BREAK case 16:
+				YY_RULE_SETUP
+#line 130 "vcg.l"
 				{
 					return (VCG_NODE);
-				} YY_BREAK case 17:YY_RULE_SETUP
-#line 108 "vcg.l"
+				}
+			YY_BREAK case 17:
+				YY_RULE_SETUP
+#line 131 "vcg.l"
 				{
 					return (VCG_SHAPE);
-				} YY_BREAK case 18:YY_RULE_SETUP
-#line 109 "vcg.l"
+				}
+			YY_BREAK case 18:
+				YY_RULE_SETUP
+#line 132 "vcg.l"
 				{
 					return (VCG_SOURCENAME);
-				} YY_BREAK case 19:YY_RULE_SETUP
-#line 110 "vcg.l"
+				}
+			YY_BREAK case 19:
+				YY_RULE_SETUP
+#line 133 "vcg.l"
 				{
 					return (VCG_TARGETNAME);
-				} YY_BREAK case 20:YY_RULE_SETUP
-#line 111 "vcg.l"
+				}
+			YY_BREAK case 20:
+				YY_RULE_SETUP
+#line 134 "vcg.l"
 				{
 					return (VCG_TITLE);
-				} YY_BREAK case 21:
+				}
+			YY_BREAK case 21:
 /* rule 21 can match eol */
-				 YY_RULE_SETUP
-#line 113 "vcg.l"
+				YY_RULE_SETUP
+#line 136 "vcg.l"
 				{
 					if (vcgleng == 2) {
 						/* string is "" */
 						vcglaststring = vcg_uniqstr("");
 						return (VCG_STRING);
 					}
-					/* copy and filter the text, and clear last " */ vcgtext[vcgleng - 1] = 0;
-					tmpp = (char *)calloc(1, (vcgleng + 1));
+					/* copy and filter the text, and clear last " */
+					vcgtext[vcgleng - 1] = 0;
+					tmpp = (char *)dp_calloc(1, (vcgleng + 1));
 					p = vcgtext;
 					p++;	/* skip first " */
 					q = tmpp;
@@ -3772,21 +3829,24 @@ do_action:			/* This label is used only to access EOF actions. */
 					}
 					p = vcg_uniqstr(tmpp);
 					vcglaststring = p;
-					free(tmpp);
+					dp_free(tmpp);
 					tmpp = NULL;
 					p = NULL;
 					q = NULL;
 					return (VCG_STRING);
 				}
-				YY_BREAK case 22:YY_RULE_SETUP
-#line 166 "vcg.l"
+			YY_BREAK case 22:
+				YY_RULE_SETUP
+#line 189 "vcg.l"
 				{
 					return ((int)yytext[0]);
-				} YY_BREAK case 23:YY_RULE_SETUP
-#line 168 "vcg.l"
-				 ECHO;
+				}
+			YY_BREAK case 23:
+				YY_RULE_SETUP
+#line 191 "vcg.l"
+				    ECHO;
 				YY_BREAK
-#line 3933 "vcg.flex.c"
+#line 3953 "vcg.flex.c"
 			case YY_STATE_EOF(INITIAL):
 				yyterminate();
 
@@ -4824,29 +4884,6 @@ static int yy_flex_strlen(const char *s)
 }
 #endif
 
-void *yyalloc(yy_size_t size)
-{
-	return malloc(size);
-}
-
-void *yyrealloc(void *ptr, yy_size_t size)
-{
-
-	/* The cast to (char *) in the following accommodates both
-	 * implementations that use char* generic pointers, and those
-	 * that use void* generic pointers.  It works with the latter
-	 * because both ANSI C and C++ allow castless assignment from
-	 * any pointer type to void*, and deal with argument conversions
-	 * as though doing an assignment.
-	 */
-	return realloc(ptr, size);
-}
-
-void yyfree(void *ptr)
-{
-	free((char *)ptr);	/* see yyrealloc() for (char *) cast */
-}
-
 /* %if-tables-serialization definitions */
 /* %define-yytables   The name for this specific scanner's tables. */
 #define YYTABLES_NAME "yytables"
@@ -4854,7 +4891,7 @@ void yyfree(void *ptr)
 
 /* %ok-for-header */
 
-#line 168 "vcg.l"
+#line 191 "vcg.l"
 
 /* */
 void vcg_lex_init(FILE * f, int debugflag)
@@ -4872,7 +4909,8 @@ void vcg_lex_init(FILE * f, int debugflag)
 void vcg_lex_clear(void)
 {
 	vcglineno = 1;
-
+	yylex_destroy();
+	vcg_flex_debug = 0;
 	return;
 }
 

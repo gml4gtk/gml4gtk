@@ -1,0 +1,26 @@
+/* gml4gtk uses pango lib which support use of emoji chars defined at
+ * https://unicode.org/emoji/charts/full-emoji-list.html
+ * What is possible depends on font and what the pango lib can draw
+ * https://pango.gnome.org/
+ * https://docs.gtk.org/Pango/
+ */
+digraph emoji
+{
+1[label="♈"];
+2[label="♿"];
+3[label="☔ "];
+4[label="⛲"];
+5[label="✋"];
+6[label="☕"];
+7[label="⛳"];
+8[label=" ♓"];
+9[label="😄"];
+1->2;
+1->3;
+1->4;
+1->5;
+3->6;
+3->7;
+5->8;
+5->9;
+}

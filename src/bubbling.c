@@ -44,6 +44,7 @@
 #include "pos.h"
 #include "hier.h"
 #include "uniqnode.h"
+#include "dpmem.h"
 
 /* bubbling has a mem leak and splay tree used to track and free all mem. */
 
@@ -60,7 +61,7 @@ static void bubbling_free(void *ptr)
 static void *bubbling_calloc(int nn, size_t sz)
 {
 	void *ret;
-	ret = calloc(nn, sz);
+	ret = dp_calloc(nn, sz);
 	if (bubbling_splaytree == NULL) {
 		bubbling_splaytree = splay_tree_new(splay_tree_compare_pointers, splay_tree_free_key, NULL);
 	}
@@ -324,9 +325,7 @@ static void new_bubble2(struct node_bubble *bnodes)
 		ptr->node->x = new_bub;
 		new_bub = new_bub + 1000000;
 		ptrnext = ptr->next;
-/* mem error here
-	free (ptr);
-*/
+		/* mem error here free (ptr); */
 		ptr = ptrnext;
 	}
 

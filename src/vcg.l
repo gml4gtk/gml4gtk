@@ -41,6 +41,7 @@
 #include "vcg.yy.h"
 #include "vcg.tab.h"
 #include "vcgus.h"
+#include "dpmem.h"
 
 /* use GNU GCC compiler builtin strlen */
 #undef YY_NEED_STRLEN
@@ -66,8 +67,30 @@ static char *tmpp = NULL;
 
 char *vcglaststring = NULL;
 
+/* own yyalloc */
+void *yyalloc (size_t n)
+{
+  return(dp_calloc(1,n));
+}
+
+void yyfree (void *ptr)
+{
+  dp_free (ptr);
+  return;
+}
+
+void *yyrealloc (void *ptr, size_t n)
+{
+  return (dp_realloc(ptr,n));
+}
+
+
 %}
 
+/* use own yyalloc */
+%option noyyalloc
+%option noyyrealloc
+%option noyyfree
 %option noinput
 %option nounput
 %option noyywrap
@@ -118,7 +141,7 @@ CCE	\/\/[^\n]*
 				  }
 				  /* copy and filter the text, and clear last " */
 				  vcgtext[vcgleng-1] = 0;
-				  tmpp = (char *) calloc (1, (vcgleng+1));
+				  tmpp = (char *) dp_calloc (1, (vcgleng+1));
 				  p = vcgtext;
 				  p++; /* skip first " */
 				  q = tmpp;
@@ -156,7 +179,7 @@ CCE	\/\/[^\n]*
 				  }
 				  p = vcg_uniqstr (tmpp);
 				  vcglaststring = p;
-				  free (tmpp);
+				  dp_free (tmpp);
 				  tmpp = NULL;
 				  p = NULL;
 				  q = NULL;
@@ -183,7 +206,8 @@ void vcg_lex_init (FILE *f, int debugflag)
 void vcg_lex_clear (void)
 {
   vcglineno=1;
-
+  yylex_destroy();
+  vcg_flex_debug = 0;
   return;
 }
 

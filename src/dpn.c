@@ -54,6 +54,7 @@
 #include "dot.tab.h"
 #include "lex.yy.h"
 #include "dpus.h"
+#include "dpmem.h"
 
 /* node[] attribute to check */
 void dp_do_nattr(char *l, char *r)
@@ -72,7 +73,7 @@ void dp_do_nattr(char *l, char *r)
 	} else if (dp_cclass == DP_TNODEDEF) {
 		res = dp_curgraph->defnode;
 	} else {
-		printf("%s(): shouldnothappen dp_cclass=%d\n", __func__, dp_cclass);
+		printf("dot %s(): shouldnothappen dp_cclass=%d\n", __func__, dp_cclass);
 		return;
 	}
 
@@ -91,7 +92,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown color `%s' at node `%s' line %d\n",
+						 "dot %s(): unknown color `%s' at node `%s' line %d\n",
 						 __func__, r, res->name, res->yylineno);
 				}
 			} else {
@@ -100,21 +101,21 @@ void dp_do_nattr(char *l, char *r)
 					/* default black color */
 					res->color = 0x00000000;
 					printf
-					    ("%s(): color list at node `%s' line %d not supported\n",
+					    ("dot %s(): color list at node `%s' line %d not supported\n",
 					     __func__, res->name, res->yylineno);
 				} else {
 					res->color = colornum->color;
 				}
 				res->bitflags0.colorset = 1;
 			}
-			free(colornum);
+			dp_free(colornum);
 			colornum = NULL;
 		} else if (strcmp(l, "colorscheme") == 0) {
 			tmpi = dp_colorschemecode(r);
 			if (tmpi == (-1)) {
 				memset(dp_errmsg, 0, 256);
 				snprintf(dp_errmsg, (256 - 1),
-					 "%s(): syntax error invalid name of colorscheme `%s' near line %d\n",
+					 "dot %s(): syntax error invalid name of colorscheme `%s' near line %d\n",
 					 __func__, r, yylineno);
 				/* continue and error message will soon appear */
 			} else {
@@ -149,7 +150,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse distortion number `%s' at line %d\n",
+						 "dot %s(): cannot parse distortion number `%s' at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -159,11 +160,11 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): distortion number `%s' at line %d is too low\n",
+						 "dot %s(): distortion number `%s' at line %d is too low\n",
 						 __func__, r, res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		}
 		break;
@@ -180,7 +181,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown color `%s' at node `%s' line %d\n",
+						 "dot %s(): unknown color `%s' at node `%s' line %d\n",
 						 __func__, r, res->name, res->yylineno);
 				}
 			} else {
@@ -189,14 +190,14 @@ void dp_do_nattr(char *l, char *r)
 					/* default white color */
 					res->fcolor = 0x00ffffff;
 					printf
-					    ("%s(): color list at node `%s' line %d not supported\n",
+					    ("dot %s(): color list at node `%s' line %d not supported\n",
 					     __func__, res->name, res->yylineno);
 				} else {
 					res->fcolor = colornum->color;
 				}
 				res->bitflags0.fcolorset = 1;
 			}
-			free(colornum);
+			dp_free(colornum);
 			colornum = NULL;
 		} else if (strcmp(l, "fixedsize") == 0) {
 			/* if fixedsize=true, the width parameter is used for node x size */
@@ -209,7 +210,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' at fixedsize line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' at fixedsize line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -219,7 +220,7 @@ void dp_do_nattr(char *l, char *r)
 				}
 				res->bitflags0.fixsizeset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "fontcolor") == 0) {
 			colornum = dp_getcolor(res->bitflags0.csnumset, res->csnum, r);
@@ -231,7 +232,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown color `%s' at node `%s' line %d\n",
+						 "dot %s(): unknown color `%s' at node `%s' line %d\n",
 						 __func__, r, res->name, res->yylineno);
 				}
 			} else {
@@ -240,14 +241,14 @@ void dp_do_nattr(char *l, char *r)
 					/* default black color */
 					res->fontcolor = 0x00000000;
 					printf
-					    ("%s(): color list at node `%s' line %d not supported\n",
+					    ("dot %s(): color list at node `%s' line %d not supported\n",
 					     __func__, res->name, res->yylineno);
 				} else {
 					res->fontcolor = colornum->color;
 				}
 				res->bitflags0.fontcolorset = 1;
 			}
-			free(colornum);
+			dp_free(colornum);
 			colornum = NULL;
 		} else if (strcmp(l, "fontname") == 0) {
 			if (r) {
@@ -269,7 +270,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse fontsize number `%s' at line %d\n",
+						 "dot %s(): cannot parse fontsize number `%s' at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -280,10 +281,11 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): fontsize number `%s' at line %d is too low\n", __func__, r, res->yylineno);
+						 "dot %s(): fontsize number `%s' at line %d is too low\n", __func__, r,
+						 res->yylineno);
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else {
 			/* something else */
@@ -317,26 +319,27 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): cannot parse `%s' for height at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): cannot parse `%s' for height at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				/* allow 0 for gprof2dot */
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for height at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for height at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					/* min. is 0.02 */
 					res->height = num->number;
 					if (res->height < 0.02) {
-						printf("%s(): minimum value for height is 0.02 but specified is %s\n", __func__, r);
+						printf("dot %s(): minimum value for height is 0.02 but specified is %s\n", __func__,
+						       r);
 						res->height = 0.02;
 					}
 					res->bitflags0.heightset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "href") == 0) {
 			/* url node */
@@ -386,7 +389,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for imagescale at line %d\n",
+						 "dot %s(): not a boolean `%s' for imagescale at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
@@ -397,7 +400,7 @@ void dp_do_nattr(char *l, char *r)
 				}
 				res->bitflags0.iscaleset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else {
 			/* something else */
@@ -406,17 +409,27 @@ void dp_do_nattr(char *l, char *r)
 
 		/* label labelloc layer */
 	case 'l':
+		/* node[label=<>] does remove the label texts if no label at node specified */
 		/* node[label=""] does remove the label texts if no label at node specified */
+		/* label can have html entity chars as &#x20; or &#231; or &#amp; */
 		if (strcmp(l, "label") == 0) {
 			if (r) {
 				if (strlen(r)) {
 					res->label = r;
+					if (r[0] == '<' && r[strlen(r) - 1] == '>') {
+						/* indicate this is html style label */
+						res->htmllabel = 1;
+						/* dphl.c does html entity chars in trans */
+					}
 				} else {
 					/* label="" does empty the label text */
 					/* dot sets few spaces at "" to get ellipse default shape */
 					res->label = dp_uniqstr("  ");
 				}
 				res->bitflags0.labelset = 1;
+				if (0) {
+					printf("%s(): node label \"%s\" html-label=%d\n", __func__, res->label, res->htmllabel);
+				}
 			}
 		} else if (strcmp(l, "labelloc") == 0) {
 			/* location of label */
@@ -424,7 +437,7 @@ void dp_do_nattr(char *l, char *r)
 			if (r == 0) {
 				memset(dp_errmsg, 0, 256);
 				snprintf(dp_errmsg, (256 - 1),
-					 "%s(): not a location `%s' for labelloc at line %d\n", __func__, r, res->yylineno);
+					 "dot %s(): not a location `%s' for labelloc at line %d\n", __func__, r, res->yylineno);
 			} else {
 				res->labelloc = tmpi;
 				res->bitflags0.labellset = 1;
@@ -451,7 +464,7 @@ void dp_do_nattr(char *l, char *r)
 				if (dp_chknum(r)) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a number `%s' for margin at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a number `%s' for margin at line %d\n", __func__, r, res->yylineno);
 				} else {
 					res->margin = r;
 					mnum = dp_getmargin(r);
@@ -463,21 +476,21 @@ void dp_do_nattr(char *l, char *r)
 						} else {
 							memset(dp_errmsg, 0, 256);
 							snprintf(dp_errmsg, (256 - 1),
-								 "%s(): cannot parse `%s' for margin at line %d\n",
+								 "dot %s(): cannot parse `%s' for margin at line %d\n",
 								 __func__, r, res->yylineno);
 						}
 					} else {
 						if (mnum->x < 0 || mnum->y < 0) {
 							memset(dp_errmsg, 0, 256);
 							snprintf(dp_errmsg, (256 - 1),
-								 "%s(): not allowed negative number `%s' for margin at line %d\n",
+								 "dot %s(): not allowed negative number `%s' for margin at line %d\n",
 								 __func__, r, res->yylineno);
 						} else {
 							res->marginx = mnum->x;
 							res->marginy = mnum->y;
 						}
 					}
-					free(mnum);
+					dp_free(mnum);
 					mnum = NULL;
 					res->bitflags0.marginset = 1;
 				}
@@ -500,7 +513,8 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for nojustify at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for nojustify at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -510,7 +524,7 @@ void dp_do_nattr(char *l, char *r)
 				}
 				res->bitflags0.nojustset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else {
 			/* something else */
@@ -529,21 +543,21 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for orientation at line %d\n",
+						 "dot %s(): unknown number `%s' for orientation at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number < 0 || num->number > 360) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number or too large number `%s' for orientation at line %d\n",
+						 "dot %s(): not allowed negative number or too large number `%s' for orientation at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->orientation = rint(num->number);
 					res->bitflags0.oriset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else {
 			/* something else */
@@ -561,13 +575,14 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for penwidth at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for penwidth at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for penwidth at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for penwidth at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					/* allow 0.25, 1.25 etc */
@@ -575,7 +590,7 @@ void dp_do_nattr(char *l, char *r)
 					res->bitflags0.penwidthset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "peripheries") == 0) {
 			/* for polygonal shapes */
@@ -587,14 +602,14 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for peripheries at line %d\n",
+						 "dot %s(): unknown number `%s' for peripheries at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for peripheries at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for peripheries at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					/* is a int number */
@@ -602,7 +617,7 @@ void dp_do_nattr(char *l, char *r)
 					res->bitflags0.periset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "pin") == 0) {
 			/* fixed pos of node if pos specified */
@@ -615,7 +630,7 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for pin at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for pin at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -625,7 +640,7 @@ void dp_do_nattr(char *l, char *r)
 				}
 				res->bitflags0.pinset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "pos") == 0) {
 			/* position of node %f,%f as string */
@@ -633,7 +648,8 @@ void dp_do_nattr(char *l, char *r)
 				if (dp_chknum(r)) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a number `%s' for position at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a number `%s' for position at line %d\n", __func__, r,
+						 res->yylineno);
 				} else {
 					if (strlen(r)) {
 						res->pos = r;
@@ -657,7 +673,7 @@ void dp_do_nattr(char *l, char *r)
 				if (dp_chknum(r)) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a number `%s' for rects at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a number `%s' for rects at line %d\n", __func__, r, res->yylineno);
 				} else {
 					if (strlen(r)) {
 						res->rects = r;
@@ -679,7 +695,8 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not a boolean `%s' for regular at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): not a boolean `%s' for regular at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (boolnum->number) {
@@ -689,7 +706,7 @@ void dp_do_nattr(char *l, char *r)
 				}
 				res->bitflags1.reguset = 1;
 			}
-			free(boolnum);
+			dp_free(boolnum);
 			boolnum = NULL;
 		} else if (strcmp(l, "root") == 0) {
 			/* this is not a dot but twopi keyword */
@@ -710,14 +727,14 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for samplepoints at line %d\n",
+						 "dot %s(): unknown number `%s' for samplepoints at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for samplepoints at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for samplepoints at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					/* is a int number */
@@ -725,13 +742,13 @@ void dp_do_nattr(char *l, char *r)
 					res->bitflags1.spset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "shape") == 0) {
 			tmpi = dp_isdotshape(r);
 			if (tmpi == (-1)) {
 				/* todo, make into parse error */
-				printf("%s(): unknown shape `%s' for node `%s' at line %d\n",
+				printf("dot %s(): unknown shape `%s' for node `%s' at line %d\n",
 				       __func__, r, res->name, res->yylineno);
 			} else {
 				res->shape = tmpi;
@@ -758,14 +775,14 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for showboxes at line %d\n",
+						 "dot %s(): unknown number `%s' for showboxes at line %d\n",
 						 __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number < 0 || num->number > 2) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number or too high number `%s' for showboxes at line %d\n",
+						 "dot %s(): not allowed negative number or too high number `%s' for showboxes at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					/* is a int number */
@@ -773,7 +790,7 @@ void dp_do_nattr(char *l, char *r)
 					res->bitflags1.showbset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "sides") == 0) {
 			/* number of sides in a polygon shape */
@@ -786,19 +803,20 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for sides at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for sides at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				/* todo: dot allows sides=0 without warning */
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative number `%s' for sides at line %d\n",
+						 "dot %s(): not allowed negative number `%s' for sides at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					if (num->number < 3) {
 						printf
-						    ("%s(): sides number `%s' is too low, minimum is 3 and using now default 4\n",
+						    ("dot %s(): sides number `%s' is too low, minimum is 3 and using now default 4\n",
 						     __func__, r);
 						res->sides = 4;
 					} else {
@@ -807,7 +825,7 @@ void dp_do_nattr(char *l, char *r)
 					res->bitflags0.sidesset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "skew") == 0) {
 			/* +/- skew factor polygon shape */
@@ -819,19 +837,19 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for skew at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for skew at line %d\n", __func__, r, res->yylineno);
 				}
 			} else {
 				if (num->number < -100) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): too low number `%s' for skew at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): too low number `%s' for skew at line %d\n", __func__, r, res->yylineno);
 				} else {
 					res->skew = num->number;
 					res->bitflags1.skewset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "sortv") == 0) {
 			/* packing modus */
@@ -843,19 +861,21 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for sortv at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for sortv at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): negative number `%s' for sortv at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): negative number `%s' for sortv at line %d\n", __func__, r,
+						 res->yylineno);
 				} else {
 					res->sortv = rint(num->number);
 					res->bitflags1.sortvset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else if (strcmp(l, "style") == 0) {
 			stylenum = dp_getstyle(r);
@@ -891,25 +911,25 @@ void dp_do_nattr(char *l, char *r)
 						/* parse error at unknown token */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): unknown token `%s' in `%s' for style at line %d\n",
+							 "dot %s(): unknown token `%s' in `%s' for style at line %d\n",
 							 __func__, stylenum->unknown, r, res->yylineno);
 					} else if (stylenum->pe_slw) {
 						/* parse error at setlinewidth number */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): wrong number or negative number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
+							 "dot %s(): wrong number or negative number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
 							 __func__, r, res->yylineno);
 					} else if (stylenum->pe_exp) {
 						/* missing number at setlinewidth */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): missing number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
+							 "dot %s(): missing number `%s' for setlinewidth in style at line %d\nuse penwidth instead of setlinewidth.\n",
 							 __func__, r, res->yylineno);
 					} else {
 						/* other parse error */
 						memset(dp_errmsg, 0, 256);
 						snprintf(dp_errmsg, (256 - 1),
-							 "%s(): unknown error in `%s' for style at line %d\n",
+							 "dot %s(): unknown error in `%s' for style at line %d\n",
 							 __func__, r, res->yylineno);
 					}
 				}
@@ -932,7 +952,7 @@ void dp_do_nattr(char *l, char *r)
 				if (stylenum->tapered) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): tapered does not apply to node in `%s' for style at line %d\n",
+						 "dot %s(): tapered does not apply to node in `%s' for style at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					if (stylenum->slwset) {
@@ -986,7 +1006,7 @@ void dp_do_nattr(char *l, char *r)
 					}
 				}
 			}
-			free(stylenum);
+			dp_free(stylenum);
 			stylenum = NULL;
 		} else {
 			/* something else */
@@ -1033,26 +1053,28 @@ void dp_do_nattr(char *l, char *r)
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): unknown number `%s' for width at line %d\n", __func__, r, res->yylineno);
+						 "dot %s(): unknown number `%s' for width at line %d\n", __func__, r,
+						 res->yylineno);
 				}
 			} else {
 				/* allow 0 for prof2dot */
 				if (num->number < 0) {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
-						 "%s(): not allowed negative numbe `%s' for width at line %d\n",
+						 "dot %s(): not allowed negative numbe `%s' for width at line %d\n",
 						 __func__, r, res->yylineno);
 				} else {
 					res->width = num->number;
 					/* min is 0.01 */
 					if (res->width < 0.01) {
-						printf("%s(): minimum value for width is 0.01 but specified is %s\n", __func__, r);
+						printf("dot %s(): minimum value for width is 0.01 but specified is %s\n", __func__,
+						       r);
 						res->width = 0.01;
 					}
 					res->bitflags0.widthset = 1;
 				}
 			}
-			free(num);
+			dp_free(num);
 			num = NULL;
 		} else {
 			/* something else */

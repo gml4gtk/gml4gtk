@@ -23,16 +23,29 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "splay-tree.h"
 #include "main.h"
 #include "dp.h"
 #include "lex.yy.h"
+#include "dpmem.h"
 
 #define YY_DEBUG 1
 
 #define YYERROR_VERBOSE 1
+
+/* memory usage wrapping feature */
+#ifndef YYFREE
+# define YYFREE dp_free
+#endif
+#ifndef YYMALLOC
+# define YYMALLOC dp_malloc
+#endif
+#ifndef YYREALLOC
+# define YYREALLOC dp_realloc
+#endif
 
 /* utf8 code at start if 1 */
 static int utfseen = 0;
@@ -42,12 +55,12 @@ static int isstrict = 0;
 
 extern int yylex (void);
 
-void yyerror (const char *msg)
+static void yyerror (const char *msg)
 {
   if (strlen(dp_errmsg)==0) {
-    snprintf(dp_errmsg,256-1,"%s(): %s at line %d yytext is %s'\n",__func__,msg,yylineno,yytext);
+    snprintf(dp_errmsg,256-1,"dot %s(): %s at line %d yytext is %s'\n",__func__,msg,yylineno,yytext);
   }
-  printf("%s(): %s at line %d yytext is `%s'\n",__func__,msg,yylineno,yytext);
+  printf("dot %s(): %s at line %d yytext is `%s'\n",__func__,msg,yylineno,yytext);
   fflush(stdout);
   fflush(stderr);
   return;
@@ -137,13 +150,13 @@ ctext:
 text:
 	  TOKEN_TEXT { $$ = $1; }
 	| TOKEN_NUM { $$ = $1; }
-	| TOKEN_HTEXT { printf("%s(): html label at line %d is not supported yet\n",__func__,yylineno); $$ = $1; }
+	| TOKEN_HTEXT { $$ = $1; }
 	| ctext { $$ = $1; }
 	;
 
 statements:
-	  statement
-	| statements statement
+	  statements statement
+	| statement
 	;
 
 /* the semicolon or comma after statement is optional */

@@ -57,7 +57,11 @@ gml4gtk_SOURCES = \
 	vcg.flex.c \
 	vcg.c \
 	vcgus.c \
-	vcgun.c
+	vcgun.c \
+	lex.hl.c \
+	dphlparser.c \
+	dphl.c \
+	dpmem.c
 
 
 #

@@ -1,0 +1,22 @@
+/* html strings in node names */
+digraph "l"
+{
+ /* <tag> becomes "tag" */
+ <tag>;
+ /* <<tag>> becomes "<tag>" */
+ <<tag>>;
+ <<tag>tag</tag>>;
+ /* this label has only a newline */
+ <<br/>>[label=<<br/>>];
+ /* this html node name has no chars */
+ <>;
+ /* this comment is not processed */
+ <<!--comment-->>;
+
+ <tag>-><<tag>>;
+ <<tag>>-><<tag>tag</tag>>;
+ <<tag>tag</tag>>-><<br/>>[label=<<br/>>];
+ <<br/>>-><>;
+ <>-><<!--comment-->>;
+
+}

@@ -40,11 +40,14 @@ extern struct gml_graph *maingraph;
 /* type of graph data 0=gml 1=dot 2=vcg */
 extern int graphtype;
 
+/* if set do node names instead of node label */
+extern int option_nnames;
+
+/* if set mirror in y direction */
+extern int option_mirrory;
+
 /* if set do node label popup */
 extern int option_popup;
-
-/* barycenter type, 1,2,3 */
-extern int barytype;
 
 /* if 1 allow incremental layout for clusters if any */
 extern int incrlayout;
@@ -169,7 +172,7 @@ extern void nodecounts(struct gml_graph *g);
 /* */
 extern void add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr,
 			 int foundid, char *nodename, char *nodelabel, int ncolor, int nbcolor, struct gml_rl *rlabel,
-			 int fontcolor);
+			 struct gml_hl *hlabel, int fontcolor, int ishtml);
 
 /* */
 extern void add_new_dummynode(struct gml_graph *g, int foundid);
@@ -177,7 +180,7 @@ extern void add_new_dummynode(struct gml_graph *g, int foundid);
 /* */
 extern void
 add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
-	     int foundtarget, char *elabel, int ecolor, int style, char *fcompass, char *tcompass, int constraint);
+	     int foundtarget, char *elabel, int ecolor, int style, char *fcompass, char *tcompass, int constraint, int ishtml);
 
 /* */
 extern void add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro,
@@ -201,6 +204,9 @@ extern void clear_startnodes_r(struct gml_graph *g);
 
 /* clear record labels */
 extern void clear_rlabel_r(struct gml_graph *g);
+
+/* clear html labels */
+extern void clear_hlabel_r(struct gml_graph *g);
 
 /* */
 extern void clear_numce_r(struct gml_graph *g);

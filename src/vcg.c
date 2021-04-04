@@ -49,6 +49,7 @@
 #include "vcgun.h"
 #include "vcg.yy.h"
 #include "vcg.tab.h"
+#include "dpmem.h"
 
 /* like yydebug, set via lexer init */
 int vcgdebug = 0;
@@ -89,7 +90,7 @@ static void vel_clear(void)
 
 	while (pvnl) {
 		pvnlnext = pvnl->next;
-		free(pvnl);
+		dp_free(pvnl);
 		pvnl = NULL;
 		pvnl = pvnlnext;
 	}
@@ -107,7 +108,7 @@ static void vnl_clear(void)
 
 	while (pvnl) {
 		pvnlnext = pvnl->next;
-		free(pvnl);
+		dp_free(pvnl);
 		pvnl = NULL;
 		pvnl = pvnlnext;
 	}
@@ -173,7 +174,8 @@ static void vcggraphtitle(void)
 
 	if (vcgtoken != VCG_COLON) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected ':' after \"title\" at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"title\" at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 		return;
 	}
@@ -182,7 +184,8 @@ static void vcggraphtitle(void)
 
 	if (vcgtoken != VCG_STRING) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected string after \"title:\" at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected string after \"title:\" at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 		return;
 	}
@@ -204,7 +207,8 @@ static void vcgnode(void)
 
 	if (vcgtoken != VCG_COLON) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected ':' after \"node\" at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"node\" at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 		return;
 	}
@@ -213,7 +217,8 @@ static void vcgnode(void)
 
 	if (vcgtoken != VCG_BO) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected '{' after \"node:\" at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected '{' after \"node:\" at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 		return;
 	}
@@ -227,8 +232,8 @@ static void vcgnode(void)
 
 		if (vcgtoken == EOF) {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "unexpected end-of-file in \"node:\" at line %d in file %s\n", vcglineno,
-				 curfname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): unexpected end-of-file in \"node:\" at line %d in file %s\n",
+				 __func__, vcglineno, curfname);
 			vcgerror = 1;
 			break;
 		}
@@ -243,8 +248,8 @@ static void vcgnode(void)
 
 			if (vcgtoken != VCG_COLON) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ':' after \"title\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"title\" at line %d in file %s\n",
+					 __func__, vcglineno, curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -253,8 +258,9 @@ static void vcgnode(void)
 
 			if (vcgtoken != VCG_STRING) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected string after \"title:\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected string after \"title:\" at line %d in file %s\n", __func__, vcglineno,
+					 curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -267,8 +273,8 @@ static void vcgnode(void)
 
 			if (vcgtoken != VCG_COLON) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ':' after \"label\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"label\" at line %d in file %s\n",
+					 __func__, vcglineno, curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -276,8 +282,9 @@ static void vcgnode(void)
 
 			if (vcgtoken != VCG_STRING) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected string after \"label:\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected string after \"label:\" at line %d in file %s\n", __func__, vcglineno,
+					 curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -290,8 +297,8 @@ static void vcgnode(void)
 
 			if (vcgtoken != VCG_COLON) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ':' after \"shape\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"shape\" at line %d in file %s\n",
+					 __func__, vcglineno, curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -300,8 +307,9 @@ static void vcgnode(void)
 
 			if (vcgtoken != VCG_ELLIPSE) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ellipse after \"shape:\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected ellipse after \"shape:\" at line %d in file %s\n", __func__, vcglineno,
+					 curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -310,8 +318,8 @@ static void vcgnode(void)
 
 		} else {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "unknown node statement `%s' at line %d in file %s\n", vcgtext,
-				 vcglineno, curfname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): unknown node statement `%s' at line %d in file %s\n",
+				 __func__, vcgtext, vcglineno, curfname);
 			vcgerror = 1;
 			break;
 		}
@@ -324,7 +332,8 @@ static void vcgnode(void)
 
 	if (title == NULL) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "node has no \"title:\" statement at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): node has no \"title:\" statement at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 	}
 
@@ -333,7 +342,7 @@ static void vcgnode(void)
 		label = title;
 	}
 
-	newnode = calloc(1, sizeof(struct vcgn));
+	newnode = dp_calloc(1, sizeof(struct vcgn));
 
 	if (newnode == NULL) {
 		vcgerror = 1;
@@ -374,7 +383,8 @@ static void vcgedge(void)
 
 	if (vcgtoken != VCG_COLON) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected ':' after \"edge\" at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"edge\" at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 		return;
 	}
@@ -383,7 +393,8 @@ static void vcgedge(void)
 
 	if (vcgtoken != VCG_BO) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected '{' after \"edge:\" at line %d in file %s\n", vcglineno, curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected '{' after \"edge:\" at line %d in file %s\n", __func__,
+			 vcglineno, curfname);
 		vcgerror = 1;
 		return;
 	}
@@ -397,8 +408,8 @@ static void vcgedge(void)
 
 		if (vcgtoken == EOF) {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "unexpected end-of-file in \"edge:\" at line %d in file %s\n", vcglineno,
-				 curfname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): unexpected end-of-file in \"edge:\" at line %d in file %s\n",
+				 __func__, vcglineno, curfname);
 			vcgerror = 1;
 			break;
 		}
@@ -413,8 +424,9 @@ static void vcgedge(void)
 
 			if (vcgtoken != VCG_COLON) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ':' after \"sourcename\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected ':' after \"sourcename\" at line %d in file %s\n", __func__, vcglineno,
+					 curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -423,7 +435,8 @@ static void vcgedge(void)
 
 			if (vcgtoken != VCG_STRING) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected string after \"sourcename:\" at line %d in file %s\n",
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected string after \"sourcename:\" at line %d in file %s\n", __func__,
 					 vcglineno, curfname);
 				vcgerror = 1;
 				break;
@@ -437,8 +450,9 @@ static void vcgedge(void)
 
 			if (vcgtoken != VCG_COLON) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ':' after \"targetname\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected ':' after \"targetname\" at line %d in file %s\n", __func__, vcglineno,
+					 curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -447,7 +461,8 @@ static void vcgedge(void)
 
 			if (vcgtoken != VCG_STRING) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected string after \"targetname:\" at line %d in file %s\n",
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected string after \"targetname:\" at line %d in file %s\n", __func__,
 					 vcglineno, curfname);
 				vcgerror = 1;
 				break;
@@ -461,8 +476,8 @@ static void vcgedge(void)
 
 			if (vcgtoken != VCG_COLON) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected ':' after \"label\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"label\" at line %d in file %s\n",
+					 __func__, vcglineno, curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -471,8 +486,9 @@ static void vcgedge(void)
 
 			if (vcgtoken != VCG_STRING) {
 				memset(parsermessage, 0, 256);
-				snprintf(parsermessage, (256 - 1), "expected string after \"label:\" at line %d in file %s\n",
-					 vcglineno, curfname);
+				snprintf(parsermessage, (256 - 1),
+					 "vcg %s(): expected string after \"label:\" at line %d in file %s\n", __func__, vcglineno,
+					 curfname);
 				vcgerror = 1;
 				break;
 			}
@@ -481,8 +497,8 @@ static void vcgedge(void)
 			vcglaststring = NULL;
 		} else {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "unknown edge statement `%s' at line %d in file %s\n", vcgtext,
-				 vcglineno, curfname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): unknown edge statement `%s' at line %d in file %s\n",
+				 __func__, vcgtext, vcglineno, curfname);
 			vcgerror = 1;
 			break;
 		}
@@ -495,15 +511,15 @@ static void vcgedge(void)
 
 	if (sn == NULL) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "edge has no \"sourcenode:\" statement at line %d in file %s\n", vcglineno,
-			 curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): edge has no \"sourcenode:\" statement at line %d in file %s\n",
+			 __func__, vcglineno, curfname);
 		vcgerror = 1;
 	}
 
 	if (tn == NULL) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "edge has no \"targetnode:\" statement at line %d in file %s\n", vcglineno,
-			 curfname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): edge has no \"targetnode:\" statement at line %d in file %s\n",
+			 __func__, vcglineno, curfname);
 		vcgerror = 1;
 	}
 
@@ -511,7 +527,7 @@ static void vcgedge(void)
 		return;
 	}
 
-	newedge = calloc(1, sizeof(struct vcge));
+	newedge = dp_calloc(1, sizeof(struct vcge));
 
 	if (newedge == NULL) {
 		vcgerror = 1;
@@ -552,18 +568,26 @@ static void chkedges(void)
 		pn = vcguniqnode(pvel->fns);
 		if (pn == NULL) {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "sourcenode `%s' in edge not defined in file %s\n", pvel->fns, curfname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): sourcenode `%s' in edge not defined in file %s\n", __func__,
+				 pvel->fns, curfname);
 			vcgerror = 1;
 			break;
+		}
+		if (pvel->fromnode == NULL) {
+			pvel->fromnode = pn;
 		}
 		/* set node number in edge */
 		pvel->fnn = pn->nr;
 		pn = vcguniqnode(pvel->tns);
 		if (pn == NULL) {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "targetnode `%s' in edge not defined in file %s\n", pvel->tns, curfname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): targetnode `%s' in edge not defined in file %s\n", __func__,
+				 pvel->tns, curfname);
 			vcgerror = 1;
 			break;
+		}
+		if (pvel->tonode == NULL) {
+			pvel->tonode = pn;
 		}
 		/* set node number in edge */
 		pvel->tnn = pn->nr;
@@ -590,7 +614,7 @@ static void copyall(struct gml_graph *g)
 		nr = maingraph->nodenum;
 		/* in vcg all nodes are located in rootgraph */
 		add_new_node(g, maingraph, nr, pvnl->nr, uniqstr(pvnl->name), uniqstr(pvnl->label), /* ncolor */ 0x00ffffff, /* nbcolor */ 0,	/* rlabel */
-			     NULL, /* fontcolor */ 0);
+			     NULL, /* hlabel */ NULL, /* fontcolor */ 0, /* ishtml */ 0);
 		pvnl->finalnr = nr;
 		pvnl = pvnl->next;
 	}
@@ -598,8 +622,16 @@ static void copyall(struct gml_graph *g)
 	pvel = vel;
 
 	while (pvel) {
-		fnn = uniqnode(g, pvel->fromnode->finalnr);
-		tnn = uniqnode(g, pvel->tonode->finalnr);
+		if (pvel->fromnode) {
+			fnn = uniqnode(g, pvel->fromnode->finalnr);
+		} else {
+			fnn = NULL;
+		}
+		if (pvel->tonode) {
+			tnn = uniqnode(g, pvel->tonode->finalnr);
+		} else {
+			tnn = NULL;
+		}
 		if (fnn && tnn) {
 			if (fnn == tnn) {
 				/* add selfedge count at this node */
@@ -608,10 +640,17 @@ static void copyall(struct gml_graph *g)
 				add_new_edge(g, maingraph, /* foundsource */ fnn->nr, /* foundtarget */ tnn->nr,
 					     uniqstr(pvel->label),
 					     /* ecolor */ 0, /* style */ 0, /* fcompass */ NULL, /* tcompass */ NULL,
-					     /* constraint */ 1);
+					     /* constraint */ 1, /* ishtml */ 0);
 			}
 		} else {
-			printf("%s(): missing nodes in edge\n", __func__);
+			printf("vcg %s(): missing nodes in edge between nodes ", __func__);
+			if (pvel->fns) {
+				printf("\"%s\" ", pvel->fns);
+			}
+			if (pvel->tns) {
+				printf("\"%s\" ", pvel->tns);
+			}
+			printf("\n");
 		}
 		pvel = pvel->next;
 	}
@@ -644,7 +683,7 @@ int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 
 	if (vcgtoken != VCG_GRAPH) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected \"graph\" at start of graph in file %s\n", fname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected \"graph\" at start of graph in file %s\n", __func__, fname);
 		vcgparse_clear();
 		return (1);
 	}
@@ -654,7 +693,8 @@ int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 
 	if (vcgtoken != VCG_COLON) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected ':' after \"graph\" at start of graph in file %s\n", fname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected ':' after \"graph\" at start of graph in file %s\n",
+			 __func__, fname);
 		vcgparse_clear();
 		return (1);
 	}
@@ -664,7 +704,8 @@ int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 
 	if (vcgtoken != VCG_BO) {
 		memset(parsermessage, 0, 256);
-		snprintf(parsermessage, (256 - 1), "expected '{' after \"graph:\" at start of graph in file %s\n", fname);
+		snprintf(parsermessage, (256 - 1), "vcg %s(): expected '{' after \"graph:\" at start of graph in file %s\n",
+			 __func__, fname);
 		vcgparse_clear();
 		return (1);
 	}
@@ -682,7 +723,8 @@ int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 
 		if (vcgtoken == EOF) {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "unexpected end-of-file at line %d in file %s\n", vcglineno, fname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): unexpected end-of-file at line %d in file %s\n", __func__,
+				 vcglineno, fname);
 			vcgerror = 1;
 			break;
 		}
@@ -705,8 +747,8 @@ int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 			vcgedge();
 		} else {
 			memset(parsermessage, 0, 256);
-			snprintf(parsermessage, (256 - 1), "unknown graph statement `%s' at line %d in file %s\n", vcgtext,
-				 vcglineno, fname);
+			snprintf(parsermessage, (256 - 1), "vcg %s(): unknown graph statement `%s' at line %d in file %s\n",
+				 __func__, vcgtext, vcglineno, fname);
 			vcgerror = 1;
 			break;
 		}

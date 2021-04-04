@@ -62,7 +62,7 @@ void dpuniqnode_add(struct dpnode *node)
 	spn = splay_tree_lookup(uniqnode_splaytree, (splay_tree_key) node->name);
 	if (spn) {
 		/* shouldnothappen */
-		printf("%s(): node `%s' does already exist\n", __func__, node->name);
+		printf("dot %s(): node `%s' does already exist\n", __func__, node->name);
 		fflush(stdout);
 		return;
 	} else {
