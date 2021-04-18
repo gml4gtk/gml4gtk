@@ -1,0 +1,151 @@
+
+
+    Markdeep https://casual-effects.com/markdeep/
+    markdown, ascii-to-all
+
+    Svgbob https://ivanceras.github.io/svgbob-editor/
+    ascii-to-all
+
+    Archetype https://fatiherikli.github.io/archetype/
+    ascii-drawing
+
+    Textik https://textik.com/
+    ascii-drawing
+
+    ASCIIFlow http://asciiflow.com/
+    ascii-drawing
+
+    Pikchr https://pikchr.org/home/pikchrshow
+    all
+
+    Kroki https://kroki.io/
+    BlockDiag, SeqDiag, ActDiag, NwDiag, PacketDiag, RackDiag, BPMN, Bytefield, PlantUML, Ditaa, Erd, Excalidraw, GraphViz, Mermaid, Nomnoml, PlantUML, SvgBob, UMLet, Vega, Vega-Lite, WaveDrom
+
+    BPMN Sketch Miner https://www.bpmn-sketch-miner.ai/
+    BPMN/flow
+
+    Webgraphviz http://www.webgraphviz.com/
+    graphviz
+
+    Viz.js http://viz-js.com/
+    graphviz
+
+    Edotor https://edotor.net/
+    graphviz
+
+    nomnoml http://www.nomnoml.com/
+    activity, class
+    Source: https://github.com/skanaar/nomnoml
+
+    CodeUML http://codeuml.com/ (dead)
+    uml
+    Source: https://github.com/oazabir/codeuml
+
+    yuml https://yuml.me/diagram/scruffy/class/draw
+    uml
+
+    PlantText http://www.planttext.com/planttext
+    activity, class, component, object, use case, state, graphviz, sequence, gui, earth
+
+    PlantUML http://www.plantuml.com/plantuml/uml/
+    activity, class, component, object, use-case, sequence, state, deployment, timing, gui, archimate, gantt, mindmap, tree, math, entity-relationship
+
+    Umple Online http://cruise.site.uottawa.ca/umpleonline/
+    class, state, composite
+
+    ZenUML https://app.zenuml.com/
+    sequence
+
+    DotUML https://dotuml.com/playground.html
+    class, use case, sequence, state, deployment, graphviz
+
+    QuickDBD https://app.quickdatabasediagrams.com/#/
+    entity-relationship
+
+    dbdiagram https://dbdiagram.io/d
+    entity-relationship
+
+    WebSequenceDiagrams https://www.websequencediagrams.com/
+    sequence
+
+    SVG Sequence Diagram http://sullerandras.github.io/SVG-Sequence-Diagram/
+    sequence
+
+    JUMLY http://jumly.tmtk.net (dead)
+    sequence
+    Source: https://github.com/tmtk75/jumly
+
+    js sequence diagrams http://bramp.github.io/js-sequence-diagrams/
+    sequence
+
+    swimlanes https://swimlanes.io/
+    sequence
+
+    SequenceDiagram https://sequencediagram.org/
+    sequence
+
+    GraphUp https://graphup.co/ (broken)
+    sequence, gantt
+
+    Text Diagram http://weidagang.github.io/text-diagram/
+    ascii sequence
+    Source: https://github.com/weidagang/text-diagram
+
+    ASCII Sequence Diagram Creator https://textart.io/sequence
+    ascii sequence
+
+    Chart Mage http://chartmage.com/index.html
+    sequence, flow
+
+    flowchart.js http://flowchart.js.org/
+    flow
+
+    drawthe http://go.drawthe.net/
+    network
+    Source: https://github.com/cidrblock/drawthe.net
+
+    mermaid https://mermaid-js.github.io/mermaid-live-editor/
+    flow, sequence, class, state, entity-relationship, gantt, pie, journey
+
+    Diagram.codes https://www.diagram.codes/
+    flow, sequence, graph, tree, onion, stack, system, timeline, mindmap
+
+    Blockdiag http://interactive.blockdiag.com/
+    block, activity, network, rack/stack, packet
+
+    state machine cat https://state-machine-cat.js.org/
+    state
+    Source: https://github.com/sverweij/state-machine-cat
+
+    MetaUML https://metauml.denksoft.com (dead)
+
+    Railroad Diagram Generator http://www.bottlecaps.de/rr/ui#_StringLiteral
+    railroad/syntax
+
+    Gleek https://www.gleek.io/
+    architecture
+
+    Ilograph https://app.ilograph.com/
+    architecture
+
+    Structurizr https://structurizr.com/dsl
+    architecture
+
+    Penrose https://github.com/penrose/penrose
+    penrose
+
+    code2flow https://app.code2flow.com/
+    flow
+
+    flowchart.fun https://flowchart.fun/
+    flow
+
+    WaveDrom https://wavedrom.com/editor.html
+    timing
+
+    CLI Text to Diagram Tools
+        perl graph-easy http://bloodgate.com/perl/graph/index.html #cli
+        flow
+        Doc: https://developpaper.com/recommend-a-tool-for-making-ascii-flow-chart-graph-easy
+        Example: graph-easy <<< [node 1]->[some text]-[this][node 1]->[branch]
+
