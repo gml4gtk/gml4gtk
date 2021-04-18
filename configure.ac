@@ -34,7 +34,7 @@
 #
 
 AC_PREREQ([2.69])
-AC_INIT([gml4gtk], [7.1], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
+AC_INIT([gml4gtk], [7.2], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
 AC_CONFIG_SRCDIR([src/main.h])
 AC_CONFIG_HEADERS([config.h])
 
@@ -203,8 +203,8 @@ AC_SUBST(HAVE_ISFINITE)
 
 
 # default to gtk+-2.0 setting to 1
-GTK_HAVE_API_VERSION_2=1
-GTK_HAVE_API_VERSION_3=0
+GTK_HAVE_API_VERSION_2=0
+GTK_HAVE_API_VERSION_3=1
 GTK_HAVE_API_VERSION_4=0
 
 AC_ARG_ENABLE(gtk2,

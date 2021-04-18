@@ -32,6 +32,8 @@ gml4gtk file.dot
 gml4gtk file.gv
 
 Or see make-gtk2.sh and make-gtk3.sh scripts for the gtk2 or gtk3 versions.
+When compiled with "./configure --enable-gcc-warnings" to get more compiler
+checks a -DMEMCHECK cflag is set and in dpmem.c is extra memory check done.
 
 Because this is a gtk program it can be compiled for windows or mac osx.
 
@@ -55,6 +57,12 @@ digraph "example"
   yydebug=true;
   ...
 }
+
+The save-as-dia writes xml data usable with diagram editor dia
+for Linux and windows at http://dia-installer.de/
+
+The save-as-jgf writes json graph data with extension .jgf
+documented at https://jsongraphformat.info/
 
 To create a callgraph using gcc use gcc option -fcallgraph-info
 and the output.ci file is a vcg graph file to open with file->open vcg
@@ -138,11 +146,17 @@ Todo: dot does incremental layout for the cluster subgraphs
 and gml4gtk can do that, but need to find a way to combine
 the results in a single drawing.
 
+To generate skeleton for use with flex-2.4.6 go into it's src dir and run:
+sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' flex.skl | m4 -P -DFLEX_MAJOR_VERSION=2 -DFLEX_MINOR_VERSION=4 -DFLEX_SUBMINOR_VERSION=6 | sed 's/m4postproc_/m4_/g' > myflex.skl
+Then use flex with "flex -Smyflex.skl input.l" and now myflex.skl can be edited.
+
+The source is checked and used with clang-12 and gcc-11 compiler development version.
+
 And donations of samples of graph data to layout are needed
 or financial means to buy programming and graph books.
 
 some parts are (C) Universitaet Passau 1986-1991
-some parts are Copyright (C) 1998-2021 Free Software Foundation, Inc.
+some parts are Copyright (C) 1998-2021 Free Software Foundation, Inc. from GNU GCC
 some parts are Copyright (C) 2008, 2011 Matthias Stallmann
 some parts are Copyright (C) 2008, 2011 Saurabh Gupta
 

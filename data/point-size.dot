@@ -1,0 +1,46 @@
+/* dot language does not specify max. point size for font.
+ * gml4gtk does limit it to 255 to avoid crashes.
+ * dot allows fp humber as 10.0 when int is expected.
+ * at test it appears dot point-size has a undocumented max. of 255
+ * dot message is:
+ * Warning: POINT-SIZE value 256 > 255 - too large - ignoredin label of node h3
+ * Warning: POINT-SIZE value 2147483648 > 255 - too large - ignoredin label of node h4
+ * Warning: POINT-SIZE value 4294967296 > 255 - too large - ignoredin label of node h5
+ * gml4gtk warns but limits the value to 255 and does not ignore the labels.
+ * dphl_chk_pointsize(): limiting point-size 256 to 255 max.
+ * dphl_chk_pointsize(): limiting point-size 2147483648 to 255 max.
+ * dphl_chk_pointsize(): limiting point-size 4294967296 to 255 max.
+// this is c++ comment this way is checked for and generates lexer warning in dot.l
+ */
+digraph "point-size"
+{
+
+ /* this is oke with a int number but gml4gtk does not support yet record shapes with html label */
+ h0 [shape=record label=<<font color="blue" point-size="28">point-size="28"</font><br/>0>];
+
+ /* this is oke with a int number */
+ h1 [label=<<font color="blue" point-size="8">point-size="8"</font><br/>1>];
+
+ /* this is fp number when int expected */
+ h2 [label=<<font color="green" point-size="10.0">point-size="10.0"</font><br/>2>]
+
+ /* this is limited by gml4gtk but not by dot */
+ h3 [label=<<font color="red" point-size="256">point-size="256"</font><br/>3>]
+
+ /* this does overflow signed 32 bits value */
+ h4 [label=<<font color="blue" point-size="2147483648">point-size="2147483648"</font><br/>4>]
+
+ /* this does overflow unsigned 32 bits value */
+ h5 [label=<<font color="blue" point-size="4294967296">point-size="4294967296"</font><br/>5>]
+
+ h1->h0;
+ h1->h2->h3;
+ h1->h4->h5;
+
+ /* this is warned about in dot.l */
+
+ */
+
+}
+
+/* end. */

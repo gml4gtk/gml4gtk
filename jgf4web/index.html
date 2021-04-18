@@ -1,0 +1,1378 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>jgf4web</title>
+<!--
+/*
+ *  Copyright t lefering
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  These are the four essential freedoms with GNU GPL software:
+ *  1: freedom to run the program, for any purpose
+ *  2: freedom to study how the program works, and change it to make it do what you wish
+ *  3: freedom to redistribute copies to help your Free Software friends
+ *  4: freedom to distribute copies of your modified versions to your Free Software friends
+ *   ,           ,
+ *  /             \
+ * ((__-^^-,-^^-__))
+ * `-_---'  `---_-'
+ *  `--|o`   'o|--'
+ *      \  `  /
+ *       ): :(
+ *       :o_o:
+ *        "-"
+ */
+-->
+</head>
+<body>
+
+<style>
+button {
+	margin:4px;
+	cursor:pointer;
+	font-size: 70%;
+	font-family: arial;
+	margin-right: 5px;
+}
+
+body {
+	margin:0;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+}
+
+text {
+	font-weight: 300;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+	font-size: 14px;
+}
+
+.node rect {
+	stroke: #333;
+	fill: #fff;
+	stroke-width: 1.5px;
+}
+
+.edgePath path.path {
+	stroke: #333;
+	fill: none;
+	stroke-width: 1.5px;
+	opacity: 0.7
+}
+
+.arrowhead {
+	stroke: blue;
+	fill: blue;
+	stroke-width: 1.5px;
+}
+
+.label {
+	font: bold 20px verdana;
+}
+
+textarea {
+	min-height:300px;
+	width:65%;
+}
+
+input {
+	width:100%;
+}
+
+</style>
+
+<h2>jgf4web json jgf graph data layout running in the browser</h2>
+<br>
+<br>
+Enter your jgf json graph data in the text area below or try the sample buttons.<br>
+<button id="sample_1_btn" disabled>Sample 1</button>
+<button id="sample_2_btn" disabled>Sample 2</button>
+<button id="sample_3_btn" disabled>Sample 3</button>
+<button id="sample_4_btn" disabled>Sample 4</button>
+<button id="sample_5_btn" disabled>Sample 5</button>
+<button id="sample_6_btn" disabled>Sample 5</button>
+<br>
+<textarea id="graph_data" rows="20" cols="80" width="100%" wrap="on">
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "FParsec.CharParsers": {
+        "label": "FParsec.CharParsers",
+        "metadata": {
+        }
+      },
+      "FParsec.Error": {
+        "label": "FParsec.Error",
+        "metadata": {
+        }
+      },
+      "FParsec.Primitives": {
+        "label": "FParsec.Primitives",
+        "metadata": {
+        }
+      },
+      "FParsec.StaticMapping": {
+        "label": "FParsec.StaticMapping",
+        "metadata": {
+        }
+      },
+      "FParsec.InternalsModule": {
+        "label": "FParsec.InternalsModule",
+        "metadata": {
+        }
+      },
+      "FParsec.RangeModule": {
+        "label": "FParsec.RangeModule",
+        "metadata": {
+        }
+      },
+      "FParsec.Range": {
+        "label": "FParsec.Range",
+        "metadata": {
+        }
+      },
+      "FParsec.Emit": {
+        "label": "FParsec.Emit",
+        "metadata": {
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "FParsec.CharParsers",
+        "target": "FParsec.Error"
+      },
+      {
+        "source": "FParsec.CharParsers",
+        "target": "FParsec.Primitives"
+      },
+      {
+        "source": "FParsec.CharParsers",
+        "target": "FParsec.StaticMapping"
+      },
+      {
+        "source": "FParsec.Error",
+        "target": "FParsec.InternalsModule"
+      },
+      {
+        "source": "FParsec.Primitives",
+        "target": "FParsec.Error"
+      },
+      {
+        "source": "FParsec.RangeModule",
+        "target": "FParsec.Range"
+      },
+      {
+        "source": "FParsec.StaticMapping",
+        "target": "FParsec.Emit"
+      },
+      {
+        "source": "FParsec.StaticMapping",
+        "target": "FParsec.Range"
+      },
+      {
+        "source": "FParsec.StaticMapping",
+        "target": "FParsec.RangeModule"
+      }
+    ],
+    "metadata": {}
+  }
+}
+
+</textarea><br>
+
+<p>
+
+<button id="generate_btn" style="font-size: 100%">Generate Graph layout</button>
+
+</p>
+
+<!-- this is the max (x,y) size of the generated svg -->
+<svg id="svg" width="10" height="10"></svg>
+
+<script language="javascript" type="text/javascript" src="jquery-3.6.0.js"> </script>
+<script language="javascript" type="text/javascript" src="d3.js"> </script>
+<script language="javascript" type="text/javascript" src="dagre-d3.js"> </script>
+<script language="javascript" type="text/javascript" src="site.js"> </script>
+
+<script type="bogus" id="sample1_text">
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "0": {
+        "label": "Washington CDC",
+        "metadata": {
+        }
+      },
+      "1": {
+        "label": "New York",
+        "metadata": {
+        }
+      },
+      "2": {
+        "label": "Atlanta",
+        "metadata": {
+        }
+      },
+      "3": {
+        "label": "Miami",
+        "metadata": {
+        }
+      },
+      "4": {
+        "label": "Boston",
+        "metadata": {
+        }
+      },
+      "5": {
+        "label": "London",
+        "metadata": {
+        }
+      },
+      "6": {
+        "label": "Philadelphia",
+        "metadata": {
+        }
+      },
+      "7": {
+        "label": "Baltimore",
+        "metadata": {
+        }
+      },
+      "8": {
+        "label": "Amsterdam",
+        "metadata": {
+        }
+      },
+      "9": {
+        "label": "Frankfurt",
+        "metadata": {
+        }
+      },
+      "10": {
+        "label": "Houston",
+        "metadata": {
+        }
+      },
+      "11": {
+        "label": "None",
+        "metadata": {
+        }
+      },
+      "12": {
+        "label": "Paris",
+        "metadata": {
+        }
+      },
+      "13": {
+        "label": "Dallas",
+        "metadata": {
+        }
+      },
+      "14": {
+        "label": "Austin",
+        "metadata": {
+        }
+      },
+      "15": {
+        "label": "Seattle",
+        "metadata": {
+        }
+      },
+      "16": {
+        "label": "Portland",
+        "metadata": {
+        }
+      },
+      "17": {
+        "label": "Tokyo",
+        "metadata": {
+        }
+      },
+      "18": {
+        "label": "San Francisco",
+        "metadata": {
+        }
+      },
+      "19": {
+        "label": "Los Angeles",
+        "metadata": {
+        }
+      },
+      "20": {
+        "label": "Phoenix",
+        "metadata": {
+        }
+      },
+      "21": {
+        "label": "Denver",
+        "metadata": {
+        }
+      },
+      "22": {
+        "label": "Chicago",
+        "metadata": {
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "0",
+        "target": "2"
+      },
+      {
+        "source": "0",
+        "target": "4"
+      },
+      {
+        "source": "0",
+        "target": "5"
+      },
+      {
+        "source": "0",
+        "target": "7"
+      },
+      {
+        "source": "1",
+        "target": "8"
+      },
+      {
+        "source": "1",
+        "target": "6"
+      },
+      {
+        "source": "1",
+        "target": "4"
+      },
+      {
+        "source": "1",
+        "target": "5"
+      },
+      {
+        "source": "1",
+        "target": "22"
+      },
+      {
+        "source": "2",
+        "target": "10"
+      },
+      {
+        "source": "2",
+        "target": "3"
+      },
+      {
+        "source": "3",
+        "target": "10"
+      },
+      {
+        "source": "5",
+        "target": "12"
+      },
+      {
+        "source": "5",
+        "target": "8"
+      },
+      {
+        "source": "6",
+        "target": "7"
+      },
+      {
+        "source": "8",
+        "target": "9"
+      },
+      {
+        "source": "9",
+        "target": "12"
+      },
+      {
+        "source": "10",
+        "target": "20"
+      },
+      {
+        "source": "10",
+        "target": "13"
+      },
+      {
+        "source": "10",
+        "target": "14"
+      },
+      {
+        "source": "11",
+        "target": "13"
+      },
+      {
+        "source": "11",
+        "target": "22"
+      },
+      {
+        "source": "11",
+        "target": "21"
+      },
+      {
+        "source": "13",
+        "target": "14"
+      },
+      {
+        "source": "15",
+        "target": "16"
+      },
+      {
+        "source": "15",
+        "target": "22"
+      },
+      {
+        "source": "16",
+        "target": "18"
+      },
+      {
+        "source": "17",
+        "target": "18"
+      },
+      {
+        "source": "18",
+        "target": "19"
+      },
+      {
+        "source": "18",
+        "target": "21"
+      },
+      {
+        "source": "19",
+        "target": "20"
+      }
+    ],
+    "metadata": {}
+  }
+}
+</script>
+
+
+<script type="bogus" id="sample2_text">
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "apt-rdepends": {
+        "label": "apt-rdepends",
+        "metadata": {
+        }
+      },
+      "libapt-pkg-perl": {
+        "label": "libapt-pkg-perl",
+        "metadata": {
+        }
+      },
+      "perl": {
+        "label": "perl",
+        "metadata": {
+        }
+      },
+      "libapt-pkg4.12": {
+        "label": "libapt-pkg4.12",
+        "metadata": {
+        }
+      },
+      "libc6": {
+        "label": "libc6",
+        "metadata": {
+        }
+      },
+      "libgcc1": {
+        "label": "libgcc1",
+        "metadata": {
+        }
+      },
+      "libstdc++6": {
+        "label": "libstdc++6",
+        "metadata": {
+        }
+      },
+      "perl-base": {
+        "label": "perl-base",
+        "metadata": {
+        }
+      },
+      "perlapi-5.20.0": {
+        "label": "perlapi-5.20.0",
+        "metadata": {
+        }
+      },
+      "libbz2-1.0": {
+        "label": "libbz2-1.0",
+        "metadata": {
+        }
+      },
+      "liblzma5": {
+        "label": "liblzma5",
+        "metadata": {
+        }
+      },
+      "zlib1g": {
+        "label": "zlib1g",
+        "metadata": {
+        }
+      },
+      "multiarch-support": {
+        "label": "multiarch-support",
+        "metadata": {
+        }
+      },
+      "gcc-4.9-base": {
+        "label": "gcc-4.9-base",
+        "metadata": {
+        }
+      },
+      "dpkg": {
+        "label": "dpkg",
+        "metadata": {
+        }
+      },
+      "libselinux1": {
+        "label": "libselinux1",
+        "metadata": {
+        }
+      },
+      "tar": {
+        "label": "tar",
+        "metadata": {
+        }
+      },
+      "libpcre3": {
+        "label": "libpcre3",
+        "metadata": {
+        }
+      },
+      "libacl1": {
+        "label": "libacl1",
+        "metadata": {
+        }
+      },
+      "libattr1": {
+        "label": "libattr1",
+        "metadata": {
+        }
+      },
+      "libdb5.3": {
+        "label": "libdb5.3",
+        "metadata": {
+        }
+      },
+      "libgdbm3": {
+        "label": "libgdbm3",
+        "metadata": {
+        }
+      },
+      "perl-modules": {
+        "label": "perl-modules",
+        "metadata": {
+        }
+      },
+      "install-info": {
+        "label": "install-info",
+        "metadata": {
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "apt-rdepends",
+        "target": "libapt-pkg-perl"
+      },
+      {
+        "source": "apt-rdepends",
+        "target": "perl"
+      },
+      {
+        "source": "libapt-pkg-perl",
+        "target": "libapt-pkg4.12"
+      },
+      {
+        "source": "libapt-pkg-perl",
+        "target": "libc6"
+      },
+      {
+        "source": "libapt-pkg-perl",
+        "target": "libgcc1"
+      },
+      {
+        "source": "libapt-pkg-perl",
+        "target": "libstdc++6"
+      },
+      {
+        "source": "libapt-pkg-perl",
+        "target": "perl-base"
+      },
+      {
+        "source": "libapt-pkg-perl",
+        "target": "perlapi-5.20.0"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "libbz2-1.0"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "libc6"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "libgcc1"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "liblzma5"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "libstdc++6"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "zlib1g"
+      },
+      {
+        "source": "libapt-pkg4.12",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "libbz2-1.0",
+        "target": "libc6"
+      },
+      {
+        "source": "libbz2-1.0",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "libc6",
+        "target": "libgcc1"
+      },
+      {
+        "source": "libgcc1",
+        "target": "gcc-4.9-base"
+      },
+      {
+        "source": "libgcc1",
+        "target": "libc6"
+      },
+      {
+        "source": "libgcc1",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "multiarch-support",
+        "target": "libc6"
+      },
+      {
+        "source": "liblzma5",
+        "target": "libc6"
+      },
+      {
+        "source": "liblzma5",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "libstdc++6",
+        "target": "gcc-4.9-base"
+      },
+      {
+        "source": "libstdc++6",
+        "target": "libc6"
+      },
+      {
+        "source": "libstdc++6",
+        "target": "libgcc1"
+      },
+      {
+        "source": "libstdc++6",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "zlib1g",
+        "target": "libc6"
+      },
+      {
+        "source": "zlib1g",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "perl-base",
+        "target": "dpkg"
+      },
+      {
+        "source": "perl-base",
+        "target": "libc6"
+      },
+      {
+        "source": "dpkg",
+        "target": "libbz2-1.0"
+      },
+      {
+        "source": "dpkg",
+        "target": "libc6"
+      },
+      {
+        "source": "dpkg",
+        "target": "liblzma5"
+      },
+      {
+        "source": "dpkg",
+        "target": "libselinux1"
+      },
+      {
+        "source": "dpkg",
+        "target": "tar"
+      },
+      {
+        "source": "dpkg",
+        "target": "zlib1g"
+      },
+      {
+        "source": "libselinux1",
+        "target": "libc6"
+      },
+      {
+        "source": "libselinux1",
+        "target": "libpcre3"
+      },
+      {
+        "source": "libselinux1",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "libpcre3",
+        "target": "libc6"
+      },
+      {
+        "source": "libpcre3",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "tar",
+        "target": "libacl1"
+      },
+      {
+        "source": "tar",
+        "target": "libc6"
+      },
+      {
+        "source": "tar",
+        "target": "libselinux1"
+      },
+      {
+        "source": "libacl1",
+        "target": "libattr1"
+      },
+      {
+        "source": "libacl1",
+        "target": "libc6"
+      },
+      {
+        "source": "libacl1",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "libattr1",
+        "target": "libc6"
+      },
+      {
+        "source": "libattr1",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "perl",
+        "target": "libbz2-1.0"
+      },
+      {
+        "source": "perl",
+        "target": "libc6"
+      },
+      {
+        "source": "perl",
+        "target": "libdb5.3"
+      },
+      {
+        "source": "perl",
+        "target": "libgdbm3"
+      },
+      {
+        "source": "perl",
+        "target": "perl-base"
+      },
+      {
+        "source": "perl",
+        "target": "perl-modules"
+      },
+      {
+        "source": "perl",
+        "target": "zlib1g"
+      },
+      {
+        "source": "perl",
+        "target": "dpkg"
+      },
+      {
+        "source": "libdb5.3",
+        "target": "libc6"
+      },
+      {
+        "source": "libdb5.3",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "libgdbm3",
+        "target": "dpkg"
+      },
+      {
+        "source": "libgdbm3",
+        "target": "install-info"
+      },
+      {
+        "source": "libgdbm3",
+        "target": "libc6"
+      },
+      {
+        "source": "libgdbm3",
+        "target": "multiarch-support"
+      },
+      {
+        "source": "install-info",
+        "target": "libc6"
+      },
+      {
+        "source": "install-info",
+        "target": "dpkg"
+      },
+      {
+        "source": "perl-modules",
+        "target": "perl-base"
+      },
+      {
+        "source": "perl-modules",
+        "target": "dpkg"
+      }
+    ],
+    "metadata": {}
+  }
+}
+</script>
+
+
+<script type="bogus" id="sample3_text">
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "1": {
+        "label": "♈",
+        "metadata": {
+        }
+      },
+      "2": {
+        "label": "♿",
+        "metadata": {
+        }
+      },
+      "3": {
+        "label": "☔ ",
+        "metadata": {
+        }
+      },
+      "4": {
+        "label": "⛲",
+        "metadata": {
+        }
+      },
+      "5": {
+        "label": "✋",
+        "metadata": {
+        }
+      },
+      "6": {
+        "label": "☕",
+        "metadata": {
+        }
+      },
+      "7": {
+        "label": "⛳",
+        "metadata": {
+        }
+      },
+      "8": {
+        "label": " ♓",
+        "metadata": {
+        }
+      },
+      "9": {
+        "label": "😄",
+        "metadata": {
+        }
+      },
+      "10": {
+        "label": "👽",
+        "metadata": {
+        }
+      },
+      "11": {
+        "label": "💿",
+        "metadata": {
+        }
+      },
+      "a": {
+        "label": "a",
+        "metadata": {
+        }
+      },
+      "b": {
+        "label": "b",
+        "metadata": {
+        }
+      },
+      "c": {
+        "label": "c",
+        "metadata": {
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "a",
+        "target": "b"
+      },
+      {
+        "source": "b",
+        "target": "c"
+      },
+      {
+        "source": "1",
+        "target": "2"
+      },
+      {
+        "source": "1",
+        "target": "3"
+      },
+      {
+        "source": "1",
+        "target": "4"
+      },
+      {
+        "source": "1",
+        "target": "5"
+      },
+      {
+        "source": "1",
+        "target": "10"
+      },
+      {
+        "source": "10",
+        "target": "11"
+      },
+      {
+        "source": "3",
+        "target": "6"
+      },
+      {
+        "source": "3",
+        "target": "7"
+      },
+      {
+        "source": "5",
+        "target": "8"
+      },
+      {
+        "source": "5",
+        "target": "9"
+      }
+    ],
+    "metadata": {}
+  }
+}
+</script>
+
+<script type="bogus" id="sample4_text">
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "Leptodora": {
+        "label": "Leptodora",
+        "metadata": {
+        }
+      },
+      "Heterocope": {
+        "label": "Heterocope",
+        "metadata": {
+        }
+      },
+      "Diapomus": {
+        "label": "Diapomus",
+        "metadata": {
+        }
+      },
+      "Eurytemora": {
+        "label": "Eurytemora",
+        "metadata": {
+        }
+      },
+      "Bosmina": {
+        "label": "Bosmina",
+        "metadata": {
+        }
+      },
+      "Daphnia": {
+        "label": "Daphnia",
+        "metadata": {
+        }
+      },
+      "Sikloja": {
+        "label": "Sikloja",
+        "metadata": {
+        }
+      },
+      "Gos": {
+        "label": "Gos",
+        "metadata": {
+        }
+      },
+      "Nors": {
+        "label": "Nors",
+        "metadata": {
+        }
+      },
+      "Lax": {
+        "label": "Lax",
+        "metadata": {
+        }
+      },
+      "Cyclops": {
+        "label": "Cyclops",
+        "metadata": {
+        }
+      },
+      "Bythotrephes": {
+        "label": "Bythotrephes",
+        "metadata": {
+        }
+      },
+      "Sik": {
+        "label": "Sik",
+        "metadata": {
+        }
+      },
+      "UNKNOWN": {
+        "label": "UNKNOWN",
+        "metadata": {
+        }
+      },
+      "Mort": {
+        "label": "Mort",
+        "metadata": {
+        }
+      },
+      "Pontoporeia": {
+        "label": "Pontoporeia",
+        "metadata": {
+        }
+      },
+      "Algae": {
+        "label": "Algae",
+        "metadata": {
+        }
+      },
+      "Gers": {
+        "label": "Gers",
+        "metadata": {
+        }
+      },
+      "Chironomidae": {
+        "label": "Chironomidae",
+        "metadata": {
+        }
+      },
+      "Pallasea": {
+        "label": "Pallasea",
+        "metadata": {
+        }
+      },
+      "Gammaracanthus": {
+        "label": "Gammaracanthus",
+        "metadata": {
+        }
+      },
+      "Braxen": {
+        "label": "Braxen",
+        "metadata": {
+        }
+      },
+      "Lake": {
+        "label": "Lake",
+        "metadata": {
+        }
+      },
+      "Oligochaeta": {
+        "label": "Oligochaeta",
+        "metadata": {
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "Leptodora",
+        "target": "Nors"
+      },
+      {
+        "source": "Heterocope",
+        "target": "Sikloja"
+      },
+      {
+        "source": "Heterocope",
+        "target": "Nors"
+      },
+      {
+        "source": "Diapomus",
+        "target": "Sikloja"
+      },
+      {
+        "source": "Eurytemora",
+        "target": "Sikloja"
+      },
+      {
+        "source": "Bosmina",
+        "target": "Sikloja"
+      },
+      {
+        "source": "Daphnia",
+        "target": "Sikloja"
+      },
+      {
+        "source": "Bythotrephes",
+        "target": "Sikloja"
+      },
+      {
+        "source": "Sikloja",
+        "target": "Gos"
+      },
+      {
+        "source": "Sikloja",
+        "target": "Lax"
+      },
+      {
+        "source": "Nors",
+        "target": "Gos"
+      },
+      {
+        "source": "Nors",
+        "target": "Lax"
+      },
+      {
+        "source": "Bythotrephes",
+        "target": "Mort"
+      },
+      {
+        "source": "Bythotrephes",
+        "target": "Nors"
+      },
+      {
+        "source": "UNKNOWN",
+        "target": "Nors"
+      },
+      {
+        "source": "Bythotrephes",
+        "target": "Sik"
+      },
+      {
+        "source": "Chironomidae",
+        "target": "Sik"
+      },
+      {
+        "source": "Pontoporeia",
+        "target": "Sik"
+      },
+      {
+        "source": "Pontoporeia",
+        "target": "Gers"
+      },
+      {
+        "source": "Chironomidae",
+        "target": "Gers"
+      },
+      {
+        "source": "Chironomidae",
+        "target": "Braxen"
+      },
+      {
+        "source": "Pallasea",
+        "target": "Nors"
+      },
+      {
+        "source": "Pallasea",
+        "target": "Lake"
+      },
+      {
+        "source": "Pallasea",
+        "target": "Gers"
+      },
+      {
+        "source": "Pallasea",
+        "target": "Braxen"
+      },
+      {
+        "source": "Algae",
+        "target": "Braxen"
+      },
+      {
+        "source": "Oligochaeta",
+        "target": "Braxen"
+      },
+      {
+        "source": "Gammaracanthus",
+        "target": "Nors"
+      },
+      {
+        "source": "Gammaracanthus",
+        "target": "Lake"
+      },
+      {
+        "source": "Cyclops",
+        "target": "Sik"
+      },
+      {
+        "source": "UNKNOWN",
+        "target": "Lake"
+      },
+      {
+        "source": "Gers",
+        "target": "Lake"
+      },
+      {
+        "source": "Nors",
+        "target": "Lake"
+      }
+    ],
+    "metadata": {}
+  }
+}
+</script>
+
+<script type="bogus" id="sample5_text">
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "0": {
+        "label": "n0",
+        "metadata": {
+        }
+      },
+      "1": {
+        "label": "n1",
+        "metadata": {
+        }
+      },
+      "2": {
+        "label": "n2",
+        "metadata": {
+        }
+      },
+      "3": {
+        "label": "n3",
+        "metadata": {
+        }
+      },
+      "4": {
+        "label": "n4",
+        "metadata": {
+        }
+      },
+      "5": {
+        "label": "n5",
+        "metadata": {
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "4",
+        "target": "0"
+      },
+      {
+        "label": "foo",
+        "source": "0",
+        "target": "1"
+      },
+      {
+        "source": "1",
+        "target": "2"
+      },
+      {
+        "source": "2",
+        "target": "3"
+      },
+      {
+        "source": "3",
+        "target": "0"
+      },
+      {
+        "source": "3",
+        "target": "0"
+      },
+      {
+        "source": "5",
+        "target": "0"
+      }
+    ],
+    "metadata": {}
+  }
+}
+</script>
+
+<script type="bogus" id="sample6_text">
+{
+  "graph": {
+    "nodes": {
+      "0":{},
+      "1":{}
+    },
+    "edges": [
+      {
+        "source": "0",
+        "target": "1"
+      }
+    ],
+    "metadata": {}
+  }
+}
+</script>
+<br>
+See also <a href="https://graphviewer.nl">graphviewer.nl</a>
+
+</body>
+
+</html>
+
