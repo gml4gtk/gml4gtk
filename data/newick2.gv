@@ -1,0 +1,24 @@
+/*
+The Newick tree format is a way of representing graph-theoretical trees
+with edge length using parentheses and commas.
+https://github.com/IAL32/Newick-To-DOT
+(A:0.1,B:0.2,(C:0.3,D:0.4):0.5);
+*/
+graph {
+    rankdir=LR;
+    splines=line;
+    node [shape=none]
+    "d8a2fd" [shape="point"];
+    "333740" [shape="point"];
+    "d8a2fd" -- "333740" [shape="point"];
+    "2dc477" [label="A"];
+    "333740" -- "2dc477" ;
+    "ac10d6" [label="B"];
+    "333740" -- "ac10d6" ;
+    "360377" [shape="point"];
+    "333740" -- "360377" ;
+    "c07b3f" [label="C"];
+    "360377" -- "c07b3f" ;
+    "e008f6" [label="D"];
+    "360377" -- "e008f6" ;
+}

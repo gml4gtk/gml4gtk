@@ -40,6 +40,28 @@ AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE
 
+AC_COPYRIGHT([
+# /*
+#  *  This program is free software: you can redistribute it and/or modify
+#  *  it under the terms of the GNU General Public License as published by
+#  *  the Free Software Foundation, either version 3 of the License, or
+#  *  (at your option) any later version.
+#  *
+#  *  This program is distributed in the hope that it will be useful,
+#  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  *  GNU General Public License for more details.
+#  *
+#  *  You should have received a copy of the GNU General Public License
+#  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#  *
+#  * SPDX-License-Identifier: GPL-3.0+
+#  * License-Filename: LICENSE
+#  *
+#  */
+])
+
+AC_LANG(C)
 
 # Checks for programs.
 AC_PROG_CC
@@ -56,7 +78,10 @@ AC_PROG_MAKE_SET
 # using -fno-inline when testing with valgrind
 #CFLAGS="$CFLAGS -g -std=c99 -fno-builtin-memset -DFORTIFY_SOURCE=2"
 #CFLAGS="$CFLAGS -g -std=c99 -O0"
-CFLAGS="-g -std=c99 -O2 "
+# asm output: -S -fverbose-asm
+# asm output: -Wa,-adhln=test-O3.s -g -fverbose-asm -masm=intel
+# asm output: -fverbose-asm -save-temps=obj
+CFLAGS="$CFLAGS -g -std=c99 "
 
 # Gcc compiler options
 # the option -frecord-gcc-switches puts the compiler options
@@ -77,6 +102,8 @@ CFLAGS="$ac_save_CFLAGS"])
 # the fortify -D option needs optimizing, cannot use -O0 then.
 # for debug with gdb the -O0 is needed or it cannot find crashes.
 # prints gcc settings and include files and is very verbose
+# when extra warnings are enabled then -DMEMCHECK is set
+# extra code in dpmem.c starts checking for memory leaks.
 # GCC_COMPILER_WARNING(--verbose)
 # GCC_COMPILER_WARNING(-H)
 AC_ARG_ENABLE(gcc-warnings,
@@ -123,6 +150,8 @@ if test "${enableval}" = yes; then
   GCC_COMPILER_WARNING(-Woverride-init-side-effects)
   GCC_COMPILER_WARNING(-Wunused-const-variable)
   GCC_COMPILER_WARNING(-Wframe-address)
+  GCC_COMPILER_WARNING(-ftrack-macro-expansion=1)
+  GCC_COMPILER_WARNING(-DMEMCHECK)
 else
   WARNING_CFLAGS=
   GCC_COMPILER_WARNING(-Wall)
@@ -147,6 +176,7 @@ fi
 #  GCC_COMPILER_WARNING(-fdump-ipa-all-graph)
 #  GCC_COMPILER_WARNING(-fcallgraph-info)
 
+#? AC_INCLUDE_DEFAULTS([stdio.h math.h])
 
 # Checks for libraries.
 AC_CHECK_LIB([m], [sqrt])
@@ -169,7 +199,7 @@ AC_CHECK_HEADER([math.h],
   AC_SEARCH_LIBS([cos],[m],[have_libm=yes],
     AC_CHECK_LIB([m],[cos],[have_libm=yes])))
 if test x"${have_libm}" != xyes; then
-   AC_MSG_FAILURE([ERROR: Please install Math libraries and math.h include files for libm],[1])
+   AC_MSG_FAILURE([gml4gtk-configure.ac-ERROR: Please install Math libraries and math.h include files for libm],[1])
 fi
 
 #-------------------------------------------
@@ -320,6 +350,36 @@ if test "$prefer_gtk2" = "no" && test "$gtk_version" = "none" ; then
     )
 fi
 
+dnl Detect Win32 compiler
+AC_MSG_CHECKING([for some Win32 platform])
+case "$host" in
+  *-*-mingw*|*-*-cygwin*)
+    platform_win32=yes
+    HAVE_PLATFORM_WIN32=1
+    ;;
+  *)
+    platform_win32=no
+    HAVE_PLATFORM_WIN32=0
+    ;;
+esac
+AC_MSG_RESULT([$platform_win32])
+AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
+AC_SUBST([PLATFORM_WIN32])
+AC_DEFINE_UNQUOTED([PLATFORM_WIN32], [$HAVE_PLATFORM_WIN32], [using a windows compiler])
+
+# compilation date in config.h
+CONFIG_DATE=`date +"%a %x %Y"`
+
+AC_SUBST(CONFIG_DATE)
+
+AC_DEFINE_UNQUOTED(COMPILE_DATE, ["$CONFIG_DATE"], [Year, month and day this program is compiled.])
+
+# short system name in config.h
+CONFIG_UNAME=`uname -s`
+
+AC_SUBST(CONFIG_UNAME)
+
+AC_DEFINE_UNQUOTED(COMPILE_UNAME, ["$CONFIG_UNAME"], [System where this is compiled.])
 
 #
 PKG_CHECK_MODULES(GTK, gtk+-$GTK_API_VERSION >= $GTK_REQUIRED)
@@ -328,13 +388,43 @@ AC_SUBST(GTK_LIBS)
 
 # final compiler settings
 AC_SUBST(PACKAGE_CFLAGS)
-
-# final compiler settings
-AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(WARNING_CFLAGS)
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
+
+echo "                     "
+echo "                     "
+echo "                     "
+echo "   ,           ,     "
+echo "  /             \    "
+echo " ((__-^^-,-^^-__))   "
+echo " '-__- -   '--__-    "
+echo "    -O       O-      "
+echo "      \     /        "
+echo "       ): :(         "
+echo "       :o_o:         "
+echo "         -           "
+echo "                     "
+echo "                     "
+echo "                     "
+
+echo This system is `uname -a`;
+
+cat <<EOF
+
+$PACKAGE_NAME $VERSION is ready to be built.
+
+The following settings will be used:
+
+Use "make" to compile $PACKAGE_NAME $VERSION.
+
+use ./configure --with-gtk=2.0 for gtk-2
+use ./configure --with-gtk=3.0 for gtk-3
+use ./configure --with-gtk=4.0 for gtk-4
+use ./configure --enable-gcc-warnings to enable gcc warnings and checks
+
+EOF
 
 AC_MSG_NOTICE([
 
@@ -342,12 +432,15 @@ Configuration:
   Source code location	${srcdir}
   Build code location	${builddir}
   Destination prefix	${prefix}
-  Compiler		${CC}
+  C-Compiler		${CC}
   Config GTK version	"${with_gtk}"
   Config warning flags	"${WARNING_CFLAGS}"
   Config CFLAGS		"${CFLAGS}"
   Config LIBS		"${LIBS}"
   Config GTK_CFLAGS	"${GTK_CFLAGS}"
   Config GTK_LIBS	"${GTK_LIBS}"
-
+  Config PACKAGE_CFLAGS	"$PACKAGE_CFLAGS"
+  Config PLATFORM_WIN32	"$platform_win32"
+  Config COMPILE_DATE	"$CONFIG_DATE"
+  Config COMPILE_UNAME	"$CONFIG_UNAME"
 ])

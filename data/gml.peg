@@ -1,0 +1,62 @@
+# gml graph language lexer+parser to use with packcc parser generator
+%prefix "gml"
+
+%source{
+
+#include <stdio.h>
+
+static const char *dbg_str[] = { "Evaluating rule", "Matched rule", "Abandoning rule" };
+
+#define PCC_DEBUG(event, rule, level, pos, buffer, length) \
+    fprintf(stdout, "%*s%s %s @%d [%.*s]\n", (int)(level * 2), "", dbg_str[event], rule, (int)pos, (int)length,  buffer); fflush(stdout)
+
+    /* NOTE: To guarantee the output order, stderr, which can lead a race condition with stdout, is not used. */
+
+}
+
+# start of input
+file <- _ head _ 'graph' _ list _ !.
+
+head <- (pair)*
+
+list <- '[' _ some_items* _ ']' _
+
+some_items <- id list2 / pair
+
+list2 <- '[' _ some_items* _ ']' _
+
+pair <- (id string) / (id id) / (id fpnum) / (id digit)
+
+digit <- ( ('-' / '+')? [0-9]+ _ ) { printf("NUMBER=%s\n",$0); }
+
+fpnum <-  ( ('-' / '+')? [0-9]* '.' [0-9]+ (['e''E'] ('-' / '+')? [0-9]+ )?  _ ) { printf("FPNUMBER=%s\n",$0); }
+
+
+id	<- < [a-zA-Z_]+[a-zA-Z_0-9]* > _	{ printf("ID=%s\n",$0); }
+
+string	<- '"' < char* > '"'  _	{  printf("STRING=%s\n",$0);  }
+
+char	<-
+	'\\' "\""
+	/ '\\' '\\'
+	/ '\\' 'b'
+	/ '\\' 'f'
+	/ '\\' 'n'
+	/ '\\' 'r'
+	/ '\\' 't'
+	/ (!"\"" .)
+
+_	<-		(space / comment)*
+space	<-	(' ' / '\t' / endofline)
+comment	<-	'#' (!endofline .)*
+endofline	<-	( '\r\n' / '\n' / '\r' / '\n\r' )		{ }
+
+%%
+
+int main() {
+    gml_context_t *ctx = gml_create(NULL);
+    while (gml_parse(ctx, NULL)){;}
+    gml_destroy(ctx);
+    return 0;
+}
+

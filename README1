@@ -48,6 +48,9 @@ In the data directory are few sample graph files to try it.
 When the left mouse button is pressed on the drawing and held down
 the drawing can be dragged around instead of using the sliders.
 
+When the vertical distance between nodes is too much select
+position mode 3 and use the dy setting in the GTK+ user interface
+
 When the binary is renamed to gml4gtkd then debug output is generated.
 
 When "yydebug=true" is used in dot language debug output is generated.
@@ -64,12 +67,17 @@ for Linux and windows at http://dia-installer.de/
 The save-as-jgf writes json graph data with extension .jgf
 documented at https://jsongraphformat.info/
 
+The directory jgf4web has javascript to run jgf layout in the browser.
+
 To create a callgraph using gcc use gcc option -fcallgraph-info
 and the output.ci file is a vcg graph file to open with file->open vcg
 
 Some other gcc options generating dot graph are -fdump-rtl-all-graph,
 -fdump-tree-all-graph, -fdump-ipa-all-graph, -fdump-analyzer-callgraph,
 -fdump-analyzer-exploded-graph -fdump-analyzer-state-purge -fdump-analyzer-supergraph
+
+The save-as-svg image output allows generation of big images which
+can be used with firefox browser, inkscape or gimp without problems.
 
 The file sfg.c is a single file graph layout library with the user api
 described in sfg.h and there is a python, php interface possible with
@@ -97,6 +105,13 @@ The gml4gtk.exe program is checked to be virus free.
 
 To compile gml4gtk on windows it needs the mingw compiler and gtk+ runtime and gtk+ development files.
 
+There is mingw compiler but also alternative which has newest gcc 11 version at
+https://github.com/skeeto/w64devkit
+
+and the releases are at
+https://github.com/skeeto/w64devkit/releases
+
+ 
 This are the needed dll's to run this gml4gtk.exe gtk+3 program:
 libatk-1.0-0.dll
 libcairo-2.dll
@@ -144,7 +159,11 @@ Use for example "graph barycenter" as search.
 
 Todo: dot does incremental layout for the cluster subgraphs
 and gml4gtk can do that, but need to find a way to combine
-the results in a single drawing.
+the results in a single drawing. The problem is that when
+edges go from one part to inside of another part the edge
+is constructed using dummy nodes and lines between them then
+extra dummy nodes must be added to the part which may change
+the layout of that part.
 
 To generate skeleton for use with flex-2.4.6 go into it's src dir and run:
 sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' flex.skl | m4 -P -DFLEX_MAJOR_VERSION=2 -DFLEX_MINOR_VERSION=4 -DFLEX_SUBMINOR_VERSION=6 | sed 's/m4postproc_/m4_/g' > myflex.skl
