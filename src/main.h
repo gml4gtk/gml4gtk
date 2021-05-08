@@ -171,6 +171,7 @@ struct gml_node {
 	int ncolor;		/* r/g/b fill color of node */
 	int nbcolor;		/* r/g/b border color of node */
 	int fontcolor;		/* r/g/b color of label text */
+	int secolor;		/* r/g/b fill color of self-edge at node if any */
 	int indegree;		/* incoming edges to node */
 	int outdegree;		/* outgoing edges from node */
 	struct gml_node *el_fnode;	/* in edge-label the from-node */
@@ -250,6 +251,8 @@ struct gml_hitem {
 	int fontsize;		/* optional pointsize */
 	int fontcolor;		/* optional color of text */
 	int ncolor;		/* optional background color from <td> or <table> */
+	int txsizemin;		/* min. text x size of all lines */
+	int tysizemin;		/* min. text y size of all lines */
 	int txsize;		/* text x size of all lines */
 	int tysize;		/* text y size of all lines */
 	int txoff;		/* text x offset in 1 line */
@@ -270,7 +273,7 @@ struct gml_hitem {
 
 		unsigned int vr:1;	/* set if str is a <vr> token */
 		unsigned int b:1;	/* set if str is <b> bold */
-		unsigned int bit12:1;
+		unsigned int table:1;	/* set if a <table> not string */
 		unsigned int bit13:1;
 		unsigned int bit14:1;
 		unsigned int bit15:1;
@@ -293,6 +296,8 @@ struct gml_hitem {
 		unsigned int bit30:1;
 		unsigned int bit31:1;
 	} bitflags;
+	struct gml_titem *rootedon;	/* item is part of <table> */
+	struct gml_titem *table;	/* item is a <table> */
 };
 
 /* list with text items in html string */
@@ -305,6 +310,27 @@ struct gml_hilist {
 struct gml_tditem {
 	struct gml_hilist *il;	/* list of text items */
 	struct gml_hilist *ilend;
+	struct gml_titem *rootedon;	/* <td> is part of <table> */
+	/* data from input */
+	int bgcolor;		/* ="colorname" */
+	int border;		/* ="int-value" */
+	int cellpadding;	/* ="int-value" */
+	int cellspacing;	/* ="int-value" */
+	int color;		/* ="colorname" */
+	int colspan;		/* ="int-value" */
+	int height;		/* ="int-value" */
+	int rowspan;		/* ="int-value" */
+	int width;		/* ="int-value" */
+	/* */
+	int xsize;		/* x size of <td> at col <tr> */
+	int ysize;		/* y size of <td> at col <tr> */
+	int xsizemin;		/* min. x size of <td> at col <tr> */
+	int ysizemin;		/* min. y size of <td> at col <tr> */
+	int xstep;		/* x step size for this <td> */
+	int ystep;		/* y step size for this <td> */
+	/* */
+	int istab;		/* set if <td> is a <table> */
+	int dummy;		/* set if <td> is dummy to fill the table */
 	struct gml_tditem *next;
 };
 
@@ -312,6 +338,12 @@ struct gml_tditem {
 struct gml_tritem {
 	struct gml_tditem *tdi;
 	struct gml_tditem *tdiend;
+	struct gml_titem *rootedon;	/* <tr> is part of <table> */
+	/* data of <tr> */
+	int numtd;		/* number of <td> statements in this <tr> */
+	/* placement data */
+	int ysize;		/* y size of this <tr> for the <td> elements */
+	int hastab;		/* set if <tr> has a <td> with <table> data */
 };
 
 /* list with <tr> items */
@@ -326,8 +358,26 @@ struct gml_titem {
 	struct gml_htlist *tlend;
 	struct gml_tritemlist *tr;	/* list of <tr> items in this table */
 	struct gml_tritemlist *trend;
-	/* table data */
+	/* data of table */
+	int xoff;		/* x offset */
+	int yoff;		/* y offset */
+	int txsize;		/* x size of table */
+	int tysize;		/* y size of table */
+	int txsizemin;		/* min. x size of table */
+	int tysizemin;		/* min. y size of table */
+	int numtr;		/* number of <tr> statements */
+	int numtd;		/* number of <td> needed in table */
+	int ncols;		/* number of columns x */
+	int nrows;		/* number of rows y */
+	int sizeset;		/* set if min. size is known */
+	/* input table data */
 	int bgcolor;		/* background color */
+	int color;		/* fontcolor */
+	int cellborder;		/* ="int-value" */
+	int cellpadding;	/* ="int-value" */
+	int cellspacing;	/* ="int-value" */
+	int height;		/* ="int-value" */
+	int width;		/* ="int-value" */
 };
 
 /* list with table elements in html string */
@@ -341,7 +391,7 @@ struct gml_hl {
 	int mode;		/* 0=items, 1=tables */
 	struct gml_hilist *il;	/* list of text items */
 	struct gml_hilist *ilend;
-	struct gml_htlist *tl;	/* list of table items */
+	struct gml_htlist *tl;	/* list of <table> items */
 	struct gml_htlist *tlend;
 };
 

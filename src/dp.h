@@ -508,6 +508,8 @@ struct dpnode {
 	double sortv;		/* (int) packing */
 	char *vertices;		/* coords polygon */
 	char *url;		/* url of node */
+	int indegree;		/* number of incoming edges */
+	int outdegree;		/* number of outgoing edges */
 
 	struct {
 		unsigned int defbynode:1;	/* set if defined by node statement */
@@ -1067,6 +1069,7 @@ struct tabledata {
 	char *title;		/* ="string" */
 	int valign;		/* ="middle|bottom|top" */
 	int width;		/* ="int-value" */
+	struct gml_titem *alt;	/* ptr to copy */
 };
 
 /* for <td>
@@ -1122,6 +1125,7 @@ struct tddata {
 	char *title;		/* ="string" */
 	int valign;		/* ="middle|bottom|top" */
 	int width;		/* ="int-value" */
+	int istab;		/* set if <td> is a <table> */
 };
 
 /* for <img>
@@ -1169,6 +1173,7 @@ struct item {
 	int fontsize;		/* optional pointsize */
 	int fontcolor;		/* optional color of text */
 	int ncolor;		/* optional background color from <td> or <table> */
+	struct tabledata *table;	/* optional <table> if <td> is a table */
 	struct {
 		unsigned int at:1;	/* set if str has a '&' */
 		unsigned int br:1;	/* set if str is a <br/> token */
@@ -1183,7 +1188,7 @@ struct item {
 
 		unsigned int vr:1;	/* set if str is a <vr> token */
 		unsigned int b:1;	/* set if str is <b> bold */
-		unsigned int bit12:1;
+		unsigned int table:1;	/* set if a <table> not a string */
 		unsigned int bit13:1;
 		unsigned int bit14:1;
 		unsigned int bit15:1;
@@ -1213,6 +1218,7 @@ struct tableldata {
 	struct tableldata *next;
 };
 
+/* <td> */
 struct tdldata {
 	struct tddata *tdd;
 	struct tdldata *next;
@@ -1223,6 +1229,7 @@ struct trdata {
 	struct tabledata *table;	/* rooted on this table or 0 */
 	struct tdldata *td;	/* td items in tr */
 	struct tdldata *tdend;
+	int hastab;	/* set if <tr> has <td> elements with a <table> */
 	struct trdata *next;
 };
 
@@ -1289,7 +1296,7 @@ extern void dp_atype_edge(void);
 extern void dp_atype_graphdef(void);
 extern void dp_atype_nodedef(void);
 extern void dp_atype_edgedef(void);
-extern void dp_aset(char *l, char *r);
+extern void dp_aset(char *l, char *r, int ishtml);
 extern void dp_mknode0(char *name);
 extern void dp_cke(char *edgedir);
 extern struct dpepoint *dp_mknid(char *name, char *port, char *compass);

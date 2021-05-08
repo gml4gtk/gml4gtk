@@ -38,13 +38,13 @@
 
 /* memory usage wrapping feature */
 #ifndef YYFREE
-# define YYFREE dp_free
+# define YYFREE free
 #endif
 #ifndef YYMALLOC
-# define YYMALLOC dp_malloc
+# define YYMALLOC malloc
 #endif
 #ifndef YYREALLOC
-# define YYREALLOC dp_realloc
+# define YYREALLOC realloc
 #endif
 
 /* utf8 code at start if 1 */
@@ -81,30 +81,31 @@ static void yyerror (const char *msg)
 
 %verbose
 
-%token TOKEN_BRACEOPEN /* { */
-%token TOKEN_BRACECLOSE /* } */
-%token TOKEN_PLUS /* + */
-%token TOKEN_COMMA /* , */
-%token TOKEN_COLON /* : */
-%token TOKEN_IS /* = */
-%token TOKEN_SC /* ; */
-%token TOKEN_BRACKETOPEN /* [ */
-%token TOKEN_BRACKETCLOSE /* ] */
-%token TOKEN_UTF8BOM
-%token TOKEN_STRICT
-%token TOKEN_GRAPH
-%token TOKEN_SUBGRAPH
-%token TOKEN_DIGRAPH
-%token TOKEN_NODE
-%token TOKEN_EDGE
+%token TOKEN_BRACEOPEN "{" /* { */
+%token TOKEN_BRACECLOSE "}" /* } */
+%token TOKEN_PLUS "+" /* + */
+%token TOKEN_COMMA "," /* , */
+%token TOKEN_COLON ":" /* : */
+%token TOKEN_IS "=" /* = */
+%token TOKEN_SC ";" /* ; */
+%token TOKEN_BRACKETOPEN "[" /* [ */
+%token TOKEN_BRACKETCLOSE "]" /* ] */
+%token TOKEN_UTF8BOM "utf8code"
+%token TOKEN_STRICT "strict"
+%token TOKEN_GRAPH "graph"
+%token TOKEN_SUBGRAPH "subgraph"
+%token TOKEN_DIGRAPH "digraph"
+%token TOKEN_NODE "node"
+%token TOKEN_EDGE "edge"
 
-%token <string> TOKEN_TEXT
-%token <string> TOKEN_NUM
-%token <string> TOKEN_QTEXT
-%token <string> TOKEN_HTEXT
-%token <string> TOKEN_EOP
+%token <string> TOKEN_TEXT "string"
+%token <string> TOKEN_NUM "number"
+%token <string> TOKEN_QTEXT "\"string\""
+%token <string> TOKEN_HTEXT "<html-string>"
+%token <string> TOKEN_EOP "-> or --"
 
 %type <string> text
+%type <string> htext
 %type <string> ctext
 %type <string> thename
 %type <string> thetype
@@ -136,6 +137,7 @@ thetype:
 	| TOKEN_DIGRAPH { isstrict = 0; $$ = "->"; }
 	;
 
+/* graph name can be empty */
 thename:
 	  text { $$ = $1; }
 	| /* empty */ { $$ = NULL; }
@@ -150,8 +152,12 @@ ctext:
 text:
 	  TOKEN_TEXT { $$ = $1; }
 	| TOKEN_NUM { $$ = $1; }
-	| TOKEN_HTEXT { $$ = $1; }
 	| ctext { $$ = $1; }
+	;
+
+/* <<html label text special treatement>> */
+htext:
+	  TOKEN_HTEXT { $$ = $1; }
 	;
 
 statements:
@@ -177,7 +183,7 @@ statement2:
 	  nstatement
 	| estatement
 	| astatement
-	| sstatement { dp_atype_sgraph(); } oattrib { dp_atype_graph (); }
+	| sstatement { /* $1 is not used here */ dp_free($1); dp_atype_sgraph(); } oattrib { dp_atype_graph (); }
 	;
 
 nstatement:
@@ -209,13 +215,17 @@ nid:
 	| text TOKEN_COLON text TOKEN_COLON text { $$ = dp_mknid ($1,$3,$5); }
 	;
 
+/* attribute value can be html string
+ * as in label=<<value>>
+ */
 sattr:
-	  text TOKEN_IS text  { dp_aset ($1,$3); }
+	  text TOKEN_IS text  { /* string as in "string" */ dp_aset ($1,$3,0); }
+	| text TOKEN_IS htext { /* html string as in <html-label> */ dp_aset ($1,$3,1); }
 	;
 
 sattr2:
 	  sattr
-	| text { dp_aset ($1,"true"); }
+	| text { dp_aset ($1,"true",0); }
 	;
 
 iattr:
@@ -259,8 +269,10 @@ atype:
 	| TOKEN_EDGE { dp_atype_edgedef (); }
 	;
 
+/* attribute value with detection of html style label */
 aset:
-	  text TOKEN_IS text { dp_aset ($1,$3); }
+	  text TOKEN_IS text { dp_aset ($1,$3,0); }
+	| text TOKEN_IS htext { dp_aset ($1,$3,1); }
 	;
 
 sstatement:

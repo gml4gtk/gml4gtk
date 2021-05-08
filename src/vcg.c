@@ -612,8 +612,10 @@ static void copyall(struct gml_graph *g)
 		/* uniq node number starting at 1 */
 		maingraph->nodenum++;
 		nr = maingraph->nodenum;
-		/* in vcg all nodes are located in rootgraph */
-		add_new_node(g, maingraph, nr, pvnl->nr, uniqstr(pvnl->name), uniqstr(pvnl->label), /* ncolor */ 0x00ffffff, /* nbcolor */ 0,	/* rlabel */
+		/* in vcg all nodes are located in rootgraph
+		 * use -1 for foundid then gml id check is not applied.
+		 */
+		add_new_node(g, maingraph, nr, /* pvnl->nr */ (-1), uniqstr(pvnl->name), uniqstr(pvnl->label), /* ncolor */ 0x00ffffff, /* nbcolor */ 0,	/* rlabel */
 			     NULL, /* hlabel */ NULL, /* fontcolor */ 0, /* ishtml */ 0);
 		pvnl->finalnr = nr;
 		pvnl = pvnl->next;

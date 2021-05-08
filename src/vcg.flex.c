@@ -294,6 +294,7 @@
 
 /* begin standard C headers. */
 /* %if-c-only */
+
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -304,24 +305,33 @@
 /* %endif */
 /* end standard C headers. */
 
+/* begin standard C++ headers. */
+/* %if-c++-only */
+/* %endif */
+
 /* %if-c-or-c++ */
 /* flex integer type definitions */
 
-#ifndef FLEXINT_H
-#define FLEXINT_H
+#ifndef YYFLEX_INTTYPES_DEFINED
+#define YYFLEX_INTTYPES_DEFINED
 
-/* C99 systems have <inttypes.h>. Non-C99 systems may or may not. */
-
-#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
-
-/* C99 says to define __STDC_LIMIT_MACROS before including stdint.h,
- * if you want the limit (max/min) macros for int types. 
+/* Prefer C99 integer types if available. */
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+/* Include <inttypes.h> and not <stdint.h> because Solaris 2.6 has the former
+ * and not the latter.
  */
-#ifndef __STDC_LIMIT_MACROS
-#define __STDC_LIMIT_MACROS 1
-#endif
-
 #include <inttypes.h>
+#define YYFLEX_USE_STDINT
+#else
+#if defined(_MSC_VER) && _MSC_VER >= 1600
+/* Visual C++ 2010 does not define __STDC_VERSION__ and has <stdint.h> but not
+ * <inttypes.h>.
+ */
+#include <stdint.h>
+#define YYFLEX_USE_STDINT
+#endif
+#endif
+#ifdef YYFLEX_USE_STDINT
 typedef int8_t flex_int8_t;
 typedef uint8_t flex_uint8_t;
 typedef int16_t flex_int16_t;
@@ -329,54 +339,28 @@ typedef uint16_t flex_uint16_t;
 typedef int32_t flex_int32_t;
 typedef uint32_t flex_uint32_t;
 #else
-typedef signed char flex_int8_t;
-typedef short int flex_int16_t;
-typedef int flex_int32_t;
 typedef unsigned char flex_uint8_t;
+typedef short int flex_int16_t;
 typedef unsigned short int flex_uint16_t;
+#ifdef __STDC__
+typedef signed char flex_int8_t;
+/* ISO C only requires at least 16 bits for int. */
+#include <limits.h>
+#if UINT_MAX >= 4294967295
+#define YYFLEX_INT32_DEFINED
+typedef int flex_int32_t;
 typedef unsigned int flex_uint32_t;
+#endif
+#else
+typedef char flex_int8_t;
+#endif
+#ifndef YYFLEX_INT32_DEFINED
+typedef long int flex_int32_t;
+typedef unsigned long int flex_uint32_t;
+#endif
+#endif
+#endif /* YYFLEX_INTTYPES_DEFINED */
 
-/* Limits of integral types. */
-#ifndef INT8_MIN
-#define INT8_MIN               (-128)
-#endif
-#ifndef INT16_MIN
-#define INT16_MIN              (-32767-1)
-#endif
-#ifndef INT32_MIN
-#define INT32_MIN              (-2147483647-1)
-#endif
-#ifndef INT8_MAX
-#define INT8_MAX               (127)
-#endif
-#ifndef INT16_MAX
-#define INT16_MAX              (32767)
-#endif
-#ifndef INT32_MAX
-#define INT32_MAX              (2147483647)
-#endif
-#ifndef UINT8_MAX
-#define UINT8_MAX              (255U)
-#endif
-#ifndef UINT16_MAX
-#define UINT16_MAX             (65535U)
-#endif
-#ifndef UINT32_MAX
-#define UINT32_MAX             (4294967295U)
-#endif
-
-#ifndef SIZE_MAX
-#define SIZE_MAX               (~(size_t)0)
-#endif
-
-#endif /* ! C99 */
-
-#endif /* ! FLEXINT_H */
-
-/* %endif */
-
-/* begin standard C++ headers. */
-/* %if-c++-only */
 /* %endif */
 
 /* TODO: this is always defined, so inline it */
@@ -3218,9 +3202,9 @@ extern int yy_flex_debug;
 int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[23] = { 0,
-	112, 113, 114, 115, 117, 118, 119, 120, 122, 123,
-	124, 126, 127, 128, 129, 130, 131, 132, 133, 134,
-	136, 189
+	103, 104, 105, 106, 108, 109, 110, 111, 113, 114,
+	115, 117, 118, 119, 120, 121, 122, 123, 124, 125,
+	127, 180
 };
 
 /* The intent behind this definition is that it'll catch
@@ -3299,27 +3283,21 @@ static char *tmpp = NULL;
 
 char *vcglaststring = NULL;
 
-/* own yyalloc */
-void *yyalloc(size_t n)
-{
-	return (dp_calloc(1, n));
-}
+/* own yyalloc
+ * void *yyalloc (size_t n) { return(calloc(1,n)); }
+ * void yyfree (void *ptr) { if (ptr) { free (ptr); } return; }
+ * void *yyrealloc (void *ptr, size_t n) { return (realloc(ptr,n)); }
+ */
 
-void yyfree(void *ptr)
-{
-	dp_free(ptr);
-	return;
-}
-
-void *yyrealloc(void *ptr, size_t n)
-{
-	return (dp_realloc(ptr, n));
-}
-
-#line 3422 "vcg.flex.c"
-/* use own yyalloc */
+#line 3394 "vcg.flex.c"
+#line 79 "vcg.l"
+	/* use own yyalloc
+	 * %option noyyalloc
+	 * %option noyyrealloc
+	 * %option noyyfree
+	 */
 #define YY_NO_INPUT 1
-#line 3425 "vcg.flex.c"
+#line 3402 "vcg.flex.c"
 
 #define INITIAL 0
 
@@ -3594,9 +3572,9 @@ YY_DECL {
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 110 "vcg.l"
+#line 101 "vcg.l"
 
-#line 3706 "vcg.flex.c"
+#line 3683 "vcg.flex.c"
 
 		while ( /*CONSTCOND*/ 1) {	/* loops until end-of-file is reached */
 			/* %% [8.0] yymore()-related code goes here */
@@ -3669,121 +3647,121 @@ do_action:			/* This label is used only to access EOF actions. */
 			case 1:
 /* rule 1 can match eol */
 				YY_RULE_SETUP
-#line 112 "vcg.l"
+#line 103 "vcg.l"
 				{	/* c-comment style *//* lexer does update yylineno */
 				}
 			YY_BREAK case 2:
 				YY_RULE_SETUP
-#line 113 "vcg.l"
+#line 104 "vcg.l"
 				{	/* start of c comment but no end of c comment */
 				}
 			YY_BREAK case 3:
 				YY_RULE_SETUP
-#line 114 "vcg.l"
+#line 105 "vcg.l"
 				{	/* end of c comment but no start of c comment */
 				}
 			YY_BREAK case 4:
 				YY_RULE_SETUP
-#line 115 "vcg.l"
+#line 106 "vcg.l"
 				{	/* c++ comment style *//* lexer does update yylineno */
 				}
 			YY_BREAK case 5:
 				YY_RULE_SETUP
-#line 117 "vcg.l"
+#line 108 "vcg.l"
 				{	/* skip form feed chars and spaces */
 				}
 			YY_BREAK case 6:
 				YY_RULE_SETUP
-#line 118 "vcg.l"
+#line 109 "vcg.l"
 				{	/* skip tabs */
 				}
 			YY_BREAK case 7:
 /* rule 7 can match eol */
 				YY_RULE_SETUP
-#line 119 "vcg.l"
+#line 110 "vcg.l"
 				{	/* skip new line *//* lexer does update yylineno */
 				}
 			YY_BREAK case 8:
 				YY_RULE_SETUP
-#line 120 "vcg.l"
+#line 111 "vcg.l"
 				{	/* skip carriage return */
 				}
 			YY_BREAK case 9:
 				YY_RULE_SETUP
-#line 122 "vcg.l"
+#line 113 "vcg.l"
 				{
 					return (VCG_COLON);
 				}
 			YY_BREAK case 10:
 				YY_RULE_SETUP
-#line 123 "vcg.l"
+#line 114 "vcg.l"
 				{
 					return (VCG_BO);
 				}
 			YY_BREAK case 11:
 				YY_RULE_SETUP
-#line 124 "vcg.l"
+#line 115 "vcg.l"
 				{
 					return (VCG_BC);
 				}
 			YY_BREAK case 12:
 				YY_RULE_SETUP
-#line 126 "vcg.l"
+#line 117 "vcg.l"
 				{
 					return (VCG_GRAPH);
 				}
 			YY_BREAK case 13:
 				YY_RULE_SETUP
-#line 127 "vcg.l"
+#line 118 "vcg.l"
 				{
 					return (VCG_EDGE);
 				}
 			YY_BREAK case 14:
 				YY_RULE_SETUP
-#line 128 "vcg.l"
+#line 119 "vcg.l"
 				{
 					return (VCG_ELLIPSE);
 				}
 			YY_BREAK case 15:
 				YY_RULE_SETUP
-#line 129 "vcg.l"
+#line 120 "vcg.l"
 				{
 					return (VCG_LABEL);
 				}
 			YY_BREAK case 16:
 				YY_RULE_SETUP
-#line 130 "vcg.l"
+#line 121 "vcg.l"
 				{
 					return (VCG_NODE);
 				}
 			YY_BREAK case 17:
 				YY_RULE_SETUP
-#line 131 "vcg.l"
+#line 122 "vcg.l"
 				{
 					return (VCG_SHAPE);
 				}
 			YY_BREAK case 18:
 				YY_RULE_SETUP
-#line 132 "vcg.l"
+#line 123 "vcg.l"
 				{
 					return (VCG_SOURCENAME);
 				}
 			YY_BREAK case 19:
 				YY_RULE_SETUP
-#line 133 "vcg.l"
+#line 124 "vcg.l"
 				{
 					return (VCG_TARGETNAME);
 				}
 			YY_BREAK case 20:
 				YY_RULE_SETUP
-#line 134 "vcg.l"
+#line 125 "vcg.l"
 				{
 					return (VCG_TITLE);
 				}
 			YY_BREAK case 21:
 /* rule 21 can match eol */
 				YY_RULE_SETUP
-#line 136 "vcg.l"
+#line 127 "vcg.l"
 				{
 					if (vcgleng == 2) {
 						/* string is "" */
@@ -3837,16 +3815,16 @@ do_action:			/* This label is used only to access EOF actions. */
 				}
 			YY_BREAK case 22:
 				YY_RULE_SETUP
-#line 189 "vcg.l"
+#line 180 "vcg.l"
 				{
 					return ((int)yytext[0]);
 				}
 			YY_BREAK case 23:
 				YY_RULE_SETUP
-#line 191 "vcg.l"
+#line 182 "vcg.l"
 				    ECHO;
 				YY_BREAK
-#line 3953 "vcg.flex.c"
+#line 3930 "vcg.flex.c"
 			case YY_STATE_EOF(INITIAL):
 				yyterminate();
 
@@ -3969,6 +3947,7 @@ do_action:			/* This label is used only to access EOF actions. */
 
 			default:
 				YY_FATAL_ERROR("fatal flex scanner internal error--no action found");
+				break;
 			}	/* end of action switch */
 		}		/* end of scanning one token */
 	}			/* end of user's declarations */
@@ -4357,8 +4336,10 @@ YY_BUFFER_STATE yy_create_buffer(FILE * file, int size)
 	 * we need to put in 2 end-of-buffer characters.
 	 */
 	b->yy_ch_buf = (char *)yyalloc((yy_size_t) (b->yy_buf_size + 2));
-	if (!b->yy_ch_buf)
+	if (!b->yy_ch_buf) {
+		yyfree(b);
 		YY_FATAL_ERROR("out of dynamic memory in yy_create_buffer()");
+	}
 
 	b->yy_is_our_buffer = 1;
 
@@ -4404,6 +4385,11 @@ static void yy_init_buffer(YY_BUFFER_STATE b, FILE * file)
 /* %endif */
 {
 	int oerrno = errno;
+
+	if (b == NULL) {
+		/* shouldnothappen */
+		return;
+	}
 
 	yy_flush_buffer(b);
 
@@ -4596,8 +4582,9 @@ YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size)
 		return NULL;
 
 	b = (YY_BUFFER_STATE) yyalloc(sizeof(struct yy_buffer_state));
-	if (!b)
+	if (!b) {
 		YY_FATAL_ERROR("out of dynamic memory in yy_scan_buffer()");
+	}
 
 	b->yy_buf_size = (int)(size - 2);	/* "- 2" to take care of EOB's */
 	b->yy_buf_pos = b->yy_ch_buf = base;
@@ -4660,8 +4647,10 @@ YY_BUFFER_STATE yy_scan_bytes(const char *yybytes, int _yybytes_len)
 	buf[_yybytes_len] = buf[_yybytes_len + 1] = YY_END_OF_BUFFER_CHAR;
 
 	b = yy_scan_buffer(buf, n);
-	if (!b)
+	if (!b) {
+		yyfree(buf);
 		YY_FATAL_ERROR("bad buffer in yy_scan_bytes()");
+	}
 
 	/* It's okay to grow etc. this buffer, and we should throw it
 	 * away when we're done.
@@ -4884,6 +4873,42 @@ static int yy_flex_strlen(const char *s)
 }
 #endif
 
+void *yyalloc(yy_size_t size)
+{
+	void *ret = NULL;
+	ret = calloc(1, size);
+	if (ret == NULL) {
+		/* option here to do exit (1); */
+	}
+	return (ret);
+}
+
+void *yyrealloc(void *ptr, yy_size_t size)
+{
+	void *ret = NULL;
+	/* The cast to (char *) in the following accommodates both
+	 * implementations that use char* generic pointers, and those
+	 * that use void* generic pointers.  It works with the latter
+	 * because both ANSI C and C++ allow castless assignment from
+	 * any pointer type to void*, and deal with argument conversions
+	 * as though doing an assignment.
+	 */
+	ret = realloc(ptr, size);
+	if (size) {
+		if (ret == NULL) {
+			/* option here to do exit (1); */
+		}
+	}
+	return (ret);
+}
+
+void yyfree(void *ptr)
+{
+	if (ptr) {
+		free((char *)ptr);
+	}			/* see yyrealloc() for (char *) cast */
+}
+
 /* %if-tables-serialization definitions */
 /* %define-yytables   The name for this specific scanner's tables. */
 #define YYTABLES_NAME "yytables"
@@ -4891,7 +4916,7 @@ static int yy_flex_strlen(const char *s)
 
 /* %ok-for-header */
 
-#line 191 "vcg.l"
+#line 182 "vcg.l"
 
 /* */
 void vcg_lex_init(FILE * f, int debugflag)

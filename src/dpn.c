@@ -57,7 +57,7 @@
 #include "dpmem.h"
 
 /* node[] attribute to check */
-void dp_do_nattr(char *l, char *r)
+void dp_do_nattr(char *l, char *r, int ishtml)
 {
 	int cc = 0;
 	int tmpi = 0;
@@ -412,23 +412,29 @@ void dp_do_nattr(char *l, char *r)
 		/* node[label=<>] does remove the label texts if no label at node specified */
 		/* node[label=""] does remove the label texts if no label at node specified */
 		/* label can have html entity chars as &#x20; or &#231; or &#amp; */
+		/* \N set node name */
 		if (strcmp(l, "label") == 0) {
 			if (r) {
 				if (strlen(r)) {
 					res->label = r;
-					if (r[0] == '<' && r[strlen(r) - 1] == '>') {
-						/* indicate this is html style label */
-						res->htmllabel = 1;
-						/* dphl.c does html entity chars in trans */
-					}
+					res->htmllabel = ishtml;
 				} else {
 					/* label="" does empty the label text */
 					/* dot sets few spaces at "" to get ellipse default shape */
 					res->label = dp_uniqstr("  ");
+					res->htmllabel = 0;
 				}
 				res->bitflags0.labelset = 1;
-				if (0) {
-					printf("%s(): node label \"%s\" html-label=%d\n", __func__, res->label, res->htmllabel);
+				/* at \N de-select */
+				/* todo, this must be done more complicated. */
+				if (strcmp(r, "\\N") == 0) {
+					res->label = NULL;
+					res->htmllabel = 0;
+					res->bitflags0.labelset = 0;
+				}
+				if (yydebug || 0) {
+					printf("%s(): node label \"%s\" type html-label=%d\n", __func__, res->label,
+					       res->htmllabel);
 				}
 			}
 		} else if (strcmp(l, "labelloc") == 0) {
@@ -950,10 +956,15 @@ void dp_do_nattr(char *l, char *r)
 				/* int rounded;  "rounded" parsed N+C */
 				/* int radial;   "radial" parsed N+C+G */
 				if (stylenum->tapered) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): tapered does not apply to node in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): tapered does not apply to node in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {
+						printf("dot %s(): tapered does not apply to node in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else {
 					if (stylenum->slwset) {
 						/* allow 0.25, 1.25 etc */
@@ -1112,6 +1123,24 @@ void dp_do_nattr(char *l, char *r)
 		break;
 	}
 
+	/* dot supports html label in record shapes.
+	 * todo in gml4gtk not yet supported.
+	 */
+	if (res->shape == DPSHAPE_RECORD || res->shape == DPSHAPE_MRECORD) {
+		if (res->bitflags0.labelset) {
+			if (res->htmllabel) {
+				printf("%s(): html label in record node shape not yet supported in node \"%s\"\n", __func__,
+				       dp_curnode->name);
+				/* turn it off */
+				res->shape = 0;
+				res->bitflags0.shapeset = 0;
+				res->label = dp_curnode->name;
+				res->bitflags0.labelset = 1;
+				res->htmllabel = 0;
+			}
+		}
+	}
+
 	fflush(stdout);
 
 	return;
@@ -1154,7 +1183,7 @@ void dp_nodefdef(struct dpnode *n)
 
 	/* imagemap id is (char *)0 */
 
-	/* label is default node name
+	/* label is default node name if not specified or \N
 	 * n->label = n->name;
 	 * n->bitflags0.labelset = 1;
 	 */

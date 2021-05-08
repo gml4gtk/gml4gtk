@@ -34,5 +34,3 @@ diff -p flex.skl flex-2.6.4.skl >flex-skl-diff.txt
 #  Then edit the myflex.skl and test with needed fixes
 # sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' flex-2.4.6.skl | m4 -P -DFLEX_MAJOR_VERSION=2 -DFLEX_MINOR_VERSION=4 -DFLEX_SUBMINOR_VERSION=6 | sed 's/m4postproc_/m4_/g' > myflex.skl
 
-# using gcc-11 -fanalyzer says some buffers may leak memory in flex lexer
-# but that is not true, it does not detec the use of yylex_destroy()

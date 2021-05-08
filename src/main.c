@@ -63,6 +63,27 @@
 #include <cairo.h>
 #include <cairo-svg.h>
 
+/* this should be the way check for glib version */
+#if GLIB_CHECK_VERSION (2,30,0)
+#ifdef WIN32
+#else
+#include <glib-unix.h>
+#endif
+#endif
+
+/* check for gtk versions */
+#if GTK_CHECK_VERSION (4,0,0)
+#elif GTK_CHECK_VERSION (3,0,0)
+#elif GTK_CHECK_VERSION (3,2,0)
+#elif GTK_CHECK_VERSION (3,4,0)
+#elif GTK_CHECK_VERSION (3,6,0)
+#elif GTK_CHECK_VERSION (3,8,0)
+#elif GTK_CHECK_VERSION (3,12,0)
+#elif GTK_CHECK_VERSION (3,14,0)
+#else
+/* assume gtk-2 */
+#endif
+
 #include "splay-tree.h"
 #include "main.h"
 #include "hier.h"
@@ -77,6 +98,7 @@
 #include "dpif.h"
 #include "dot.tab.h"
 #include "vcg.h"
+#include "jgf.h"
 #include "dpmem.h"
 
 /* todo the pango font routines can be improved */
@@ -231,8 +253,10 @@ static void top_level_window_main_quit(void);
 static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer user_data);
+static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer user_data);
+static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void xspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void yspin_changed(GtkWidget * widget, gpointer spinbutton);
@@ -299,7 +323,7 @@ static void do_relayout_all(struct gml_graph *g);
 
 static void finalxy(struct gml_graph *g);
 
-static struct gml_p static_maingtk_textsizes1sz(struct gml_rl *info);
+static struct gml_p *static_maingtk_textsizes1sz(struct gml_rl *info);
 
 static void static_maingtk_textsizes1rl(struct gml_rl *info);
 
@@ -329,8 +353,10 @@ int main(int argc, char *argv[])
 	GtkWidget *open1;	/* open gml file */
 	GtkWidget *open2;	/* open dot file */
 	GtkWidget *open3;	/* open vcg file */
+	GtkWidget *open4;	/* open jgf file */
 	GtkWidget *svg1;
 	GtkWidget *dia1;
+	GtkWidget *jgf1;
 	GtkWidget *about1;
 	GtkWidget *quit1;
 	GtkWidget *hbox1;
@@ -361,19 +387,18 @@ int main(int argc, char *argv[])
 	GtkWidget *popup1;
 	GtkWidget *mirrory1;
 
+	/* */
+	dp_meminit();
+
 	argv0 = argv[0];
 
 	/* get the home dir */
 	s = getenv("HOME");
 	if (s) {
 		lastopendir = dp_calloc(1, (strlen(s) + 1));
-		if (lastopendir) {
-			strcpy(lastopendir, s);
-		}
+		strcpy(lastopendir, s);
 		lastsavedir = dp_calloc(1, (strlen(s) + 1));
-		if (lastsavedir) {
-			strcpy(lastsavedir, s);
-		}
+		strcpy(lastsavedir, s);
 	} else {
 		/* there is no home dir set in env */
 		lastopendir = NULL;
@@ -507,6 +532,14 @@ int main(int argc, char *argv[])
 	/* run this routine when selected 'open' in 'file' menu */
 	g_signal_connect(G_OBJECT(open3), "activate", G_CALLBACK(on_top_level_window_open3_activate), NULL);
 
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open4 = gtk_menu_item_new_with_mnemonic("Open JGF graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open4);
+	gtk_widget_show(open4);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open4), "activate", G_CALLBACK(on_top_level_window_open4_activate), NULL);
+
 	svg1 = gtk_menu_item_new_with_mnemonic("Save as SVG");
 	gtk_container_add(GTK_CONTAINER(menuitem1_menu), svg1);
 	gtk_widget_show(svg1);
@@ -520,6 +553,13 @@ int main(int argc, char *argv[])
 
 	/* run this routine when selected 'dia' in 'file' menu */
 	g_signal_connect(G_OBJECT(dia1), "activate", G_CALLBACK(on_top_level_window_dia1_activate), NULL);
+
+	jgf1 = gtk_menu_item_new_with_mnemonic("Save as JGF");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), jgf1);
+	gtk_widget_show(jgf1);
+
+	/* run this routine when selected 'jgf' in 'file' menu */
+	g_signal_connect(G_OBJECT(jgf1), "activate", G_CALLBACK(on_top_level_window_jgf1_activate), NULL);
 
 	/* 'about' in 'file' sub menu in menu items in menu bar in vbox1 */
 	about1 = gtk_menu_item_new_with_mnemonic("About");
@@ -1191,7 +1231,18 @@ int main(int argc, char *argv[])
 	/* run the gui */
 	gtk_main();
 
+	/* */
 	do_clear_all(0);
+
+	if (lastopendir) {
+		dp_free(lastopendir);
+	}
+	if (lastsavedir) {
+		dp_free(lastsavedir);
+	}
+
+	/* optional memory check report when compiled with -DMEMCHECK */
+	dp_memreport();
 
 	return (0);
 }
@@ -1655,7 +1706,7 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 	double dy = 0.0;
 	double hw = 0.0;
 	double hh = 0.0;
-	GdkModifierType state;
+	GdkModifierType state = 0;
 	struct gml_node *n = NULL;
 
 	/* check if there is node data to draw */
@@ -1665,8 +1716,8 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 		return (TRUE);
 	}
 
-	if (event) {
-		/* */
+	if (event == NULL) {
+		/* shouldnothappen */
 	}
 
 	/* where mouse click is on window and mouse status */
@@ -1674,7 +1725,14 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 	gdk_window_get_pointer(widget->window, &x, &y, &state);
 #endif
 #if GTK_HAVE_API_VERSION_3 == 1
-	gdk_window_get_device_position(gtk_widget_get_window(widget), event->device, &x, &y, &state);
+	if (event) {
+		gdk_window_get_device_position(gtk_widget_get_window(widget), event->device, &x, &y, &state);
+	} else {
+		/* shouldnothappen */
+		state = 0;
+		x = 0;
+		y = 0;
+	}
 #endif
 
 	if ((state & GDK_BUTTON1_MASK) != 0) {
@@ -1701,7 +1759,7 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 			if (vxmin > maxx) {
 				vxmin = maxx;
 			}
-			gsld = gdelta;
+			/* */
 			gsld = (gdelta / maxx);
 			gsld = (gsld * 100);
 			val = gtk_adjustment_get_value(GTK_ADJUSTMENT(adjhscale1));
@@ -1728,9 +1786,9 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 			if (vymin > maxy) {
 				vymin = maxy;
 			}
-			gsld = gdelta;
-			gsld = gdelta / maxy;
-			gsld = gsld * 100;
+			/* */
+			gsld = (gdelta / maxy);
+			gsld = (gsld * 100);
 			val = gtk_adjustment_get_value(GTK_ADJUSTMENT(adjvscale2));
 			ival = (int)val;
 			ival = ival + (int)gsld;
@@ -2181,6 +2239,15 @@ static void top_level_window_main_quit(void)
 
 	do_clear_all(0);
 
+	if (lastopendir) {
+		dp_free(lastopendir);
+		lastopendir = NULL;
+	}
+	if (lastsavedir) {
+		dp_free(lastsavedir);
+		lastsavedir = NULL;
+	}
+
 	/* run the gtk internal routine to stop gtk_main() which is a for(){} loop */
 	gtk_main_quit();
 
@@ -2256,19 +2323,17 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 			(void)dp_free(lastopendir);
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
-		if (lastopendir) {
-			strcpy(lastopendir, file_chooser_dir);
-		}
-		(void)dp_free(file_chooser_dir);
+		strcpy(lastopendir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
 	}
 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
 		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (inputfilename) {
-			strcpy(inputfilename, file_chooser_filename);
-		}
-		(void)dp_free(file_chooser_filename);
+		strcpy(inputfilename, file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
 	} else {
 		return;
 	}
@@ -2276,10 +2341,9 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	/* set filename in window */
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));
-	if (baseinputfilename2) {
-		strcpy(baseinputfilename2, bname);
-	}
-	dp_free(bname);
+	strcpy(baseinputfilename2, bname);
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
 
 	/* open file to parse */
 	errno = 0;
@@ -2337,9 +2401,11 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	}
 
 	fclose(f);
+
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
-	dp_free(bname);
+	/* not dp_free because gtk allocated */
+	g_free(bname);
 
 	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
 
@@ -2382,7 +2448,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		(void)dp_free(inputfilename);
+		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
 
 		/* fit drawing in window */
@@ -2391,7 +2457,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		(void)dp_free(inputfilename);
+		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
@@ -2473,10 +2539,9 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 			(void)dp_free(lastopendir);
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
-		if (lastopendir) {
-			strcpy(lastopendir, file_chooser_dir);
-		}
-		(void)dp_free(file_chooser_dir);
+		strcpy(lastopendir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
 	}
 
 	/* copy the input filename from gtk */
@@ -2485,18 +2550,19 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		if (inputfilename) {
 			strcpy(inputfilename, file_chooser_filename);
 		}
-		(void)dp_free(file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
 	} else {
 		return;
 	}
 
 	/* set filename in window */
 	bname = g_path_get_basename(inputfilename);
-	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));;
-	if (baseinputfilename2) {
-		strcpy(baseinputfilename2, bname);
-	}
-	dp_free(bname);
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));
+	strcpy(baseinputfilename2, bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
 
 	/* open file to parse */
 	errno = 0;
@@ -2557,8 +2623,11 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 	fclose(f);
 
 	bname = g_path_get_basename(inputfilename);
+
 	baseinputfilename = uniqstr(bname);
-	dp_free(bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
 
 	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
 
@@ -2605,7 +2674,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		(void)dp_free(inputfilename);
+		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
 
 		/* fit drawing in window */
@@ -2614,8 +2683,9 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		(void)dp_free(inputfilename);
+		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
+
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -2695,10 +2765,9 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 			(void)dp_free(lastopendir);
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
-		if (lastopendir) {
-			strcpy(lastopendir, file_chooser_dir);
-		}
-		(void)dp_free(file_chooser_dir);
+		strcpy(lastopendir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
 	}
 
 	/* copy the input filename from gtk */
@@ -2707,18 +2776,20 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		if (inputfilename) {
 			strcpy(inputfilename, file_chooser_filename);
 		}
-		(void)dp_free(file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
 	} else {
 		return;
 	}
 
 	/* set filename in window */
 	bname = g_path_get_basename(inputfilename);
-	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));;
-	if (baseinputfilename2) {
-		strcpy(baseinputfilename2, bname);
-	}
-	dp_free(bname);
+
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));
+	strcpy(baseinputfilename2, bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
 
 	/* open file to parse */
 	errno = 0;
@@ -2732,8 +2803,8 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
+		dp_free(inputfilename);
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2778,12 +2849,10 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 
 	fclose(f);
 
-	/* XXX todo maybe this basename does not work on windows
-	 * and it depends on mingw compiler and glib dll. to check.
-	 */
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
-	dp_free(bname);
+	/* not dp_free because gtk allocated */
+	g_free(bname);
 
 	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
 
@@ -2822,21 +2891,233 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		(void)dp_free(inputfilename);
+		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
-
 		/* fit drawing in window */
 		dofit();
 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		(void)dp_free(inputfilename);
+		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
 	}
+
+	/* re draw screen */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+/* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
+static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer user_data)
+{
+	GtkWidget *edialog = (GtkWidget *) 0;
+	GtkWidget *pdialog = (GtkWidget *) 0;
+	GtkWidget *dialog = (GtkWidget *) 0;
+	char *file_chooser_filename = (char *)0;
+	char *file_chooser_dir = (char *)0;
+	GtkFileChooser *chooser = NULL;
+	char *inputfilename = (char *)0;
+	char *baseinputfilename = (char *)0;
+	char *baseinputfilename2 = (char *)0;
+	FILE *f = NULL;
+	char *bname = NULL;
+
+	if (menuitem) {
+	}
+	if (user_data) {
+	}
+
+#if GTK_HAVE_API_VERSION_2 == 1
+
+	/* see gimp source code howto */
+	dialog = gtk_file_chooser_dialog_new("Select JGF Graph File", 0,	/* parent_window */
+					     GTK_FILE_CHOOSER_ACTION_OPEN,
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+
+#endif
+
+#if GTK_HAVE_API_VERSION_3 == 1
+
+	/* see gimp source code howto */
+	dialog = gtk_file_chooser_dialog_new("Select JGF Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
+					     ,
+					     GTK_FILE_CHOOSER_ACTION_OPEN,
+					     "Cancel", GTK_RESPONSE_CANCEL, "Open", GTK_RESPONSE_ACCEPT, NULL);
+
+#endif
+
+	chooser = GTK_FILE_CHOOSER(dialog);
+
+	/* use same dir if opened in earlier dir */
+	if (lastopendir) {
+		gtk_file_chooser_set_current_folder(chooser, lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	/* run the window to select a input file */
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		/* open button */
+		file_chooser_filename = (char *)gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		file_chooser_dir = (char *)gtk_file_chooser_get_current_folder(chooser);
+	} else {
+		/* cancel button */
+		(void)gtk_widget_destroy(dialog);
+		return;
+	}
+
+	/* */
+	(void)gtk_widget_destroy(dialog);
+
+	/* update last-used-dir */
+	if (file_chooser_dir) {
+		if (lastopendir) {
+			(void)dp_free(lastopendir);
+		}
+		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+		strcpy(lastopendir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
+	}
+
+	/* copy the input filename from gtk */
+	if (file_chooser_filename) {
+		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+		if (inputfilename) {
+			strcpy(inputfilename, file_chooser_filename);
+		}
+		/* node dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
+	} else {
+		return;
+	}
+
+	/* set filename in window */
+	bname = g_path_get_basename(inputfilename);
+
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));
+	strcpy(baseinputfilename2, bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
+
+	/* open file to parse */
+	errno = 0;
+	f = fopen(inputfilename, "r");
+
+	if (f == NULL) {
+		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
+		gtk_dialog_run(GTK_DIALOG(edialog));
+		gtk_widget_destroy(edialog);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg 3=jgf */
+	graphtype = 3;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the vcg data */
+	if (jgfparse(maingraph, f, baseinputfilename2, argv0)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+		pdialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_dialog_run(GTK_DIALOG(pdialog));
+		gtk_widget_destroy(pdialog);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
+		fflush(stdout);
+		fclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	fclose(f);
+
+	bname = g_path_get_basename(inputfilename);
+	baseinputfilename = uniqstr(bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
+
+	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, baseinputfilename2);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		while (gtk_events_pending()) {
+			gtk_main_iteration();
+			/* this updates the status text */
+		}
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		while (gtk_main_iteration()) {
+			/* this should update the status text */ ;
+		}
+
+		/* set sliders to defaults */
+		zfactor = 1.0;
+		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
+
+		vxmin = 0;
+		vymin = 0;
+		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
+		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+	} else {
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	dp_free(inputfilename);
+	dp_free(baseinputfilename2);
 
 	/* re draw screen */
 	gtk_widget_queue_draw(drawingarea1);
@@ -2850,6 +3131,7 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 	GtkWidget *dialog = (GtkWidget *) 0;
 	GtkWidget *edialog = (GtkWidget *) 0;
 	char *file_chooser_filename = (char *)0;
+	char *file_chooser_dir = (char *)0;
 	GtkFileChooser *chooser = NULL;
 	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 	gint res = 0;
@@ -2892,11 +3174,22 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 
 	if (res == GTK_RESPONSE_ACCEPT) {
 		file_chooser_filename = gtk_file_chooser_get_filename(chooser);
-		lastsavedir = gtk_file_chooser_get_current_folder(chooser);
+		file_chooser_dir = gtk_file_chooser_get_current_folder(chooser);
 	} else {
 		/* cancel button */
 		(void)gtk_widget_destroy(dialog);
 		return;
+	}
+
+	/* update last-used-dir */
+	if (file_chooser_dir) {
+		if (lastsavedir) {
+			dp_free(lastsavedir);
+		}
+		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+		strcpy(lastsavedir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
 	}
 
 	/* */
@@ -2908,8 +3201,8 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 		if (svgfilename) {
 			strcpy(svgfilename, file_chooser_filename);
 		}
-		/* */
-		(void)dp_free(file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
 	} else {
 		/* no filename */
 		return;
@@ -2981,6 +3274,7 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 	GtkWidget *dialog = (GtkWidget *) 0;
 	GtkWidget *edialog = (GtkWidget *) 0;
 	char *file_chooser_filename = (char *)0;
+	char *file_chooser_dir = (char *)0;
 	GtkFileChooser *chooser = NULL;
 	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 	gint res = 0;
@@ -3017,11 +3311,22 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 
 	if (res == GTK_RESPONSE_ACCEPT) {
 		file_chooser_filename = gtk_file_chooser_get_filename(chooser);
-		lastsavedir = gtk_file_chooser_get_current_folder(chooser);
+		file_chooser_dir = gtk_file_chooser_get_current_folder(chooser);
 	} else {
 		/* cancel button */
 		(void)gtk_widget_destroy(dialog);
 		return;
+	}
+
+	/* update last-used-dir */
+	if (file_chooser_dir) {
+		if (lastsavedir) {
+			dp_free(lastsavedir);
+		}
+		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+		strcpy(lastsavedir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
 	}
 
 	/* */
@@ -3030,11 +3335,9 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 	/* */
 	if (file_chooser_filename) {
 		diafilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (diafilename) {
-			strcpy(diafilename, file_chooser_filename);
-		}
-		/* */
-		(void)dp_free(file_chooser_filename);
+		strcpy(diafilename, file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
 	} else {
 		/* no filename */
 		return;
@@ -3061,6 +3364,245 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 
 	fclose(fstream);
 	dp_free(diafilename);
+
+	return;
+}
+
+/* save as jgf json diagram json jgf version 2.1
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://jsongraphformat.info/v2.1/json-graph-schema.json",
+  "title": "JSON Graph Schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "graph": { "$ref": "#/definitions/graph" }
+      },
+      "additionalProperties": false,
+      "required": [
+        "graph"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "graphs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/graph" }
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "graph": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" },
+            "directed": { "type": [ "boolean" ], "default": true },
+            "type": { "type": "string" },
+            "metadata": { "type": [ "object" ] },
+            "nodes": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/node" }
+            },
+            "edges": {
+              "type": [ "array" ],
+              "items": { "$ref": "#/definitions/edge" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" },
+            "directed": { "type": [ "boolean" ], "default": true },
+            "type": { "type": "string" },
+            "metadata": { "type": [ "object" ] },
+            "nodes": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/node" }
+            },
+            "hyperedges": {
+              "type": [ "array" ],
+              "items": { "$ref": "#/definitions/directedhyperedge" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" },
+            "directed": { "type": [ "boolean" ], "enum": [false] },
+            "type": { "type": "string" },
+            "metadata": { "type": [ "object" ] },
+            "nodes": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/node" }
+            },
+            "hyperedges": {
+              "type": [ "array" ],
+              "items": { "$ref": "#/definitions/undirectedhyperedge" }
+            }
+          },
+          "required": [ "directed" ]
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "metadata": { "type": "object" },
+        "additionalProperties": false
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "relation": { "type": "string" },
+        "directed": { "type": [ "boolean" ], "default": true },
+        "label": { "type": "string" },
+        "metadata": { "type": [ "object" ] }
+      },
+      "required": [ "source", "target" ]
+    },
+    "directedhyperedge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "array", "items": { "type": "string" } },
+        "target": { "type": "array", "items": { "type": "string" } },
+        "relation": { "type": "string" },
+        "label": { "type": "string" },
+        "metadata": { "type": [ "object" ] }
+      },
+      "required": [ "source", "target" ]
+    },
+    "undirectedhyperedge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "nodes": { "type": "array", "items": { "type": "string" } },
+        "relation": { "type": "string" },
+        "label": { "type": "string" },
+        "metadata": { "type": [ "object" ] }
+      },
+      "required": [ "nodes" ]
+    }
+  }
+}
+*/
+static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer user_data)
+{
+	GtkWidget *dialog = (GtkWidget *) 0;
+	GtkWidget *edialog = (GtkWidget *) 0;
+	char *file_chooser_filename = (char *)0;
+	char *file_chooser_dir = (char *)0;
+	GtkFileChooser *chooser = NULL;
+	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+	gint res = 0;
+	char *jgffilename = NULL;
+	FILE *fstream = NULL;
+
+	if (validdata == 0) {
+		return;
+	}
+
+	if (menuitem) {
+	}
+	if (user_data) {
+	}
+
+	dialog = gtk_file_chooser_dialog_new("Save As JGF json",
+					     /* parent_window */ NULL,
+					     action, "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
+
+	chooser = GTK_FILE_CHOOSER(dialog);
+
+	/* change to last used dir if any */
+	if (lastsavedir) {
+		gtk_file_chooser_set_current_folder(chooser, lastsavedir);
+	}
+
+	/* ask to override existing */
+	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
+
+	/* get the filename */
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	res = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (res == GTK_RESPONSE_ACCEPT) {
+		file_chooser_filename = gtk_file_chooser_get_filename(chooser);
+		file_chooser_dir = gtk_file_chooser_get_current_folder(chooser);
+	} else {
+		/* cancel button */
+		(void)gtk_widget_destroy(dialog);
+		return;
+	}
+
+	/* update last-used-dir */
+	if (file_chooser_dir) {
+		if (lastsavedir) {
+			dp_free(lastsavedir);
+		}
+		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+		strcpy(lastsavedir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
+	}
+
+	/* */
+	(void)gtk_widget_destroy(dialog);
+
+	/* */
+	if (file_chooser_filename) {
+		jgffilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+		strcpy(jgffilename, file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
+	} else {
+		/* no filename */
+		return;
+	}
+
+	errno = 0;
+	fstream = fopen(jgffilename, "wb");
+
+	/* check if open */
+	if (fstream == NULL) {
+		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 "Cannot open file %s for writing (%s)", jgffilename, g_strerror(errno));
+		gtk_dialog_run(GTK_DIALOG(edialog));
+		gtk_widget_destroy(edialog);
+		dp_free(jgffilename);
+		return;
+	}
+
+	/* write the jgf json */
+	graph2jgf(maingraph, fstream);
+
+	fclose(fstream);
+	dp_free(jgffilename);
 
 	return;
 }
@@ -3418,6 +3960,10 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_html1item(cairo_
 	x0 = x0 + xplus;
 	y0 = y0 + yplus;
 
+	if (yydebug || 0) {
+		printf("%s(): text %s at (%d,%d)\n", __func__, item->text, xplus, yplus);
+	}
+
 	layout = pango_cairo_create_layout(crp);
 
 	/* background color */
@@ -3635,6 +4181,10 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_htmlitems(cairo_
 		return;
 	}
 
+	if (yydebug || 0) {
+		printf("%s(): node=\"%s\" xyplus=(%d,%d)\n", __func__, node->name, xplus, yplus);
+	}
+
 	/* scan the text elements */
 	pi = il;
 	while (pi) {
@@ -3644,6 +4194,7 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_htmlitems(cairo_
 			} else if (pi->items->bitflags.hr) {
 			} else if (pi->items->bitflags.vr) {
 			} else if (pi->items->bitflags.img) {
+			} else if (pi->items->bitflags.table) {
 			} else {
 				on_top_level_window_drawingarea1_expose_event_nodes_html1item(crp, node, pitem, xplus, yplus);
 			}
@@ -3654,17 +4205,215 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_htmlitems(cairo_
 	return;
 }
 
+/* zzz */
+
+/* html tables node drawing */
+static void on_top_level_window_drawingarea1_expose_event_nodes_1htmltable(cairo_t * crp, struct gml_node
+									   *node, struct gml_htlist *tlptr)
+{
+	struct gml_tritemlist *trptr = NULL;	/* list of <tr> items in this table */
+	struct gml_tditem *tdiptr = NULL;
+	struct gml_hilist *ilptr = NULL;	/* list of text items */
+	struct gml_htlist *tlptrsub = NULL;
+	int yo = 0;
+	int xo = 0;
+	int nyo = 0;
+	int nxo = 0;
+	int itemrectanglecolor = 0;	/* color of outline rectangle of item, 0 is black, #rrggbb */
+	int r = 0;
+	int g = 0;
+	int b = 0;
+	int tabxoff = 0;
+	int tabyoff = 0;
+	int tabxsize = 0;
+	int tabysize = 0;
+	int tabncols = 0;
+	int tabnrows = 0;
+	int trnumtd = 0;
+	int trysize = 0;
+	int tdxsize = 0;
+	int ytd = 0;
+
+	if (tlptr == NULL) {
+		printf("%s(): nil tlptr\n", __func__);
+		/* shouldnothappen */
+		return;
+	}
+
+	if (tlptr->titem == NULL) {
+		printf("%s(): nil titem\n", __func__);
+		/* shouldnothappen */
+		return;
+	}
+
+	/* scan the items in this <table> */
+	nxo = node->finx - vxmin;
+	nyo = node->finy - vymin;
+
+	/* (x,y) offset of <table> */
+	tabxoff = tlptr->titem->xoff;
+	tabyoff = tlptr->titem->yoff;
+	if (tabxoff) {		/* todo */
+	}
+	if (tabyoff) {		/* todo */
+	}
+	if (yydebug || 0) {
+		printf("%s(): <table> offset is (%d,%d)\n", __func__, tabxoff, tabyoff);
+	}
+	/* start draw at table offset */
+	/* xo = tabxoff; not used here */
+	yo = tabyoff;
+
+	/* (x,y) size of <table> */
+	tabxsize = tlptr->titem->txsize;
+	tabysize = tlptr->titem->tysize;
+	if (tabxsize) {		/* todo */
+	}
+	if (tabysize) {		/* todo */
+	}
+	/* (x,y) size of table in cols/rows */
+	tabncols = tlptr->titem->ncols;
+	tabnrows = tlptr->titem->nrows;
+	if (tabncols) {		/* todo */
+	}
+	if (tabnrows) {		/* todo */
+	}
+	/* */
+	if (tlptr->titem->tr) {
+		trptr = tlptr->titem->tr;
+
+		while (trptr) {
+			/* scan the <tr> items  */
+			if (trptr->tritem) {
+				/* number of <td> items at this <tr> */
+				trnumtd = trptr->tritem->numtd;
+				if (trnumtd) {	/* todo */
+				}
+				/* y size of this <tr> */
+				trysize = trptr->tritem->ysize;
+				/* */
+				tdiptr = trptr->tritem->tdi;
+				if (tdiptr) {
+					/* scan the <td> items */
+					xo = tabxoff;
+
+					while (tdiptr) {
+						/* x size of this <td> */
+						tdxsize = tdiptr->xsize;
+						if (tdxsize) {	/* todo not used here */
+						}
+						/* there are dummy <td> with no item data in it, but color, size is set */
+						ilptr = tdiptr->il;
+						if (ilptr) {
+							ytd = 0;
+							while (ilptr) {
+								/* colored rectangle around item, option here. */
+								r = ((itemrectanglecolor & 0x00ff0000) >> 16);
+								g = ((itemrectanglecolor & 0x0000ff00) >> 8);
+								b = (itemrectanglecolor & 0x000000ff);
+
+								/* */
+								/* */
+
+								if (yydebug || 0) {
+									printf
+									    ("%s(): <td> at (%d,%d) size (%d,%d) \"%s\"\n",
+									     __func__, xo, yo + ytd, ilptr->items->txsize,
+									     ilptr->items->tysize, ilptr->items->text);
+								}
+
+								/* */
+								if (ilptr->items->bitflags.br) {
+								} else if (ilptr->items->bitflags.hr) {
+								} else if (ilptr->items->bitflags.vr) {
+								} else if (ilptr->items->bitflags.img) {
+								} else if (ilptr->items->bitflags.table) {
+									if (yydebug || 0) {
+										printf
+										    ("%s(): table bit set todo xstep=%d xo=%d yo+ytd=%d\n",
+										     __func__, tdiptr->xstep, xo, yo + ytd);
+									}
+									ilptr->items->table->xoff = xo;
+									ilptr->items->table->yoff = yo + ytd;
+								} else {
+									if (yydebug || 0) {
+										printf("%s(): items at (%d,%d)\n", __func__, xo,
+										       yo + ytd);
+									}
+									/* html items node drawing */
+									on_top_level_window_drawingarea1_expose_event_nodes_html1item
+									    (crp, node, ilptr->items,
+									     /* int xplus */
+									     xo,
+									     /* int yplus */
+									     yo + ytd);
+
+								}
+
+								ytd = ytd + ilptr->items->tysize;
+								ilptr = ilptr->next;
+							}
+
+						}
+						/* there can be dummy <td> */
+						/* test */
+						if (0) {
+							/* test only */
+							cairo_set_source_rgb(crp, r / 255.0, g / 255.0, b / 255.0);
+							cairo_rectangle(crp, xo + nxo, yo + nyo, tdxsize, trysize);
+							cairo_stroke(crp);	/* ccx */
+						} else {
+							cairo_set_source_rgb(crp, r / 255.0, g / 255.0, b / 255.0);
+							cairo_rectangle(crp, xo + nxo, yo + nyo, tdiptr->xstep, tdiptr->ystep);
+							cairo_stroke(crp);	/* ccx */
+						}
+						/* */
+
+						/* to next <td> */
+						xo = xo + 2;
+						xo = xo + tdiptr->xstep;
+						tdiptr = tdiptr->next;
+					}
+					/* end of <td> */
+					yo = yo + trysize;
+
+				}
+			}
+			trptr = trptr->next;
+		}
+	}
+
+	/* scan the sub <table> items in this <table> */
+	if (tlptr->titem->tl) {
+		tlptrsub = tlptr->titem->tl;
+		while (tlptrsub) {
+			on_top_level_window_drawingarea1_expose_event_nodes_1htmltable(crp, node, tlptrsub);
+			tlptrsub = tlptrsub->next;
+		}
+	}
+
+	return;
+}
+
 /* html tables node drawing */
 static void on_top_level_window_drawingarea1_expose_event_nodes_htmltables(cairo_t * crp, struct gml_node
 									   *node)
 {
-	/* todo */
-	if (crp) {
-	}
+	struct gml_htlist *tlptr = NULL;
+
 	if (node->hlabel->tl == NULL) {
 		/* shouldnothappen */
 		return;
 	}
+
+	/* */
+	tlptr = node->hlabel->tl;
+
+	while (tlptr) {
+		on_top_level_window_drawingarea1_expose_event_nodes_1htmltable(crp, node, tlptr);
+		tlptr = tlptr->next;
+	}
+
 	return;
 }
 
@@ -3722,17 +4471,17 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 			/* first draw circle is node has a selfedge */
 			if (nl->node->elabel == 0) {
 				if (nl->node->nselfedges) {
-					/* black selfedge */
-					r = 0;
-					g = 0;
-					b = 0;
-					/* draw in black */
+
+					/* black or colored selfedge */
+					r = (nl->node->secolor & 0x00ff0000) >> 16;
+					g = ((nl->node->secolor & 0x0000ff00) >> 8);
+					b = (nl->node->secolor & 0x000000ff);
 					cairo_set_source_rgb(crp, r / 255.0, g / 255.0, b / 255.0);
-					/* draw the self-edge, start at 1/4 circle */
-					cairo_arc(crp, x0, y0 + nl->node->bby, 6 /* radius */ ,
-						  45 * (180 * M_PI), 2 * M_PI);
-					/* opt. arrow, which is too big here */
-					if (1) {
+					/* draw the self-edge, whole circle */
+					cairo_arc(crp, x0 + nl->node->bbx - 3, y0 + nl->node->bby - 3, 6 /* radius */ ,
+						  0 /*  45 * (180 * M_PI) */ , 2 * M_PI);
+					/* opt. arrow, which is too big here todo. this looks not good */
+					if (0) {
 						drarrow(crp, x0 - 10, y0 + nl->node->bby - 6, x0, y0 + nl->node->bby - 6, 3);
 					}
 					cairo_stroke(crp);
@@ -3740,8 +4489,8 @@ static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp)
 			}
 
 			/* fillcolor of node white default or color */
-			r = (nl->node->ncolor & 0x00ff0000) >> 16;
-			g = (nl->node->ncolor & 0x0000ff00) >> 8;
+			r = ((nl->node->ncolor & 0x00ff0000) >> 16);
+			g = ((nl->node->ncolor & 0x0000ff00) >> 8);
 			b = (nl->node->ncolor & 0x000000ff);
 
 			cairo_set_source_rgb(crp, r / 255.0, g / 255.0, b / 255.0);
@@ -4612,6 +5361,7 @@ static gboolean on_top_level_window_drawingarea1_draw_event(GtkWidget * widget, 
 	cairo_stroke(crdraw);
 	/* use zoom slider drawing scale */
 	cairo_scale(crdraw, zfactor, zfactor);
+
 	on_top_level_window_drawingarea1_expose_event_nodes(crdraw);
 	on_top_level_window_drawingarea1_expose_event_edges(crdraw);
 	cairo_destroy(crp);
@@ -4629,7 +5379,7 @@ static void update_status_text(char *text)
 	/* */
 	if (text) {
 		snprintf(charentry1buffer, (64 - 1), "%s", text);
-		if (option_gdebug > 1 || 1) {
+		if (option_gdebug > 1 || 0) {
 			printf("%s(): %s\n", __func__, text);
 			fflush(stdout);
 		}
@@ -5089,41 +5839,41 @@ static void dofit(void)
 }
 
 /* size of fields */
-static struct gml_p static_maingtk_textsizes1sz(struct gml_rl *info)
+static struct gml_p *static_maingtk_textsizes1sz(struct gml_rl *info)
 {
-	struct gml_p d = { 0, 0 };
-	struct gml_p dsub = { 0, 0 };
+	struct gml_p *data = NULL;
+	struct gml_p *dsub = NULL;
 	int i = 0;
 
-	d.x = 0;
-	d.y = 0;
+	data = calloc(1, sizeof(struct gml_p));
 
 	if (info == NULL) {
-		return (d);
+		return (data);
 	}
 
 	if (info->hd) {
-		d.x = info->txsize;
-		d.y = info->tysize;
+		data->x = info->txsize;
+		data->y = info->tysize;
 	} else {
 		for (i = 0; i < info->nparts; i++) {
 			dsub = static_maingtk_textsizes1sz(info->parts[i]);
 			if (info->dir == 0) {
-				d.x = d.x + dsub.x;
-				if (dsub.y > d.y) {
-					d.y = dsub.y;
+				data->x = data->x + dsub->x;
+				if (dsub->y > data->y) {
+					data->y = dsub->y;
 				}
 			} else {
-				if (dsub.x > d.x) {
-					d.x = dsub.x;
+				if (dsub->x > data->x) {
+					data->x = dsub->x;
 				}
-				d.y = d.y + dsub.y;
+				data->y = data->y + dsub->y;
 			}
+			dp_free(dsub);
 		}
 	}
 
-	info->bbx = d.x;
-	info->bby = d.y;
+	info->bbx = data->x;
+	info->bby = data->y;
 
 	if (yydebug || 0) {
 		printf
@@ -5131,7 +5881,7 @@ static struct gml_p static_maingtk_textsizes1sz(struct gml_rl *info)
 		     __func__, info->hd, info->dir, info->bbx, info->bby, info->txsize, info->tysize, info->ulabel);
 	}
 
-	return (d);
+	return (data);
 }
 
 static void static_maingtk_textsizes1eq(struct gml_rl *info)
@@ -5157,7 +5907,7 @@ static void static_maingtk_textsizes1eq(struct gml_rl *info)
 	}
 
 	if (info->hd == 0) {
-		/* zzz  */
+		/*  */
 		for (i = 0; i < info->nparts; i++) {
 			if (info->dir == 0) {
 				info->parts[i]->bby = info->bby;
@@ -5378,7 +6128,7 @@ static void static_maingtk_textsizes1rl(struct gml_rl *info)
 
 				/* */
 
-				if (yydebug) {
+				if (yydebug || 0) {
 					printf("%s(): (%d,%d) size for `%s'\n", __func__, info->txsize, info->tysize, info->ulabel);
 				}
 			} else {
@@ -5441,8 +6191,6 @@ static void static_maingtk_textsizes2rl(struct gml_rl *info, int count, int xoff
 
 		xo = 0;
 		yo = 0;
-		ibbx = bbx;
-		ibby = bby;
 		abbx = 0;
 		abby = 0;
 
@@ -5520,30 +6268,32 @@ static void static_maingtk_textsizes2rl(struct gml_rl *info, int count, int xoff
 /* handle record label sizes for one node */
 static void static_maingtk_textsizes1n(struct gml_node *node)
 {
-	struct gml_p d;
+	struct gml_p *data = NULL;
 
 	/* calc (x,y) text size of all parts in record label */
 	static_maingtk_textsizes1rl(node->rlabel);
 
-	d = static_maingtk_textsizes1sz(node->rlabel);
+	data = static_maingtk_textsizes1sz(node->rlabel);
 
 	if (yydebug || 0) {
-		printf("%s(): d is (%d,%d) versus bbxy(%d,%d)\n", __func__, d.x, d.y, node->bbx, node->bby);
+		printf("%s(): d is (%d,%d) versus bbxy(%d,%d)\n", __func__, data->x, data->y, node->bbx, node->bby);
 	}
 
 	/* check for use of step of bb */
 	static_maingtk_textsizes1eq(node->rlabel);
 
 	/* now position the text parts and result in the rlabel structs */
-	node->bbx = d.x;
-	node->bby = d.y;
+	node->bbx = data->x;
+	node->bby = data->y;
 
 	/* save copy of full size */
-	node->fbbx = d.x;
-	node->fbby = d.y;
+	node->fbbx = data->x;
+	node->fbby = data->y;
 
 	/* relocate the parts */
 	static_maingtk_textsizes2rl(node->rlabel, 0, 0, 0, node->bbx, node->bby);
+
+	dp_free(data);
 
 	return;
 }
@@ -5551,9 +6301,9 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 /* size of one 1 html item
  * the item has fontsize, name and bitflags of type
  */
-static struct gml_p static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
+static struct gml_p *static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
 {
-	struct gml_p d = { 0, 0 };
+	struct gml_p *data = NULL;
 	int fsz = 0;
 	char *slant = NULL;
 	char *weight = NULL;
@@ -5567,23 +6317,49 @@ static struct gml_p static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
 	int w = 0;
 	int h = 0;
 
+	data = dp_calloc(1, sizeof(struct gml_p));
+
 	if (item == NULL) {
 		/* shouldnothappen */
-		return (d);
+		return (data);
 	}
 
-	if (0) {
+	if (item->bitflags.table) {
+		if (yydebug || 0) {
+			printf("%s(): item is a <table>\n", __func__);
+		}
+		if (item->table == NULL) {
+			/* shouldnothappen */
+			printf("%s(): item is a <table> but nil table\n", __func__);
+			return (data);
+		}
+		/* set the size of <table> as size of this item */
+		item->txsize = item->table->txsizemin;
+		item->tysize = item->table->tysizemin;
+		/* */
+		data->x = item->txsize;
+		data->y = item->tysize;
+
+		if (yydebug || 0) {
+			printf("%s(): \"%s\" has size (%d,%d) d (%d,%d)\n", __func__, "<table>", item->txsize, item->tysize,
+			       data->x, data->y);
+		}
+
+		return (data);
+	}
+
+	if (yydebug || 0) {
 		printf("%s(): item->text is \"%s\"\n", __func__, item->text);
 	}
 
 	if (item->text == NULL) {
 		/* shouldnothappen */
-		return (d);
+		return (data);
 	}
 
 	if (strlen(item->text) == 0) {
 		/* shouldnothappen */
-		return (d);
+		return (data);
 	}
 
 	/* get fontsize */
@@ -5595,7 +6371,7 @@ static struct gml_p static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
 		/* check fontsize */
 		if (item->fontsize < 5) {
 			/* too small text */
-			return (d);
+			return (data);
 		}
 		fsz = item->fontsize;
 	}
@@ -5672,10 +6448,6 @@ static struct gml_p static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
 	item->txsize = (w / PANGO_SCALE);
 	item->tysize = (h / PANGO_SCALE);
 
-	if (0) {
-		printf("%s(): \"%s\" has size (%d,%d)\n", __func__, item->text, item->txsize, item->tysize);
-	}
-
 	/* */
 	g_object_unref(G_OBJECT(layout));
 
@@ -5685,17 +6457,22 @@ static struct gml_p static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item)
 	cairo_surface_destroy(surface);
 	surface = NULL;
 
-	d.x = item->txsize;
-	d.y = item->tysize;
+	data->x = item->txsize;
+	data->y = item->tysize;
 
-	return (d);
+	if (yydebug || 0) {
+		printf("%s(): \"%s\" has size (%d,%d) d (%d,%d)\n", __func__, item->text, item->txsize, item->tysize, data->x,
+		       data->y);
+	}
+
+	return (data);
 }
 
 /* size of html items */
-static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, struct gml_hl *info)
+static struct gml_p *static_maingtk_textsizes1htmlszitems(struct gml_node *node, struct gml_hl *info)
 {
-	struct gml_p d = { 0, 0 };
-	struct gml_p ditem = { 0, 0 };
+	struct gml_p *data = NULL;
+	struct gml_p *ditem = NULL;
 	struct gml_hitem *pitem = NULL;
 	struct gml_hitem *pitem2 = NULL;
 	struct gml_hilist *pi = NULL;
@@ -5709,12 +6486,23 @@ static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, 
 	int mx = 0;
 	int tof = 0;
 
-	if (node) {
+	data = dp_calloc(1, sizeof(struct gml_p));
+
+	if (node == NULL) {
+		return (data);
+	}
+
+	if (info == NULL) {
+		return (data);
 	}
 
 	if (info->il == NULL) {
 		/* shouldnothappen */
-		return (d);
+		return (data);
+	}
+
+	if (yydebug || 0) {
+		printf("%s(): items of node \"%s\" are:\n", __func__, node->name);
 	}
 
 	/* get size of the text elements */
@@ -5727,33 +6515,39 @@ static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, 
 			} else if (pi->items->bitflags.hr) {
 			} else if (pi->items->bitflags.vr) {
 			} else if (pi->items->bitflags.img) {
+			} else if (pi->items->bitflags.table) {
+				if (0) {
+					printf("%s(): table bit set. todo\n", __func__);
+				}
 			} else {
+				if (yydebug || 0) {
+					printf("\"%s\"\n", pi->items->text);
+				}
 				ditem = static_maingtk_textsizes1htmlsz1item(pitem);
-				if (ditem.x == 0 || ditem.y == 0) {
+				if (ditem->x == 0 || ditem->y == 0) {
 					/* zero sized text */
 				}
-				pitem->txsize = ditem.x;
-				pitem->tysize = ditem.y;
+				pitem->txsizemin = ditem->x;
+				pitem->tysizemin = ditem->y;
+				pitem->txsize = ditem->x;
+				pitem->tysize = ditem->y;
+				dp_free(ditem);
 			}
-		}
-		if (0) {
-			printf("\"%s\" ", pi->items->text);
 		}
 		pi = pi->next;
 	}
-	if (0) {
+	/* */
+	if (yydebug || 0) {
 		printf("\n");
 	}
 
 	/* determine the size of these lines */
 	mx = 0;
 	my = 0;
-	mxl = 0;
-	myl = 0;
+	/* */
 	pi = info->il;
 	tof = 0;
 	while (pi) {
-		pitem = pi->items;
 		/* set start/end line */
 		sl = pi;
 		el = pi;
@@ -5763,30 +6557,36 @@ static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, 
 		while (pi2) {
 			pitem2 = pi2->items;
 			el = pi2;
-			if (pi2->items->bitflags.br) {
-				/* newline */
-				if (myl == 0) {
-					/* a <br/> can have a fontsize set */
-					if (pi2->items->fontsize > 0) {
-						myl = pi2->items->fontsize;
-					} else {
-						myl = DEFAULT_FONTSIZE_INT;
+			if (pi2->items) {
+				if (pi2->items->bitflags.br) {
+					/* newline */
+					if (myl == 0) {
+						/* a <br/> can have a fontsize set */
+						if (pi2->items->fontsize > 0) {
+							myl = pi2->items->fontsize;
+						} else {
+							myl = DEFAULT_FONTSIZE_INT;
+						}
 					}
-				}
-				/* set x at start of line */
-				mxl = 0;
-				break;
-			} else if (pi2->items->bitflags.hr) {
-			} else if (pi2->items->bitflags.vr) {
-			} else if (pi2->items->bitflags.img) {
-			} else {
-				/* text x offset in this line */
-				mxl2 = mxl2 + pitem2->txsize;
-				if (mxl2 > mx) {
-					mx = mxl2;
-				}
-				if (pitem2->tysize > myl) {
-					myl = pitem2->tysize;
+					/* set x at start of line */
+					/* mxl = 0; */
+					break;
+				} else if (pi2->items->bitflags.hr) {
+				} else if (pi2->items->bitflags.vr) {
+				} else if (pi2->items->bitflags.img) {
+				} else if (pi2->items->bitflags.table) {
+					if (0) {
+						printf("%s(): table bit set todo\n", __func__);
+					}
+				} else {
+					/* text x offset in this line */
+					mxl2 = mxl2 + pitem2->txsize;
+					if (mxl2 > mx) {
+						mx = mxl2;
+					}
+					if (pitem2->tysize > myl) {
+						myl = pitem2->tysize;
+					}
 				}
 			}
 			pi2 = pi2->next;
@@ -5798,18 +6598,20 @@ static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, 
 		pi2 = sl;
 		while (pi2) {
 			pitem2 = pi2->items;
-			/* text x offset in this line */
-			pitem2->txoff = mxl;
-			mxl = mxl + pitem2->txsize;
-			if (mxl > mx) {
-				mx = mxl;
-			}
-			/* y size of this text line */
-			pitem2->lysize = myl;
-			/* text y offset in this line */
-			pitem2->tyoff = (myl - pitem2->tysize) + tof;
-			if (pi2 == el) {
-				break;
+			if (pitem2) {
+				/* text x offset in this line */
+				pitem2->txoff = mxl;
+				mxl = mxl + pitem2->txsize;
+				if (mxl > mx) {
+					mx = mxl;
+				}
+				/* y size of this text line */
+				pitem2->lysize = myl;
+				/* text y offset in this line */
+				pitem2->tyoff = (myl - pitem2->tysize) + tof;
+				if (pi2 == el) {
+					break;
+				}
 			}
 			pi2 = pi2->next;
 		}
@@ -5826,85 +6628,433 @@ static struct gml_p static_maingtk_textsizes1htmlszitems(struct gml_node *node, 
 	}
 
 	/* set node text (x,y) */
-	node->tx = mx;
-	node->ty = my;
+	node->tx = mx + 2;
+	node->ty = my + 2;
+
+	data->x = node->tx;
+	data->y = node->ty;
 
 	/* here update text x pos for br align statements if any todo */
 
 	node->txsize = 1;
 
-	return (d);
+	if (yydebug || 0) {
+		printf("%s(): size (%d,%d) for node \"%s\"\n", __func__, data->x, data->y, node->name);
+	}
+
+	return (data);
+}
+
+/* one <table> in table list */
+static struct gml_p *static_maingtk_textsizes1htmlsz1table(struct gml_node *node, struct gml_htlist *tlptr)
+{
+	struct gml_p *data = NULL;
+	struct gml_p *subdata = NULL;
+	struct gml_p *di = NULL;
+	struct gml_titem *titemptr = NULL;
+	struct gml_htlist *tlptrsub = NULL;
+	struct gml_tritemlist *trptr = NULL;	/* list of <tr> items in this table */
+	struct gml_tditem *tdiptr = NULL;
+	struct gml_hilist *ilptr = NULL;
+	int *tdsz = NULL;
+	int ntr = 0;
+	int numtd = 0;
+	int ntdmax = 0;
+	int trysum = 0;
+	int ilmaxy = 0;
+	int trxsum = 0;
+	int trmax = 0;
+	int tdcount = 0;
+	int tdxtotal = 0;
+	int tdytotal = 0;
+	int wanttd = 0;
+	int i = 0;
+	struct gml_tditem *dummytd = NULL;
+	int ystep = 0;
+	int tablebgcolor = 0x00ffffff;	/* white */
+
+	data = dp_calloc(1, sizeof(struct gml_p));
+
+	titemptr = tlptr->titem;
+
+	if (titemptr == NULL) {
+		/* shouldnothappen */
+		return (data);
+	}
+
+	/* first scan the sub <table> data */
+	tlptrsub = titemptr->tl;
+
+	while (tlptrsub) {
+		subdata = static_maingtk_textsizes1htmlsz1table(node, tlptrsub);
+		/* todo */
+		dp_free(subdata);
+		tlptrsub = tlptrsub->next;
+	}
+
+	/* fillcolor of this <table> */
+	tablebgcolor = titemptr->bgcolor;
+
+	trptr = titemptr->tr;	/* list of <tr> items in this table */
+
+	if (trptr == NULL) {
+		/* shouldnothappen */
+		return (data);
+	}
+
+	ntdmax = 0;
+	ntr = 0;
+	trmax = 0;
+	while (trptr) {
+		if (trptr->tritem == NULL) {
+			/* shouldnothappen */
+			return (data);
+		}
+		/* needed x size for this <tr> */
+		trxsum = 0;
+
+		/* <td> in <tr> */
+		tdiptr = trptr->tritem->tdi;
+		if (tdiptr == NULL) {
+			/* shouldnothappen */
+			return (data);
+		}
+
+		/* number of <td> in this <tr> */
+		numtd = 0;
+		ilmaxy = 0;
+
+		while (tdiptr) {
+			ilptr = tdiptr->il;
+			if (ilptr == NULL) {
+				/* shouldnothappen */
+				return (data);
+			}
+
+			/* size of <td> */
+			tdxtotal = 0;
+			tdytotal = 0;
+
+			while (ilptr) {
+				di = static_maingtk_textsizes1htmlsz1item(ilptr->items);
+				/* handle item size */
+				/* x size of this <td> */
+
+				if (yydebug || 0) {
+					printf("%s(): item in td (%d,%d) for \"%s\"\n", __func__, di->x, di->y, ilptr->items->text);
+				}
+				if (di->x > tdxtotal) {
+					tdxtotal = di->x;
+				}
+				tdytotal = tdytotal + di->y;
+				trxsum = trxsum + di->x;
+
+				tdiptr->ysize = di->y;
+
+				/* */
+				dp_free(di);
+				/* next item */
+				ilptr = ilptr->next;
+			}
+
+			/* set the size in this <td> */
+			tdiptr->xsize = tdxtotal;
+			tdiptr->ysize = tdytotal;
+
+			if (tdiptr->ysize > ilmaxy) {
+				ilmaxy = tdiptr->ysize;
+			}
+
+			if (yydebug || 0) {
+				printf("%s(): td (%d,%d) size for this these td items ilmaxy=%d\n", __func__, tdiptr->xsize,
+				       tdiptr->ysize, ilmaxy);
+			}
+			numtd++;
+			/* next <td> */
+			tdiptr = tdiptr->next;
+		}
+
+		if (yydebug || 0) {
+			printf("%s(): setting ysize to %d\n", __func__, ilmaxy);
+		}
+		/* y size in this <tr> for the <td> items */
+		trptr->tritem->ysize = ilmaxy;
+
+		/* number of <td> in this <tr> */
+		trptr->tritem->numtd = numtd;
+		if (numtd > ntdmax) {
+			ntdmax = numtd;
+		}
+		/* number of <tr> statements */
+		ntr++;
+		/* widest <tr> */
+		if (trxsum > trmax) {
+			trmax = trxsum;
+		}
+		/* needed y size for this <td> in this <tr> */
+		trysum = trysum + ilmaxy;
+		/* next <tr> */
+		trptr = trptr->next;
+	}
+
+	/* number of <tr> in this <table> */
+	titemptr->numtr = ntr;
+	titemptr->nrows = ntr;
+
+	/* number of <td> needed for this table */
+	titemptr->numtd = ntdmax;
+	titemptr->ncols = ntdmax;
+
+	/* needed y size to hold all <td> */
+	titemptr->tysize = trysum;
+	titemptr->tysizemin = trysum;
+
+	/* re-scan to update the <td> size at <tr> */
+	tdsz = dp_calloc(1, (sizeof(int) * ntdmax));
+
+	/* re-scan */
+	titemptr = tlptr->titem;
+
+	trptr = titemptr->tr;	/* list of <tr> items in this table */
+
+	/* find the widest <td> at a <tr> */
+	while (trptr) {
+		/* <td> in <tr> */
+		tdiptr = trptr->tritem->tdi;
+
+		tdcount = 0;
+		while (tdiptr) {
+			if (tdiptr->xsize > tdsz[tdcount]) {
+				tdsz[tdcount] = tdiptr->xsize;
+			}
+			tdcount++;
+			/* next <td> */
+			tdiptr = tdiptr->next;
+		}
+
+		/* next <tr> */
+		trptr = trptr->next;
+	}
+
+	/* update the x step */
+	trptr = titemptr->tr;	/* list of <tr> items in this table */
+
+	trmax = 0;
+	while (trptr) {
+		/* <td> in <tr> */
+		tdiptr = trptr->tritem->tdi;
+		trxsum = 0;
+		tdcount = 0;
+		while (tdiptr) {
+			/* (x,y) size of <td> */
+			if (yydebug || 0) {
+				printf("%s():  at col=%d size (%d,%d) for this td\n", __func__, tdcount, tdiptr->xsize,
+				       tdiptr->ysize);
+			}
+			tdiptr->xstep = tdsz[tdcount];
+			tdiptr->ystep = trptr->tritem->ysize;
+			trxsum = trxsum + tdiptr->xstep;
+			/* set max reached x size */
+			if (trxsum > trmax) {
+				trmax = trxsum;
+			}
+			if (yydebug || 0) {
+				printf("%s(): at col=%d size (%d,%d) trmax=%d\n", __func__, tdcount, tdiptr->xstep, tdiptr->ystep,
+				       trmax);
+			}
+			tdcount++;
+			/* next <td> */
+			tdiptr = tdiptr->next;
+		}
+
+		/* next <tr> */
+		trptr = trptr->next;
+	}
+
+	/* needed x size to hold all <tr> */
+	titemptr->txsize = trmax;
+	titemptr->txsizemin = trmax;
+
+	/* indicate that min. size is set for this <table> */
+	titemptr->sizeset = 1;
+
+	/* set <table> (x,y) size */
+	data->x = trmax;
+	data->y = trysum;
+
+	/* add dummy <td> to fill the tables */
+	trptr = titemptr->tr;	/* list of <tr> items in this table */
+
+	/* find the widest <td> at a <tr> */
+	while (trptr) {
+		/* <td> in <tr> */
+		tdiptr = trptr->tritem->tdi;
+
+		/* number of needed <td> */
+		wanttd = ntdmax;
+
+		ystep = trptr->tritem->ysize;
+
+		tdcount = 0;
+
+		while (tdiptr) {
+			wanttd--;
+			/* set min. needed (x,y) size for <td> (x,y) size set earlier */
+			tdiptr->xsizemin = tdiptr->xsize;
+			tdiptr->ysizemin = tdiptr->ysize;
+			tdcount++;
+			/* next <td> */
+			tdiptr = tdiptr->next;
+		}
+
+		if (yydebug || 0) {
+			printf("%s(): <tr> has %d <td> but needs %d <td> adding %d dummy <td>\n", __func__, trptr->tritem->numtd,
+			       ntdmax, wanttd);
+		}
+
+		/* add the dummy <td> */
+		for (i = 0; i < wanttd; i++) {
+			dummytd = dp_calloc(1, sizeof(struct gml_tditem));
+			/* this is a <td> with no data */
+			dummytd->dummy = 1;
+			/* x size depends on pos. of <td> */
+			dummytd->xsize = tdsz[tdcount];
+			dummytd->xstep = tdsz[tdcount];
+			dummytd->xsizemin = tdsz[tdcount];
+			/* y size */
+			dummytd->ysize = ystep;
+			dummytd->ystep = ystep;
+			dummytd->ysizemin = ystep;
+			/* fill color */
+			dummytd->bgcolor = tablebgcolor;
+
+			/* link in */
+			if (trptr->tritem->tdi == NULL) {
+				trptr->tritem->tdi = dummytd;
+				trptr->tritem->tdiend = dummytd;
+			} else {
+				trptr->tritem->tdiend->next = dummytd;
+				trptr->tritem->tdiend = dummytd;
+			}
+
+			tdcount++;
+		}
+		/* next <tr> */
+		trptr = trptr->next;
+	}
+
+	/* ready with <td> x size data */
+	dp_free(tdsz);
+
+	if (yydebug || 0) {
+		printf("%s(): size (%d,%d) <table> in for node \"%s\"\n", __func__, data->x, data->y, node->name);
+	}
+
+	return (data);
 }
 
 /* size of html tables */
-static struct gml_p static_maingtk_textsizes1htmlsztables(struct gml_node *node, struct gml_hl *info)
+static struct gml_p *static_maingtk_textsizes1htmlsztables(struct gml_node *node, struct gml_hl *info)
 {
-	struct gml_p d = { 0, 0 };
-	if (node) {
-	}
-	printf("%s(): todo\n", __func__);
-	if (info->tl == NULL) {
-		/* shouldnothappen */
-		return (d);
-	}
-	return (d);
-}
+	struct gml_p *data = NULL;
+	struct gml_p *subdata = NULL;
+	struct gml_htlist *tlptr = NULL;	/* list of sub table items */
+	int trx = 0;
+	int try = 0;
 
-/* size of html */
-static struct gml_p static_maingtk_textsizes1htmlsz(struct gml_node *node, struct gml_hl *info)
-{
-	struct gml_p d = { 0, 0 };
+	data = dp_calloc(1, sizeof(struct gml_p));
+
+	if (node == NULL) {
+		/* shouldnothappen */
+		return (data);
+	}
 
 	if (info == NULL) {
 		/* shouldnothappen */
-		return (d);
-	}
-	if (info->mode == 0) {
-		/* html items */
-		static_maingtk_textsizes1htmlszitems(node, info);
-	} else {
-		/* html tables */
-		static_maingtk_textsizes1htmlsztables(node, info);
+		return (data);
 	}
 
-	return (d);
+	if (info->tl == NULL) {
+		/* shouldnothappen */
+		return (data);
+	}
+
+	tlptr = info->tl;
+	while (tlptr) {
+		subdata = static_maingtk_textsizes1htmlsz1table(node, tlptr);
+		/* temp test todo */
+		trx = subdata->x;
+		try = subdata->y;
+
+		dp_free(subdata);
+		tlptr = tlptr->next;
+	}
+
+	data->x = trx + 2;
+	data->y = try + 2;
+
+	if (yydebug || 0) {
+		printf("%s(): size (%d,%d) for node \"%s\"\n", __func__, data->x, data->y, node->name);
+	}
+
+	return (data);
+}
+
+/* size of html */
+static struct gml_p *static_maingtk_textsizes1htmlsz(struct gml_node *node, struct gml_hl *info)
+{
+	struct gml_p *data = NULL;
+
+	if (info->mode == 0) {
+		/* html items */
+		data = static_maingtk_textsizes1htmlszitems(node, info);
+	} else {
+		/* html tables */
+		data = static_maingtk_textsizes1htmlsztables(node, info);
+	}
+
+	return (data);
 }
 
 /* handle html label sizes for one node */
 static void static_maingtk_textsizes1htmln(struct gml_node *node)
 {
-	struct gml_p d = { 10, 10 };
+	struct gml_p *data = NULL;
 
 	/* preset with small value */
 	node->tx = 0;
 	node->ty = 0;
 
-	node->bbx = d.x;
-	node->bby = d.y;
+	node->bbx = 10;
+	node->bby = 10;
 
 	/* save copy of full size */
-	node->fbbx = d.x;
-	node->fbby = d.y;
+	node->fbbx = 10;
+	node->fbby = 10;
 
-	d = static_maingtk_textsizes1htmlsz(node, node->hlabel);
-
-	if (d.x) {
-	}
-	if (d.y) {
-	}
+	data = static_maingtk_textsizes1htmlsz(node, node->hlabel);
 
 	/* for a box */
-	node->bbx = node->tx + 4;
-	node->bby = node->ty + 4;
+	node->bbx = data->x;	// node->tx + 4;
+	node->bby = data->y;	// node->ty + 4;
 
 	/* save copy of full size */
 	node->fbbx = node->bbx;
 	node->fbby = node->bby;
 
+	if (yydebug || 0) {
+		printf("%s(): size (%d,%d) for node \"%s\"\n", __func__, node->bbx, node->bby, node->name);
+	}
+
+	/* */
+	dp_free(data);
+
 	return;
 }
 
-/* translate \n \l \r in dot string */
+/* translate \n \l \r in dot string
+ * todo \N and this is already done in dpif.c to check.
+ */
 static char *unesc(char *str)
 {
 	char *buf = NULL;
@@ -5918,7 +7068,7 @@ static char *unesc(char *str)
 	}
 	if (strchr(str, '\\') == NULL) {
 		/* string has no esc chars */
-		return (str);
+		return (uniqstr(str));
 	}
 	buf = dp_calloc(1, (strlen(str) + 1));
 	if (buf == NULL) {
@@ -6174,16 +7324,6 @@ static void static_maingtk_textsizes(void)
 				nl->node->bbx = bbxname;
 				nl->node->bby = bbyname;
 
-				/* old:
-				 * if(bbxname>nl->node->fbbx){
-				 * nl->node->fbbx=bbxname;
-				 * }
-				 * if(bbyname>nl->node->fbby)
-				 * {
-				 * nl->node->fbby=bbyname;
-				 * }
-				 */
-
 			} else {
 				nl->node->drawrh = 1;
 			}
@@ -6281,6 +7421,149 @@ static void finalxy1(struct gml_graph *g)
 	}
 
 	clear_posnodes_r(maingraph);
+
+	/* y positioning */
+	make_levelnodes(maingraph);
+
+	maxy = 0;
+	yoff = 0;
+
+	/* number of edges between level n and n+1 */
+	g->nume = (int *)dp_calloc(1, (maingraph->maxlevel + 1) * sizeof(int));
+
+	/* scan vert. to adjust the y positions. */
+	for (i = 0; i < (maingraph->maxlevel + 1); i++) {
+		/* y spacing between the vert. levels */
+		yoff = yoff + (yspacing / 1);
+		/* determine half-way of the ypos. */
+		if (g->hpos[i] == 0) {
+			/* if only dummy nodes */
+			hw = (yspacing / 2);
+		} else {
+			hw = (g->hpos[i] / 2);
+		}
+
+		/* update with current y */
+		hw = hw + yoff;
+		lnl = g->levelnodes[i];
+		ecount = 0;
+		/* scan the nodes at this y pos. */
+		while (lnl) {
+			/* set start, end of y level */
+			lnl->node->ly0 = yoff;
+			lnl->node->ly1 = (yoff + g->hpos[i]);
+			/* center the node around the half-way */
+			lnl->node->finy = (hw - (lnl->node->bby / 2));
+			/* update drawing max y pos used */
+			if ((lnl->node->finy + lnl->node->bby) > maxy) {
+				maxy = (lnl->node->finy + lnl->node->bby);
+			}
+
+			/* give dummy nodes a vertical size of the level */
+			if (lnl->node->dummy) {
+				lnl->node->bby = g->hpos[i];
+				/* if only dummy nodes at level, use spacing */
+				if (g->hpos[i] == 0) {
+					lnl->node->bby = yspacing;
+				}
+			}
+
+			/* number of edges between level n and n+1 */
+			ecount = (ecount + lnl->node->outdegree);
+			lnl = lnl->next;
+		}
+
+		/* number of edges between level n and n+1 */
+		g->nume[i] = ecount;
+
+		/* y spacing between the vert. levels */
+		yoff = yoff + (yspacing / 1);
+
+		/* yspacing depends on number of edges at this level
+		 * turned off because this add too much y-spacing
+		 * yoff = yoff + (ecount * 3);
+		 */
+		/* yspacing depends on number of crossing edges at this level
+		 * this has increasing y effect between levels
+		 */
+		if (g->numce) {
+			yoff = yoff + (1 * (g->numce[i] / 8));
+		}
+
+		/* y to next pos. */
+		yoff = yoff + g->hpos[i];
+	}
+
+	clear_levelnodes_r(maingraph);
+
+	/* clear number of edges between level n and n+1 */
+	clear_nume_r(maingraph);
+
+	return;
+}
+
+/* do final y of nodes/edges for mode 1 */
+static void finaly1(struct gml_graph *g)
+{
+	struct gml_nlist *lnl = NULL;
+	int hw = 0;
+	int xoff = 0;
+	int yoff = 0;
+	int i = 0;
+	int ecount = 0;
+
+	/* used for pos2 and do not change the x pos */
+	if (0) {
+
+		/* x positioning */
+		make_posnodes(maingraph);
+
+		maxx = 0;
+		xoff = 0;
+
+		/* scan hor. to adjust the x positions. */
+		for (i = 0; i < (g->widestnnodes + 1); i++) {
+			/* x spacing between the hor. levels */
+			xoff = xoff + xspacing;
+			/* determine half-way of the xpos. */
+			if (g->wpos[i] == 0) {
+				/* if only dummy nodes */
+				hw = xspacing / 2;
+			} else {
+				hw = (g->wpos[i] / 2);
+			}
+
+			/* update with current x */
+			hw = hw + xoff;
+			lnl = g->posnodes[i];
+			/* scan the nodes at this x pos. */
+			while (lnl) {
+				/* center the node around the half-way */
+				lnl->node->finx = (hw - (lnl->node->bbx / 2));
+				if ((lnl->node->finx + lnl->node->bbx) > maxx) {
+					maxx = (lnl->node->finx + lnl->node->bbx);
+				}
+
+				lnl = lnl->next;
+			}
+
+			lnl = g->posnodes[i];
+			/* scan the nodes at this x pos. */
+			while (lnl) {
+				/* center the node around the half-way */
+				lnl->node->lx0 = xoff;
+				lnl->node->lx1 = xoff + g->wpos[i];
+				lnl = lnl->next;
+			}
+
+			/* x spacing between the hor. levels */
+			xoff = xoff + xspacing;
+			/* x to next pos. */
+			xoff = xoff + g->wpos[i];
+		}
+
+		clear_posnodes_r(maingraph);
+	}
 
 	/* y positioning */
 	make_levelnodes(maingraph);
@@ -6468,6 +7751,8 @@ static void finalxy(struct gml_graph *g)
 		finalxy1(g);
 		break;
 	case 2:
+		/* this extra fixes problem with y setting sometines */
+		finaly1(g);
 		finalxy2(g);
 		break;
 	case 3:
@@ -6501,14 +7786,202 @@ static void finalxy(struct gml_graph *g)
 	return;
 }
 
+/* XPM */
+static const char *data_visualization_1_xpm[] = {
+	"50 50 119 2",
+	"  	c #FFFFFF",
+	". 	c #ECECEC",
+	"+ 	c #B1B1B1",
+	"@ 	c #808080",
+	"# 	c #6C6C6C",
+	"$ 	c #898989",
+	"% 	c #C0C0C0",
+	"& 	c #F6F6F6",
+	"* 	c #BBBBBB",
+	"= 	c #1C1C1C",
+	"- 	c #000000",
+	"; 	c #474747",
+	"> 	c #DADADA",
+	", 	c #222222",
+	"' 	c #DFDFDF",
+	") 	c #606060",
+	"! 	c #C7C7C7",
+	"~ 	c #B9B9B9",
+	"{ 	c #383838",
+	"] 	c #666666",
+	"^ 	c #FCFCFC",
+	"/ 	c #F7F7F7",
+	"( 	c #E5E5E5",
+	"_ 	c #D9D9D9",
+	": 	c #F1F1F1",
+	"< 	c #E4E4E4",
+	"[ 	c #F2F2F2",
+	"} 	c #7F7F7F",
+	"| 	c #989898",
+	"1 	c #B6B6B6",
+	"2 	c #E9E9E9",
+	"3 	c #7E7E7E",
+	"4 	c #767676",
+	"5 	c #E3E3E3",
+	"6 	c #6D6D6D",
+	"7 	c #B2B2B2",
+	"8 	c #ACACAC",
+	"9 	c #EBEBEB",
+	"0 	c #3D3D3D",
+	"a 	c #2E2E2E",
+	"b 	c #848484",
+	"c 	c #C2C2C2",
+	"d 	c #979797",
+	"e 	c #787878",
+	"f 	c #BFBFBF",
+	"g 	c #C6C6C6",
+	"h 	c #EAEAEA",
+	"i 	c #F9F9F9",
+	"j 	c #161616",
+	"k 	c #838383",
+	"l 	c #5F5F5F",
+	"m 	c #FDFDFD",
+	"n 	c #EFEFEF",
+	"o 	c #F8F8F8",
+	"p 	c #828282",
+	"q 	c #ADADAD",
+	"r 	c #424242",
+	"s 	c #9A9A9A",
+	"t 	c #CECECE",
+	"u 	c #9F9F9F",
+	"v 	c #818181",
+	"w 	c #FAFAFA",
+	"x 	c #F0F0F0",
+	"y 	c #868686",
+	"z 	c #535353",
+	"A 	c #555555",
+	"B 	c #939393",
+	"C 	c #AEAEAE",
+	"D 	c #D1D1D1",
+	"E 	c #878787",
+	"F 	c #777777",
+	"G 	c #404040",
+	"H 	c #CFCFCF",
+	"I 	c #A0A0A0",
+	"J 	c #A1A1A1",
+	"K 	c #3B3B3B",
+	"L 	c #D0D0D0",
+	"M 	c #757575",
+	"N 	c #565656",
+	"O 	c #585858",
+	"P 	c #5A5A5A",
+	"Q 	c #FBFBFB",
+	"R 	c #D8D8D8",
+	"S 	c #B4B4B4",
+	"T 	c #C1C1C1",
+	"U 	c #DEDEDE",
+	"V 	c #636363",
+	"W 	c #DBDBDB",
+	"X 	c #999999",
+	"Y 	c #858585",
+	"Z 	c #A7A7A7",
+	"` 	c #494949",
+	" .	c #8C8C8C",
+	"..	c #8E8E8E",
+	"+.	c #C8C8C8",
+	"@.	c #8A8A8A",
+	"#.	c #FEFEFE",
+	"$.	c #B8B8B8",
+	"%.	c #ABABAB",
+	"&.	c #B5B5B5",
+	"*.	c #C5C5C5",
+	"=.	c #9D9D9D",
+	"-.	c #5D5D5D",
+	";.	c #B7B7B7",
+	">.	c #353535",
+	",.	c #BEBEBE",
+	"'.	c #656565",
+	").	c #EDEDED",
+	"!.	c #BCBCBC",
+	"~.	c #262626",
+	"{.	c #E0E0E0",
+	"].	c #F3F3F3",
+	"^.	c #454545",
+	"/.	c #BDBDBD",
+	"(.	c #4B4B4B",
+	"_.	c #DDDDDD",
+	":.	c #323232",
+	"<.	c #6E6E6E",
+	"[.	c #A8A8A8",
+	"                                                                                                    ",
+	"                                                                                                    ",
+	"                                                                                                    ",
+	"            . + @ # $ % &                                                                           ",
+	"          * = - - - - - ; >                                                                         ",
+	"        * - - - - - - - - , '                                                                       ",
+	"      . = - - ) ! > ~ { - - ] ^                                                                     ",
+	"      + - - ) /       ( , - - _                                         : < [                       ",
+	"      } - - !           | - - 1                                     2 3 - - - 4 5                   ",
+	"      6 - - >           7 - - 8                                   9 0 - - - - - a 5                 ",
+	"      $ - - ~           b - - c                                   d - - - - - - - e                 ",
+	"      f - - { (       g - - - h                                 i j - - - - - - - - [               ",
+	"      & ; - - , | 7 k - - - l m                                 n - - - - - - - - - (               ",
+	"        > , - - - - - - - - - | ^                               o = - - - - - - - - [               ",
+	"          ' ] - - - - - l - - - | ^                             ^ ] - - - - - - - p                 ",
+	"            ^ _ 1 q c h m | - - - | ^                         ^ d - - - - - - - r 2                 ",
+	"                          ^ | - - - | ^                     ^ d - - - ] = - j s .                   ",
+	"                            ^ | - - - d ^ i t u v v u t w ^ d - - - d ^ i x w                       ",
+	"                              ^ | - - - y z - - - - - - A y - - - d ^                               ",
+	"                                m | - - - - - - - - - - - - - - B ^                                 ",
+	"                                  ^ y - - - 0 C D D q 0 - - - E ^                                   ",
+	"                                  w z - - F [         [ 4 - - A w                                   ",
+	"                                  t - - G [             [ 0 - - H                                   ",
+	"                                  u - - C                 q - - I                                   ",
+	"                                  v - - D                 D - - p                                   ",
+	"                                  v - - D                 D - - p                                   ",
+	"                                  u - - q                 8 - - J                                   ",
+	"                                  t - - 0 [             : K - - L                                   ",
+	"                                  w A - - 4 [         : M - - N w                                   ",
+	"                                  ^ E - - - 0 q D D 8 K - - - E ^                                   ",
+	"                                m | - - - - - - - - - - - - - - B ^                                 ",
+	"                              ^ | - - - y O - - - - - - P y - - - | ^                               ",
+	"                            ^ | - - - d ^ Q D 4 - - 4 D Q ^ d - - - | ^                             ",
+	"                          m | - - - B ^       + - - +       m | - - - B ^                           ",
+	"            ^ R S q T 2 m | - - - | ^         + - - +         ^ | - - - | m 2 T q S R ^             ",
+	"          U V - - - - - l - - - | ^           + - - +           ^ | - - - l - - - - - V '           ",
+	"        > , - - - - - - - - - | ^             + - - +             ^ | - - - - - - - - - , W         ",
+	"      & ; - - , X 7 Y - - - l m               Z - - Z               m l - - - Y 7 X , - - ` /       ",
+	"      f - - { (       ! - - - 2           /  .- - - - ../           2 - - - +.      ( { - - %       ",
+	"      $ - - ~           b - - c         m @.- - - - - -  .#.        T - - Y           $.- - @.      ",
+	"      6 - - >           7 - - 8         > - - - - - - - - W         %.- - 7           _ - - 6       ",
+	"      } - - !           d - - 1         Z - - - - - - - - q         &.- - s           *.- - v       ",
+	"      7 - - ) /       < = - - >         =.- - - - - - - - Z         R - - , (       & -.- - 7       ",
+	"      . = - - l g _ ;.>.- - ] ^         ,.- - - - - - - - ,.        ^ '.- - { ~ _ *.-.- - , ).      ",
+	"        !.- - - - - - - - ~.{.          ].^.- - - - - - ^.].          ' , - - - - - - - - ,.        ",
+	"          /., - - - - - (.W               _.:.- - - - >._.              W ` - - - - - , ,.          ",
+	"            ).7 v # @.% /                   x Z <.<.[.x                   / % @.# p 7 ).            ",
+	"                                                                                                    ",
+	"                                                                                                    ",
+	"                                                                                                    "
+};
+
 /* show about with ok button */
 static void show_about(GtkWidget * widget, gpointer data)
 {
 	GtkWidget *dialog = NULL;
+	GdkPixbuf *xpmdata = NULL;
+	int buflen = 0;
+	char *buf = NULL;
+	char *pbuf = NULL;
+	char *text0 = "This is a GML (Graph-Markup_Language) graph viewer program.\n"
+	    "This program is free to share, copy, use, modify or fork.\n"
+	    "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n";
+
 	if (widget) {
 	}
 	if (data) {
 	}
+
+	buflen = 384;
+
+	buf = dp_calloc(1, buflen);
+
+	buflen--;
 
 	dialog = gtk_about_dialog_new();
 #if GTK_HAVE_API_VERSION_2 == 1
@@ -6517,20 +7990,33 @@ static void show_about(GtkWidget * widget, gpointer data)
 #if GTK_HAVE_API_VERSION_3 == 1
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
 #endif
+
+	/* todo it seems this is depreciated. */
+	xpmdata = gdk_pixbuf_new_from_xpm_data(data_visualization_1_xpm);
+
+	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), xpmdata);
+
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), PACKAGE_VERSION);
 	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "Copyright is GNU GPL Version 3, see http://www.gnu.org/");
-	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
-				      "This is a GML (Graph-Markup_Language) graph viewer program.\n"
-				      "This program is free to share, copy, use, modify or fork.\n"
-				      "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n");
-	if (0) {
-		/* does not always work when there is a url link in a dialog window */
-		gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
-	}
+	snprintf(buf, (buflen), "%sCompiled on %s\n", text0, COMPILE_DATE);
+	pbuf = buf + (int)(strlen(buf));
+	/* */
+	snprintf(pbuf, (buflen - (int)(strlen(buf))), "compiled with gtk %d.%d.%d glib %d.%d.%d pango %s cairo %s\n",
+		 GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION,
+		 GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION, PANGO_VERSION_STRING, CAIRO_VERSION_STRING);
+	pbuf = buf + (int)(strlen(buf));
+	/* */
+	snprintf(pbuf, (buflen - (int)(strlen(buf))), "running with gtk %d.%d.%d glib %d.%d.%d pango %s cairo %s\n",
+		 gtk_major_version, gtk_minor_version, gtk_micro_version,
+		 glib_major_version, glib_minor_version, glib_micro_version, pango_version_string(), cairo_version_string());
+	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), buf);
+	gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
+
 	/* suppress warning */
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
+	dp_free(buf);
 	return;
 }
 

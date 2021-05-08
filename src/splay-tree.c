@@ -18,6 +18,32 @@
  *
  */
 
+/* A splay-tree datatype.  
+   Copyright (C) 1998-2021 Free Software Foundation, Inc.
+   Contributed by Mark Mitchell (mark@markmitchell.com).
+
+This file is part of GNU CC.
+   
+GNU CC is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+GNU CC is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GNU CC; see the file COPYING.  If not, write to
+the Free Software Foundation, 51 Franklin Street - Fifth Floor,
+Boston, MA 02110-1301, USA.  */
+
+/* For an easily readable description of splay-trees, see:
+
+     Lewis, Harry R. and Denenberg, Larry.  Data Structures and Their
+     Algorithms.  Harper-Collins, Inc.  1991.  */
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -36,7 +62,9 @@ static struct splay_tree_node_n *splay(splay_tree sp, splay_tree_key key);
 splay_tree splay_tree_delete(splay_tree sp)
 {
 	splay_tree_node spn = (splay_tree_node) 0;
-	splay_tree_node spn2 = (splay_tree_node) 0;
+	splay_tree_key *keys = (splay_tree_key *) 0;
+	int count = 0;
+	int i = 0;
 
 	if (sp == (splay_tree) 0) {
 		return ((splay_tree) 0);
@@ -49,12 +77,42 @@ splay_tree splay_tree_delete(splay_tree sp)
 		 * gcc realloc()'s array with pointers to free() but using realloc()
 		 * may cause unexpected high memory usage, thats why avoiding realloc() use.
 		 */
+
+		/* first count how many entries */
 		spn = splay_tree_min(sp);
 		while (spn) {
-			spn2 = splay_tree_successor(sp, spn->key);
-			splay_tree_remove(sp, spn->key);
-			spn = spn2;
+			count++;
+			spn = splay_tree_successor(sp, spn->key);
 		}
+
+		/* one extra for safety */
+		count++;
+
+		/* get buffer to hold keys */
+		keys = dp_calloc(1, (count * sizeof(splay_tree_key)));
+
+		if (keys) {
+
+			/* copy keys into buffer */
+			spn = splay_tree_min(sp);
+			i = 0;
+			while (spn) {
+				keys[i] = (splay_tree_key) spn->key;
+				i++;
+				spn = splay_tree_successor(sp, spn->key);
+			}
+
+			/* remove every key in buffer */
+			for (i = 0; i < count; i++) {
+				splay_tree_remove(sp, (splay_tree_key) keys[i]);
+				keys[i] = (splay_tree_key) 0;
+			}
+
+			/* ready. */
+			dp_free(keys);
+			keys = NULL;
+		}
+
 	}
 
 	/* wipe the pointers in the struct to make valgrind happy */
@@ -157,20 +215,6 @@ void splay_tree_insert(splay_tree sp, splay_tree_key key, splay_tree_value value
 	}
 
 	sp->root = spn;
-
-	return;
-}
-
-/* insert and allow duplicates of key */
-void splay_tree_insert_duplicates(splay_tree sp, splay_tree_key key, splay_tree_value value)
-{
-
-	if (sp == (splay_tree) 0) {
-		/* no tree */
-		return;
-	}
-
-	splay_tree_insert(sp, key, value);
 
 	return;
 }

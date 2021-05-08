@@ -67,30 +67,20 @@ static char *tmpp = NULL;
 
 char *vcglaststring = NULL;
 
-/* own yyalloc */
-void *yyalloc (size_t n)
-{
-  return(dp_calloc(1,n));
-}
-
-void yyfree (void *ptr)
-{
-  dp_free (ptr);
-  return;
-}
-
-void *yyrealloc (void *ptr, size_t n)
-{
-  return (dp_realloc(ptr,n));
-}
-
+/* own yyalloc
+ * void *yyalloc (size_t n) { return(calloc(1,n)); }
+ * void yyfree (void *ptr) { if (ptr) { free (ptr); } return; }
+ * void *yyrealloc (void *ptr, size_t n) { return (realloc(ptr,n)); }
+ */
 
 %}
 
-/* use own yyalloc */
-%option noyyalloc
-%option noyyrealloc
-%option noyyfree
+	/* use own yyalloc
+	 * %option noyyalloc
+	 * %option noyyrealloc
+	 * %option noyyfree
+	 */
+
 %option noinput
 %option nounput
 %option noyywrap

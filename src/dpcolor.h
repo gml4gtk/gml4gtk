@@ -310,9 +310,6 @@ extern int dp_colorschemecode (const char *name);
 extern int dp_colornscode (int code, int scheme);
 
 /* */
-extern void dp_colorcode_html (const char *filename);
-
-/* */
 extern int dp_findcolor (int scheme, char *str);
 
 

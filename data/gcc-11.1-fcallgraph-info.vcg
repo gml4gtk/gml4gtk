@@ -1,0 +1,18 @@
+/* generated with gcc-11.1
+gcc -fcallgraph-info
+file.ci is a vcg graph file
+*/
+graph: { title: "test.c"
+node: { title: "f1" label: "f1\ntest.c:4:5" }
+node: { title: "f2" label: "f2\ntest.c:9:5" }
+node: { title: "f3" label: "f3\ntest.c:14:5" }
+edge: { sourcename: "f3" targetname: "f1" label: "test.c:17:16" }
+node: { title: "f4" label: "f4\ntest.c:20:5" }
+edge: { sourcename: "f4" targetname: "f2" label: "test.c:22:12" }
+edge: { sourcename: "f4" targetname: "f1" label: "test.c:22:12" }
+edge: { sourcename: "f4" targetname: "f3" label: "test.c:22:12" }
+node: { title: "main" label: "main\ntest.c:25:5" }
+node: { title: "malloc" label: "malloc\n/usr/include/stdlib.h:539:14" shape : ellipse }
+edge: { sourcename: "main" targetname: "malloc" label: "test.c:28:10" }
+edge: { sourcename: "main" targetname: "f4" label: "test.c:32:4" }
+}

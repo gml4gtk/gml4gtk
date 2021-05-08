@@ -3,7 +3,7 @@ https://graphviewer.nl/
 To run this program on windows it needs the 64bits gtk-3 dll's to be installed
 and these are available from: https://sourceforge.net/projects/gtk3win/
 The file with 64bits gtk3 dll's is gtk3-runtime x84_64
-Below are the names of the dll's which ar included in a bundled version.
+Below are the names of the dll's which are included in a bundled version.
 
 The gml4gtk program can be installed on any folder directory on windows.
 The gml4gtk program does not need or create extra files or change files.
@@ -14,7 +14,7 @@ in any directory folder. To remove it remove the directory with the dlls'
 
 Howto compile:
 
-./autogen.sh
+./autogen.sh (or autoreconf -fvim)
 ./configure
 make
 cd src
@@ -23,6 +23,10 @@ cd src
 also:
 make clean
 make cleaner
+
+For gtk2 or gtk3
+./configure --with-gtk=2.0
+./configure --with-gtk=3.0
 
 Usage:
 gml4gtk
@@ -41,7 +45,8 @@ When compiled for windows it needs all gtk dll's to run the program.
 
 The gml4gtk reads most GML files and partial DOT graph files,
 and DOT data from gcc,bison,llvm,radare2 and more can be used.
-The dot language node html table labels are not yet supported.
+The dot html labels with <table> elements are partial supported in version 7.2
+It can happen the drawing is not oke, then switch to pos mode 1
 
 In the data directory are few sample graph files to try it.
 
@@ -147,6 +152,14 @@ libtiffxx-5.dll
 libwinpthread-1.dll
 libxml2-2.dll
 zlib1.dll
+
+The gmltest directory has index.html page with javacript for syntax check of a gml graph
+
+The jgf4web directory has index.html page with javacript for graph layout of json jgf graph data
+
+The jgf json graph save and open feature is experimental or just may work.
+
+The json jgf files have file extension .jgf
 
 Read also the Kozo Sugiyama book isbn 981-02-4879-2
 

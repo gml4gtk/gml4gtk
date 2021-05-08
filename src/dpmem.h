@@ -46,6 +46,12 @@ extern void *dp_calloc(size_t nmemb, size_t size);
 /* */
 extern void *dp_realloc(void *ptr, size_t n);
 
+/* */
+extern void dp_memreport (void);
+
+/* */
+extern void dp_meminit(void);
+
 #endif
 
 /* end */

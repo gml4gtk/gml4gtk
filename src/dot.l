@@ -54,25 +54,14 @@ static char *tmpp = NULL;
 static char *p = NULL;
 static char *q = NULL;
 static int htmlnest = 0;
+static void dp_check_c_comment (char *s);
 
-extern void dp_lex_init (FILE *f, int debug);
 
-/* own yyalloc */
-void *yyalloc (size_t n)
-{
-  return(dp_calloc(1,n));
-}
-
-void yyfree (void *ptr)
-{
-  dp_free (ptr);
-  return;
-}
-
-void *yyrealloc (void *ptr, size_t n)
-{
-  return (dp_realloc(ptr,n));
-}
+/* own yyalloc
+ * void *yyalloc (size_t n) { return(calloc(1,n)); }
+ * void yyfree (void *ptr) { if (ptr) { free (ptr); } return; }
+ * void *yyrealloc (void *ptr, size_t n) { return (realloc(ptr,n)); }
+*/
 
 %}
 
@@ -85,10 +74,12 @@ void *yyrealloc (void *ptr, size_t n)
 /* node label="" is two chars in output drawing */
 /* allow in fnum1,2,3 also numbers as "23.1" or "23." and ".23" */
 
-/* use own yyalloc */
-%option noyyalloc
-%option noyyfree
-%option noyyrealloc
+	/* use own yyalloc
+	 * %option noyyalloc
+	 * %option noyyfree
+	 * %option noyyrealloc
+	*/
+
 %option noinput
 %option nounput
 %option noyywrap
@@ -102,9 +93,8 @@ ISTR	[^\\\"]|\\.|\\\n
 STR	\"({ISTR}*)\"
 
 CCS	\/\*[^\*]*\*+([^\*\/][^\*]*\*+)*\/
-CCS0	\/\*
-CCS1	\*\/
 CCE	\/\/[^\n]*
+CCS1	\*\/
 
 ALPHA	[A-Za-z]
 DIGIT	[0-9]
@@ -117,9 +107,8 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 
 %%
 
-{CCS}				{ /* c-comment style */ /* lexer does update yylineno */ }
-{CCS0}				{ /* start of c comment but no end of c comment */ }
-{CCS1} 				{ /* end of c comment but no start of c comment */ }
+{CCS}				{ /* c-comment style */ /* lexer does update yylineno */ dp_check_c_comment(yytext+1); }
+{CCS1}				{ /* end of c comment but no start of c comment shouldnothappen */ printf("%s(): end of c-comment without start of c-comment \"*\\\" at line %d skipped\n",__func__,yylineno); }
 {CCE}				{ /* c++ comment style */ /* lexer does update yylineno */ }
 
 "#".*				{ /* dot comment line */ }
@@ -146,7 +135,7 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 [Nn][Oo][Dd][Ee]		{ return(TOKEN_NODE); }
 [Dd][Ii][Gg][Rr][Aa][Pp][Hh]	{ return(TOKEN_DIGRAPH); }
 [Gg][Rr][Aa][Pp][Hh]		{ return(TOKEN_GRAPH); }
-[Ss][Uu][Bb][Gg][Rr][Aa][Pp][Hh] { return(TOKEN_SUBGRAPH); }
+[Ss][Uu][Bb][Gg][Rr][Aa][Pp][Hh]	{ return(TOKEN_SUBGRAPH); }
 [Ss][Tt][Rr][Ii][Cc][Tt]	{ return(TOKEN_STRICT); }
 
 {STR}				{
@@ -191,18 +180,6 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				        *q = '\\'; /* special in record label */
 				        q++;
 				        *q = '}';
-				        q++;
-				        p = p + 2;
-				      } else if (*(p+1) == '<') {
-				        *q = '\\'; /* special in html label */
-				        q++;
-				        *q = '<';
-				        q++;
-				        p = p + 2;
-				      } else if (*(p+1) == '>') {
-				        *q = '\\'; /* special in html label */
-				        q++;
-				        *q = '>';
 				        q++;
 				        p = p + 2;
 				      } else if (*(p+1) == '\\') {
@@ -279,8 +256,8 @@ static void dp_lex_clear (void)
 {
   if (tmpp) {
     dp_free (tmpp);
+    tmpp = NULL;
   }
-  tmpp = NULL;
   p = NULL;
   q = NULL;
   htmlnest = 0;
@@ -301,9 +278,41 @@ void dp_yydebug (int debugflag)
 
   /* activate debug in lexer */
   yy_flex_debug = debugflag;
+
   /* activate debug in glr parser */
   yydebug = debugflag;
 
+  return;
+}
+
+/* check for comment inside comment */
+static void dp_check_c_comment (char *str)
+{
+  char *ptr0 = NULL;
+  char *ptr = NULL;
+  if(str == NULL) {
+    return;
+  }
+  if(strlen(str) < 1) {
+    return;
+  }
+  ptr=str;
+  while (*ptr) {
+    ptr0 = strchr (ptr, '/');
+    if (ptr0) {
+      if ((*(ptr0+1)) == '*') {
+        printf ("%s(): start of c-comment \"/*\" inside c-comment at line %d\n",__func__,yylineno);
+        ptr0++;
+      } else if ((*(ptr0+1)) == '/') {
+        printf ("%s(): start of c++-comment \"//\" inside c-comment at line %d\n",__func__,yylineno);
+        ptr0++;
+      } else {
+        /* nop */
+      }
+      ptr=ptr0;
+    }
+    ptr++;
+  }
   return;
 }
 

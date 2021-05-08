@@ -172,7 +172,7 @@ int htmlparse(struct dpnode *node)
 	}
 
 	/* unknown mode yet */
-	hlinf->mode = (-1);
+	hlinf->mode = 0;	/* or (-1); */
 
 	html_lex_init(yydebug /* debug */ , node->label, node->yylineno);
 
@@ -214,14 +214,11 @@ int htmlparse(struct dpnode *node)
 				       node->label, hlinf->mode, (void *)hlinf->il, (void *)hlinf->tl);
 			}
 		} else {
+			/* hlinf->mode == -1 does happen todo */
 			printf("%s(): node \"%s\" \"%s\" mode=%d il=%p tl=%p shouldnothappen wrong mode\n", __func__, node->name,
 			       node->label, hlinf->mode, (void *)hlinf->il, (void *)hlinf->tl);
 		}
 	}
-
-/* todo later to free this
-	dphl_freemem();
-*/
 
 	return (status);
 }
@@ -243,8 +240,8 @@ static void dphl_clearhlinfo(void)
 			pilnext = pil->next;
 			if (pil->items) {
 				dp_free(pil->items);
+				pil->items = NULL;
 			}
-			pil->items = NULL;
 			dp_free(pil);
 			pil = pilnext;
 		}
@@ -254,6 +251,7 @@ static void dphl_clearhlinfo(void)
 
 	/* table data to free */
 	if (hlinf->tl) {
+		/* todo */
 		hlinf->tl = NULL;
 		hlinf->tlend = NULL;
 	}
@@ -266,14 +264,14 @@ static void dphl_clearhlinfo(void)
 }
 
 /* add data to items */
-static struct item *dphl_makeitem(char *str, char *alt, int opt)
+static struct item *dphl_makeitem(char *str, char *alt, int opt, struct tabledata *newtable)
 {
 	struct item *item = NULL;
+	char *msg = NULL;
+
 	item = dp_calloc(1, sizeof(struct item));
-	if (item == NULL) {
-		/* shouldnothappen */
-		return (NULL);
-	}
+
+	msg = str;
 
 	/* preset item */
 	item->text = str;	/* text to display */
@@ -282,6 +280,7 @@ static struct item *dphl_makeitem(char *str, char *alt, int opt)
 	item->fontsize = (-1);	/* optional pointsize */
 	item->fontcolor = (-1);	/* optional color of text */
 	item->ncolor = (-1);	/* optional background color from <td> or <table> */
+	item->table = NULL;	/* optional <table> in <td> */
 	/* the bitflags are all 0 */
 
 	/* check if a <br> */
@@ -297,6 +296,14 @@ static struct item *dphl_makeitem(char *str, char *alt, int opt)
 	/* check if a <vr> */
 	if (opt == 3) {
 		item->bitflags.vr = 1;
+	}
+
+	/* check if a <table> */
+	if (opt == 5) {
+		item->bitflags.table = 1;
+		/* this is the <table> in the <td> */
+		item->table = newtable;
+		msg = "<table> in <td>";
 	}
 
 	/* check if str has html chars */
@@ -363,6 +370,9 @@ static struct item *dphl_makeitem(char *str, char *alt, int opt)
 			if (curtd->bgcolor < 0) {
 				/* not specified */
 			} else {
+				if (yydebug || 1) {
+					printf("%s(): setting background color 0x%x for \"%s\"\n", __func__, curtd->bgcolor, msg);
+				}
 				item->ncolor = curtd->bgcolor;
 			}
 		}
@@ -405,13 +415,8 @@ static void dphl_itemitems(char *str, char *alt, int opt)
 
 	il = dp_calloc(1, sizeof(struct ilist));
 
-	if (il == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	/* set linkage to data */
-	il->items = dphl_makeitem(str, alt, opt);
+	il->items = dphl_makeitem(str, alt, opt, NULL);
 
 	if (il->items == NULL) {
 		/* shouldnothappen */
@@ -460,18 +465,8 @@ static void dphl_itemtables(char *str, char *alt, int opt)
 
 	il = dp_calloc(1, sizeof(struct ilist));
 
-	if (il == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	/* set linkage to data */
-	il->items = dphl_makeitem(str, alt, opt);
-
-	if (il->items == NULL) {
-		/* shouldnothappen */
-		return;
-	}
+	il->items = dphl_makeitem(str, alt, opt, NULL);
 
 	curtd->table = curtable;
 
@@ -1263,6 +1258,12 @@ int dphl_chk_border(char *str, int mode)
 			 str, hllineno);
 		return (1);
 	}
+	if (ival > 255) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1), "html %s(): too high value `%s' for border (max is 255) in html string at line %d\n",
+			 __func__, str, hllineno);
+		return (1);
+	}
 	/* ival is the size */
 	/* size 0 is allowed */
 	if (mode == T_TD) {
@@ -1330,6 +1331,13 @@ int dphl_chk_cellborder(char *str)
 			 __func__, str, hllineno);
 		return (1);
 	}
+	if (ival > 255) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for cellborder (max is 255) in html string at line %d\n", __func__, str,
+			 hllineno);
+		return (1);
+	}
 	/* ival is the size */
 	/* size 0 is allowed */
 	/* <table> cellborder */
@@ -1344,7 +1352,7 @@ int dphl_chk_cellborder(char *str)
 	return (0);
 }
 
-/* check cellpadding value */
+/* check cellpadding value, default is 2 px */
 int dphl_chk_cellpadding(char *str, int mode)
 {
 	int n = 0;
@@ -1384,6 +1392,13 @@ int dphl_chk_cellpadding(char *str, int mode)
 			 __func__, str, hllineno);
 		return (1);
 	}
+	if (ival > 255) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for cellpadding (max is 255) in html string at line %d\n", __func__, str,
+			 hllineno);
+		return (1);
+	}
 	/* ival is the size */
 	/* size 0 is allowed */
 	if (mode == T_TD) {
@@ -1412,7 +1427,7 @@ int dphl_chk_cellpadding(char *str, int mode)
 	return (0);
 }
 
-/* check cellspacing value */
+/* check cellspacing value default is 2 px */
 /* cellspacing="0.5" is used in dot data, parse fp number */
 int dphl_chk_cellspacing(char *str, int mode)
 {
@@ -1454,13 +1469,18 @@ int dphl_chk_cellspacing(char *str, int mode)
 	}
 	if (dval > INT_MAX) {
 		memset(dp_errmsg, 0, 256);
-		snprintf(dp_errmsg, (256 - 1), "html %s(): too large value `%s' for cellspacing in html string at line %d\n",
+		snprintf(dp_errmsg, (256 - 1), "html %s(): too high value `%s' for cellspacing in html string at line %d\n",
 			 __func__, str, hllineno);
 		return (1);
 	}
 	dval = round(dval);
 	ival = (int)dval;
-	if (ival) {
+	if (ival > 127) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for cellspacing (max is 127) in html string at line %d\n", __func__, str,
+			 hllineno);
+		return (1);
 	}
 	/* ival is the spacing */
 	/* size 0 is allowed */
@@ -1634,6 +1654,13 @@ int dphl_chk_colspan(char *str)
 			 hllineno);
 		return (1);
 	}
+	if (ival > 65535) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for colspan (max is 65535) in html string at line %d\n", __func__, str,
+			 hllineno);
+		return (1);
+	}
 	/* ival is the size */
 	/* size 0 is not allowed */
 	/* <td> colspan */
@@ -1644,6 +1671,11 @@ int dphl_chk_colspan(char *str)
 		snprintf(dp_errmsg, (256 - 1), "html %s(): multiple value `%s' for colspan in html string at line %d\n", __func__,
 			 str, hllineno);
 		return (1);
+	}
+
+	/* todo */
+	if (curtd->colspan > 1) {
+		printf("%s(): colspan=%d is not yet implemented in this version\n", __func__, curtd->colspan);
 	}
 
 	return (0);
@@ -1835,6 +1867,13 @@ int dphl_chk_height(char *str, int mode)
 			 str, hllineno);
 		return (1);
 	}
+	if (ival > 65535) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for height (max is 65535) in html string at line %d\n", __func__, str,
+			 hllineno);
+		return (1);
+	}
 	/* ival is the size */
 	/* size 0 is allowed */
 	if (mode == T_TD) {
@@ -1979,18 +2018,18 @@ int dphl_chk_port(char *str, int mode)
 /* check point-size value for font */
 int dphl_chk_pointsize(char *str)
 {
-	int n = 0;
 	int ival = 0;
 	int pe = 0;
 	int es = 0;
-	struct dpinum *num = NULL;
+	double dnum = 0.0;
+	struct dpnum *num = NULL;
 	if (*str == '-') {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): negative value `%s' for point-size in html string\n", __func__, str);
 		return (1);
 	}
-	num = dp_getinum(str);
-	n = num->number;
+	num = dp_getnum(str);
+	dnum = num->number;
 	pe = num->pe;
 	es = num->es;
 	dp_free(num);
@@ -2005,12 +2044,17 @@ int dphl_chk_pointsize(char *str)
 		snprintf(dp_errmsg, (256 - 1), "html %s(): bad value `%s' for point-size in html string\n", __func__, str);
 		return (1);
 	}
-	ival = n;
-	if (ival < 0) {
+
+	if (dnum < 0) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): negative value `%s' for point-size in html string\n", __func__, str);
 		return (1);
 	}
+	if (dnum > 255) {
+		printf("%s(): limiting too high pointsize %f to 255\n", __func__, dnum);
+		dnum = 255;
+	}
+	ival = (int)dnum;
 	/* ival is the font pointsize */
 	/* pointsize 0 is allowed */
 	/* <font> point-size */
@@ -2099,6 +2143,13 @@ int dphl_chk_rowspan(char *str)
 			 hllineno);
 		return (1);
 	}
+	if (ival > 65535) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for rowspan (max is 65535) in html string at line %d\n", __func__, str,
+			 hllineno);
+		return (1);
+	}
 	/* ival is the size */
 	/* size 0 is not allowed */
 	/* <td> rowspan */
@@ -2109,6 +2160,11 @@ int dphl_chk_rowspan(char *str)
 		snprintf(dp_errmsg, (256 - 1), "html %s(): multiple value `%s' for rowspan in html string at line %d\n", __func__,
 			 str, hllineno);
 		return (1);
+	}
+
+	/* todo */
+	if (curtd->rowspan > 1) {
+		printf("%s(): rowspan=%d is not yet implemented in this version\n", __func__, curtd->rowspan);
 	}
 
 	return (0);
@@ -2501,6 +2557,13 @@ int dphl_chk_width(char *str, int mode)
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): negative value `%s' for width in html string at line %d\n", __func__,
 			 str, hllineno);
+		return (1);
+	}
+	if (ival > 65535) {
+		memset(dp_errmsg, 0, 256);
+		snprintf(dp_errmsg, (256 - 1),
+			 "html %s(): too high value `%s' for width (max is 65535) in html string at line %d\n", __func__, str,
+			 hllineno);
 		return (1);
 	}
 	/* ival is the size */
@@ -2965,6 +3028,69 @@ static void dphl_pulltable(void)
 	return;
 }
 
+/* at new <table> to current <td> */
+static void dphl_addtableitem(struct tabledata *newtable)
+{
+	struct ilist *il = NULL;
+
+	if (yydebug || 0) {
+		printf("%s(): setting new <table> in current <td> items\n", __func__);
+	}
+
+	/* if opt is set it is br=1, hr=2, vr=3, img=4, table=5 */
+	if (hlinf == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+
+	if (hlinf->mode == 0) {
+		/* shouldnothappen */
+		return;
+	}
+
+	if (curtable == NULL) {
+		/* shouldnothappen */
+		printf("%s(): nil curtable\n", __func__);
+		return;
+	}
+
+	if (curtd == NULL) {
+		/* shouldnothappen */
+		printf("%s(): nil curtd\n", __func__);
+		return;
+	}
+
+	if (curtr == NULL) {
+		/* shouldnothappen */
+		printf("%s(): nil curtr\n", __func__);
+		return;
+	}
+
+	il = dp_calloc(1, sizeof(struct ilist));
+
+	/* set linkage to data */
+	il->items = dphl_makeitem( /* str */ NULL, /* alt */ NULL, /* opt */ 5, newtable);
+
+	/* <td> belongs to this <table> */
+	curtd->table = curtable;
+
+	/* indicate in <td> this is a <table> */
+	curtd->istab = 1;
+
+	/* indicate in <tr> there is a <td> with a <table> statement */
+	curtr->hastab = 1;
+
+	if (curtd->il == NULL) {
+		curtd->il = il;
+		curtd->ilend = il;
+	} else {
+		curtd->ilend->next = il;
+		curtd->ilend = il;
+	}
+
+	return;
+}
+
 /* reset <table> at start */
 void dphl_rtable(void)
 {
@@ -2972,30 +3098,21 @@ void dphl_rtable(void)
 	struct tabledata *curtable2 = NULL;
 	struct tableldata *curtablel = NULL;
 
-	curtablel = dp_calloc(1, sizeof(struct tableldata));
-
-	if (curtablel == NULL) {
-		/* shouldnothappen */
-		return;
+	if (hlinf->mode < 1) {
+		/* mode=tables */
+		hlinf->mode = 1;
+		if (hlinf->il) {
+			/* todo, clear no il and ilend items */
+			printf("%s(): switch to <table> mode and hlinf->il=%p to clear\n", __func__, (void *)hlinf->il);
+		}
 	}
+
+	curtablel = dp_calloc(1, sizeof(struct tableldata));
 
 	tli = dp_calloc(1, sizeof(struct tlist));
 
-	if (tli == NULL) {
-		/* shouldnothappen */
-		dp_free(curtablel);
-		return;
-	}
-
 	/* fresh table data */
 	curtable2 = dp_calloc(1, sizeof(struct tabledata));
-
-	if (curtable2 == NULL) {
-		/* shouldnothappen */
-		dp_free(curtablel);
-		dp_free(tli);
-		return;
-	}
 
 	curtablel->tabdata = curtable2;
 
@@ -3004,11 +3121,24 @@ void dphl_rtable(void)
 
 	/* preset <table> */
 	curtable2->align = (-1);	/* ="center|left|right" */
-	curtable2->bgcolor = (-1);	/* ="colorname" */
+
+	if (curtable) {
+		curtable2->bgcolor = curtable->bgcolor;	/* ="colorname" */
+	} else {
+		curtable2->bgcolor = (-1);	/* ="colorname" */
+	}
+	if (curtd) {
+		curtable2->bgcolor = curtd->bgcolor;	/* ="colorname" */
+	} else {
+		curtable2->bgcolor = (-1);	/* ="colorname" */
+	}
+
 	curtable2->border = (-1);	/* ="int-value" */
 	curtable2->cellborder = (-1);	/* ="int-value" */
 	curtable2->cellpadding = (-1);	/* ="int-value" */
 	curtable2->cellspacing = (-1);	/* ="int-value" */
+
+	/* todo see above for fontcolor */
 	curtable2->color = (-1);	/* ="colorname" */
 	curtable2->columns = NULL;	/* ="string" */
 	curtable2->fixedsize = (-1);	/* ="true|false" */
@@ -3031,6 +3161,11 @@ void dphl_rtable(void)
 	curtable2->width = (-1);	/* ="int-value" */
 
 	curtable2->table = curtable;	/* rooted on this table or 0 */
+
+	/* not at first <table> entry */
+	if (curtd) {
+		dphl_addtableitem(curtable2);
+	}
 
 	/* push old curtable if any */
 	if (curtable) {
@@ -3159,19 +3294,8 @@ void dphl_rtd(void)
 
 	curtdl = dp_calloc(1, sizeof(struct tdldata));
 
-	if (curtdl == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	/* fresh table data */
 	curtd2 = dp_calloc(1, sizeof(struct tddata));
-
-	if (curtd2 == NULL) {
-		/* shouldnothappen */
-		dp_free(curtdl);
-		return;
-	}
 
 	/* push old curtd if any */
 	if (curtd) {
@@ -3230,7 +3354,9 @@ void dphl_rtd(void)
 void dphl_etd(int code)
 {
 	/* curdata has data, with curtd settings */
-	if (code) {		/* todo */
+	if (code == 2) {
+		/* this can indicate there is something wrong in generated grph data */
+		printf("%s(): <td> with no items found\n", __func__);
 	}
 
 	/* pull curtd if any */
@@ -3248,9 +3374,6 @@ static void dphl_pushtr(void)
 	/* data for <tr> */
 	if (trstack == NULL) {
 		trstack = splay_tree_new(splay_tree_compare_ints, NULL, NULL);
-		if (trstack == NULL) {
-			return;
-		}
 	}
 
 	if (splay_tree_has_data(trstack) == 0) {
@@ -3320,18 +3443,7 @@ void dphl_rtr(void)
 
 	trl = dp_calloc(1, sizeof(struct trlist));
 
-	if (trl == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	tri = dp_calloc(1, sizeof(struct trdata));
-
-	if (tri == NULL) {
-		/* shouldnothappen */
-		dp_free(trl);
-		return;
-	}
 
 	trl->tritem = tri;
 
@@ -3369,7 +3481,7 @@ void dphl_data(char *str)
 {
 	char *altstr = NULL;
 
-	if (0) {
+	if (yydebug || 0) {
 		printf("html %s(): data is \"%s\"\n", __func__, str);
 	}
 
@@ -3382,7 +3494,7 @@ void dphl_data(char *str)
 	if (strchr(str, '&')) {
 		/* this can set error status */
 		altstr = dplh_htrans(str);
-		if (0) {
+		if (yydebug || 0) {
 			printf("%s(): translated html char is \"%s\"\n", __func__, altstr);
 		}
 		if (dphl_chk_err()) {
@@ -3421,174 +3533,11 @@ void dphl_data(char *str)
 	return;
 }
 
-/* free ilist */
-static void dphl_freememil(struct tdldata *td)
-{
-	struct ilist *ilptr = NULL;	/* text items in td or 0 */
-	struct ilist *ilptrnext = NULL;	/* text items in td or 0 */
-	struct tddata *tdd = NULL;
-	if (td == NULL) {
-		return;
-	}
-	if (td->tdd == NULL) {
-		return;
-	}
-	tdd = td->tdd;
-	if (tdd == NULL) {
-		return;
-	}
-	if (tdd->il) {
-		ilptr = tdd->il;
-		while (ilptr) {
-			ilptrnext = ilptr->next;
-			if (ilptr->items) {
-				dp_free(ilptr->items);
-			}
-			ilptr->items = NULL;
-			dp_free(ilptr);
-			ilptr = ilptrnext;
-		}
-		tdd->il = NULL;
-	}
-	td->tdd->ilend = NULL;
-
-	return;
-}
-
-/* free <tr> */
-static void dphl_freememtr(struct trlist *tr)
-{
-	struct tdldata *tdlptr = NULL;	/* td items in tr */
-	struct tdldata *tdlptrnext = NULL;
-
-	if (tr == NULL) {
-		return;
-	}
-	if (tr->tritem == NULL) {
-		return;
-	}
-
-	/* <td> data */
-	tdlptr = tr->tritem->td;
-	while (tdlptr) {
-		tdlptrnext = tdlptr->next;
-		/* tdptr is free'ed later */
-		dphl_freememil(tdlptr);
-		if (tdlptr->tdd) {
-			dp_free(tdlptr->tdd);
-		}
-		tdlptr->tdd = NULL;
-		dp_free(tdlptr);
-		tdlptr = tdlptrnext;
-	}
-	tr->tritem->td = NULL;
-	tr->tritem->tdend = NULL;
-
-	dp_free(tr->tritem);
-	tr->tritem = NULL;
-
-	return;
-}
-
-static void dphl_freememt_r(struct tlist *tl)
-{
-	struct tlist *tlptr = NULL;	/* list of table items */
-	struct tlist *tlptrnext = NULL;	/* list of table items */
-	struct trlist *trptr = NULL;	/* tr items */
-	struct trlist *trptrnext = NULL;	/* end tr items */
-
-	if (tl == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
-	if (tl->titem == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
-	if (tl->titem->tabdata) {
-		/* clear sub tables if any */
-		if (tl->titem->tabdata->tl) {
-			tlptr = tl->titem->tabdata->tl;
-			while (tlptr) {
-				tlptrnext = tlptr->next;
-				dphl_freememt_r(tlptr);
-				if (tlptr->titem) {
-					dp_free(tlptr->titem);
-				}
-				tlptr->titem = NULL;
-				dp_free(tlptr);
-				tlptr = tlptrnext;
-			}
-			tl->titem->tabdata->tl = NULL;
-		}
-		tl->titem->tabdata->tlend = NULL;
-		/* <tr> data */
-		if (tl->titem->tabdata->tr) {
-			trptr = tl->titem->tabdata->tr;
-			while (trptr) {
-				trptrnext = trptr->next;
-				dphl_freememtr(trptr);
-				if (trptr->tritem) {
-					dp_free(trptr->tritem);
-				}
-				trptr->tritem = NULL;
-				dp_free(trptr);
-				trptr = trptrnext;
-			}
-			tl->titem->tabdata->tr = NULL;
-		}
-		tl->titem->tabdata->trend = NULL;
-		if (tl->titem->tabdata) {
-			dp_free(tl->titem->tabdata);
-		}
-		tl->titem->tabdata = NULL;
-	}
-
-	if (tl->titem) {
-		dp_free(tl->titem);
-	}
-	tl->titem = NULL;
-
-	return;
-}
-
-/* free table list data if any */
-static void dphl_freememtl(void)
-{
-	struct tlist *tlptr;	/* list of table items */
-	struct tlist *tlptrnext;	/* list of table items */
-	if (hlinf == NULL) {
-		return;
-	}
-	if (hlinf->tl == NULL) {
-		return;
-	}
-	tlptr = hlinf->tl;
-	while (tlptr) {
-		tlptrnext = tlptr->next;
-		dphl_freememt_r(tlptr);
-		if (tlptr->titem) {
-			dp_free(tlptr->titem);
-		}
-		tlptr->titem = NULL;
-		dp_free(tlptr);
-		tlptr = tlptrnext;
-	}
-	hlinf->tl = NULL;
-	hlinf->tlend = NULL;
-	return;
-}
-
-/* free mem */
+/* free mem used by html label parsing, node hlinfo data is cleared later in dp_clearall() */
 void dphl_freemem(void)
 {
 	struct fontldata *fptr = NULL;
 	struct fontldata *fptrnext = NULL;
-
-	/* free table list data if any */
-	dphl_freememtl();
 
 	/* data for <br> */
 	if (curbr) {

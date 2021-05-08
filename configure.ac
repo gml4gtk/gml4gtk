@@ -247,13 +247,18 @@ else
 fi])
 
 AC_MSG_CHECKING([which gtk+ version to compile against])
+
+# set [with_gtk=2.0] to default for gtk-2
+# set [with_gtk=3.0] to default for gtk-3
+# set [with_gtk=4.0] to default for gtk-4
+
 AC_ARG_WITH([gtk],
   [AS_HELP_STRING([--with-gtk=2.0|3.0|4.0],[which gtk+ version to compile against (default: 3.0)])],
   [case "$with_gtk" in
      2.0|3.0|4.0) ;;
      *) AC_MSG_ERROR([invalid gtk version specified]) ;;
    esac],
-  [with_gtk=2.0])
+  [with_gtk=3.0])
 AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in

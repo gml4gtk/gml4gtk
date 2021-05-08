@@ -4,35 +4,36 @@ Grammar
 
     1 $@1: %empty
 
-    2 startdot: utf thetype thename $@1 TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+    2 startdot: utf thetype thename $@1 "{" statements "}"
     3         | error
     4         | %empty
 
-    5 utf: TOKEN_UTF8BOM
+    5 utf: "utf8code"
     6    | %empty
 
-    7 thetype: TOKEN_STRICT TOKEN_GRAPH
-    8        | TOKEN_GRAPH
-    9        | TOKEN_STRICT TOKEN_DIGRAPH
-   10        | TOKEN_DIGRAPH
+    7 thetype: "strict" "graph"
+    8        | "graph"
+    9        | "strict" "digraph"
+   10        | "digraph"
 
    11 thename: text
    12        | %empty
 
-   13 ctext: TOKEN_QTEXT
-   14      | ctext TOKEN_PLUS TOKEN_QTEXT
+   13 ctext: "\"string\""
+   14      | ctext "+" "\"string\""
 
-   15 text: TOKEN_TEXT
-   16     | TOKEN_NUM
-   17     | TOKEN_HTEXT
-   18     | ctext
+   15 text: "string"
+   16     | "number"
+   17     | ctext
+
+   18 htext: "<html-string>"
 
    19 statements: statements statement
    20           | statement
 
    21 statement: statement2
-   22          | statement2 TOKEN_SC
-   23          | statement2 TOKEN_COMMA
+   22          | statement2 ";"
+   23          | statement2 ","
 
    24 statement2: nstatement
    25           | estatement
@@ -47,95 +48,97 @@ Grammar
    30 nstatement: nidid $@3 oattrib
 
    31 nidid: text
-   32      | text TOKEN_COLON text
-   33      | text TOKEN_COLON text TOKEN_COLON text
+   32      | text ":" text
+   33      | text ":" text ":" text
 
    34 nid: text
-   35    | text TOKEN_COLON text
-   36    | text TOKEN_COLON text TOKEN_COLON text
+   35    | text ":" text
+   36    | text ":" text ":" text
 
-   37 sattr: text TOKEN_IS text
+   37 sattr: text "=" text
+   38      | text "=" htext
 
-   38 sattr2: sattr
-   39       | text
+   39 sattr2: sattr
+   40       | text
 
-   40 iattr: sattr2 iattr
-   41      | sattr2 TOKEN_COMMA iattr
-   42      | sattr2 TOKEN_SC iattr
-   43      | %empty
+   41 iattr: sattr2 iattr
+   42      | sattr2 "," iattr
+   43      | sattr2 ";" iattr
+   44      | %empty
 
-   44 tattr: TOKEN_BRACKETOPEN iattr TOKEN_BRACKETCLOSE
+   45 tattr: "[" iattr "]"
 
-   45 oattrib: tattr oattrib
-   46        | %empty
+   46 oattrib: tattr oattrib
+   47        | %empty
 
-   47 $@4: %empty
+   48 $@4: %empty
 
-   48 $@5: %empty
+   49 $@5: %empty
 
-   49 estatement: nid $@4 erhs $@5 oattrib
+   50 estatement: nid $@4 erhs $@5 oattrib
 
-   50 $@6: %empty
+   51 $@6: %empty
 
-   51 $@7: %empty
+   52 $@7: %empty
 
-   52 estatement: sstatement $@6 erhs $@7 oattrib
+   53 estatement: sstatement $@6 erhs $@7 oattrib
 
-   53 erhs: TOKEN_EOP nid
+   54 erhs: "-> or --" nid
 
-   54 $@8: %empty
+   55 $@8: %empty
 
-   55 erhs: TOKEN_EOP nid $@8 erhs
-   56     | TOKEN_EOP sstatement
+   56 erhs: "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
 
-   57 $@9: %empty
+   58 $@9: %empty
 
-   58 erhs: TOKEN_EOP sstatement $@9 erhs
+   59 erhs: "-> or --" sstatement $@9 erhs
 
-   59 astatement: atype tattr
-   60           | aset
+   60 astatement: atype tattr
+   61           | aset
 
-   61 atype: TOKEN_GRAPH
-   62      | TOKEN_NODE
-   63      | TOKEN_EDGE
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
 
-   64 aset: text TOKEN_IS text
+   65 aset: text "=" text
+   66     | text "=" htext
 
-   65 sstatement: shead TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+   67 sstatement: shead "{" statements "}"
 
-   66 $@10: %empty
+   68 $@10: %empty
 
-   67 sstatement: TOKEN_BRACEOPEN $@10 statements TOKEN_BRACECLOSE
+   69 sstatement: "{" $@10 statements "}"
 
-   68 shead: TOKEN_SUBGRAPH text
-   69      | TOKEN_SUBGRAPH
+   70 shead: "subgraph" text
+   71      | "subgraph"
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256) 3
-TOKEN_BRACEOPEN (258) 2 65 67
-TOKEN_BRACECLOSE (259) 2 65 67
-TOKEN_PLUS (260) 14
-TOKEN_COMMA (261) 23 41
-TOKEN_COLON (262) 32 33 35 36
-TOKEN_IS (263) 37 64
-TOKEN_SC (264) 22 42
-TOKEN_BRACKETOPEN (265) 44
-TOKEN_BRACKETCLOSE (266) 44
-TOKEN_UTF8BOM (267) 5
-TOKEN_STRICT (268) 7 9
-TOKEN_GRAPH (269) 7 8 61
-TOKEN_SUBGRAPH (270) 68 69
-TOKEN_DIGRAPH (271) 9 10
-TOKEN_NODE (272) 62
-TOKEN_EDGE (273) 63
-TOKEN_TEXT <string> (274) 15
-TOKEN_NUM <string> (275) 16
-TOKEN_QTEXT <string> (276) 13 14
-TOKEN_HTEXT <string> (277) 17
-TOKEN_EOP <string> (278) 53 55 56 58
+"{" (258) 2 67 69
+"}" (259) 2 67 69
+"+" (260) 14
+"," (261) 23 42
+":" (262) 32 33 35 36
+"=" (263) 37 38 65 66
+";" (264) 22 43
+"[" (265) 45
+"]" (266) 45
+"utf8code" (267) 5
+"strict" (268) 7 9
+"graph" (269) 7 8 62
+"subgraph" (270) 70 71
+"digraph" (271) 9 10
+"node" (272) 63
+"edge" (273) 64
+"string" <string> (274) 15
+"number" <string> (275) 16
+"\"string\"" <string> (276) 13 14
+"<html-string>" <string> (277) 18
+"-> or --" <string> (278) 54 56 57 59
 
 
 Nonterminals, with rules where they appear
@@ -153,76 +156,79 @@ thetype <string> (28)
 thename <string> (29)
     on left: 11 12, on right: 2
 ctext <string> (30)
-    on left: 13 14, on right: 14 18
+    on left: 13 14, on right: 14 17
 text <string> (31)
-    on left: 15 16 17 18, on right: 11 31 32 33 34 35 36 37 39 64 68
-statements (32)
-    on left: 19 20, on right: 2 19 65 67
-statement (33)
+    on left: 15 16 17, on right: 11 31 32 33 34 35 36 37 38 40 65 66
+    70
+htext <string> (32)
+    on left: 18, on right: 38 66
+statements (33)
+    on left: 19 20, on right: 2 19 67 69
+statement (34)
     on left: 21 22 23, on right: 19 20
-statement2 (34)
+statement2 (35)
     on left: 24 25 26 28, on right: 21 22 23
-$@2 (35)
+$@2 (36)
     on left: 27, on right: 28
-nstatement (36)
+nstatement (37)
     on left: 30, on right: 24
-$@3 (37)
+$@3 (38)
     on left: 29, on right: 30
-nidid <string> (38)
+nidid <string> (39)
     on left: 31 32 33, on right: 30
-nid <dp> (39)
-    on left: 34 35 36, on right: 49 53 55
-sattr (40)
-    on left: 37, on right: 38
-sattr2 (41)
-    on left: 38 39, on right: 40 41 42
-iattr (42)
-    on left: 40 41 42 43, on right: 40 41 42 44
-tattr (43)
-    on left: 44, on right: 45 59
-oattrib (44)
-    on left: 45 46, on right: 28 30 45 49 52
-estatement (45)
-    on left: 49 52, on right: 25
-$@4 (46)
-    on left: 47, on right: 49
-$@5 (47)
-    on left: 48, on right: 49
-$@6 (48)
-    on left: 50, on right: 52
-$@7 (49)
-    on left: 51, on right: 52
-erhs (50)
-    on left: 53 55 56 58, on right: 49 52 55 58
-$@8 (51)
-    on left: 54, on right: 55
-$@9 (52)
-    on left: 57, on right: 58
-astatement (53)
-    on left: 59 60, on right: 26
-atype (54)
-    on left: 61 62 63, on right: 59
-aset (55)
-    on left: 64, on right: 60
-sstatement <dp> (56)
-    on left: 65 67, on right: 28 52 56 58
-$@10 (57)
-    on left: 66, on right: 67
-shead (58)
-    on left: 68 69, on right: 65
+nid <dp> (40)
+    on left: 34 35 36, on right: 50 54 56
+sattr (41)
+    on left: 37 38, on right: 39
+sattr2 (42)
+    on left: 39 40, on right: 41 42 43
+iattr (43)
+    on left: 41 42 43 44, on right: 41 42 43 45
+tattr (44)
+    on left: 45, on right: 46 60
+oattrib (45)
+    on left: 46 47, on right: 28 30 46 50 53
+estatement (46)
+    on left: 50 53, on right: 25
+$@4 (47)
+    on left: 48, on right: 50
+$@5 (48)
+    on left: 49, on right: 50
+$@6 (49)
+    on left: 51, on right: 53
+$@7 (50)
+    on left: 52, on right: 53
+erhs (51)
+    on left: 54 56 57 59, on right: 50 53 56 59
+$@8 (52)
+    on left: 55, on right: 56
+$@9 (53)
+    on left: 58, on right: 59
+astatement (54)
+    on left: 60 61, on right: 26
+atype (55)
+    on left: 62 63 64, on right: 60
+aset (56)
+    on left: 65 66, on right: 61
+sstatement <dp> (57)
+    on left: 67 69, on right: 28 53 57 59
+$@10 (58)
+    on left: 68, on right: 69
+shead (59)
+    on left: 70 71, on right: 67
 
 
 State 0
 
     0 $accept: . startdot $end
 
-    error          shift, and go to state 1
-    TOKEN_UTF8BOM  shift, and go to state 2
+    error       shift, and go to state 1
+    "utf8code"  shift, and go to state 2
 
-    $end           reduce using rule 4 (startdot)
-    TOKEN_STRICT   reduce using rule 6 (utf)
-    TOKEN_GRAPH    reduce using rule 6 (utf)
-    TOKEN_DIGRAPH  reduce using rule 6 (utf)
+    $end       reduce using rule 4 (startdot)
+    "strict"   reduce using rule 6 (utf)
+    "graph"    reduce using rule 6 (utf)
+    "digraph"  reduce using rule 6 (utf)
 
     startdot  go to state 3
     utf       go to state 4
@@ -237,7 +243,7 @@ State 1
 
 State 2
 
-    5 utf: TOKEN_UTF8BOM .
+    5 utf: "utf8code" .
 
     $default  reduce using rule 5 (utf)
 
@@ -251,11 +257,11 @@ State 3
 
 State 4
 
-    2 startdot: utf . thetype thename $@1 TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+    2 startdot: utf . thetype thename $@1 "{" statements "}"
 
-    TOKEN_STRICT   shift, and go to state 6
-    TOKEN_GRAPH    shift, and go to state 7
-    TOKEN_DIGRAPH  shift, and go to state 8
+    "strict"   shift, and go to state 6
+    "graph"    shift, and go to state 7
+    "digraph"  shift, and go to state 8
 
     thetype  go to state 9
 
@@ -269,1003 +275,1006 @@ State 5
 
 State 6
 
-    7 thetype: TOKEN_STRICT . TOKEN_GRAPH
-    9        | TOKEN_STRICT . TOKEN_DIGRAPH
+    7 thetype: "strict" . "graph"
+    9        | "strict" . "digraph"
 
-    TOKEN_GRAPH    shift, and go to state 10
-    TOKEN_DIGRAPH  shift, and go to state 11
+    "graph"    shift, and go to state 10
+    "digraph"  shift, and go to state 11
 
 
 State 7
 
-    8 thetype: TOKEN_GRAPH .
+    8 thetype: "graph" .
 
     $default  reduce using rule 8 (thetype)
 
 
 State 8
 
-   10 thetype: TOKEN_DIGRAPH .
+   10 thetype: "digraph" .
 
     $default  reduce using rule 10 (thetype)
 
 
 State 9
 
-    2 startdot: utf thetype . thename $@1 TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+    2 startdot: utf thetype . thename $@1 "{" statements "}"
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
 
     $default  reduce using rule 12 (thename)
 
-    thename  go to state 16
-    ctext    go to state 17
-    text     go to state 18
+    thename  go to state 15
+    ctext    go to state 16
+    text     go to state 17
 
 
 State 10
 
-    7 thetype: TOKEN_STRICT TOKEN_GRAPH .
+    7 thetype: "strict" "graph" .
 
     $default  reduce using rule 7 (thetype)
 
 
 State 11
 
-    9 thetype: TOKEN_STRICT TOKEN_DIGRAPH .
+    9 thetype: "strict" "digraph" .
 
     $default  reduce using rule 9 (thetype)
 
 
 State 12
 
-   15 text: TOKEN_TEXT .
+   15 text: "string" .
 
     $default  reduce using rule 15 (text)
 
 
 State 13
 
-   16 text: TOKEN_NUM .
+   16 text: "number" .
 
     $default  reduce using rule 16 (text)
 
 
 State 14
 
-   13 ctext: TOKEN_QTEXT .
+   13 ctext: "\"string\"" .
 
     $default  reduce using rule 13 (ctext)
 
 
 State 15
 
-   17 text: TOKEN_HTEXT .
+    2 startdot: utf thetype thename . $@1 "{" statements "}"
 
-    $default  reduce using rule 17 (text)
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 18
 
 
 State 16
 
-    2 startdot: utf thetype thename . $@1 TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+   14 ctext: ctext . "+" "\"string\""
+   17 text: ctext .
 
-    $default  reduce using rule 1 ($@1)
+    "+"  shift, and go to state 19
 
-    $@1  go to state 19
+    $default  reduce using rule 17 (text)
 
 
 State 17
-
-   14 ctext: ctext . TOKEN_PLUS TOKEN_QTEXT
-   18 text: ctext .
-
-    TOKEN_PLUS  shift, and go to state 20
-
-    $default  reduce using rule 18 (text)
-
-
-State 18
 
    11 thename: text .
 
     $default  reduce using rule 11 (thename)
 
 
+State 18
+
+    2 startdot: utf thetype thename $@1 . "{" statements "}"
+
+    "{"  shift, and go to state 20
+
+
 State 19
 
-    2 startdot: utf thetype thename $@1 . TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+   14 ctext: ctext "+" . "\"string\""
 
-    TOKEN_BRACEOPEN  shift, and go to state 21
+    "\"string\""  shift, and go to state 21
 
 
 State 20
 
-   14 ctext: ctext TOKEN_PLUS . TOKEN_QTEXT
+    2 startdot: utf thetype thename $@1 "{" . statements "}"
 
-    TOKEN_QTEXT  shift, and go to state 22
+    "{"           shift, and go to state 22
+    "graph"       shift, and go to state 23
+    "subgraph"    shift, and go to state 24
+    "node"        shift, and go to state 25
+    "edge"        shift, and go to state 26
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statements  go to state 28
+    statement   go to state 29
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
 
 
 State 21
 
-    2 startdot: utf thetype thename $@1 TOKEN_BRACEOPEN . statements TOKEN_BRACECLOSE
-
-    TOKEN_BRACEOPEN  shift, and go to state 23
-    TOKEN_GRAPH      shift, and go to state 24
-    TOKEN_SUBGRAPH   shift, and go to state 25
-    TOKEN_NODE       shift, and go to state 26
-    TOKEN_EDGE       shift, and go to state 27
-    TOKEN_TEXT       shift, and go to state 12
-    TOKEN_NUM        shift, and go to state 13
-    TOKEN_QTEXT      shift, and go to state 14
-    TOKEN_HTEXT      shift, and go to state 15
-
-    ctext       go to state 17
-    text        go to state 28
-    statements  go to state 29
-    statement   go to state 30
-    statement2  go to state 31
-    nstatement  go to state 32
-    nidid       go to state 33
-    nid         go to state 34
-    estatement  go to state 35
-    astatement  go to state 36
-    atype       go to state 37
-    aset        go to state 38
-    sstatement  go to state 39
-    shead       go to state 40
-
-
-State 22
-
-   14 ctext: ctext TOKEN_PLUS TOKEN_QTEXT .
+   14 ctext: ctext "+" "\"string\"" .
 
     $default  reduce using rule 14 (ctext)
 
 
+State 22
+
+   69 sstatement: "{" . $@10 statements "}"
+
+    $default  reduce using rule 68 ($@10)
+
+    $@10  go to state 40
+
+
 State 23
 
-   67 sstatement: TOKEN_BRACEOPEN . $@10 statements TOKEN_BRACECLOSE
-
-    $default  reduce using rule 66 ($@10)
-
-    $@10  go to state 41
-
-
-State 24
-
-   61 atype: TOKEN_GRAPH .
-
-    $default  reduce using rule 61 (atype)
-
-
-State 25
-
-   68 shead: TOKEN_SUBGRAPH . text
-   69      | TOKEN_SUBGRAPH .
-
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    $default  reduce using rule 69 (shead)
-
-    ctext  go to state 17
-    text   go to state 42
-
-
-State 26
-
-   62 atype: TOKEN_NODE .
+   62 atype: "graph" .
 
     $default  reduce using rule 62 (atype)
 
 
-State 27
+State 24
 
-   63 atype: TOKEN_EDGE .
+   70 shead: "subgraph" . text
+   71      | "subgraph" .
+
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    $default  reduce using rule 71 (shead)
+
+    ctext  go to state 16
+    text   go to state 41
+
+
+State 25
+
+   63 atype: "node" .
 
     $default  reduce using rule 63 (atype)
 
 
-State 28
+State 26
+
+   64 atype: "edge" .
+
+    $default  reduce using rule 64 (atype)
+
+
+State 27
 
    31 nidid: text .
-   32      | text . TOKEN_COLON text
-   33      | text . TOKEN_COLON text TOKEN_COLON text
+   32      | text . ":" text
+   33      | text . ":" text ":" text
    34 nid: text .
-   35    | text . TOKEN_COLON text
-   36    | text . TOKEN_COLON text TOKEN_COLON text
-   64 aset: text . TOKEN_IS text
+   35    | text . ":" text
+   36    | text . ":" text ":" text
+   65 aset: text . "=" text
+   66     | text . "=" htext
 
-    TOKEN_COLON  shift, and go to state 43
-    TOKEN_IS     shift, and go to state 44
+    ":"  shift, and go to state 42
+    "="  shift, and go to state 43
 
-    TOKEN_EOP  reduce using rule 34 (nid)
-    $default   reduce using rule 31 (nidid)
+    "-> or --"  reduce using rule 34 (nid)
+    $default    reduce using rule 31 (nidid)
+
+
+State 28
+
+    2 startdot: utf thetype thename $@1 "{" statements . "}"
+   19 statements: statements . statement
+
+    "{"           shift, and go to state 22
+    "}"           shift, and go to state 44
+    "graph"       shift, and go to state 23
+    "subgraph"    shift, and go to state 24
+    "node"        shift, and go to state 25
+    "edge"        shift, and go to state 26
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statement   go to state 45
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
 
 
 State 29
-
-    2 startdot: utf thetype thename $@1 TOKEN_BRACEOPEN statements . TOKEN_BRACECLOSE
-   19 statements: statements . statement
-
-    TOKEN_BRACEOPEN   shift, and go to state 23
-    TOKEN_BRACECLOSE  shift, and go to state 45
-    TOKEN_GRAPH       shift, and go to state 24
-    TOKEN_SUBGRAPH    shift, and go to state 25
-    TOKEN_NODE        shift, and go to state 26
-    TOKEN_EDGE        shift, and go to state 27
-    TOKEN_TEXT        shift, and go to state 12
-    TOKEN_NUM         shift, and go to state 13
-    TOKEN_QTEXT       shift, and go to state 14
-    TOKEN_HTEXT       shift, and go to state 15
-
-    ctext       go to state 17
-    text        go to state 28
-    statement   go to state 46
-    statement2  go to state 31
-    nstatement  go to state 32
-    nidid       go to state 33
-    nid         go to state 34
-    estatement  go to state 35
-    astatement  go to state 36
-    atype       go to state 37
-    aset        go to state 38
-    sstatement  go to state 39
-    shead       go to state 40
-
-
-State 30
 
    20 statements: statement .
 
     $default  reduce using rule 20 (statements)
 
 
-State 31
+State 30
 
    21 statement: statement2 .
-   22          | statement2 . TOKEN_SC
-   23          | statement2 . TOKEN_COMMA
+   22          | statement2 . ";"
+   23          | statement2 . ","
 
-    TOKEN_COMMA  shift, and go to state 47
-    TOKEN_SC     shift, and go to state 48
+    ","  shift, and go to state 46
+    ";"  shift, and go to state 47
 
     $default  reduce using rule 21 (statement)
 
 
-State 32
+State 31
 
    24 statement2: nstatement .
 
     $default  reduce using rule 24 (statement2)
 
 
-State 33
+State 32
 
    30 nstatement: nidid . $@3 oattrib
 
     $default  reduce using rule 29 ($@3)
 
-    $@3  go to state 49
+    $@3  go to state 48
+
+
+State 33
+
+   50 estatement: nid . $@4 erhs $@5 oattrib
+
+    $default  reduce using rule 48 ($@4)
+
+    $@4  go to state 49
 
 
 State 34
-
-   49 estatement: nid . $@4 erhs $@5 oattrib
-
-    $default  reduce using rule 47 ($@4)
-
-    $@4  go to state 50
-
-
-State 35
 
    25 statement2: estatement .
 
     $default  reduce using rule 25 (statement2)
 
 
-State 36
+State 35
 
    26 statement2: astatement .
 
     $default  reduce using rule 26 (statement2)
 
 
+State 36
+
+   60 astatement: atype . tattr
+
+    "["  shift, and go to state 50
+
+    tattr  go to state 51
+
+
 State 37
 
-   59 astatement: atype . tattr
+   61 astatement: aset .
 
-    TOKEN_BRACKETOPEN  shift, and go to state 51
-
-    tattr  go to state 52
+    $default  reduce using rule 61 (astatement)
 
 
 State 38
 
-   60 astatement: aset .
+   28 statement2: sstatement . $@2 oattrib
+   53 estatement: sstatement . $@6 erhs $@7 oattrib
 
-    $default  reduce using rule 60 (astatement)
+    "-> or --"  reduce using rule 51 ($@6)
+    $default    reduce using rule 27 ($@2)
+
+    $@2  go to state 52
+    $@6  go to state 53
 
 
 State 39
 
-   28 statement2: sstatement . $@2 oattrib
-   52 estatement: sstatement . $@6 erhs $@7 oattrib
+   67 sstatement: shead . "{" statements "}"
 
-    TOKEN_EOP  reduce using rule 50 ($@6)
-    $default   reduce using rule 27 ($@2)
-
-    $@2  go to state 53
-    $@6  go to state 54
+    "{"  shift, and go to state 54
 
 
 State 40
 
-   65 sstatement: shead . TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE
+   69 sstatement: "{" $@10 . statements "}"
 
-    TOKEN_BRACEOPEN  shift, and go to state 55
+    "{"           shift, and go to state 22
+    "graph"       shift, and go to state 23
+    "subgraph"    shift, and go to state 24
+    "node"        shift, and go to state 25
+    "edge"        shift, and go to state 26
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statements  go to state 55
+    statement   go to state 29
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
 
 
 State 41
 
-   67 sstatement: TOKEN_BRACEOPEN $@10 . statements TOKEN_BRACECLOSE
+   70 shead: "subgraph" text .
 
-    TOKEN_BRACEOPEN  shift, and go to state 23
-    TOKEN_GRAPH      shift, and go to state 24
-    TOKEN_SUBGRAPH   shift, and go to state 25
-    TOKEN_NODE       shift, and go to state 26
-    TOKEN_EDGE       shift, and go to state 27
-    TOKEN_TEXT       shift, and go to state 12
-    TOKEN_NUM        shift, and go to state 13
-    TOKEN_QTEXT      shift, and go to state 14
-    TOKEN_HTEXT      shift, and go to state 15
-
-    ctext       go to state 17
-    text        go to state 28
-    statements  go to state 56
-    statement   go to state 30
-    statement2  go to state 31
-    nstatement  go to state 32
-    nidid       go to state 33
-    nid         go to state 34
-    estatement  go to state 35
-    astatement  go to state 36
-    atype       go to state 37
-    aset        go to state 38
-    sstatement  go to state 39
-    shead       go to state 40
+    $default  reduce using rule 70 (shead)
 
 
 State 42
 
-   68 shead: TOKEN_SUBGRAPH text .
+   32 nidid: text ":" . text
+   33      | text ":" . text ":" text
+   35 nid: text ":" . text
+   36    | text ":" . text ":" text
 
-    $default  reduce using rule 68 (shead)
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 56
 
 
 State 43
 
-   32 nidid: text TOKEN_COLON . text
-   33      | text TOKEN_COLON . text TOKEN_COLON text
-   35 nid: text TOKEN_COLON . text
-   36    | text TOKEN_COLON . text TOKEN_COLON text
+   65 aset: text "=" . text
+   66     | text "=" . htext
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
+    "string"         shift, and go to state 12
+    "number"         shift, and go to state 13
+    "\"string\""     shift, and go to state 14
+    "<html-string>"  shift, and go to state 57
 
-    ctext  go to state 17
-    text   go to state 57
+    ctext  go to state 16
+    text   go to state 58
+    htext  go to state 59
 
 
 State 44
 
-   64 aset: text TOKEN_IS . text
-
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    ctext  go to state 17
-    text   go to state 58
-
-
-State 45
-
-    2 startdot: utf thetype thename $@1 TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE .
+    2 startdot: utf thetype thename $@1 "{" statements "}" .
 
     $default  reduce using rule 2 (startdot)
 
 
-State 46
+State 45
 
    19 statements: statements statement .
 
     $default  reduce using rule 19 (statements)
 
 
-State 47
+State 46
 
-   23 statement: statement2 TOKEN_COMMA .
+   23 statement: statement2 "," .
 
     $default  reduce using rule 23 (statement)
 
 
-State 48
+State 47
 
-   22 statement: statement2 TOKEN_SC .
+   22 statement: statement2 ";" .
 
     $default  reduce using rule 22 (statement)
 
 
-State 49
+State 48
 
    30 nstatement: nidid $@3 . oattrib
 
-    TOKEN_BRACKETOPEN  shift, and go to state 51
+    "["  shift, and go to state 50
 
-    $default  reduce using rule 46 (oattrib)
+    $default  reduce using rule 47 (oattrib)
 
-    tattr    go to state 59
-    oattrib  go to state 60
+    tattr    go to state 60
+    oattrib  go to state 61
+
+
+State 49
+
+   50 estatement: nid $@4 . erhs $@5 oattrib
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 63
 
 
 State 50
 
-   49 estatement: nid $@4 . erhs $@5 oattrib
+   45 tattr: "[" . iattr "]"
 
-    TOKEN_EOP  shift, and go to state 61
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
 
-    erhs  go to state 62
+    $default  reduce using rule 44 (iattr)
+
+    ctext   go to state 16
+    text    go to state 64
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 67
 
 
 State 51
 
-   44 tattr: TOKEN_BRACKETOPEN . iattr TOKEN_BRACKETCLOSE
+   60 astatement: atype tattr .
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    $default  reduce using rule 43 (iattr)
-
-    ctext   go to state 17
-    text    go to state 63
-    sattr   go to state 64
-    sattr2  go to state 65
-    iattr   go to state 66
+    $default  reduce using rule 60 (astatement)
 
 
 State 52
 
-   59 astatement: atype tattr .
+   28 statement2: sstatement $@2 . oattrib
 
-    $default  reduce using rule 59 (astatement)
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 68
 
 
 State 53
 
-   28 statement2: sstatement $@2 . oattrib
+   53 estatement: sstatement $@6 . erhs $@7 oattrib
 
-    TOKEN_BRACKETOPEN  shift, and go to state 51
+    "-> or --"  shift, and go to state 62
 
-    $default  reduce using rule 46 (oattrib)
-
-    tattr    go to state 59
-    oattrib  go to state 67
+    erhs  go to state 69
 
 
 State 54
 
-   52 estatement: sstatement $@6 . erhs $@7 oattrib
+   67 sstatement: shead "{" . statements "}"
 
-    TOKEN_EOP  shift, and go to state 61
+    "{"           shift, and go to state 22
+    "graph"       shift, and go to state 23
+    "subgraph"    shift, and go to state 24
+    "node"        shift, and go to state 25
+    "edge"        shift, and go to state 26
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
 
-    erhs  go to state 68
+    ctext       go to state 16
+    text        go to state 27
+    statements  go to state 70
+    statement   go to state 29
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
 
 
 State 55
 
-   65 sstatement: shead TOKEN_BRACEOPEN . statements TOKEN_BRACECLOSE
+   19 statements: statements . statement
+   69 sstatement: "{" $@10 statements . "}"
 
-    TOKEN_BRACEOPEN  shift, and go to state 23
-    TOKEN_GRAPH      shift, and go to state 24
-    TOKEN_SUBGRAPH   shift, and go to state 25
-    TOKEN_NODE       shift, and go to state 26
-    TOKEN_EDGE       shift, and go to state 27
-    TOKEN_TEXT       shift, and go to state 12
-    TOKEN_NUM        shift, and go to state 13
-    TOKEN_QTEXT      shift, and go to state 14
-    TOKEN_HTEXT      shift, and go to state 15
+    "{"           shift, and go to state 22
+    "}"           shift, and go to state 71
+    "graph"       shift, and go to state 23
+    "subgraph"    shift, and go to state 24
+    "node"        shift, and go to state 25
+    "edge"        shift, and go to state 26
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
 
-    ctext       go to state 17
-    text        go to state 28
-    statements  go to state 69
-    statement   go to state 30
-    statement2  go to state 31
-    nstatement  go to state 32
-    nidid       go to state 33
-    nid         go to state 34
-    estatement  go to state 35
-    astatement  go to state 36
-    atype       go to state 37
-    aset        go to state 38
-    sstatement  go to state 39
-    shead       go to state 40
+    ctext       go to state 16
+    text        go to state 27
+    statement   go to state 45
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
 
 
 State 56
 
-   19 statements: statements . statement
-   67 sstatement: TOKEN_BRACEOPEN $@10 statements . TOKEN_BRACECLOSE
+   32 nidid: text ":" text .
+   33      | text ":" text . ":" text
+   35 nid: text ":" text .
+   36    | text ":" text . ":" text
 
-    TOKEN_BRACEOPEN   shift, and go to state 23
-    TOKEN_BRACECLOSE  shift, and go to state 70
-    TOKEN_GRAPH       shift, and go to state 24
-    TOKEN_SUBGRAPH    shift, and go to state 25
-    TOKEN_NODE        shift, and go to state 26
-    TOKEN_EDGE        shift, and go to state 27
-    TOKEN_TEXT        shift, and go to state 12
-    TOKEN_NUM         shift, and go to state 13
-    TOKEN_QTEXT       shift, and go to state 14
-    TOKEN_HTEXT       shift, and go to state 15
+    ":"  shift, and go to state 72
 
-    ctext       go to state 17
-    text        go to state 28
-    statement   go to state 46
-    statement2  go to state 31
-    nstatement  go to state 32
-    nidid       go to state 33
-    nid         go to state 34
-    estatement  go to state 35
-    astatement  go to state 36
-    atype       go to state 37
-    aset        go to state 38
-    sstatement  go to state 39
-    shead       go to state 40
+    "-> or --"  reduce using rule 35 (nid)
+    $default    reduce using rule 32 (nidid)
 
 
 State 57
 
-   32 nidid: text TOKEN_COLON text .
-   33      | text TOKEN_COLON text . TOKEN_COLON text
-   35 nid: text TOKEN_COLON text .
-   36    | text TOKEN_COLON text . TOKEN_COLON text
+   18 htext: "<html-string>" .
 
-    TOKEN_COLON  shift, and go to state 71
-
-    TOKEN_EOP  reduce using rule 35 (nid)
-    $default   reduce using rule 32 (nidid)
+    $default  reduce using rule 18 (htext)
 
 
 State 58
 
-   64 aset: text TOKEN_IS text .
+   65 aset: text "=" text .
 
-    $default  reduce using rule 64 (aset)
+    $default  reduce using rule 65 (aset)
 
 
 State 59
 
-   45 oattrib: tattr . oattrib
+   66 aset: text "=" htext .
 
-    TOKEN_BRACKETOPEN  shift, and go to state 51
-
-    $default  reduce using rule 46 (oattrib)
-
-    tattr    go to state 59
-    oattrib  go to state 72
+    $default  reduce using rule 66 (aset)
 
 
 State 60
+
+   46 oattrib: tattr . oattrib
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 73
+
+
+State 61
 
    30 nstatement: nidid $@3 oattrib .
 
     $default  reduce using rule 30 (nstatement)
 
 
-State 61
-
-   53 erhs: TOKEN_EOP . nid
-   55     | TOKEN_EOP . nid $@8 erhs
-   56     | TOKEN_EOP . sstatement
-   58     | TOKEN_EOP . sstatement $@9 erhs
-
-    TOKEN_BRACEOPEN  shift, and go to state 23
-    TOKEN_SUBGRAPH   shift, and go to state 25
-    TOKEN_TEXT       shift, and go to state 12
-    TOKEN_NUM        shift, and go to state 13
-    TOKEN_QTEXT      shift, and go to state 14
-    TOKEN_HTEXT      shift, and go to state 15
-
-    ctext       go to state 17
-    text        go to state 73
-    nid         go to state 74
-    sstatement  go to state 75
-    shead       go to state 40
-
-
 State 62
 
-   49 estatement: nid $@4 erhs . $@5 oattrib
+   54 erhs: "-> or --" . nid
+   56     | "-> or --" . nid $@8 erhs
+   57     | "-> or --" . sstatement
+   59     | "-> or --" . sstatement $@9 erhs
 
-    $default  reduce using rule 48 ($@5)
+    "{"           shift, and go to state 22
+    "subgraph"    shift, and go to state 24
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
 
-    $@5  go to state 76
+    ctext       go to state 16
+    text        go to state 74
+    nid         go to state 75
+    sstatement  go to state 76
+    shead       go to state 39
 
 
 State 63
 
-   37 sattr: text . TOKEN_IS text
-   39 sattr2: text .
+   50 estatement: nid $@4 erhs . $@5 oattrib
 
-    TOKEN_IS  shift, and go to state 77
+    $default  reduce using rule 49 ($@5)
 
-    $default  reduce using rule 39 (sattr2)
+    $@5  go to state 77
 
 
 State 64
 
-   38 sattr2: sattr .
+   37 sattr: text . "=" text
+   38      | text . "=" htext
+   40 sattr2: text .
 
-    $default  reduce using rule 38 (sattr2)
+    "="  shift, and go to state 78
+
+    $default  reduce using rule 40 (sattr2)
 
 
 State 65
 
-   40 iattr: sattr2 . iattr
-   41      | sattr2 . TOKEN_COMMA iattr
-   42      | sattr2 . TOKEN_SC iattr
+   39 sattr2: sattr .
 
-    TOKEN_COMMA  shift, and go to state 78
-    TOKEN_SC     shift, and go to state 79
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    $default  reduce using rule 43 (iattr)
-
-    ctext   go to state 17
-    text    go to state 63
-    sattr   go to state 64
-    sattr2  go to state 65
-    iattr   go to state 80
+    $default  reduce using rule 39 (sattr2)
 
 
 State 66
 
-   44 tattr: TOKEN_BRACKETOPEN iattr . TOKEN_BRACKETCLOSE
+   41 iattr: sattr2 . iattr
+   42      | sattr2 . "," iattr
+   43      | sattr2 . ";" iattr
 
-    TOKEN_BRACKETCLOSE  shift, and go to state 81
+    ","           shift, and go to state 79
+    ";"           shift, and go to state 80
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    $default  reduce using rule 44 (iattr)
+
+    ctext   go to state 16
+    text    go to state 64
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 81
 
 
 State 67
+
+   45 tattr: "[" iattr . "]"
+
+    "]"  shift, and go to state 82
+
+
+State 68
 
    28 statement2: sstatement $@2 oattrib .
 
     $default  reduce using rule 28 (statement2)
 
 
-State 68
-
-   52 estatement: sstatement $@6 erhs . $@7 oattrib
-
-    $default  reduce using rule 51 ($@7)
-
-    $@7  go to state 82
-
-
 State 69
 
-   19 statements: statements . statement
-   65 sstatement: shead TOKEN_BRACEOPEN statements . TOKEN_BRACECLOSE
+   53 estatement: sstatement $@6 erhs . $@7 oattrib
 
-    TOKEN_BRACEOPEN   shift, and go to state 23
-    TOKEN_BRACECLOSE  shift, and go to state 83
-    TOKEN_GRAPH       shift, and go to state 24
-    TOKEN_SUBGRAPH    shift, and go to state 25
-    TOKEN_NODE        shift, and go to state 26
-    TOKEN_EDGE        shift, and go to state 27
-    TOKEN_TEXT        shift, and go to state 12
-    TOKEN_NUM         shift, and go to state 13
-    TOKEN_QTEXT       shift, and go to state 14
-    TOKEN_HTEXT       shift, and go to state 15
+    $default  reduce using rule 52 ($@7)
 
-    ctext       go to state 17
-    text        go to state 28
-    statement   go to state 46
-    statement2  go to state 31
-    nstatement  go to state 32
-    nidid       go to state 33
-    nid         go to state 34
-    estatement  go to state 35
-    astatement  go to state 36
-    atype       go to state 37
-    aset        go to state 38
-    sstatement  go to state 39
-    shead       go to state 40
+    $@7  go to state 83
 
 
 State 70
 
-   67 sstatement: TOKEN_BRACEOPEN $@10 statements TOKEN_BRACECLOSE .
+   19 statements: statements . statement
+   67 sstatement: shead "{" statements . "}"
 
-    $default  reduce using rule 67 (sstatement)
+    "{"           shift, and go to state 22
+    "}"           shift, and go to state 84
+    "graph"       shift, and go to state 23
+    "subgraph"    shift, and go to state 24
+    "node"        shift, and go to state 25
+    "edge"        shift, and go to state 26
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statement   go to state 45
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
 
 
 State 71
 
-   33 nidid: text TOKEN_COLON text TOKEN_COLON . text
-   36 nid: text TOKEN_COLON text TOKEN_COLON . text
+   69 sstatement: "{" $@10 statements "}" .
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    ctext  go to state 17
-    text   go to state 84
+    $default  reduce using rule 69 (sstatement)
 
 
 State 72
 
-   45 oattrib: tattr oattrib .
+   33 nidid: text ":" text ":" . text
+   36 nid: text ":" text ":" . text
 
-    $default  reduce using rule 45 (oattrib)
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 85
 
 
 State 73
 
-   34 nid: text .
-   35    | text . TOKEN_COLON text
-   36    | text . TOKEN_COLON text TOKEN_COLON text
+   46 oattrib: tattr oattrib .
 
-    TOKEN_COLON  shift, and go to state 85
-
-    $default  reduce using rule 34 (nid)
+    $default  reduce using rule 46 (oattrib)
 
 
 State 74
 
-   53 erhs: TOKEN_EOP nid .
-   55     | TOKEN_EOP nid . $@8 erhs
+   34 nid: text .
+   35    | text . ":" text
+   36    | text . ":" text ":" text
 
-    TOKEN_EOP  reduce using rule 54 ($@8)
-    $default   reduce using rule 53 (erhs)
+    ":"  shift, and go to state 86
 
-    $@8  go to state 86
+    $default  reduce using rule 34 (nid)
 
 
 State 75
 
-   56 erhs: TOKEN_EOP sstatement .
-   58     | TOKEN_EOP sstatement . $@9 erhs
+   54 erhs: "-> or --" nid .
+   56     | "-> or --" nid . $@8 erhs
 
-    TOKEN_EOP  reduce using rule 57 ($@9)
-    $default   reduce using rule 56 (erhs)
+    "-> or --"  reduce using rule 55 ($@8)
+    $default    reduce using rule 54 (erhs)
 
-    $@9  go to state 87
+    $@8  go to state 87
 
 
 State 76
 
-   49 estatement: nid $@4 erhs $@5 . oattrib
+   57 erhs: "-> or --" sstatement .
+   59     | "-> or --" sstatement . $@9 erhs
 
-    TOKEN_BRACKETOPEN  shift, and go to state 51
+    "-> or --"  reduce using rule 58 ($@9)
+    $default    reduce using rule 57 (erhs)
 
-    $default  reduce using rule 46 (oattrib)
-
-    tattr    go to state 59
-    oattrib  go to state 88
+    $@9  go to state 88
 
 
 State 77
 
-   37 sattr: text TOKEN_IS . text
+   50 estatement: nid $@4 erhs $@5 . oattrib
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
+    "["  shift, and go to state 50
 
-    ctext  go to state 17
-    text   go to state 89
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 89
 
 
 State 78
 
-   41 iattr: sattr2 TOKEN_COMMA . iattr
+   37 sattr: text "=" . text
+   38      | text "=" . htext
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
+    "string"         shift, and go to state 12
+    "number"         shift, and go to state 13
+    "\"string\""     shift, and go to state 14
+    "<html-string>"  shift, and go to state 57
 
-    $default  reduce using rule 43 (iattr)
-
-    ctext   go to state 17
-    text    go to state 63
-    sattr   go to state 64
-    sattr2  go to state 65
-    iattr   go to state 90
+    ctext  go to state 16
+    text   go to state 90
+    htext  go to state 91
 
 
 State 79
 
-   42 iattr: sattr2 TOKEN_SC . iattr
+   42 iattr: sattr2 "," . iattr
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
 
-    $default  reduce using rule 43 (iattr)
+    $default  reduce using rule 44 (iattr)
 
-    ctext   go to state 17
-    text    go to state 63
-    sattr   go to state 64
-    sattr2  go to state 65
-    iattr   go to state 91
+    ctext   go to state 16
+    text    go to state 64
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 92
 
 
 State 80
 
-   40 iattr: sattr2 iattr .
+   43 iattr: sattr2 ";" . iattr
 
-    $default  reduce using rule 40 (iattr)
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    $default  reduce using rule 44 (iattr)
+
+    ctext   go to state 16
+    text    go to state 64
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 93
 
 
 State 81
 
-   44 tattr: TOKEN_BRACKETOPEN iattr TOKEN_BRACKETCLOSE .
-
-    $default  reduce using rule 44 (tattr)
-
-
-State 82
-
-   52 estatement: sstatement $@6 erhs $@7 . oattrib
-
-    TOKEN_BRACKETOPEN  shift, and go to state 51
-
-    $default  reduce using rule 46 (oattrib)
-
-    tattr    go to state 59
-    oattrib  go to state 92
-
-
-State 83
-
-   65 sstatement: shead TOKEN_BRACEOPEN statements TOKEN_BRACECLOSE .
-
-    $default  reduce using rule 65 (sstatement)
-
-
-State 84
-
-   33 nidid: text TOKEN_COLON text TOKEN_COLON text .
-   36 nid: text TOKEN_COLON text TOKEN_COLON text .
-
-    TOKEN_EOP  reduce using rule 36 (nid)
-    $default   reduce using rule 33 (nidid)
-
-
-State 85
-
-   35 nid: text TOKEN_COLON . text
-   36    | text TOKEN_COLON . text TOKEN_COLON text
-
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    ctext  go to state 17
-    text   go to state 93
-
-
-State 86
-
-   55 erhs: TOKEN_EOP nid $@8 . erhs
-
-    TOKEN_EOP  shift, and go to state 61
-
-    erhs  go to state 94
-
-
-State 87
-
-   58 erhs: TOKEN_EOP sstatement $@9 . erhs
-
-    TOKEN_EOP  shift, and go to state 61
-
-    erhs  go to state 95
-
-
-State 88
-
-   49 estatement: nid $@4 erhs $@5 oattrib .
-
-    $default  reduce using rule 49 (estatement)
-
-
-State 89
-
-   37 sattr: text TOKEN_IS text .
-
-    $default  reduce using rule 37 (sattr)
-
-
-State 90
-
-   41 iattr: sattr2 TOKEN_COMMA iattr .
+   41 iattr: sattr2 iattr .
 
     $default  reduce using rule 41 (iattr)
 
 
+State 82
+
+   45 tattr: "[" iattr "]" .
+
+    $default  reduce using rule 45 (tattr)
+
+
+State 83
+
+   53 estatement: sstatement $@6 erhs $@7 . oattrib
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 94
+
+
+State 84
+
+   67 sstatement: shead "{" statements "}" .
+
+    $default  reduce using rule 67 (sstatement)
+
+
+State 85
+
+   33 nidid: text ":" text ":" text .
+   36 nid: text ":" text ":" text .
+
+    "-> or --"  reduce using rule 36 (nid)
+    $default    reduce using rule 33 (nidid)
+
+
+State 86
+
+   35 nid: text ":" . text
+   36    | text ":" . text ":" text
+
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 95
+
+
+State 87
+
+   56 erhs: "-> or --" nid $@8 . erhs
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 96
+
+
+State 88
+
+   59 erhs: "-> or --" sstatement $@9 . erhs
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 97
+
+
+State 89
+
+   50 estatement: nid $@4 erhs $@5 oattrib .
+
+    $default  reduce using rule 50 (estatement)
+
+
+State 90
+
+   37 sattr: text "=" text .
+
+    $default  reduce using rule 37 (sattr)
+
+
 State 91
 
-   42 iattr: sattr2 TOKEN_SC iattr .
+   38 sattr: text "=" htext .
 
-    $default  reduce using rule 42 (iattr)
+    $default  reduce using rule 38 (sattr)
 
 
 State 92
 
-   52 estatement: sstatement $@6 erhs $@7 oattrib .
+   42 iattr: sattr2 "," iattr .
 
-    $default  reduce using rule 52 (estatement)
+    $default  reduce using rule 42 (iattr)
 
 
 State 93
 
-   35 nid: text TOKEN_COLON text .
-   36    | text TOKEN_COLON text . TOKEN_COLON text
+   43 iattr: sattr2 ";" iattr .
 
-    TOKEN_COLON  shift, and go to state 96
-
-    $default  reduce using rule 35 (nid)
+    $default  reduce using rule 43 (iattr)
 
 
 State 94
 
-   55 erhs: TOKEN_EOP nid $@8 erhs .
+   53 estatement: sstatement $@6 erhs $@7 oattrib .
 
-    $default  reduce using rule 55 (erhs)
+    $default  reduce using rule 53 (estatement)
 
 
 State 95
 
-   58 erhs: TOKEN_EOP sstatement $@9 erhs .
+   35 nid: text ":" text .
+   36    | text ":" text . ":" text
 
-    $default  reduce using rule 58 (erhs)
+    ":"  shift, and go to state 98
+
+    $default  reduce using rule 35 (nid)
 
 
 State 96
 
-   36 nid: text TOKEN_COLON text TOKEN_COLON . text
+   56 erhs: "-> or --" nid $@8 erhs .
 
-    TOKEN_TEXT   shift, and go to state 12
-    TOKEN_NUM    shift, and go to state 13
-    TOKEN_QTEXT  shift, and go to state 14
-    TOKEN_HTEXT  shift, and go to state 15
-
-    ctext  go to state 17
-    text   go to state 97
+    $default  reduce using rule 56 (erhs)
 
 
 State 97
 
-   36 nid: text TOKEN_COLON text TOKEN_COLON text .
+   59 erhs: "-> or --" sstatement $@9 erhs .
+
+    $default  reduce using rule 59 (erhs)
+
+
+State 98
+
+   36 nid: text ":" text ":" . text
+
+    "string"      shift, and go to state 12
+    "number"      shift, and go to state 13
+    "\"string\""  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 99
+
+
+State 99
+
+   36 nid: text ":" text ":" text .
 
     $default  reduce using rule 36 (nid)

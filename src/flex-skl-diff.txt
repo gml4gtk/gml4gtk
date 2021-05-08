@@ -1,0 +1,186 @@
+*** flex.skl	2021-04-10 20:35:32.929246353 -0400
+--- flex-2.6.4.skl	2021-04-10 11:29:47.345074080 -0400
+*************** m4_ifelse(M4_YY_PREFIX,yy,,
+*** 91,98 ****
+  
+  #define FLEX_SCANNER
+  #define YY_FLEX_MAJOR_VERSION 2
+! #define YY_FLEX_MINOR_VERSION 6
+! #define YY_FLEX_SUBMINOR_VERSION 4
+  #if YY_FLEX_SUBMINOR_VERSION > 0
+  #define FLEX_BETA
+  #endif
+--- 91,98 ----
+  
+  #define FLEX_SCANNER
+  #define YY_FLEX_MAJOR_VERSION 2
+! #define YY_FLEX_MINOR_VERSION 4
+! #define YY_FLEX_SUBMINOR_VERSION 6
+  #if YY_FLEX_SUBMINOR_VERSION > 0
+  #define FLEX_BETA
+  #endif
+*************** do_action:	/* This label is used only to
+*** 1890,1896 ****
+  	default:
+  		YY_FATAL_ERROR(
+  			"fatal flex scanner internal error--no action found" );
+- 	break;
+  	} /* end of action switch */
+  		} /* end of scanning one token */
+  	} /* end of user's declarations */
+--- 1890,1895 ----
+*************** static void yy_load_buffer_state  (M4_YY
+*** 2498,2507 ****
+  	 * we need to put in 2 end-of-buffer characters.
+  	 */
+  	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2) M4_YY_CALL_LAST_ARG );
+! 	if ( ! b->yy_ch_buf ) {
+! 		yyfree (b);
+  		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+- 	}
+  
+  	b->yy_is_our_buffer = 1;
+  
+--- 2497,2504 ----
+  	 * we need to put in 2 end-of-buffer characters.
+  	 */
+  	b->yy_ch_buf = (char *) yyalloc( (yy_size_t) (b->yy_buf_size + 2) M4_YY_CALL_LAST_ARG );
+! 	if ( ! b->yy_ch_buf )
+  		YY_FATAL_ERROR( "out of dynamic memory in yy_create_buffer()" );
+  
+  	b->yy_is_our_buffer = 1;
+  
+*************** static void yy_load_buffer_state  (M4_YY
+*** 2564,2574 ****
+  	int oerrno = errno;
+      M4_YY_DECL_GUTS_VAR();
+  
+- 	if (b == NULL) {
+- 		/* shouldnothappen */
+- 		return;
+- 	}
+- 
+  	yy_flush_buffer( b M4_YY_CALL_LAST_ARG);
+  
+  %if-c-only
+--- 2561,2566 ----
+*************** YY_BUFFER_STATE yy_scan_buffer  YYFARGS2
+*** 2791,2799 ****
+  		return NULL;
+  
+  	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+! 	if ( ! b ) {
+  		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
+- 	}
+  
+  	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
+  	b->yy_buf_pos = b->yy_ch_buf = base;
+--- 2783,2790 ----
+  		return NULL;
+  
+  	b = (YY_BUFFER_STATE) yyalloc( sizeof( struct yy_buffer_state ) M4_YY_CALL_LAST_ARG );
+! 	if ( ! b )
+  		YY_FATAL_ERROR( "out of dynamic memory in yy_scan_buffer()" );
+  
+  	b->yy_buf_size = (int) (size - 2);	/* "- 2" to take care of EOB's */
+  	b->yy_buf_pos = b->yy_ch_buf = base;
+*************** YY_BUFFER_STATE yy_scan_bytes  YYFARGS2(
+*** 2864,2873 ****
+  	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
+  
+  	b = yy_scan_buffer( buf, n M4_YY_CALL_LAST_ARG);
+! 	if ( ! b ) {
+! 		yyfree (buf);
+  		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
+- 	}
+  
+  	/* It's okay to grow etc. this buffer, and we should throw it
+  	 * away when we're done.
+--- 2855,2862 ----
+  	buf[_yybytes_len] = buf[_yybytes_len+1] = YY_END_OF_BUFFER_CHAR;
+  
+  	b = yy_scan_buffer( buf, n M4_YY_CALL_LAST_ARG);
+! 	if ( ! b )
+  		YY_FATAL_ERROR( "bad buffer in yy_scan_bytes()" );
+  
+  	/* It's okay to grow etc. this buffer, and we should throw it
+  	 * away when we're done.
+*************** void *yyalloc YYFARGS1( yy_size_t ,size)
+*** 3453,3464 ****
+  {
+  	M4_YY_DECL_GUTS_VAR();
+  	M4_YY_NOOP_GUTS_VAR();
+! 	void *ret = NULL;
+! 	ret = calloc(1,size);
+! 	if (ret == NULL) {
+! 		/* option here to do exit (1); */
+! 	}
+! 	return (ret);
+  }
+  ]])
+  
+--- 3442,3448 ----
+  {
+  	M4_YY_DECL_GUTS_VAR();
+  	M4_YY_NOOP_GUTS_VAR();
+! 	return malloc(size);
+  }
+  ]])
+  
+*************** void *yyrealloc  YYFARGS2( void *,ptr, y
+*** 3468,3474 ****
+  {
+  	M4_YY_DECL_GUTS_VAR();
+  	M4_YY_NOOP_GUTS_VAR();
+! 	void *ret = NULL;
+  	/* The cast to (char *) in the following accommodates both
+  	 * implementations that use char* generic pointers, and those
+  	 * that use void* generic pointers.  It works with the latter
+--- 3452,3458 ----
+  {
+  	M4_YY_DECL_GUTS_VAR();
+  	M4_YY_NOOP_GUTS_VAR();
+! 
+  	/* The cast to (char *) in the following accommodates both
+  	 * implementations that use char* generic pointers, and those
+  	 * that use void* generic pointers.  It works with the latter
+*************** void *yyrealloc  YYFARGS2( void *,ptr, y
+*** 3476,3488 ****
+  	 * any pointer type to void*, and deal with argument conversions
+  	 * as though doing an assignment.
+  	 */
+! 	ret = realloc(ptr, size);
+! 	if (size) {
+! 		if (ret == NULL) {
+! 			/* option here to do exit (1); */
+! 		}
+! 	}
+! 	return (ret);
+  }
+  ]])
+  
+--- 3460,3466 ----
+  	 * any pointer type to void*, and deal with argument conversions
+  	 * as though doing an assignment.
+  	 */
+! 	return realloc(ptr, size);
+  }
+  ]])
+  
+*************** void yyfree YYFARGS1( void *,ptr)
+*** 3492,3498 ****
+  {
+  	M4_YY_DECL_GUTS_VAR();
+  	M4_YY_NOOP_GUTS_VAR();
+! 	if (ptr) { free( (char *) ptr ); }	/* see yyrealloc() for (char *) cast */
+  }
+  ]])
+  
+--- 3470,3476 ----
+  {
+  	M4_YY_DECL_GUTS_VAR();
+  	M4_YY_NOOP_GUTS_VAR();
+! 	free( (char *) ptr );	/* see yyrealloc() for (char *) cast */
+  }
+  ]])
+  

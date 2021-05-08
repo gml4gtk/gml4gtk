@@ -1006,37 +1006,70 @@ void dp_do_eattr(char *l, char *r)
 				/* int invis;   "invis" parsed N+E */
 				/* int bold;    "bold" parsed N+E */
 				/* int tapered; "tapered" parsed E */
+				/* tolerated by dot is "filled" in E */
+				/* tolerated by dot is "rounded" in E */
 
 				if (stylenum->filled) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): filled does not apply to edge in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): filled does not apply to edge in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {	/* as warning */
+						printf
+						    ("dot %s(): filled does not apply to edge in `%s' for style at line %d\n",
+						     __func__, r, res->yylineno);
+					}
 				} else if (stylenum->striped) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): striped does not apply to edge in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): striped does not apply to edge in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {	/* as warning */
+						printf("dot %s(): striped does not apply to edge in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->wedged) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): wedged does not apply to edge in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): wedged does not apply to edge in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {	/* as warning */
+						printf("dot %s(): wedged does not apply to edge in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->diagonals) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): diagonals does not apply to edge in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): diagonals does not apply to edge in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {	/* as warning */
+						printf("dot %s(): diagonals does not apply to edge in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->rounded) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): rounded does not apply to edge in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): rounded does not apply to edge in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {	/* as warning */
+						printf("dot %s(): rounded does not apply to edge in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->radial) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): radial does not apply to edge in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): radial does not apply to edge in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {	/* as warning */
+						printf("dot %s(): radial does not apply to edge in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else {
 					res->bitflags0.styleset = 1;
 					if (stylenum->slwset) {

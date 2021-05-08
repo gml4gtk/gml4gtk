@@ -234,11 +234,11 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 			}
 		}
 
-		status = 0;
 		status = rhp_node_foreach(getnodedata_from_rhp_1);
+
 		if (status) {
 			/* shouldnothappen */
-			printf("%s(): error status from rhp\n", __func__);
+			printf("%s(): error status %d from rhp\n", __func__, status);
 		}
 
 		/* free all memory when ready with rhp.c */
@@ -260,7 +260,9 @@ void prep(struct gml_graph *g)
 	struct gml_elist *enl2 = NULL;
 	struct gml_edge *edge2 = NULL;
 	struct gml_edge *edge = NULL;
-	if (g) {
+
+	if (g == NULL) {
+		return;
 	}
 
 	ga = maingraph;
@@ -269,13 +271,13 @@ void prep(struct gml_graph *g)
 	ga->nedgelabels = 0;
 	ga->nodenum = 0;
 	ga->tnedgelabels = 0;
+
+	/* */
 	lnl = maingraph->rawnodelist;
 	while (lnl) {
 		node = lnl->node;
+
 		node2 = dp_calloc(1, sizeof(struct gml_node));
-		if (node2 == NULL) {
-			return;
-		}
 
 		node2->rootedon = node->rootedon;
 		node2->rlabel = node->rlabel;	/* record label */
@@ -284,6 +286,7 @@ void prep(struct gml_graph *g)
 		node2->ncolor = node->ncolor;	/* fill color r/g/b */
 		node2->nbcolor = node->nbcolor;	/* border color r/g/b */
 		node2->fontcolor = node->fontcolor;
+		node2->secolor = node->secolor;	/* self edge color */
 		node2->nlabel = node->nlabel;
 		node2->name = node->name;
 		node2->nselfedges = node->nselfedges;
@@ -307,14 +310,12 @@ void prep(struct gml_graph *g)
 				/* keep the configuration with using r/h node labels */
 			}
 		}
+
 		/* add node in work list */
 		lnl2 = dp_calloc(1, sizeof(struct gml_nlist));
-		if (lnl2 == NULL) {
-			dp_free(node2);
-			return;
-		}
 
 		lnl2->node = node2;
+
 		if (ga->nodelist == NULL) {
 			ga->nodelist = lnl2;
 			ga->nodelisttail = lnl2;
@@ -336,10 +337,8 @@ void prep(struct gml_graph *g)
 	enl = maingraph->rawedgelist;
 	while (enl) {
 		edge = enl->edge;
+
 		edge2 = dp_calloc(1, sizeof(struct gml_edge));
-		if (edge2 == NULL) {
-			return;
-		}
 
 		edge2->nr = edge->nr;
 		if (edge->nr > g->edgenum) {
@@ -390,26 +389,26 @@ void prep(struct gml_graph *g)
 		/* dot constraint flag */
 		edge2->constraint = edge->constraint;
 		/* check if nodes are in same subgraph, and in a cluster */
-		if (edge2->from_node->rootedon == edge2->to_node->rootedon) {
-			if (edge2->from_node->rootedon->type == SG_CLUSTER) {
-				if (yydebug || 0) {
-					printf("%s(): edge %d is inside cluster\n", __func__, edge2->nr);
+		if (edge2->from_node && edge2->to_node) {
+			if (edge2->from_node->rootedon == edge2->to_node->rootedon) {
+				if (edge2->from_node->rootedon->type == SG_CLUSTER) {
+					if (yydebug || 0) {
+						printf("%s(): edge %d is inside cluster\n", __func__, edge2->nr);
+					}
+					edge2->incluster = 1;
 				}
-				edge2->incluster = 1;
 			}
-		}
 
-		/* update in/out degree of nodes for reorg() */
-		edge2->from_node->outdegree++;
-		edge2->to_node->indegree++;
+			/* update in/out degree of nodes for reorg() */
+			edge2->from_node->outdegree++;
+			edge2->to_node->indegree++;
+		}
 
 		enl2 = dp_calloc(1, sizeof(struct gml_elist));
-		if (enl2 == NULL) {
-			dp_free(edge2);
-			return;
-		}
 
 		enl2->edge = edge2;
+
+		/* link in */
 		if (ga->edgelist == NULL) {
 			ga->edgelist = enl2;
 			ga->edgelisttail = enl2;
@@ -468,9 +467,6 @@ static void prepincr_addnode(struct gml_graph *g, struct gml_node *node)
 
 	/* add node to nodelist of cluster graph */
 	node2 = dp_calloc(1, sizeof(struct gml_node));
-	if (node2 == NULL) {
-		return;
-	}
 
 	node2->rootedon = node->rootedon;
 	node2->rlabel = node->rlabel;	/* record label */
@@ -478,17 +474,16 @@ static void prepincr_addnode(struct gml_graph *g, struct gml_node *node)
 	node2->ncolor = node->ncolor;	/* fill color r/g/b */
 	node2->nbcolor = node->nbcolor;	/* border color r/g/b */
 	node2->fontcolor = node->fontcolor;
+	node2->secolor = node->secolor;	/* self-edge color */
 	node2->nlabel = node->nlabel;
 	node2->name = node->name;
 	node2->nselfedges = node->nselfedges;
 	node2->incluster = 1;	/* node is part of cluster layout */
+
 	/* uniq node numbers start at 1 */
 	node2->nr = node->nr;
+
 	lnl2 = dp_calloc(1, sizeof(struct gml_nlist));
-	if (lnl2 == NULL) {
-		dp_free(node2);
-		return;
-	}
 
 	lnl2->node = node2;
 	if (ga->nodelist == NULL) {
@@ -510,7 +505,9 @@ void prepincr(struct gml_graph *g)
 	struct gml_elist *enl2 = NULL;
 	struct gml_edge *edge2 = NULL;
 	struct gml_edge *edge = NULL;
-	if (g) {
+
+	if (g == NULL) {
+		return;
 	}
 
 	if (0) {
@@ -830,7 +827,14 @@ void graph2dia(struct gml_graph *g, FILE * f)
 			fprintf(f, "<dia:composite type=\"text\">\n");
 			fprintf(f, "<dia:attribute name=\"string\">\n");
 			fprintf(f, "<dia:string>#");
-			dia_string(f, un->nlabel);
+
+			/* not supported dot record/html label */
+			if (un->rlabel || un->hlabel) {
+				dia_string(f, un->name);
+			} else {
+				dia_string(f, un->nlabel);
+			}
+
 			fprintf(f, "#</dia:string>\n");
 			fprintf(f, "</dia:attribute>\n");
 			fprintf(f, "<dia:attribute name=\"font\">\n");
@@ -1036,6 +1040,402 @@ void graph2dia(struct gml_graph *g, FILE * f)
 	/* tail */
 	fprintf(f, "</dia:layer>\n");
 	fprintf(f, "</dia:diagram>\n");
+	return;
+}
+
+/* write graph data as jgf json
+
+This is a minimal graph with no data:
+
+{
+    "graph": {
+        "id": "",
+        "type": "schema test",
+        "label": "empty test",
+        "nodes": {},
+        "edges": [],
+        "metadata": {}
+    }
+}
+
+this is a small example single graph:
+ "graph": {
+            "id": "car-manufacturer-countries",
+            "type": "car",
+            "label": "Car Manufacturer Countries",
+            "nodes": {
+                "japan": {
+                    "label": "Japan"
+                },
+                "nissan": {
+                    "label": "Nissan"
+                },
+                "toyota": {
+                    "label": "Toyota"
+                }
+            },
+            "edges": [
+                {
+                    "source": "nissan",
+                    "target": "japan",
+                    "relation": "country_of_origin"
+                },
+                {
+                    "source": "nissan",
+                    "target": "japan",
+                    "relation": "country_of_origin"
+                }
+            ]
+        }
+- dot html or record labels are set as node name
+- edge label "" is set as no label
+- node label "" is set as "" label
+- in the metadata can put more
+- see also the dot xdot json format
+*/
+/* save as jgf json diagram json jgf version 2.1
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://jsongraphformat.info/v2.1/json-graph-schema.json",
+  "title": "JSON Graph Schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "graph": { "$ref": "#/definitions/graph" }
+      },
+      "additionalProperties": false,
+      "required": [
+        "graph"
+      ]
+    },
+    {
+      "type": "object",
+      "properties": {
+        "graphs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/graph" }
+        }
+      },
+      "additionalProperties": false
+    }
+  ],
+  "definitions": {
+    "graph": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" },
+            "directed": { "type": [ "boolean" ], "default": true },
+            "type": { "type": "string" },
+            "metadata": { "type": [ "object" ] },
+            "nodes": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/node" }
+            },
+            "edges": {
+              "type": [ "array" ],
+              "items": { "$ref": "#/definitions/edge" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" },
+            "directed": { "type": [ "boolean" ], "default": true },
+            "type": { "type": "string" },
+            "metadata": { "type": [ "object" ] },
+            "nodes": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/node" }
+            },
+            "hyperedges": {
+              "type": [ "array" ],
+              "items": { "$ref": "#/definitions/directedhyperedge" }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "label": { "type": "string" },
+            "directed": { "type": [ "boolean" ], "enum": [false] },
+            "type": { "type": "string" },
+            "metadata": { "type": [ "object" ] },
+            "nodes": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/node" }
+            },
+            "hyperedges": {
+              "type": [ "array" ],
+              "items": { "$ref": "#/definitions/undirectedhyperedge" }
+            }
+          },
+          "required": [ "directed" ]
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "properties": {
+        "label": { "type": "string" },
+        "metadata": { "type": "object" },
+        "additionalProperties": false
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "relation": { "type": "string" },
+        "directed": { "type": [ "boolean" ], "default": true },
+        "label": { "type": "string" },
+        "metadata": { "type": [ "object" ] }
+      },
+      "required": [ "source", "target" ]
+    },
+    "directedhyperedge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "array", "items": { "type": "string" } },
+        "target": { "type": "array", "items": { "type": "string" } },
+        "relation": { "type": "string" },
+        "label": { "type": "string" },
+        "metadata": { "type": [ "object" ] }
+      },
+      "required": [ "source", "target" ]
+    },
+    "undirectedhyperedge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "nodes": { "type": "array", "items": { "type": "string" } },
+        "relation": { "type": "string" },
+        "label": { "type": "string" },
+        "metadata": { "type": [ "object" ] }
+      },
+      "required": [ "nodes" ]
+    }
+  }
+}
+*/
+
+static void graph2jgflabel(char *text, FILE * f)
+{
+	char *ptr = NULL;
+	if (text == NULL) {
+		return;
+	}
+	if (strlen(text) == 0) {
+		return;
+	}
+	ptr = text;
+	while (*ptr) {
+		/* bnfrt\ and \u[a-fA-f] todo */
+		if ((*ptr) == '\n') {
+			fputs("\\n", f);
+		} else if ((*ptr) == '"') {
+			/* this is '\"' in a "..." string */
+			fputs("\\\"", f);
+		} else if ((*ptr) == '\\') {
+			/* this becomes \\ */
+			fputs("\\\\", f);
+		} else if ((*ptr) == '\t') {
+			fputs("    ", f);
+		} else if ((*ptr) == '\b') {
+			/* parsed by json, but generates error in dagre.js, so skip \b */
+			if (0) {
+				fputs("\\b", f);
+			} else {
+
+			}
+		} else if ((*ptr) == '\r') {
+			fputs("\\r", f);
+		} else if ((*ptr) == '\f') {
+			fputs("\\f", f);
+		} else if ((*ptr) == '/') {
+			fputs("\\/", f);
+		} else {
+			fputc((*ptr), f);
+		}
+		ptr++;
+	}
+
+	return;
+}
+
+void graph2jgf(struct gml_graph *g, FILE * f)
+{
+	struct gml_elist *el = NULL;
+	struct gml_nlist *lnl = NULL;
+	struct gml_node *un = NULL;
+	struct gml_node *sn = NULL;
+	struct gml_node *tn = NULL;
+	int color = 0;
+	int rc = 0;
+	int gc = 0;
+	int bc = 0;
+
+	/* head */
+	fprintf(f, "{\n");
+	fprintf(f, "  \"graph\": {\n");
+
+	/* optional graph data */
+	fprintf(f, "    \"id\": \"gml4gtk\",\n");
+	if (1)
+		fprintf(f, "    \"type\": \"schema test\",\n");
+	fprintf(f, "    \"label\": \"gml4gtk\",\n");
+
+	/* print the node list with real nodes */
+	lnl = g->rawnodelist;
+
+	fprintf(f, "    \"nodes\": {\n");
+
+	while (lnl) {
+		un = lnl->node;
+
+		fprintf(f, "      \"");
+		graph2jgflabel(un->name, f);
+		fputs("\": {\n", f);
+
+		/* id is optional */
+		if (0) {
+			fprintf(f, "        \"id\": \"");
+			graph2jgflabel(un->name, f);
+			fputs("\",\n", f);
+		}
+
+		/* at html, record label set node name */
+		if (un->rlabel || un->hlabel) {
+			fprintf(f, "        \"label\": \"");
+			graph2jgflabel(un->name, f);
+			fputs("\",\n", f);
+		} else {
+			if (un->nlabel) {
+				/* this can be "" labels */
+				fprintf(f, "        \"label\": \"");
+				graph2jgflabel(un->nlabel, f);
+				fputs("\",\n", f);
+			} else {
+				fprintf(f, "        \"label\": \"");
+				graph2jgflabel(un->name, f);
+				fputs("\",\n", f);
+			}
+		}
+
+		fprintf(f, "        \"metadata\": {\n");
+
+		if (1) {
+			color = un->ncolor;
+
+			/* fill color of node white default or color */
+			rc = (color & 0x00ff0000) >> 16;
+			gc = (color & 0x0000ff00) >> 8;
+			bc = (color & 0x000000ff);
+
+			fprintf(f, "          \"fillcolor\": \"#%02x%02x%02x\",\n", rc, gc, bc);
+
+			color = un->nbcolor;
+
+			/* border color of node black default or color */
+			rc = (color & 0x00ff0000) >> 16;
+			gc = (color & 0x0000ff00) >> 8;
+			bc = (color & 0x000000ff);
+
+			fprintf(f, "          \"bordercolor\": \"#%02x%02x%02x\",\n", rc, gc, bc);
+
+			color = un->fontcolor;
+
+			/* font color of node black default or color */
+			rc = (color & 0x00ff0000) >> 16;
+			gc = (color & 0x0000ff00) >> 8;
+			bc = (color & 0x000000ff);
+
+			fprintf(f, "          \"fontcolor\": \"#%02x%02x%02x\"\n", rc, gc, bc);
+		}
+		/* end of metadata */
+		fprintf(f, "        }\n");
+
+		/* end of node */
+		fprintf(f, "      }");
+
+		if (lnl->next) {
+			fprintf(f, ",");
+		}
+		fprintf(f, "\n");
+
+		/* next node */
+		lnl = lnl->next;
+	}
+
+	/* end of nodes */
+	fprintf(f, "    },\n");
+
+	fprintf(f, "    \"edges\": [\n");
+
+	el = g->rawedgelist;
+	while (el) {
+		/* from/to node */
+		sn = el->edge->from_node;
+		tn = el->edge->to_node;
+		fprintf(f, "      {\n");
+		if (el->edge->elabel) {
+			if (el->edge->ishtml == 0) {
+				/* skip "" labels */
+				if (strlen(el->edge->elabel)) {
+					fprintf(f, "        \"label\": \"");
+					graph2jgflabel(el->edge->elabel, f);
+					fputs("\",\n", f);
+				}
+			}
+		}
+		fprintf(f, "        \"source\": \"");
+		graph2jgflabel(sn->name, f);
+		fputs("\",\n", f);
+		fprintf(f, "        \"target\": \"");
+		graph2jgflabel(tn->name, f);
+		fputs("\"\n", f);
+
+		if (0) {
+			fprintf(f, "        \"relation\": \"edge\"\n");
+		}
+
+		fprintf(f, "      }");
+		if (el->next) {
+			fprintf(f, ",\n");
+		} else {
+			fprintf(f, "\n");
+		}
+		el = el->next;
+	}
+
+	/* end of edges */
+	fprintf(f, "    ],\n");
+
+	/* end of nodes+edges */
+
+	fprintf(f, "    \"metadata\": {}\n");
+
+	/* end of "graph": { */
+	fprintf(f, "  }\n");
+
+	/* tail */
+	fprintf(f, "}\n");
+
 	return;
 }
 
@@ -1245,11 +1645,42 @@ static void clear_hlabel2il(struct gml_hilist *il)
 	return;
 }
 
+/* clear <td> data */
+static void clear_hlabel2td(struct gml_tritem *tritem)
+{
+	struct gml_tditem *tdiptr = NULL;
+	struct gml_tditem *tdiptrnext = NULL;
+
+	if (tritem == NULL) {
+		return;
+	}
+	if (tritem->tdi == NULL) {
+		return;
+	}
+	tdiptr = tritem->tdi;
+	while (tdiptr) {
+		tdiptrnext = tdiptr->next;
+		if (tdiptr->il) {
+			/* clear il data in this <td> */
+			clear_hlabel2il(tdiptr->il);
+		}
+		tdiptr->il = NULL;
+		tdiptr->ilend = NULL;
+		dp_free(tdiptr);
+		tdiptr = tdiptrnext;
+	}
+	tritem->tdi = NULL;
+	tritem->tdiend = NULL;
+	return;
+}
+
 /* recurse free sub-table data */
 static void clear_hlabel2tl_r(struct gml_titem *titem)
 {
 	struct gml_htlist *ptr = NULL;
 	struct gml_htlist *ptrnext = NULL;
+	struct gml_tritemlist *trptr = NULL;	/* list of <tr> items in this table */
+	struct gml_tritemlist *trptrnext = NULL;	/* list of <tr> items in this table */
 
 	if (titem == NULL) {
 		return;
@@ -1263,6 +1694,28 @@ static void clear_hlabel2tl_r(struct gml_titem *titem)
 		/* free the table data */
 		if (ptr->titem) {
 			clear_hlabel2tl_r(ptr->titem);
+			if (ptr->titem->tl) {
+				ptr->titem->tl = NULL;
+				ptr->titem->tlend = NULL;
+			}
+			/* free the <tr> data in this table */
+			if (ptr->titem->tr) {
+				trptr = ptr->titem->tr;
+				while (trptr) {
+					trptrnext = trptr->next;
+					if (trptr->tritem) {
+						/* clear <td> data */
+						clear_hlabel2td(trptr->tritem);
+						dp_free(trptr->tritem);
+						trptr->tritem = NULL;
+					}
+					dp_free(trptr);
+					trptr = trptrnext;
+				}
+				ptr->titem->tr = NULL;
+				ptr->titem->trend = NULL;
+			}
+
 			dp_free(ptr->titem);
 			ptr->titem = NULL;
 		}
@@ -1271,6 +1724,7 @@ static void clear_hlabel2tl_r(struct gml_titem *titem)
 		ptr = ptrnext;
 	}
 
+	titem->tl = NULL;
 	titem->tlend = NULL;
 
 	/* clear the titem data */
@@ -1283,6 +1737,8 @@ static void clear_hlabel2tl(struct gml_htlist *titem)
 {
 	struct gml_htlist *ptr = NULL;
 	struct gml_htlist *ptrnext = NULL;
+	struct gml_tritemlist *trptr;	/* list of <tr> items in this table */
+	struct gml_tritemlist *trptrnext;	/* list of <tr> items in this table */
 
 	ptr = titem;
 
@@ -1291,9 +1747,34 @@ static void clear_hlabel2tl(struct gml_htlist *titem)
 		/* free the table data */
 		if (ptr->titem) {
 			clear_hlabel2tl_r(ptr->titem);
+			/* free the sub table data */
+			if (ptr->titem->tl) {
+				ptr->titem->tl = NULL;
+				ptr->titem->tlend = NULL;
+			}
+			/* free the <tr> data in this table */
+			if (ptr->titem->tr) {
+				trptr = ptr->titem->tr;
+				while (trptr) {
+					trptrnext = trptr->next;
+					if (trptr->tritem) {
+						/* clear <td> data */
+						clear_hlabel2td(trptr->tritem);
+						dp_free(trptr->tritem);
+						trptr->tritem = NULL;
+					}
+					dp_free(trptr);
+					trptr = trptrnext;
+				}
+				ptr->titem->tr = NULL;
+				ptr->titem->trend = NULL;
+			}
+
 			dp_free(ptr->titem);
 			ptr->titem = NULL;
+
 		}
+
 		dp_free(ptr);
 		ptr = NULL;
 		ptr = ptrnext;
@@ -3288,9 +3769,12 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	struct gml_edge *edge = NULL;
 	struct gml_elist *el = NULL;
 	char *elabel2 = NULL;
+	char *se = NULL;
+
 	/* get node struct of sourcenode */
 	snode = uniqnode(NULL, foundsource);
 	tnode = uniqnode(NULL, foundtarget);
+
 	if (snode == NULL) {
 		printf
 		    ("%s(): source node in edge from %d to %d not found and edge is skipped\n", __func__, foundsource, foundtarget);
@@ -3305,37 +3789,58 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 		return;
 	}
 
+	if (snode == tnode) {
+		se = " and this is a selfedge";
+	} else {
+		se = "";
+	}
+
+	if (yydebug || 0) {
+		printf("%s(): edge from \"%s\" to \"%s\" has edgelabel \"%s\"%s\n", __func__, snode->name, tnode->name, elabel, se);
+	}
+
 	/* update number of edgelabels in the graph
 	 * todo edgelabels in self-edges are also counted this way
 	 * todo edgelabels in self edges
 	 */
-	elabel2 = NULL;
 	if (elabel) {
 
 		if (strlen(elabel)) {
 			g->nedgelabels++;
 			elabel2 = elabel;
+		} else {
+			/* "" is set as no-edgelabel */
+			elabel2 = NULL;
 		}
+	} else {
+		elabel2 = NULL;
 	}
 
 	/* at self edge incr. it at the node */
 	if (snode == tnode) {
+		if (yydebug || 0) {
+			printf("%s(): selfedge in add edge secolor=%x\n", __func__, ecolor);
+		}
 		/* a self-edge, increment count */
 		snode->nselfedges++;
+		/* set color of self-edge */
+		snode->secolor = ecolor;
+		tnode->secolor = ecolor;
 		g->nselfedges++;
 		/* in prep(): add node in list with self-edge nodes
 		 * add_selfedgenode(g, snode);
 		 */
 		g->nedges++;
 		maingraph->tnedges++;
+		/* self edges are not so good supported yet, todo */
+		if (elabel2) {
+			printf("%s(): at edge with node \"%s\" self edges with labels not supported\n", __func__, snode->name);
+		}
 		return;
 	}
 
 	/* a new edge */
 	edge = dp_calloc(1, sizeof(struct gml_edge));
-	if (edge == NULL) {
-		return;
-	}
 
 	/* edge number start at 1 */
 	g->edgenum++;
@@ -3343,20 +3848,19 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	edge->rootedon = ro;
 	edge->from_node = snode;
 	edge->to_node = tnode;
-	edge->elabel = elabel2;	/* "" is set as (char *)0 */
+	edge->elabel = uniqstr(elabel2);	/* "" is set as (char *)0 */
 	edge->ishtml = ishtml;	/* set if elabel is html string */
 	edge->ecolor = ecolor;
 	edge->style = style;
 	edge->fcompass = fcompass;
 	edge->tcompass = tcompass;
 	edge->constraint = constraint;
+
+	/* */
 	el = dp_calloc(1, sizeof(struct gml_elist));
-	if (el == NULL) {
-		dp_free(edge);
-		return;
-	}
 
 	el->edge = edge;
+
 	if (g->rawedgelist == NULL) {
 		g->rawedgelist = el;
 		g->rawedgelisttail = el;
@@ -3365,8 +3869,12 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 		g->rawedgelisttail = el;
 	}
 
+	/* number of edges in this subgraph */
 	g->nedges++;
+
+	/* total number of edges */
 	maingraph->tnedges++;
+
 	return;
 }
 
@@ -3434,22 +3942,25 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 	struct gml_nlist *lnll = NULL;
 	char nlbuf[16];
 	char *lb = NULL;
-	/* check if node exists */
-	node = uniqnodeid(NULL, foundid);
-	if (node) {
-		if (nodelabel) {
-			lb = nodelabel;
-		} else {
-			lb = "";
+	/* check if node exists as gml node with a id but not for dot/vg parsers then foundid is -1 */
+	if (foundid >= 0) {
+		node = uniqnodeid(NULL, foundid);
+		if (node) {
+			if (nodelabel) {
+				lb = nodelabel;
+			} else {
+				lb = "";
+			}
+			printf("%s(): node id %d with label \"%s\"is already defined and this one skipped\n", __func__, foundid,
+			       lb);
+			if (node->nlabel) {
+				lb = node->nlabel;
+			} else {
+				lb = "";
+			}
+			printf("%s(): earlier defined as node %d with label \"%s\"\n", __func__, node->id, lb);
+			return;
 		}
-		printf("%s(): node id %d with label \"%s\"is already defined and this one skipped\n", __func__, foundid, lb);
-		if (node->nlabel) {
-			lb = node->nlabel;
-		} else {
-			lb = "";
-		}
-		printf("%s(): earlier defined as node %d with label \"%s\"\n", __func__, node->id, lb);
-		return;
 	}
 
 	node = uniqnode(NULL, nr);
@@ -3478,9 +3989,6 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 	}
 
 	node = dp_calloc(1, sizeof(struct gml_node));
-	if (node == NULL) {
-		return;
-	}
 
 	node->rootedon = ro;	/* graph where node is located */
 	node->nr = nr;		/* uniq node number */
@@ -3488,6 +3996,7 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 	node->ncolor = ncolor;	/* fill color r/g/b */
 	node->nbcolor = nbcolor;	/* border color r/g/b */
 	node->fontcolor = fontcolor;
+	node->secolor = 0;	/* self edge color */
 	node->name = uniqstr(nodename);
 
 	if (nodelabel) {
@@ -3516,10 +4025,15 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 	if (hlabel && rlabel) {
 		/* shouldnothappen */
 		printf("%s(): node `%s' has html and record label\n", __func__, nodename);
+		node->hlabel = NULL;
+		node->rlabel = NULL;
+		node->ishtml = 0;
 	}
 
 	uniqnode_add(NULL, node);
+
 	lnll = dp_calloc(1, sizeof(struct gml_nlist));
+
 	if (lnll == NULL) {
 		dp_free(node);
 		return;
@@ -3537,6 +4051,7 @@ add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr, int foundid, cha
 
 	/* number of nodes in this graph */
 	g->nnodes++;
+
 	/* number of total nodes in input graph */
 	maingraph->tnnodes++;
 
@@ -3988,7 +4503,11 @@ void longestpath(struct gml_graph *g)
 		mns = "unknown";
 	}
 
-	printf("%s(): path is %d edges starting at \"%s\" with metric %d (%s)\n", __func__, maxn, mns, fac, humansized(fac));
+	if (yydebug || 0) {
+		printf("%s(): path is %d edges starting at \"%s\" with metric %d (%s)\n", __func__, maxn, mns, fac,
+		       humansized(fac));
+	}
+
 	return;
 }
 

@@ -84,7 +84,6 @@ struct splay_tree_t {
 extern splay_tree splay_tree_new(splay_tree_compare_fn fnc, splay_tree_delete_key_fn fndk, splay_tree_delete_value_fn fndv);
 extern splay_tree splay_tree_delete(splay_tree sp);
 extern void splay_tree_insert(splay_tree sp, splay_tree_key k, splay_tree_value v);
-extern void splay_tree_insert_duplicates(splay_tree sp, splay_tree_key k, splay_tree_value v);
 extern void splay_tree_remove(splay_tree sp, splay_tree_key key);
 extern splay_tree_node splay_tree_lookup(splay_tree sp, splay_tree_key k);
 extern int splay_tree_foreach(splay_tree sp, splay_tree_foreach_fn f, void *data);

@@ -1,6 +1,12 @@
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Year, month and day this program is compiled. */
+#define COMPILE_DATE "Sat 05/08/21 2021"
+
+/* System where this is compiled. */
+#define COMPILE_UNAME "Linux"
+
 /* gtk version 2 */
 #define GTK_HAVE_API_VERSION_2 0
 
@@ -68,7 +74,7 @@
 #define PACKAGE_NAME "gml4gtk"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "gml4gtk 7.1"
+#define PACKAGE_STRING "gml4gtk 7.2"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gml4gtk.tar.gz"
@@ -77,7 +83,10 @@
 #define PACKAGE_URL "https://sourceforge.net/projects/gml4gtk"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "7.1"
+#define PACKAGE_VERSION "7.2"
+
+/* using a windows compiler */
+#define PLATFORM_WIN32 0
 
 /* The size of `uintptr_t', as computed by sizeof. */
 #define SIZEOF_UINTPTR_T 8
@@ -89,4 +98,4 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "7.1"
+#define VERSION "7.2"

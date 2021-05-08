@@ -103,6 +103,9 @@ extern void prepincr(struct gml_graph *g);
 /* write graph data as dia diagram */
 extern void graph2dia(struct gml_graph *g, FILE * fout);
 
+/* write graph data as jgf json */
+extern void graph2jgf(struct gml_graph *g, FILE * fout);
+
 /* calculate edge connections */
 extern void edgeconnections(struct gml_graph *g);
 

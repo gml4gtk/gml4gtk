@@ -79,7 +79,7 @@ struct gml_graph *uniqgraph(int sgnum)
 {
 	splay_tree_node spn = NULL;
 	if (uniqgraph_splaytree == NULL) {
-		return (NULL);
+		uniqgraph_splaytree = splay_tree_new(splay_tree_compare_ints, NULL, NULL);
 	}
 	spn = splay_tree_lookup(uniqgraph_splaytree, (splay_tree_key) sgnum);
 	if (spn) {

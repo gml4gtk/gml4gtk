@@ -177,17 +177,20 @@ static void medianvalue(struct vertex *a)
 	int *orders = NULL;
 	struct vertex *adjacent = NULL;
 
+	if (a == NULL) {
+		return;
+	}
+
 	/* get next level */
 	if (down) {
-		la = a[0].level + 1;
+		la = (a[0].level + 1);
 		adjacent = tree[la];
 		ll = levellength(adjacent[0].level);
 	} else {
-		la = a[0].level - 1;
+		la = (a[0].level - 1);
 		if (la < 0) {
-			printf("%s(): la is %d out of range\n", __func__, la);
+			printf("%s(): la=%d is out of range\n", __func__, la);
 			fflush(stdout);
-			la = 0;
 			return;
 		}
 		adjacent = tree[la];
@@ -430,6 +433,13 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 	struct vertex *dummy = NULL;
 	struct vertex *dummy2 = NULL;
 	struct vertex *temp = NULL;
+
+	if (a == NULL) {	/* shouldnothappen */
+		return;
+	}
+	if (b == NULL) {	/* shouldnothappen */
+		return;
+	}
 
 	if (a[0].level == b[0].level) {
 		printf("%s(): a %p and b %p have same level %d out of range\n", __func__, (void *)a, (void *)b, a[0].level);
@@ -888,12 +898,14 @@ static void barycenter_3(struct gml_graph *g, int it1v, int it2v)
 	if (s3debug || 0) {
 		for (i = 0; i <= g->maxlevel; i++) {
 			/* scan nodes at level [i] */
-			j = 0;
-			while (tree[i][j].id != 0) {
-				printf("%s(): node %d has %d parents, %d children\n", __func__, tree[i][j].id,
-				       tree[i][j].no_of_parent, tree[i][j].no_of_child);
-				/* to next x pos */
-				j++;
+			if (tree[i]) {
+				j = 0;
+				while (tree[i][j].id != 0) {
+					printf("%s(): node %d has %d parents, %d children\n", __func__, tree[i][j].id,
+					       tree[i][j].no_of_parent, tree[i][j].no_of_child);
+					/* to next x pos */
+					j++;
+				}
 			}
 		}
 	}
@@ -930,27 +942,29 @@ static void barycenter_3(struct gml_graph *g, int it1v, int it2v)
 	/* copy new node positions */
 	for (i = 0; i < (g->maxlevel + 1); i++) {
 		/* scan nodes at level [i] */
-		j = 0;
-		while (tree[i][j].id != 0) {
-			tree[i][j].y = i;	/* rel. y pos. */
-			tree[i][j].x = j;	/* rel. x pos. */
-			/* find the node with this id */
-			n = uniqnode2(g, tree[i][j].id);
-			if (n) {
-				if (tree[i][j].y == n->rely) {
-					/* oke and set node rel. x pos */
-					n->relx = tree[i][j].x;
+		if (tree[i]) {
+			j = 0;
+			while (tree[i][j].id != 0) {
+				tree[i][j].y = i;	/* rel. y pos. */
+				tree[i][j].x = j;	/* rel. x pos. */
+				/* find the node with this id */
+				n = uniqnode2(g, tree[i][j].id);
+				if (n) {
+					if (tree[i][j].y == n->rely) {
+						/* oke and set node rel. x pos */
+						n->relx = tree[i][j].x;
+					} else {
+						/* shpuldnothappen */
+						printf("%s(): node %d moved from level %d to level %d\n", __func__, n->nr, n->rely,
+						       tree[i][j].y);
+					}
 				} else {
 					/* shpuldnothappen */
-					printf("%s(): node %d moved from level %d to level %d\n", __func__, n->nr, n->rely,
-					       tree[i][j].y);
+					printf("%s(): node id %d not found\n", __func__, tree[i][j].id);
 				}
-			} else {
-				/* shpuldnothappen */
-				printf("%s(): node id %d not found\n", __func__, tree[i][j].id);
+				/* to next x pos */
+				j++;
 			}
-			/* to next x pos */
-			j++;
 		}
 	}
 

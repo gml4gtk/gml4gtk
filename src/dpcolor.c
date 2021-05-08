@@ -159,7 +159,7 @@ int dp_bgcb = 0xff;		/* (blue) white */
 
 /* color names database */
 static splay_tree gucolor = NULL;
-static splay_tree gucolorrev = NULL;
+
 /* The type of a function used to deallocate any resources associated
    with the key.  */
 static void ucolor_splay_tree_delete_key_fn(splay_tree_key keydata);
@@ -8007,7 +8007,6 @@ void dp_colorcode_clear(void)
 
 	/* color names database */
 	gucolor = splay_tree_delete(gucolor);
-	gucolorrev = splay_tree_delete(gucolorrev);
 
 	return;
 }
@@ -8867,16 +8866,13 @@ static void coloradd(const char *name, int code, int rev)
 	int i = 0;
 	int j = 0;
 
-	/* insert by name or by color code */
-	if (rev == 0) {
-		s = dp_uniqstr((char *)name);
-		splay_tree_insert(gucolor,	/* splay_tree */
-				  (splay_tree_key) s, (splay_tree_value) code);
-	} else {
-		/* allow same key more then once */
-		splay_tree_insert_duplicates(gucolorrev,	/* splay_tree */
-					     (splay_tree_key) code, (splay_tree_value) name);
+	if (rev) {
+		return;
 	}
+
+	s = dp_uniqstr((char *)name);
+	splay_tree_insert(gucolor,	/* splay_tree */
+			  (splay_tree_key) s, (splay_tree_value) code);
 
 	/* workaround GCC colorname bug to add also colornames with a space
 	 * " " as one without a space by transforming the name.
@@ -9137,110 +9133,6 @@ int dp_colorcode(const char *name)
 
 	/* unknown color name */
 	return ((int)-1);
-}
-
-static int colorcodebycode(splay_tree_node n, void *data)
-{
-	char *name = NULL;
-	int code = 0;
-	int r = 0;
-	int g = 0;
-	int b = 0;
-	FILE *f = NULL;
-	f = (FILE *) data;
-	name = (char *)n->value;
-	code = (int)n->key;
-	r = (code & 0x00ff0000) >> 16;
-	g = (code & 0x0000ff00) >> 8;
-	b = (code & 0x000000ff);
-	fprintf(f,
-		" <tr><td class=\"ltable\">\"%s\"</td><td class=\"rtable\">#%02x%02x%02x</td><td bgcolor=\"#%02x%02x%02x\">&nbsp;</td></tr>\n",
-		name, r, g, b, r, g, b);
-	return (0);
-}
-
-static int colorcodebyname(splay_tree_node n, void *data)
-{
-	char *name = NULL;
-	int code = 0;
-	int r = 0;
-	int g = 0;
-	int b = 0;
-	FILE *f = NULL;
-	f = (FILE *) data;
-	name = (char *)n->key;
-	code = (int)n->value;
-	r = (code & 0x00ff0000) >> 16;
-	g = (code & 0x0000ff00) >> 8;
-	b = (code & 0x000000ff);
-	fprintf(f,
-		" <tr><td class=\"ltable\">\"%s\"</td><td class=\"rtable\">#%02x%02x%02x</td><td bgcolor=\"#%02x%02x%02x\">&nbsp;</td></tr>\n",
-		name, r, g, b, r, g, b);
-	return (0);
-}
-
-/* print html page with colors */
-void dp_colorcode_html(const char *filename)
-{
-	FILE *f = NULL;
-	splay_tree_node spn = NULL;
-	const char *head =
-	    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
-	    "<html>\n"
-	    "<head>\n"
-	    "  <meta content=\"text/html; charset=ISO-8859-1\"\n"
-	    " http-equiv=\"Content-Type\">\n"
-	    "  <title>gml4gtk-colors</title>\n"
-	    "</head>\n"
-	    "<body>\n"
-	    "<a href=\"http://sourceforge.net/projects/gml4gtk/\">http://sourceforge.net/projects/gml4gtk/</a><br>\n"
-	    "<br>\n" "gml4gtk colornames as in X11 rgb.txt<br>\n" "<br>\n";
-	const char *head2 = "<table border=\"1\" cellspacing=\"1\" cellpadding=\"1\" width=\"100%\">\n";
-	const char *tail = "</table>\n" "<br>\n";
-	const char *tail2 = "</body>\n" "</html>\n";
-	f = fopen(filename, "wb");
-	if (f == NULL) {
-		return;
-	}
-
-	/* clear database */
-	dp_colorcode_clear();
-	/* indexed on (char *) */
-	gucolor = splay_tree_new(splay_tree_compare_strings,	/* splay_tree_compare_fn */
-				 ucolor_splay_tree_delete_key_fn,	/* splay_tree_delete_key_fn */
-				 ucolor_splay_tree_delete_value_fn	/* splay_tree_delete_value_fn */
-	    );
-	/* add color data indexed by name */
-	colordata(0);
-	/* indexed on (int)code */
-	gucolorrev = splay_tree_new(splay_tree_compare_ints,	/* splay_tree_compare_fn */
-				    ucolor_splay_tree_delete_key_fn,	/* splay_tree_delete_key_fn */
-				    ucolor_splay_tree_delete_value_fn	/* splay_tree_delete_value_fn */
-	    );
-	/* add color data indexed by code */
-	colordata(1);
-	fprintf(f, "%s", head);
-	fprintf(f, "%s", "<br><br>Indexed by code<br>\n");
-	/* print indexed by code */
-	fprintf(f, "%s", head2);
-	spn = splay_tree_min(gucolorrev);
-	if (spn) {
-	}
-	splay_tree_foreach(gucolorrev, colorcodebycode, (void *)f);
-	fprintf(f, "%s", tail);
-	fprintf(f, "%s", "<br><br>Indexed by name<br>\n");
-	/* print indexed by name */
-	fprintf(f, "%s", head2);
-	spn = splay_tree_min(gucolor);
-	if (spn) {
-	}
-	splay_tree_foreach(gucolor, colorcodebyname, (void *)f);
-	fprintf(f, "%s", tail);
-	fprintf(f, "%s", tail2);
-	/* clear database */
-	dp_colorcode_clear();
-	fclose(f);
-	return;
 }
 
 /* find color, optional in a scheme */

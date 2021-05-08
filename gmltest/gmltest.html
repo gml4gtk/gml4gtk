@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <script src="gmlpeg-parser.js"></script>
+    <script>
+function checkgml() {
+    var text = document.getElementById("textin").value;
+    try {
+	var g=gmlpeg.parse(text);
+	strOut2 = "<b>Syntax oke</b>";
+    } catch (err) {
+	/* console.log(err.message); */
+	/* console.log(err.location.start.line); */
+	strOut2 = '<b>Syntax error at line ' + err.location.start.line + ' ' + err.message + '</b>';
+    }
+
+    var resultselement2 = document.getElementById("results2");
+    resultselement2.innerHTML = strOut2;
+}
+</script><br>
+    <b> check gml graph for syntax errors</b><br>
+    <br>
+    <form>
+      <p> <textarea rows="20" cols="80" id="textin" wrap="off"># this is a comment line
+# colors in nodes/edges using 'fill'
+# background color of a node is set using `fill'
+# border color of a node is set using `outline'
+# edge line color is set using `fill'
+graph [
+  directed 1
+  node [ id 0 label "n0" graphics [ fill "#f00000" ] ]
+  node [ id 1 label "n1" graphics [ outline "#ff0000" fill "#00ff00" ] ]
+  node [ id 2 label "n2" graphics [ outline "#00ff00" fill "#f0ff00" ] ]
+  node [ id 3 label "n3" graphics [ outline "#0000ff" fill "#f08000" ] ]
+  node [ id 4 label "n4" graphics [ fill "#f0000f" ] ]
+  node [ id 5 label "n5" graphics [ outline "#f0000f" fill "#ffffff" ] ]
+  edge [ source 4 target 0 graphics [ fill "#f000ff" ] ]
+  edge [ source 0 target 1 label "foo" graphics [ fill "#0f0ff0" ] ]
+  edge [ source 1 target 2 graphics [ fill "#abf000" ] ]
+  edge [ source 2 target 3 graphics [ fill "#f0f000" ] ]
+  edge [ source 3 target 0 graphics [ fill "#f000f0" ] ]
+  edge [ source 3 target 0 graphics [ fill "#ff000b" ] ]
+  edge [ source 5 target 0 graphics [ fill "#ff000b" ] ]
+]
+
+</textarea><br>
+        <table>
+          <tbody>
+            <tr>
+              <td><button onclick="checkgml()" type="button">Check GML
+                  Graph syntax</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </p>
+      <p> </p>
+      <br>
+      <div id="results2"> </div>
+      <br>
+      The syntax parser is a javascript parser made with pegjs at <a
+        href="https://pegjs.org/">https://pegjs.org/</a><br>
+      <br>
+      This is the gml.pegjs gml grammar<br>
+      <br>
+      <br>
+      file = _ head _ id _ list _<br>
+      <br>
+      head = (pair)*<br>
+      <br>
+      list = "[" _ some_items* _ "]" _<br>
+      <br>
+      some_items = id list2 / pair<br>
+      <br>
+      list2 = _ "[" _ some_items* _ "]" _<br>
+      <br>
+      pair = (id string) / (id id) / (id fpnum) / (id digit)<br>
+      <br>
+      digit = (("-"[0-9]+ _ ) / ("+"[0-9]+ _ ) / ([0-9]+ _ ))<br>
+      <br>
+      fpnum = (("-"[0-9]*["."][0-9]* _ ) / ("+"[0-9]*["."][0-9]* _ ) /
+      ([0-9]*["."][0-9]* _ ))<br>
+      <br>
+      id&nbsp;&nbsp;&nbsp; =&nbsp; [a-zA-Z_]+[a-zA-Z_0-9]*&nbsp; _<br>
+      <br>
+      string&nbsp;&nbsp;&nbsp; = '"'&nbsp; char*&nbsp; '"'&nbsp; _<br>
+      <br>
+      char&nbsp;&nbsp;&nbsp; =<br>
+      &nbsp;&nbsp;&nbsp; "\\" "\""<br>
+      &nbsp;&nbsp;&nbsp; / "\\" "\\"<br>
+      &nbsp;&nbsp;&nbsp; / "\\" "b"<br>
+      &nbsp;&nbsp;&nbsp; / "\\" "f"<br>
+      &nbsp;&nbsp;&nbsp; / "\\" "n"<br>
+      &nbsp;&nbsp;&nbsp; / "\\" "r"<br>
+      &nbsp;&nbsp;&nbsp; / "\\" "t"<br>
+      &nbsp;&nbsp;&nbsp; / (!"\"" .)<br>
+      <br>
+      _&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; (space
+      / comment / endofline)*<br>
+      <br>
+      space&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; (" " / "\t" /
+      endofline)<br>
+      <br>
+      comment&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; "#" (!endofline .)*<br>
+      <br>
+      endofline&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp; ( "\r\n" / "\n" /
+      "\r" / "\n\r" )<br>
+      <br>
+      <br>
+    </form>
+  </body>
+</html>

@@ -24,6 +24,8 @@
  * <br/> is lexed as token "<br" and token "/>"
  */
 
+/* gcc-11 analyzer has several problems with the flex-2.4.6 generated lexers, even with own customized skeleton */
+
 %{
 
 #include "config.h"
@@ -41,6 +43,9 @@
 #include "dphl.h"
 #include "dpmem.h"
 
+/* use GNU GCC compiler builtin strlen */
+#undef YY_NEED_STRLEN
+
 /* temp buffer */
 static char *tmp = NULL;
 static char *pt = NULL;
@@ -49,29 +54,19 @@ static char *q = NULL;
 /* ws */
 static int skipws = 1;
 
-/* own yyalloc */
-void *yyalloc (size_t n)
-{
-  return(dp_calloc(1,n));
-}
-
-void yyfree (void *ptr)
-{
-  dp_free (ptr);
-  return;
-}
-
-void *yyrealloc (void *ptr, size_t n)
-{
-  return (dp_realloc (ptr,n));
-}
+/* own yyalloc
+ * void *yyalloc (size_t n) { return(calloc(1,n)); }
+ * void yyfree (void *ptr) { if(ptr) { free (ptr); } return; }
+ * void *yyrealloc (void *ptr, size_t n) { return (realloc (ptr,n)); }
+ */
 
 %}
 
-/* use own yyalloc */
-%option noyyalloc
-%option noyyfree
-%option noyyrealloc
+	/* use own yyalloc
+	 * %option noyyalloc
+	 * %option noyyfree
+	 * %option noyyrealloc
+	 */
 
 	/* no yywrap() at end-of-file */
 %option noyywrap
@@ -99,6 +94,9 @@ void *yyrealloc (void *ptr, size_t n)
 
 	/* use clib to read data */
 %option noread
+
+	/* line no */
+%option yylineno
 
 	/* "string" as in var="value" */
 ISTR	[^\\\"]|\\.|\\\n
@@ -622,7 +620,7 @@ void html_lex_deinit (void)
   hl_flex_debug = 0;
 
   /* clear buffer */
-  if (clearit) {
+  if (clearit || 1) {
     /* this may fix valgrind issue */
     yylex_destroy();
     /* yy_delete_buffer (buffer); */
@@ -637,16 +635,22 @@ void html_lex_deinit (void)
   buflen = 0;
 
   /* data buffer */
-  dp_free (dbuf);
-  dbuf = (char *)0;
+  if (dbuf) {
+    dp_free (dbuf);
+    dbuf = (char *)0;
+  }
 
   /* tag buffer */
-  dp_free (tbuf);
-  tbuf = (char *)0;
+  if (tbuf) {
+    dp_free (tbuf);
+    tbuf = (char *)0;
+  }
 
   /* input buffer */
-  dp_free (ibuf);
-  ibuf = (char *)0;
+  if( ibuf) {
+    dp_free (ibuf);
+    ibuf = (char *)0;
+  }
 
   /* pointer in ibuf */
   bufptr = (char *)0;

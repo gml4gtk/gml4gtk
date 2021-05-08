@@ -1517,30 +1517,58 @@ void dp_do_gattr(char *l, char *r)
 				/*  int radial;         "radial" parsed N */
 
 				if (stylenum->invis) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): invis does not apply to graph in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): invis does not apply to graph in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {
+						/* as warning */
+						printf("dot %s(): invis does not apply to graph in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->tapered) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): tapered does not apply to graph in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): tapered does not apply to graph in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {
+						/* as warning */
+						printf("dot %s(): tapered does not apply to graph in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->wedged) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): wedged does not apply to graph in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): wedged does not apply to graph in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {
+						/* as warning */
+						printf("dot %s(): wedged does not apply to graph in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->diagonals) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): diagonals does not apply to graph in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): diagonals does not apply to graph in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {
+						/* as warning */
+						printf("dot %s(): diagonals does not apply to graph in `%s' for style at line %d\n",
+						       __func__, r, res->yylineno);
+					}
 				} else if (stylenum->radial) {
-					memset(dp_errmsg, 0, 256);
-					snprintf(dp_errmsg, (256 - 1),
-						 "dot %s(): radial does not apply to graph in `%s' for style at line %d\n",
-						 __func__, r, res->yylineno);
+					if (0) {	/* as error */
+						memset(dp_errmsg, 0, 256);
+						snprintf(dp_errmsg, (256 - 1),
+							 "dot %s(): radial does not apply to graph in `%s' for style at line %d\n",
+							 __func__, r, res->yylineno);
+					} else {
+						/* as warning */
+					}
 				} else {
 					if (stylenum->slwset) {
 						if (stylenum->slw < 0) {

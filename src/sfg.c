@@ -1505,6 +1505,8 @@ static void splay_tree_delete_helper(splay_tree sp, splay_tree_node node)
 /* delete whole sp tree */
 static splay_tree splay_tree_delete(splay_tree sp)
 {
+
+ /* todo */
 	if (sp) {
 		splay_tree_delete_helper(sp, sp->root);
 		dp_free((void *)sp);

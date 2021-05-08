@@ -35,7 +35,7 @@
 #define DPN_H 1
 
 /* node[] attribute to check */
-extern void dp_do_nattr (char *l, char *r);
+extern void dp_do_nattr (char *l, char *r, int ishtml);
 
 /* set factory default */
 extern void dp_nodefdef (struct dpnode *n);

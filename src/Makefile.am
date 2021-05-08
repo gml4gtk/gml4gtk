@@ -61,7 +61,9 @@ gml4gtk_SOURCES = \
 	lex.hl.c \
 	dphlparser.c \
 	dphl.c \
-	dpmem.c
+	dpmem.c \
+	json.c \
+	jgf.c
 
 
 #
@@ -73,11 +75,48 @@ gml4gtk_tolink = @GTK_LIBS@
 
 #
 gml4gtk$(EXEEXT): $(gml4gtk_SOURCES)
+	rm -f ./gml4gtk
 	$(CC) $(gml4gtk_CFLAGS) $(gml4gtk_SOURCES) -I. -I.. $(gml4gtk_tolink) -lm -o gml4gtk
+	$(CC) --version
+
+# make callgraph based on assembly output.
+# uses edges.sh script
+callgraph:
+	make clean
+	rm -v -f gml4gtk-callgraph.gv
+	rm -v -f gml4gtk-out.gv
+	$(CC) -g -S -I. -I.. -O0 $(GTK_CFLAGS) $(gml4gtk_SOURCES)
+	echo "digraph callgraph {" >gml4gtk-out.gv
+	cat *.s |./mkedges.sh >>gml4gtk-out.gv
+	echo "}" >>gml4gtk-out.gv
+	echo "/* the gtk library calls:"  >gml4gtk-callgraph.gv
+	grep -E '\bgtk_' gml4gtk-out.gv >>gml4gtk-callgraph.gv
+	grep -E '\bpango_' gml4gtk-out.gv >>gml4gtk-callgraph.gv
+	grep -E '\bg_' gml4gtk-out.gv >>gml4gtk-callgraph.gv
+	echo "*/" >>gml4gtk-callgraph.gv
+	cat gml4gtk-out.gv  >>gml4gtk-callgraph.gv
+	rm -v -f gml4gtk-out.gv
+
+# using calltree program
+# calls to cairo, pango, gtk are not included this way
+# using -x option the external routines are there
+# the -x graph is big for gml4gtk
+# pkg-config --cflags-only-I gtk+-2.0
+# -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/harfbuzz -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/gio-unix-2.0 -I/usr/include/atk-1.0 
+cg:
+	make clean
+	calltree -dot -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/harfbuzz -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/gio-unix-2.0 -I/usr/include/atk-1.0  -I. -I.. $(gml4gtk_SOURCES) >gml4gtk-cg.gv
+	calltree -dot -x -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/harfbuzz -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/gio-unix-2.0 -I/usr/include/atk-1.0  -I. -I.. $(gml4gtk_SOURCES) >gml4gtk-externals-cg.gv
+
+# check json jgf
+# or:	$(CC) -O0 -g -fdump-ipa-all-graph jsonlint.c json.c -o jsonlint
+jsonlint:
+	rm -f jsonlint
+	$(CC) -O0 -g jsonlint.c json.c -o jsonlint
 
 #
 indent:
-	./Lindent $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h
+	./Lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h
 
 # clang -emit-llvm hello.c -c -o main.bc
 # opt -dot-cfg-only main.bc
@@ -177,5 +216,10 @@ clean-generic:
 	rm -v -f *.plist
 	rm -v -f *.ps
 	rm -v -f ./*.exe
+	rm -v -f jsonlint
+	rm -v -f ./*.gk*
+	rm -v -f ./*.out
+	rm -v -f ./*.res
+	rm -v -f ./gml4gtk-cg.gv
 
 # /* end */

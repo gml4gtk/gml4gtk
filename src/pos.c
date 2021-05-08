@@ -188,7 +188,7 @@ static void make_node_list_up(struct gml_graph *g, int l)
 	struct gml_nlist *gnl = NULL;
 	struct gml_node *n = NULL;
 	int i = 0;
-
+	int prion = 0;
 	/* for_all_nodes(g,n) */
 	gnl = g->nodelist;
 
@@ -201,9 +201,17 @@ static void make_node_list_up(struct gml_graph *g, int l)
 			if (is_dummy(n)) {
 				/* higer value then the highest node in this level */
 				/*old nl[i].priority = (g->nnodes_of_level[l + 1] + 1000 */
-				nl[i].priority = (100000 - n->relx);
+				/*old nl[i].priority = (100000 - n->relx); */
+				nl[i].priority = (1000000 + n->relx);
 			} else {
-				nl[i].priority = lower_connectivity(n);
+				prion = lower_connectivity(n);
+				prion += n->relx;
+				if (n->elabel) {
+					/* give edge labels higher prio then node, but lower then dummy nodes */
+					nl[i].priority = (100000 + prion);
+				} else {
+					nl[i].priority = prion;
+				}
 			}
 			i++;
 		}
@@ -220,6 +228,7 @@ static void make_node_list_down(struct gml_graph *g, int l)
 	struct gml_nlist *gnl = NULL;
 	struct gml_node *n = NULL;
 	int i = 0;
+	int prion = 0;
 
 	/* for_all_nodes(g,n) */
 	gnl = g->nodelist;
@@ -232,9 +241,17 @@ static void make_node_list_down(struct gml_graph *g, int l)
 			if (is_dummy(n)) {
 				/* give dummy node uniq high number */
 				/*old  nl[i].priority = (g->nnodes_of_level[l - 1] + 1000 */
-				nl[i].priority = (100000 - n->relx);
+				/*old nl[i].priority = (100000 - n->relx); */
+				nl[i].priority = (1000000 + n->relx);
 			} else {
-				nl[i].priority = upper_connectivity(n);
+				prion = upper_connectivity(n);
+				prion += n->relx;
+				if (n->elabel) {
+					/* give edge labels higher prio then node, but lower then dummy nodes */
+					nl[i].priority = (100000 + prion);
+				} else {
+					nl[i].priority = prion;
+				}
 			}
 			i++;
 		}

@@ -234,10 +234,12 @@ static int find_next(int n)
 	int highest_priority = 0;
 
 	for (i = 0; i < n; i++) {
-		if (nl[i].priority >= highest_priority) {
-			if (nl[i].done == 0) {
-				nindex = i;
-				highest_priority = nl[i].priority;
+		if (nl) {
+			if (nl[i].priority >= highest_priority) {
+				if (nl[i].done == 0) {
+					nindex = i;
+					highest_priority = nl[i].priority;
+				}
 			}
 		}
 	}
@@ -253,6 +255,10 @@ static void do_down(struct gml_graph *g, int l)
 	int optimal_position = 0;
 	int distance = 0;
 	int possible_distance = 0;
+
+	if (nl == NULL) {	/* shouldnothappen */
+		return;
+	}
 
 	for (i = 0; i < g->nnodes_of_level[l]; i++) {
 		index = find_next(g->nnodes_of_level[l]);
@@ -600,10 +606,14 @@ static void pos3leftmost(struct gml_graph *g)
 	/* left most layout setting all node x pos. to minimum needed value */
 	for (i = 0; i < g->maxlevel; i++) {
 		nl = dl[i];
-		mx = 0;
-		for (j = 0; j < g->nnodes_of_level[i]; j++) {
-			nl[j].node->absx = mx;
-			mx = mx + xmindist + nl[j].node->bbx;
+		if (nl) {
+			mx = 0;
+			for (j = 0; j < g->nnodes_of_level[i]; j++) {
+				if (nl[j].node) {
+					nl[j].node->absx = mx;
+					mx = mx + xmindist + nl[j].node->bbx;
+				}
+			}
 		}
 	}
 

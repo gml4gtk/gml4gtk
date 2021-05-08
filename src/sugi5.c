@@ -362,19 +362,26 @@ static int mediansort(struct gml_graph *g, struct suginode *a, struct suginode *
 	int ch = 0;
 	struct suginode *dummy = NULL;
 
+	if (a == NULL) {	/* shouldnothappen */
+		return (0);
+	}
+	if (b == NULL) {	/* shouldnothappen */
+		return (0);
+	}
+
 	if (a[0].level == b[0].level) {
 		printf("%s(): a %p and b %p have same level %d out of range\n", __func__, (void *)a, (void *)b, a[0].level);
 		fflush(stdout);
 		return (0);
 	}
 
-	if (a[0].level < 0 || a[0].level > gmaxlevel) {
+	if ((a[0].level < 0) || (a[0].level > gmaxlevel)) {
 		printf("%s(): level-a %d out of range 0...%d\n", __func__, a[0].level, gmaxlevel);
 		fflush(stdout);
 		return (0);
 	}
 
-	if (b[0].level < 0 || b[0].level > gmaxlevel) {
+	if ((b[0].level < 0) || (b[0].level > gmaxlevel)) {
 		printf("%s(): level-b %d out of range 0...%d\n", __func__, b[0].level, gmaxlevel);
 		fflush(stdout);
 		return (0);
@@ -833,13 +840,18 @@ static void barycenter_5(struct gml_graph *g, int it1v, int it2v)
 
 	/* print raw data */
 	if (s3debug || 0) {
+		/* scan all levels */
 		for (i = 0; i < gnlevels; i++) {
 			/* scan nodes at level [i] */
 			for (j = 0; j < nglevelnodes[i]; j++) {
-				printf("%s(): node %d has %d indegree, %d outdegree\n", __func__, sugidata[i][j].id,
-				       sugidata[i][j].indegree, sugidata[i][j].outdegree);
+				if (sugidata[i]) {
+					printf("%s(): node %d has %d indegree, %d outdegree\n", __func__, sugidata[i][j].id,
+					       sugidata[i][j].indegree, sugidata[i][j].outdegree);
+				}
+
 			}
 		}
+
 	}
 
 	/* phase I, no equal bary value swapping */

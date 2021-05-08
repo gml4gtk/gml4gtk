@@ -91,8 +91,6 @@ struct dparrow *dp_getarrow(char *s)
 	/* the raw name */
 	ret->name = dp_uniqstr(s);
 
-	t = DP_EA_UNKNOWN;
-
 	/* parse the basic shapes */
 	if (strcasecmp(s, "box") == 0) {
 		t = DP_EA_BOX;
@@ -482,7 +480,6 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 		return (NULL);
 	}
 
-	prs = rs1;
 	lastfield = NULL;
 
 	prt = (char *)dp_calloc(1, clblen + 1);
@@ -623,8 +620,7 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 				}
 			}
 			lastfield = dp_uniqstr(rs1);
-			memset(rs1, 0, clblen + 1);
-			prs = rs1;
+			memset(rs1, 0, (clblen + 1));
 		}
 
 	}
@@ -677,14 +673,10 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 		prt = NULL;
 	}
 
-	pos1 = 0;
-
 	return (nrec);
 }
 
-static int ind = 0;
-
-static void dp_1chkrecpr(struct dppart *info)
+static void dp_1chkrecpr(struct dppart *info, int ind)
 {
 	int i = 0;
 
@@ -693,7 +685,7 @@ static void dp_1chkrecpr(struct dppart *info)
 		return;
 	}
 	for (i = 0; i < ind; i++) {
-		printf("\t");
+		printf("  ");
 	}
 
 	printf("%p---begin\n", (void *)info);
@@ -707,13 +699,13 @@ static void dp_1chkrecpr(struct dppart *info)
 	for (i = 0; i < info->ndpparts; i++) {
 		ind++;
 		if (info->parts[i]) {
-			dp_1chkrecpr(info->parts[i]);
+			dp_1chkrecpr(info->parts[i], (ind + 1));
 		}
 		ind--;
 	}
 
 	for (i = 0; i < ind; i++) {
-		printf("\t");
+		printf("  ");
 	}
 
 	printf("%p---end\n", (void *)info);
@@ -732,6 +724,10 @@ static int dp_1chkrec(struct dpnode *node)
 	/* check for matching {} in string */
 	p = node->label;
 	status = 0;
+
+	if (p == NULL) {
+		return (0);
+	}
 
 	/* if "" */
 	if (strlen(p) == 0) {
@@ -771,8 +767,7 @@ static int dp_1chkrec(struct dpnode *node)
 	clblen = strlen(clb);
 	inf = dp_2chkrec(node, /* direction hor. */ 0);
 	if (yydebug || 0) {
-		ind = 0;
-		dp_1chkrecpr(inf);
+		dp_1chkrecpr(inf, 0);
 	}
 	fflush(stdout);
 	/* tmp label char */
@@ -789,13 +784,9 @@ static int dp_chkrec(void)
 	struct dpnlink *nl = NULL;
 	nl = dp_anodes;
 	while (nl) {
+		status = 0;
 		if (nl->n->shape == DPSHAPE_RECORD || nl->n->shape == DPSHAPE_MRECORD) {
-			/* if this is html string */
-			if (nl->n->htmllabel) {
-				nl->n->labelinfo = NULL;
-			} else {
-				status = dp_1chkrec(nl->n);
-			}
+			status = dp_1chkrec(nl->n);
 		}
 		if (status) {
 			break;
@@ -829,10 +820,6 @@ static int dp_chkhtmln(void)
 		}
 		if (nl->n->label) {
 			if (strlen(nl->n->label) > 0) {
-				if (nl->n->shape == DPSHAPE_RECORD || nl->n->shape == DPSHAPE_MRECORD) {
-					/* html labels do not apply to record shapes */
-					/* todo, html labels are used in record labels */
-				}
 				/* non-record shape node with optional <> html label */
 				if (nl->n->htmllabel) {
 					status = dp1_chkhmln(nl->n);

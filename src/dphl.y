@@ -98,16 +98,17 @@
 #define YYERROR_VERBOSE 1
 
 
-/* memory usage wrapping feature */
+/* memory usage wrapping feature
 #ifndef YYFREE
-# define YYFREE dp_free
+# define YYFREE free
 #endif
 #ifndef YYMALLOC
-# define YYMALLOC dp_malloc
+# define YYMALLOC malloc
 #endif
 #ifndef YYREALLOC
-# define YYREALLOC dp_realloc
+# define YYREALLOC realloc
 #endif
+*/
 
 /* in lexer */
 extern int hllineno;
@@ -155,6 +156,9 @@ static void yyerror (const char *msg)
  */
 %define api.prefix {hly}
 
+/* not a yacc parser and gcc-11 analyzer has a problem with bison yacc parsers. */
+%glr-parser
+
 /* where to start in the grammar */
 %start begin
 
@@ -176,75 +180,75 @@ static void yyerror (const char *msg)
 /* u */
 %union { char *string; }
 
-%token <string>HL_DATA	/* string with data area */
-%token HL_HTML		/* "<html" */
-%token HL_C_HTML	/* "</html" */
-%token HL_B		/* "<b" */
-%token HL_C_B		/* "</b" */
-%token HL_BR		/* "<br" */
-%token HL_C_BR		/* "</br" */
-%token HL_FONT		/* "<font" */
-%token HL_C_FONT	/* "</font" */
-%token HL_HR		/* "<hr" */
-%token HL_C_HR		/* "</hr" */
-%token HL_I		/* "<i" */
-%token HL_C_I		/* "</i" */
-%token HL_IMG		/* "<img" */
-%token HL_C_IMG		/* "</img" */
-%token HL_O		/* "<o" */
-%token HL_C_O		/* "</o" */
-%token HL_S		/* "<s" */
-%token HL_C_S		/* "</s" */
-%token HL_SUB		/* "<sub" */
-%token HL_C_SUB		/* "</sub" */
-%token HL_SUP		/* "<sup" */
-%token HL_C_SUP		/* "</sup" */
-%token HL_TABLE		/* "<table" */
-%token HL_C_TABLE	/* "</table" */
-%token HL_TD		/* "<td" */
-%token HL_C_TD		/* "</td" */
-%token HL_TR		/* "<tr" */
-%token HL_C_TR		/* "</tr" */
-%token HL_U		/* "<u" */
-%token HL_C_U		/* "</u" */
-%token HL_VR		/* "<vr" */
-%token HL_C_VR		/* "</vr" */
+%token <string>HL_DATA	"string" /* string with data area */
+%token HL_HTML		"<html" /* "<html" */
+%token HL_C_HTML	"</html" /* "</html" */
+%token HL_B		"<b" /* "<b" */
+%token HL_C_B		"</b" /* "</b" */
+%token HL_BR		"<br" /* "<br" */
+%token HL_C_BR		"</br" /* "</br" */
+%token HL_FONT		"<font" /* "<font" */
+%token HL_C_FONT	"</font" /* "</font" */
+%token HL_HR		"<hr" /* "<hr" */
+%token HL_C_HR		"</hr" /* "</hr" */
+%token HL_I		"<i" /* "<i" */
+%token HL_C_I		"</i" /* "</i" */
+%token HL_IMG		"<img" /* "<img" */
+%token HL_C_IMG		"</img" /* "</img" */
+%token HL_O		"<o" /* "<o" */
+%token HL_C_O		"</o" /* "</o" */
+%token HL_S		"<s" /* "<s" */
+%token HL_C_S		"</s" /* "</s" */
+%token HL_SUB		"<sub" /* "<sub" */
+%token HL_C_SUB		"</sub" /* "</sub" */
+%token HL_SUP		"<sup" /* "<sup" */
+%token HL_C_SUP		"</sup" /* "</sup" */
+%token HL_TABLE		"<table" /* "<table" */
+%token HL_C_TABLE	"</table" /* "</table" */
+%token HL_TD		"<td" /* "<td" */
+%token HL_C_TD		"</td" /* "</td" */
+%token HL_TR		"<tr" /* "<tr" */
+%token HL_C_TR		"</tr" /* "</tr" */
+%token HL_U		"<u" /* "<u" */
+%token HL_C_U		"</u" /* "</u" */
+%token HL_VR		"<vr" /* "<vr" */
+%token HL_C_VR		"</vr" /* "</vr" */
 
-%token HL_SC		/* "/>" */
-%token HL_C		/* ">" */
-%token HL_IS		/* "=" */
-%token <string>HL_QSTR	/* "string" */
-%token <string>HL_STR	/* attribute variable name */
+%token HL_SC		"/>" /* "/>" */
+%token HL_C		">" /* ">" */
+%token HL_IS		"=" /* "=" */
+%token <string>HL_QSTR	"string" /* "string" */
+%token <string>HL_STR	"text" /* attribute variable name */
 
-%token HL_ALIGN		/* "align" */
-%token HL_BALIGN	/* "balign" */
-%token HL_BGCOLOR	/* "bgcolor" */
-%token HL_BORDER	/* "border" */
-%token HL_CELLBORDER	/* "cellborder" */
-%token HL_CELLPADDING	/* "cellpadding" */
-%token HL_CELLSPACING	/* "cellspacing" */
-%token HL_COLOR		/* "color" */
-%token HL_COLUMNS	/* "columns" */
-%token HL_COLSPAN	/* "colspan" */
-%token HL_FACE		/* "face" */
-%token HL_FIXEDSIZE	/* "fixedsize" */
-%token HL_GRADIENTANGLE	/* "gradientangle" */
-%token HL_HEIGHT	/* "height" */
-%token HL_HREF		/* "href" */
-%token HL_ID		/* "id" */
-%token HL_PORT		/* "port" */
-%token HL_POINTSIZE	/* "point-size" */
-%token HL_ROWS		/* "rows" */
-%token HL_ROWSPAN	/* "rowspan" */
-%token HL_SCALE		/* "scale" */
-%token HL_SIDES		/* "sides" */
-%token HL_SRC		/* "src" */
-%token HL_STYLE		/* "style" */
-%token HL_TARGET	/* "target" */
-%token HL_TITLE		/* "title" */
-%token HL_TOOLTIP	/* "tooltip" */
-%token HL_VALIGN	/* "valign" */
-%token HL_WIDTH		/* "width" */
+%token HL_ALIGN		"align" /* "align" */
+%token HL_BALIGN	"balign" /* "balign" */
+%token HL_BGCOLOR	"bgcolor" /* "bgcolor" */
+%token HL_BORDER	"border" /* "border" */
+%token HL_CELLBORDER	"cellborder" /* "cellborder" */
+%token HL_CELLPADDING	"cellpadding" /* "cellpadding" */
+%token HL_CELLSPACING	"cellspacing" /* "cellspacing" */
+%token HL_COLOR		"color" /* "color" */
+%token HL_COLUMNS	"columns" /* "columns" */
+%token HL_COLSPAN	"colspan" /* "colspan" */
+%token HL_FACE		"face" /* "face" */
+%token HL_FIXEDSIZE	"fixedsize" /* "fixedsize" */
+%token HL_GRADIENTANGLE	"gradientangle" /* "gradientangle" */
+%token HL_HEIGHT	"height" /* "height" */
+%token HL_HREF		"href" /* "href" */
+%token HL_ID		"id" /* "id" */
+%token HL_PORT		"port" /* "port" */
+%token HL_POINTSIZE	"point-size" /* "point-size" */
+%token HL_ROWS		"rows" /* "rows" */
+%token HL_ROWSPAN	"rowspan" /* "rowspan" */
+%token HL_SCALE		"scale" /* "scale" */
+%token HL_SIDES		"sides" /* "sides" */
+%token HL_SRC		"src" /* "src" */
+%token HL_STYLE		"style" /* "style" */
+%token HL_TARGET	"target" /* "target" */
+%token HL_TITLE		"title" /* "title" */
+%token HL_TOOLTIP	"tooltip" /* "tooltip" */
+%token HL_VALIGN	"valign" /* "valign" */
+%token HL_WIDTH		"width" /* "width" */
 
 
 %%
