@@ -84,6 +84,7 @@ cleaner:
 	rm -vf ./*~
 	rm -vf ./O1
 	rm -vf ./O2
+	rm -vf ./O3
 	rm -vf ./*.ci
 	rm -vf ./*.o
 	rm -vf ./*.dot
@@ -94,6 +95,11 @@ cleaner:
 # %d\t%d number is lines added/deleted in a file
 gitlog:
 	git log --numstat >gitlog.txt
+
+# use as sudo dbain check install to create R=rpm, S=slackware or D=debian package
+# first run autogen.sh and make for a binary
+checkinstall:
+	checkinstall -D --install=no
 
 
 # end

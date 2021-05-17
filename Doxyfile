@@ -872,7 +872,11 @@ FILE_PATTERNS          = *.c \
 			*.ac \
 			*.dot \
 			README1 \
-			dmake
+			dmake \
+			*.js \
+			*.html \
+			*.peg \
+			*.pegjs
 
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should

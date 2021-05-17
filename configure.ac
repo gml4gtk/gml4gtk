@@ -28,13 +28,13 @@
 # autoconf
 # libtoolize --force --automake
 # automake -a --gnu --include-deps
-# or do this all using autoreconf
+# or do this all using autoreconf -fvim
 #
 # test also using scan-build from llvm clang tools
 #
 
 AC_PREREQ([2.69])
-AC_INIT([gml4gtk], [7.2], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
+AC_INIT([gml4gtk], [7.3], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
 AC_CONFIG_SRCDIR([src/main.h])
 AC_CONFIG_HEADERS([config.h])
 

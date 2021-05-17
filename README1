@@ -153,9 +153,9 @@ libwinpthread-1.dll
 libxml2-2.dll
 zlib1.dll
 
-The gmltest directory has index.html page with javacript for syntax check of a gml graph
+The gmltest directory has index.html page with javascript for syntax check of a gml graph
 
-The jgf4web directory has index.html page with javacript for graph layout of json jgf graph data
+The jgf4web directory has index.html page with javascript for graph layout of json jgf graph data
 
 The jgf json graph save and open feature is experimental or just may work.
 
@@ -183,6 +183,8 @@ sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' flex.skl | m4 -P -DFLEX_MAJOR_VERS
 Then use flex with "flex -Smyflex.skl input.l" and now myflex.skl can be edited.
 
 The source is checked and used with clang-12 and gcc-11 compiler development version.
+
+To make a package for debian, slackware, fedora, ubuntu the checkinstall program can be used.
 
 And donations of samples of graph data to layout are needed
 or financial means to buy programming and graph books.
