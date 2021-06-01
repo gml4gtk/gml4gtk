@@ -29,6 +29,9 @@
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 
 #include "config.h"
@@ -45,7 +48,7 @@
 #include "dpmem.h"
 
 /* how much double values may differ when seen as same */
-#define LOWVAL (0.01)
+#define LOWVAL (0.1)
 
 struct suginode {
 	int id;			/* uniq node number */
@@ -57,6 +60,7 @@ struct suginode {
 	int indegree;		/* number of incoming edges */
 	double barydown;	/* barycenter value */
 	double baryup;		/* barycenter value */
+	int qsortpos;		/* position for stable qsort() */
 };
 
 /* set to 1 for debug output */
@@ -220,7 +224,8 @@ static int comparevalue(const void *a, const void *b)
 	}
 	/* if (baryx == baryy) */
 	if (fabs(baryx - baryy) <= LOWVAL) {
-		return (0);
+		/* for stable qsort() use pos field at equal */
+			return (y->qsortpos - x->qsortpos);
 	}
 	if (baryx > baryy) {
 		return (1);
@@ -447,6 +452,10 @@ static void mediansort(struct gml_graph *g, struct suginode *a, struct suginode 
 
 	/* sort on barycenter value if more then 1 member */
 	if (t > 1) {
+		/* for stable qsort() set pos field */
+		for (i = 0; i < t; i++) {
+			sugidata[a[0].level]->qsortpos = i;
+		}
 		/* sort on avg. in/out positions of connecting nodes */
 		qsort(sugidata[a[0].level], t, sizeof(struct suginode), comparevalue);
 		/* nodes may have changed positions, re-number the pos field */

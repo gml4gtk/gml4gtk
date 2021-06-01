@@ -29,6 +29,9 @@
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 
 #ifndef POS4_H

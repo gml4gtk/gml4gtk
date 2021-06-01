@@ -29,6 +29,9 @@
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 
 #include "config.h"
@@ -43,6 +46,8 @@
 #include "uniqnode.h"
 #include "sugi.h"
 #include "dpmem.h"
+
+/* updated qsort() to stable qsort() see https://nullprogram.com/blog/2014/08/29/ */
 
 /* how much double values may differ when seen as same */
 #define LOWVAL (0.01)
@@ -64,6 +69,7 @@ struct vertex {
 	double baryup;		/* barycenter value */
 	int x;			/* final rel. x pos */
 	int y;			/* final rel. y pos */
+	int qsortpos;		/* position for qsort */
 };
 
 /* node data arrays */
@@ -112,13 +118,8 @@ static int comparevalue(const void *a, const void *b)
 	struct vertex *y = (struct vertex *)b;
 	/* if (BARY(x) == BARY(y)) */
 	if (fabs(BARY(x) - BARY(y)) <= LOWVAL) {
-		if (UN_BARY(x) > UN_BARY(y)) {
-			return (1);
-		}
-		if (UN_BARY(x) < UN_BARY(y)) {
-			return (-1);
-		}
-		return 0;
+		/* using pos. this changes the qsort() into stable qsort() */
+		return (y->qsortpos - x->qsortpos);
 	}
 	if (BARY(x) > BARY(y)) {
 		return (1);
@@ -164,7 +165,9 @@ static int levellength(int level)
  * the median is the number 6 in the middle.
  * the average is 1+2+6+7+12/5 = 5.6
  * some tools have options to changed the way this barycenter is determined for different layouts.
-*/
+ * qsort() is not stable sort which means that equal values can be swapped.
+ * turn qsort into stable qsort adding position data.
+ */
 static void medianvalue(struct vertex *a)
 {
 	int la = 0;
@@ -232,6 +235,7 @@ static void medianvalue(struct vertex *a)
 
 	/* sort if more then 1 item to sort */
 	if (j > 1) {
+		/* to make this stable qsort() it needs extra position data field */
 		qsort(orders, j, sizeof(int), mediancomp);
 	}
 
@@ -521,6 +525,10 @@ static void mediansort(struct gml_graph *g, struct vertex *a, struct vertex *b)
 
 	/* sort on barycenter value if more then 1 member */
 	if (t > 1) {
+		/* set pos to change qsort() into stable qsort */
+		for (i = 0; i < t; i++) {
+			tree[a[0].level]->qsortpos = i;
+		}
 		qsort(tree[a[0].level], t, sizeof(struct vertex), comparevalue);
 	}
 

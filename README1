@@ -196,3 +196,7 @@ some parts are Copyright (C) 2008, 2011 Saurabh Gupta
 
 For questions mail to mooigraph on gmail.com
 
+/*
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
+ */

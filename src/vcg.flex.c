@@ -3202,9 +3202,9 @@ extern int yy_flex_debug;
 int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[23] = { 0,
-	103, 104, 105, 106, 108, 109, 110, 111, 113, 114,
-	115, 117, 118, 119, 120, 121, 122, 123, 124, 125,
-	127, 180
+	107, 108, 109, 110, 112, 113, 114, 115, 117, 118,
+	119, 121, 122, 123, 124, 125, 126, 127, 128, 129,
+	131, 184
 };
 
 /* The intent behind this definition is that it'll catch
@@ -3244,9 +3244,12 @@ char *yytext;
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 /* lex the vcg data generated with gcc -fcallgraph-info option which is a subset of vcg language */
-#line 34 "vcg.l"
+#line 38 "vcg.l"
 
 #include "config.h"
 
@@ -3289,15 +3292,15 @@ char *vcglaststring = NULL;
  * void *yyrealloc (void *ptr, size_t n) { return (realloc(ptr,n)); }
  */
 
-#line 3394 "vcg.flex.c"
-#line 79 "vcg.l"
+#line 3397 "vcg.flex.c"
+#line 83 "vcg.l"
 	/* use own yyalloc
 	 * %option noyyalloc
 	 * %option noyyrealloc
 	 * %option noyyfree
 	 */
 #define YY_NO_INPUT 1
-#line 3402 "vcg.flex.c"
+#line 3405 "vcg.flex.c"
 
 #define INITIAL 0
 
@@ -3572,9 +3575,9 @@ YY_DECL {
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 101 "vcg.l"
+#line 105 "vcg.l"
 
-#line 3683 "vcg.flex.c"
+#line 3686 "vcg.flex.c"
 
 		while ( /*CONSTCOND*/ 1) {	/* loops until end-of-file is reached */
 			/* %% [8.0] yymore()-related code goes here */
@@ -3647,129 +3650,91 @@ do_action:			/* This label is used only to access EOF actions. */
 			case 1:
 /* rule 1 can match eol */
 				YY_RULE_SETUP
-#line 103 "vcg.l"
+#line 107 "vcg.l"
 				{	/* c-comment style *//* lexer does update yylineno */
 				}
-			YY_BREAK case 2:
-				YY_RULE_SETUP
-#line 104 "vcg.l"
-				{	/* start of c comment but no end of c comment */
-				}
-			YY_BREAK case 3:
-				YY_RULE_SETUP
-#line 105 "vcg.l"
-				{	/* end of c comment but no start of c comment */
-				}
-			YY_BREAK case 4:
-				YY_RULE_SETUP
-#line 106 "vcg.l"
-				{	/* c++ comment style *//* lexer does update yylineno */
-				}
-			YY_BREAK case 5:
-				YY_RULE_SETUP
+				YY_BREAK case 2:YY_RULE_SETUP
 #line 108 "vcg.l"
-				{	/* skip form feed chars and spaces */
-				}
-			YY_BREAK case 6:
-				YY_RULE_SETUP
+				{	/* start of c comment but no end of c comment */
+				} YY_BREAK case 3:YY_RULE_SETUP
 #line 109 "vcg.l"
-				{	/* skip tabs */
-				}
-			YY_BREAK case 7:
-/* rule 7 can match eol */
-				YY_RULE_SETUP
+				{	/* end of c comment but no start of c comment */
+				} YY_BREAK case 4:YY_RULE_SETUP
 #line 110 "vcg.l"
-				{	/* skip new line *//* lexer does update yylineno */
-				}
-			YY_BREAK case 8:
-				YY_RULE_SETUP
-#line 111 "vcg.l"
-				{	/* skip carriage return */
-				}
-			YY_BREAK case 9:
-				YY_RULE_SETUP
+				{	/* c++ comment style *//* lexer does update yylineno */
+				} YY_BREAK case 5:YY_RULE_SETUP
+#line 112 "vcg.l"
+				{	/* skip form feed chars and spaces */
+				} YY_BREAK case 6:YY_RULE_SETUP
 #line 113 "vcg.l"
-				{
-					return (VCG_COLON);
-				}
-			YY_BREAK case 10:
-				YY_RULE_SETUP
+				{	/* skip tabs */
+				} YY_BREAK case 7:
+/* rule 7 can match eol */
+				 YY_RULE_SETUP
 #line 114 "vcg.l"
-				{
-					return (VCG_BO);
-				}
-			YY_BREAK case 11:
-				YY_RULE_SETUP
+				{	/* skip new line *//* lexer does update yylineno */
+				} YY_BREAK case 8:YY_RULE_SETUP
 #line 115 "vcg.l"
-				{
-					return (VCG_BC);
-				}
-			YY_BREAK case 12:
-				YY_RULE_SETUP
+				{	/* skip carriage return */
+				} YY_BREAK case 9:YY_RULE_SETUP
 #line 117 "vcg.l"
 				{
-					return (VCG_GRAPH);
-				}
-			YY_BREAK case 13:
-				YY_RULE_SETUP
+					return (VCG_COLON);
+				} YY_BREAK case 10:YY_RULE_SETUP
 #line 118 "vcg.l"
 				{
-					return (VCG_EDGE);
-				}
-			YY_BREAK case 14:
-				YY_RULE_SETUP
+					return (VCG_BO);
+				} YY_BREAK case 11:YY_RULE_SETUP
 #line 119 "vcg.l"
 				{
-					return (VCG_ELLIPSE);
-				}
-			YY_BREAK case 15:
-				YY_RULE_SETUP
-#line 120 "vcg.l"
-				{
-					return (VCG_LABEL);
-				}
-			YY_BREAK case 16:
-				YY_RULE_SETUP
+					return (VCG_BC);
+				} YY_BREAK case 12:YY_RULE_SETUP
 #line 121 "vcg.l"
 				{
-					return (VCG_NODE);
-				}
-			YY_BREAK case 17:
-				YY_RULE_SETUP
+					return (VCG_GRAPH);
+				} YY_BREAK case 13:YY_RULE_SETUP
 #line 122 "vcg.l"
 				{
-					return (VCG_SHAPE);
-				}
-			YY_BREAK case 18:
-				YY_RULE_SETUP
+					return (VCG_EDGE);
+				} YY_BREAK case 14:YY_RULE_SETUP
 #line 123 "vcg.l"
 				{
-					return (VCG_SOURCENAME);
-				}
-			YY_BREAK case 19:
-				YY_RULE_SETUP
+					return (VCG_ELLIPSE);
+				} YY_BREAK case 15:YY_RULE_SETUP
 #line 124 "vcg.l"
 				{
-					return (VCG_TARGETNAME);
-				}
-			YY_BREAK case 20:
-				YY_RULE_SETUP
+					return (VCG_LABEL);
+				} YY_BREAK case 16:YY_RULE_SETUP
 #line 125 "vcg.l"
 				{
-					return (VCG_TITLE);
-				}
-			YY_BREAK case 21:
-/* rule 21 can match eol */
-				YY_RULE_SETUP
+					return (VCG_NODE);
+				} YY_BREAK case 17:YY_RULE_SETUP
+#line 126 "vcg.l"
+				{
+					return (VCG_SHAPE);
+				} YY_BREAK case 18:YY_RULE_SETUP
 #line 127 "vcg.l"
+				{
+					return (VCG_SOURCENAME);
+				} YY_BREAK case 19:YY_RULE_SETUP
+#line 128 "vcg.l"
+				{
+					return (VCG_TARGETNAME);
+				} YY_BREAK case 20:YY_RULE_SETUP
+#line 129 "vcg.l"
+				{
+					return (VCG_TITLE);
+				} YY_BREAK case 21:
+/* rule 21 can match eol */
+				 YY_RULE_SETUP
+#line 131 "vcg.l"
 				{
 					if (vcgleng == 2) {
 						/* string is "" */
 						vcglaststring = vcg_uniqstr("");
 						return (VCG_STRING);
 					}
-					/* copy and filter the text, and clear last " */
-					vcgtext[vcgleng - 1] = 0;
+					/* copy and filter the text, and clear last " */ vcgtext[vcgleng - 1] = 0;
 					tmpp = (char *)dp_calloc(1, (vcgleng + 1));
 					p = vcgtext;
 					p++;	/* skip first " */
@@ -3813,18 +3778,15 @@ do_action:			/* This label is used only to access EOF actions. */
 					q = NULL;
 					return (VCG_STRING);
 				}
-			YY_BREAK case 22:
-				YY_RULE_SETUP
-#line 180 "vcg.l"
+				YY_BREAK case 22:YY_RULE_SETUP
+#line 184 "vcg.l"
 				{
 					return ((int)yytext[0]);
-				}
-			YY_BREAK case 23:
-				YY_RULE_SETUP
-#line 182 "vcg.l"
-				    ECHO;
+				} YY_BREAK case 23:YY_RULE_SETUP
+#line 186 "vcg.l"
+				 ECHO;
 				YY_BREAK
-#line 3930 "vcg.flex.c"
+#line 3933 "vcg.flex.c"
 			case YY_STATE_EOF(INITIAL):
 				yyterminate();
 
@@ -4916,7 +4878,7 @@ void yyfree(void *ptr)
 
 /* %ok-for-header */
 
-#line 182 "vcg.l"
+#line 186 "vcg.l"
 
 /* */
 void vcg_lex_init(FILE * f, int debugflag)

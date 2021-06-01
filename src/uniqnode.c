@@ -33,6 +33,9 @@
  * uniqnode() is used for raw node data
  * uniqnode2() is used for work node data in nodelist
  * uniqnode() is indexed on node number and node id for gml graph data
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 
 #include "config.h"

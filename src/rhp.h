@@ -15,7 +15,6 @@
  *
  * SPDX-License-Identifier: GPL-3.0+
  * License-Filename: LICENSE
- *
  */
 
 /* relative horizontal positioning in a single c source file.

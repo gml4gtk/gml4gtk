@@ -1041,163 +1041,112 @@ do_action:			/* This label is used only to access EOF actions. */
 				{	/* c-comment style *//* lexer does update yylineno */
 					dp_check_c_comment(yytext + 1);
 				}
-			YY_BREAK case 2:
-				YY_RULE_SETUP
+				YY_BREAK case 2:YY_RULE_SETUP
 #line 112 "dot.l"
 				{	/* end of c comment but no start of c comment shouldnothappen */
 					printf("%s(): end of c-comment without start of c-comment \"*\\\" at line %d skipped\n",
 					       __func__, yylineno);
-				}
-			YY_BREAK case 3:
-				YY_RULE_SETUP
+				} YY_BREAK case 3:YY_RULE_SETUP
 #line 113 "dot.l"
 				{	/* c++ comment style *//* lexer does update yylineno */
-				}
-			YY_BREAK case 4:
-				YY_RULE_SETUP
+				} YY_BREAK case 4:YY_RULE_SETUP
 #line 115 "dot.l"
 				{	/* dot comment line */
-				}
-			YY_BREAK case 5:
-				YY_RULE_SETUP
+				} YY_BREAK case 5:YY_RULE_SETUP
 #line 116 "dot.l"
 				{	/* this is dot specific */
 					return (TOKEN_UTF8BOM);
-				}
-			YY_BREAK case 6:
-				YY_RULE_SETUP
+				} YY_BREAK case 6:YY_RULE_SETUP
 #line 117 "dot.l"
 				{	/* skip form feed chars and spaces */
-				}
-			YY_BREAK case 7:
-				YY_RULE_SETUP
+				} YY_BREAK case 7:YY_RULE_SETUP
 #line 118 "dot.l"
 				{	/* skip tabs */
-				}
-			YY_BREAK case 8:
+				} YY_BREAK case 8:
 /* rule 8 can match eol */
-				YY_RULE_SETUP
+				 YY_RULE_SETUP
 #line 119 "dot.l"
 				{	/* skip new line *//* lexer does update yylineno */
-				}
-			YY_BREAK case 9:
-				YY_RULE_SETUP
+				} YY_BREAK case 9:YY_RULE_SETUP
 #line 120 "dot.l"
 				{	/* skip carriage return */
-				}
-			YY_BREAK case 10:
-				YY_RULE_SETUP
+				} YY_BREAK case 10:YY_RULE_SETUP
 #line 122 "dot.l"
 				{
 					return (EOF);
-				}
-			YY_BREAK case 11:
-				YY_RULE_SETUP
+				} YY_BREAK case 11:YY_RULE_SETUP
 #line 123 "dot.l"
 				{
 					return (TOKEN_PLUS);
-				}
-			YY_BREAK case 12:
-				YY_RULE_SETUP
+				} YY_BREAK case 12:YY_RULE_SETUP
 #line 124 "dot.l"
 				{
 					return (TOKEN_COMMA);
-				}
-			YY_BREAK case 13:
-				YY_RULE_SETUP
+				} YY_BREAK case 13:YY_RULE_SETUP
 #line 125 "dot.l"
 				{
 					return (TOKEN_COLON);
-				}
-			YY_BREAK case 14:
-				YY_RULE_SETUP
+				} YY_BREAK case 14:YY_RULE_SETUP
 #line 126 "dot.l"
 				{
 					return (TOKEN_SC);
-				}
-			YY_BREAK case 15:
-				YY_RULE_SETUP
+				} YY_BREAK case 15:YY_RULE_SETUP
 #line 127 "dot.l"
 				{
 					return (TOKEN_IS);
-				}
-			YY_BREAK case 16:
-				YY_RULE_SETUP
+				} YY_BREAK case 16:YY_RULE_SETUP
 #line 128 "dot.l"
 				{
 					return (TOKEN_BRACKETOPEN);
-				}
-			YY_BREAK case 17:
-				YY_RULE_SETUP
+				} YY_BREAK case 17:YY_RULE_SETUP
 #line 129 "dot.l"
 				{
 					return (TOKEN_BRACKETCLOSE);
-				}
-			YY_BREAK case 18:
-				YY_RULE_SETUP
+				} YY_BREAK case 18:YY_RULE_SETUP
 #line 130 "dot.l"
 				{
 					return (TOKEN_BRACEOPEN);
-				}
-			YY_BREAK case 19:
-				YY_RULE_SETUP
+				} YY_BREAK case 19:YY_RULE_SETUP
 #line 131 "dot.l"
 				{
 					return (TOKEN_BRACECLOSE);
-				}
-			YY_BREAK case 20:
-				YY_RULE_SETUP
+				} YY_BREAK case 20:YY_RULE_SETUP
 #line 132 "dot.l"
 				{
 					yylval.string = "--";
 					return (TOKEN_EOP);
-				}
-			YY_BREAK case 21:
-				YY_RULE_SETUP
+				} YY_BREAK case 21:YY_RULE_SETUP
 #line 133 "dot.l"
 				{
 					yylval.string = "->";
 					return (TOKEN_EOP);
-				}
-			YY_BREAK case 22:
-				YY_RULE_SETUP
+				} YY_BREAK case 22:YY_RULE_SETUP
 #line 135 "dot.l"
 				{
 					return (TOKEN_EDGE);
-				}
-			YY_BREAK case 23:
-				YY_RULE_SETUP
+				} YY_BREAK case 23:YY_RULE_SETUP
 #line 136 "dot.l"
 				{
 					return (TOKEN_NODE);
-				}
-			YY_BREAK case 24:
-				YY_RULE_SETUP
+				} YY_BREAK case 24:YY_RULE_SETUP
 #line 137 "dot.l"
 				{
 					return (TOKEN_DIGRAPH);
-				}
-			YY_BREAK case 25:
-				YY_RULE_SETUP
+				} YY_BREAK case 25:YY_RULE_SETUP
 #line 138 "dot.l"
 				{
 					return (TOKEN_GRAPH);
-				}
-			YY_BREAK case 26:
-				YY_RULE_SETUP
+				} YY_BREAK case 26:YY_RULE_SETUP
 #line 139 "dot.l"
 				{
 					return (TOKEN_SUBGRAPH);
-				}
-			YY_BREAK case 27:
-				YY_RULE_SETUP
+				} YY_BREAK case 27:YY_RULE_SETUP
 #line 140 "dot.l"
 				{
 					return (TOKEN_STRICT);
-				}
-			YY_BREAK case 28:
+				} YY_BREAK case 28:
 /* rule 28 can match eol */
-				YY_RULE_SETUP
+				 YY_RULE_SETUP
 #line 142 "dot.l"
 				{
 					if (yyleng == 2) {
@@ -1206,8 +1155,7 @@ do_action:			/* This label is used only to access EOF actions. */
 						yylval.string = p;
 						return (TOKEN_QTEXT);
 					}
-					/* copy and filter the text, and clear last " */
-					yytext[yyleng - 1] = 0;
+					/* copy and filter the text, and clear last " */ yytext[yyleng - 1] = 0;
 					tmpp = (char *)dp_calloc(1, yyleng);
 					p = yytext;
 					p++;	/* skip first " */
@@ -1271,34 +1219,28 @@ do_action:			/* This label is used only to access EOF actions. */
 					q = NULL;
 					return (TOKEN_QTEXT);
 				}
-			YY_BREAK case 29:
-				YY_RULE_SETUP
+				YY_BREAK case 29:YY_RULE_SETUP
 #line 216 "dot.l"
 				{
 					p = dp_uniqstr(yytext);
 					yylval.string = p;
 					return (TOKEN_TEXT);
-				}
-			YY_BREAK case 30:
-				YY_RULE_SETUP
+				} YY_BREAK case 30:YY_RULE_SETUP
 #line 222 "dot.l"
 				{
 					p = dp_uniqstr(yytext);
 					yylval.string = p;
 					return (TOKEN_NUM);
-				}
-				YY_BREAK
+				} YY_BREAK
 /* html label, but if it is <> return "" */
-			case 31:
-				YY_RULE_SETUP
+				case 31:YY_RULE_SETUP
 #line 229 "dot.l"
 				{
 					BEGIN(htmlstr);
 					htmlnest = 1;
 					yylval.string = "<";
 				}
-			YY_BREAK case 32:
-				YY_RULE_SETUP
+				YY_BREAK case 32:YY_RULE_SETUP
 #line 230 "dot.l"
 				{
 					htmlnest--;
@@ -1313,48 +1255,37 @@ do_action:			/* This label is used only to access EOF actions. */
 						return (TOKEN_HTEXT);
 					}
 				}
-			YY_BREAK case 33:
-				YY_RULE_SETUP
+				YY_BREAK case 33:YY_RULE_SETUP
 #line 231 "dot.l"
 				{
 					htmlnest++;
 					yylval.string = dp_ccat(yylval.string, yytext);
-				}
-			YY_BREAK case 34:
-				YY_RULE_SETUP
+				} YY_BREAK case 34:YY_RULE_SETUP
 #line 232 "dot.l"
 				{
 					yylval.string = dp_ccat(yylval.string, "&lt;");
-				}
-			YY_BREAK case 35:
-				YY_RULE_SETUP
+				} YY_BREAK case 35:YY_RULE_SETUP
 #line 233 "dot.l"
 				{
 					yylval.string = dp_ccat(yylval.string, "&gt;");
-				}
-			YY_BREAK case 36:
+				} YY_BREAK case 36:
 /* rule 36 can match eol */
-				YY_RULE_SETUP
+				 YY_RULE_SETUP
 #line 234 "dot.l"
 				{ /* yylineno++ is update by lexer code */ ;
-				}
-			YY_BREAK case 37:
+				} YY_BREAK case 37:
 /* rule 37 can match eol */
-				YY_RULE_SETUP
+				 YY_RULE_SETUP
 #line 235 "dot.l"
 				{
 					yylval.string = dp_ccat(yylval.string, yytext);
-				}
-			YY_BREAK case 38:
-				YY_RULE_SETUP
+				} YY_BREAK case 38:YY_RULE_SETUP
 #line 238 "dot.l"
 				{
 					return ((int)yytext[0]);
-				}
-			YY_BREAK case 39:
-				YY_RULE_SETUP
+				} YY_BREAK case 39:YY_RULE_SETUP
 #line 240 "dot.l"
-				    ECHO;
+				 ECHO;
 				YY_BREAK
 #line 1346 "lex.yy.c"
 			case YY_STATE_EOF(INITIAL):

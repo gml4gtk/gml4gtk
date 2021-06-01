@@ -27,7 +27,11 @@
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
+
 /* lex the vcg data generated with gcc -fcallgraph-info option which is a subset of vcg language */
 
 %{

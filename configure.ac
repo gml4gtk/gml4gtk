@@ -81,6 +81,7 @@ AC_PROG_MAKE_SET
 # asm output: -S -fverbose-asm
 # asm output: -Wa,-adhln=test-O3.s -g -fverbose-asm -masm=intel
 # asm output: -fverbose-asm -save-temps=obj
+# -fplugin=$HOME/scallgraph_plugin.so.0.0.0
 CFLAGS="$CFLAGS -g -std=c99 "
 
 # Gcc compiler options

@@ -370,7 +370,7 @@ static struct item *dphl_makeitem(char *str, char *alt, int opt, struct tabledat
 			if (curtd->bgcolor < 0) {
 				/* not specified */
 			} else {
-				if (yydebug || 1) {
+				if (yydebug || 0) {
 					printf("%s(): setting background color 0x%x for \"%s\"\n", __func__, curtd->bgcolor, msg);
 				}
 				item->ncolor = curtd->bgcolor;

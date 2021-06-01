@@ -29,6 +29,9 @@
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 
 /* graphviz dot does layout in multiple steps of parts of the graph

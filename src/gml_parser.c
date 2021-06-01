@@ -29,6 +29,9 @@
  *       ): :(
  *       :o_o:
  *        "-"
+ *
+ * SPDX-License-Identifier: GPL-3.0+
+ * License-Filename: LICENSE
  */
 
 /*
@@ -189,7 +192,7 @@ struct GML_pair *GML_parser(FILE * source, struct GML_stat *stat, int open)
 			}
 
 			if (!tmp_elem) {
-/* #warning "memleak here " */
+				/* #warning "memleak here " */
 				tmp_elem = (struct GML_list_elem *)
 				    gmlparser_calloc(1, sizeof(struct GML_list_elem));
 				tmp_elem->next = stat->key_list;
@@ -987,6 +990,14 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 	/* uniq node number start at 1 */
 	maingraph->nodenum++;
 	nr = maingraph->nodenum;
+
+	/* in ogdf gml label "" set the nodename */
+	if (nodelabel) {
+		if (strlen(nodelabel) == 0) {
+			/* make nodelabel nodename */
+			nodelabel = nodename;
+		}
+	}
 
 	/* in gml all nodes are located in rootgraph */
 	add_new_node(g, maingraph, nr, foundid, nodename, nodelabel, ncolor, nbcolor, NULL /* rl */ , NULL /* hl */ , fontcolor,

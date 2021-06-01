@@ -15,7 +15,6 @@
  *
  * SPDX-License-Identifier: GPL-3.0+
  * License-Filename: LICENSE
- * Copyright mooigrap authors
  */
 
 /* updated: it now allows empty levels, see if(0) { rhp_log() } */

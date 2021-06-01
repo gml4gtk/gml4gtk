@@ -116,7 +116,7 @@ jsonlint:
 
 #
 indent:
-	./Lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h
+	./lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h
 
 # clang -emit-llvm hello.c -c -o main.bc
 # opt -dot-cfg-only main.bc
@@ -221,5 +221,6 @@ clean-generic:
 	rm -v -f ./*.out
 	rm -v -f ./*.res
 	rm -v -f ./gml4gtk-cg.gv
+	rm -v -f *.scallgraph.gv
 
 # /* end */
