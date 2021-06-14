@@ -18,9 +18,14 @@
  *
  */
 
+/**
+ * @file: splay-tree.h
+ */
+
 #ifndef SPLAY_TREE_H
 #define SPLAY_TREE_H 1
 
+/* needed for type unintptr_t or use long long int */
 #include <stdint.h>
 
 /* how many bytes can a splay key to index on have max. */
@@ -107,4 +112,4 @@ extern int splay_tree_compare_strings(splay_tree_key k1, splay_tree_key k2);
 
 #endif /* _SPLAY_TREE_H */
 
-/* end */
+/* end. */

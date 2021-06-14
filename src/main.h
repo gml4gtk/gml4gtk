@@ -198,6 +198,7 @@ struct gml_edge {
 	char reversed;		/* set if edge is reversed */
 	char hedge;		/* set if edge is horizontal line */
 	char vedge;		/* set if edge is vertical */
+	char inner;		/* set if edge is a inner edge */
 	char *elabel;		/* optional edge label */
 	int ishtml;		/* set if elabel is <> html label */
 	int ecolor;		/* r/g/b edge line color */

@@ -2,16 +2,16 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Year, month and day this program is compiled. */
-#define COMPILE_DATE "Tue 06/01/21 2021"
+#define COMPILE_DATE "Mon 06/14/21 2021"
 
 /* System where this is compiled. */
 #define COMPILE_UNAME "Linux"
 
 /* gtk version 2 */
-#define GTK_HAVE_API_VERSION_2 1
+#define GTK_HAVE_API_VERSION_2 0
 
 /* gtk version 3 */
-#define GTK_HAVE_API_VERSION_3 0
+#define GTK_HAVE_API_VERSION_3 1
 
 /* gtk version 4 */
 #define GTK_HAVE_API_VERSION_4 0

@@ -44,6 +44,10 @@ Boston, MA 02110-1301, USA.  */
      Lewis, Harry R. and Denenberg, Larry.  Data Structures and Their
      Algorithms.  Harper-Collins, Inc.  1991.  */
 
+/**
+ * @file: splay-tree.c
+ */
+
 #include "config.h"
 
 #include <stdio.h>
@@ -52,6 +56,20 @@ Boston, MA 02110-1301, USA.  */
 
 #include "splay-tree.h"
 #include "dpmem.h"
+
+/* here wrapping to custom malloc/free can be set */
+static inline void *splay_tree_malloc(size_t n)
+{
+	return (dp_calloc(1, n));
+}
+
+static inline void *splay_tree_free(void *ptr)
+{
+	if (ptr) {
+		dp_free(ptr);
+	}
+	return (NULL);
+}
 
 /* forward decl. */
 static struct splay_tree_node_n *splay(splay_tree sp, splay_tree_key key);
@@ -87,30 +105,28 @@ splay_tree splay_tree_delete(splay_tree sp)
 		count++;
 
 		/* get buffer to hold keys */
-		keys = dp_calloc(1, (count * sizeof(splay_tree_key)));
+		keys = (splay_tree_key *) splay_tree_malloc(count * sizeof(splay_tree_key));
 
-		if (keys) {
-
-			/* copy keys into buffer */
-			spn = splay_tree_min(sp);
-			i = 0;
-			while (spn) {
-				keys[i] = (splay_tree_key) spn->key;
-				i++;
-				spn = splay_tree_successor(sp, spn->key);
-			}
-
-			/* remove every key in buffer */
-			for (i = 0; i < count; i++) {
-				splay_tree_remove(sp, (splay_tree_key) keys[i]);
-				keys[i] = (splay_tree_key) 0;
-			}
-
-			/* ready. */
-			dp_free(keys);
-			keys = NULL;
+		/* copy keys into buffer */
+		spn = splay_tree_min(sp);
+		i = 0;
+		while (spn) {
+			keys[i] = (splay_tree_key) spn->key;
+			i++;
+			spn = splay_tree_successor(sp, spn->key);
 		}
 
+		/* remove every key in buffer */
+		for (i = 0; i < count; i++) {
+			splay_tree_remove(sp, (splay_tree_key) keys[i]);
+			keys[i] = (splay_tree_key) 0;
+		}
+
+		/* ready. */
+		keys = (splay_tree_key *) splay_tree_free(keys);
+
+		/* keys is never read */
+		if (keys) { /* fix */ }
 	}
 
 	/* wipe the pointers in the struct to make valgrind happy */
@@ -125,9 +141,7 @@ splay_tree splay_tree_delete(splay_tree sp)
 	/* The deallocate-value function.  NULL if no cleanup is necessary.  */
 	sp->delete_value = (splay_tree_delete_value_fn) 0;
 
-	dp_free((void *)sp);
-
-	return ((splay_tree) 0);
+	return ((splay_tree) splay_tree_free((void *)sp));
 }
 
 /* Allocate a new splay tree, using COMPARE_FN to compare nodes,
@@ -144,11 +158,7 @@ splay_tree_new(splay_tree_compare_fn compare_fn, splay_tree_delete_key_fn delete
 		return ((splay_tree) 0);
 	}
 
-	sp = (splay_tree) dp_calloc(1, sizeof(struct splay_tree_t));
-
-	if (sp == (splay_tree) 0) {
-		return ((splay_tree) 0);
-	}
+	sp = (splay_tree) splay_tree_malloc(sizeof(struct splay_tree_t));
 
 	/* set root node to use and the functions */
 	sp->root = (splay_tree_node) 0;
@@ -181,12 +191,7 @@ void splay_tree_insert(splay_tree sp, splay_tree_key key, splay_tree_value value
 	}
 
 	/* Create a new node, and insert it at the root.  */
-	spn = (splay_tree_node) dp_calloc(1, sizeof(struct splay_tree_node_n));
-
-	if (spn == (splay_tree_node) 0) {
-		/* shouldnothappen */
-		return;
-	}
+	spn = (splay_tree_node) splay_tree_malloc(sizeof(struct splay_tree_node_n));
 
 	/* set node data */
 	spn->key = key;
@@ -284,7 +289,10 @@ void splay_tree_remove(splay_tree sp, splay_tree_key key)
 	node->left = (splay_tree_node) 0;
 	node->right = (splay_tree_node) 0;
 
-	dp_free((void *)node);
+	node = (splay_tree_node) splay_tree_free((void *)node);
+
+	/* node is never read */
+	if (node) { /* fix */ }
 
 	return;
 }
@@ -483,7 +491,7 @@ splay_tree_node splay_tree_successor(splay_tree sp, splay_tree_key key)
 void splay_tree_free_value(splay_tree_value value)
 {
 	if (value) {
-		dp_free((void *)value);
+		(void)splay_tree_free((void *)value);
 	}
 	return;
 }
@@ -491,7 +499,7 @@ void splay_tree_free_value(splay_tree_value value)
 void splay_tree_free_key(splay_tree_key key)
 {
 	if (key) {
-		dp_free((void *)key);
+		(void)splay_tree_free((void *)key);
 	}
 	return;
 }
@@ -682,4 +690,4 @@ labelend:
 	return ((struct splay_tree_node_n *)t);
 }
 
-/* end */
+/* end. */

@@ -42,6 +42,20 @@
 #ifndef SFG_H
 #define SFG_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+# define __BEGIN_DECLS extern "C" {
+# define __END_DECLS }
+#else
+# define __BEGIN_DECLS /* empty */
+# define __END_DECLS /* empty */
+#endif
+
+__BEGIN_DECLS
+
+/* at top of sfg.c the sfg_calloc() and sfg_free() can be edited for customized malloc/free */
+
 /* returns a version number as version 1.0 returns int 10 */
 extern int sfg_version(void);
 
@@ -425,6 +439,8 @@ extern int sfg_node_foreach(int (*getnodedata)
  * returns -3 if no callback routine
  */
 extern int sfg_edge_foreach(int (*getedgedata)(int num, int from, int to, int type, int rev));
+
+__END_DECLS
 
 #endif
 

@@ -3917,6 +3917,12 @@ add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	edge->fcompass = fcompass;
 	edge->tcompass = tcompass;
 	edge->constraint = constraint;
+	/* edge is a inner edge if both nodes are dummy nodes */
+	if (edge->from_node->dummy && edge->to_node->dummy) {
+		edge->inner = 1;
+	} else {
+		edge->inner = 0;
+	}
 	el = dp_calloc(1, sizeof(struct gml_elist));
 	if (el == NULL) {
 		return;

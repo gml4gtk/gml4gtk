@@ -39,6 +39,7 @@ gml4gtk_SOURCES = \
 	pos4.c \
 	hier.c \
 	splay-tree.c \
+	skip-list.c \
 	uniqstr.c \
 	uniqnode.c \
 	uniqgraph.c \
@@ -116,7 +117,7 @@ jsonlint:
 
 #
 indent:
-	./lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h
+	./lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h skip-list.h
 
 # clang -emit-llvm hello.c -c -o main.bc
 # opt -dot-cfg-only main.bc

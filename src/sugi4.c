@@ -225,7 +225,7 @@ static int comparevalue(const void *a, const void *b)
 	/* if (baryx == baryy) */
 	if (fabs(baryx - baryy) <= LOWVAL) {
 		/* for stable qsort() use pos field at equal */
-			return (y->qsortpos - x->qsortpos);
+		return (y->qsortpos - x->qsortpos);
 	}
 	if (baryx > baryy) {
 		return (1);

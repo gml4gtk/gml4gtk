@@ -47,21 +47,47 @@
 #include <stdio.h>
 #include <stdlib.h>		/* for calloc() free() */
 
+#include "dpmem.h"
+
 /* from <limits.h> for CHAR_BIT is 8 definition */
+#ifndef CHAR_BIT
 #define CHAR_BIT 8
+#endif
 
 /* min (x,y) spacing between nodes */
 #define NXSPACING 5
 #define NYSPACING 15
 
 #include "sfg.h"
-#include "dpmem.h"
 
 struct gml_graph;
 struct gml_node;
 struct gml_edge;
 struct gml_nlist;
 struct gml_elist;
+
+/* here calloc/free can be changed and malloc, realloc is not used */
+static inline void *sfg_calloc (size_t nmemb, size_t size)
+{
+	void *ret = NULL;
+	if ((nmemb * size) == 0) {
+		/* should not happen */
+	}
+	ret = dp_calloc (nmemb, size);
+	if (ret == (void *)0) {
+		/* should not happen */
+		exit (1);
+	}
+	return (ret);
+}
+
+static inline void *sfg_free (void *ptr)
+{
+	if (ptr) {
+		(void)dp_free (ptr);
+	}
+	return ((void *)0);
+}
 
 /* how many bytes can a splay key to index on have max.
  * this data type must be large enough for a pointer.
@@ -72,7 +98,7 @@ struct gml_elist;
  * The size of `uintptr_t', as computed by sizeof.
  * #define SIZEOF_UINTPTR_T 8
  *
- * #include <stdint.h>	// for uintptr_t definition
+ * #include <stdint.h> // for uintptr_t definition
  * typedef unsigned long long int splay_tree_key;
  * typedef uintptr_t splay_tree_key;
  * in this situation it can be:
@@ -283,7 +309,7 @@ int sfg_init(void)
 	if (maingraph) {
 		return (-1);
 	}
-	maingraph = dp_calloc(1, sizeof(struct gml_graph));
+	maingraph = (struct gml_graph *) sfg_calloc(1, sizeof(struct gml_graph));
 	if (maingraph == NULL) {
 		return (-2);
 	}
@@ -308,23 +334,19 @@ int sfg_deinit(void)
 		return (-1);
 	}
 	if (maingraph->numce) {
-		dp_free(maingraph->numce);
-		maingraph->numce = NULL;
+		maingraph->numce = (int *) sfg_free (maingraph->numce);
 	}
 	if (maingraph->nnodes_of_level) {
-		dp_free(maingraph->nnodes_of_level);
-		maingraph->nnodes_of_level = NULL;
+		maingraph->nnodes_of_level = (int *) sfg_free (maingraph->nnodes_of_level);
 	}
 	if (maingraph->startnodes) {
-		dp_free(maingraph->startnodes);
-		maingraph->startnodes = NULL;
+		maingraph->startnodes = (int *) sfg_free(maingraph->startnodes);
 	}
 	clear_stlist_all(maingraph);
 	clear_edgelist(maingraph);
 	clear_nodelist(maingraph);
 	uniqnode_splaytree = splay_tree_delete(uniqnode_splaytree);
-	dp_free(maingraph);
-	maingraph = NULL;
+	maingraph = (struct gml_graph *) sfg_free (maingraph);
 	return (0);
 }
 
@@ -364,13 +386,13 @@ int sfg_addnode(int number, int tx, int ty)
 		return (-6);
 	}
 	/* create the new node */
-	nn = dp_calloc(1, sizeof(struct gml_node));
+	nn = (struct gml_node *) sfg_calloc(1, sizeof(struct gml_node));
 	if (nn == NULL) {
 		return (-7);
 	}
-	nl = dp_calloc(1, sizeof(struct gml_nlist));
+	nl = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 	if (nl == NULL) {
-		dp_free(nn);
+		nn = (struct gml_node *) sfg_free (nn);
 		return (-7);
 	}
 	nn->nr = number;
@@ -459,13 +481,13 @@ int sfg_addedge(int number, int from, int to, int tx, int ty)
 		fn->nselfedges++;
 	} else {
 		/* fresh new edge */
-		e = dp_calloc(1, sizeof(struct gml_edge));
+		e = (struct gml_edge *) sfg_calloc(1, sizeof(struct gml_edge));
 		if (e == NULL) {
 			return (-9);
 		}
-		el = dp_calloc(1, sizeof(struct gml_elist));
+		el = (struct gml_elist *) sfg_calloc(1, sizeof(struct gml_elist));
 		if (el == NULL) {
-			dp_free(e);
+			e = (struct gml_edge *) sfg_free(e);
 			return (-9);
 		}
 		e->nr = number;
@@ -1497,7 +1519,7 @@ static void splay_tree_delete_helper(splay_tree sp, splay_tree_node node)
 		node->value = (splay_tree_value) 0;
 	}
 
-	dp_free((void *)node);
+	(void) sfg_free ((void *)node);
 
 	return;
 }
@@ -1505,11 +1527,9 @@ static void splay_tree_delete_helper(splay_tree sp, splay_tree_node node)
 /* delete whole sp tree */
 static splay_tree splay_tree_delete(splay_tree sp)
 {
-
- /* todo */
 	if (sp) {
 		splay_tree_delete_helper(sp, sp->root);
-		dp_free((void *)sp);
+		(void) sfg_free ((void *)sp);
 	}
 	return ((splay_tree) 0);
 }
@@ -1528,7 +1548,7 @@ splay_tree_new(splay_tree_compare_fn compare_fn, splay_tree_delete_key_fn delete
 		return ((splay_tree) 0);
 	}
 
-	sp = (splay_tree) dp_calloc(1, sizeof(struct splay_tree_t));
+	sp = (splay_tree) sfg_calloc(1, sizeof(struct splay_tree_t));
 
 	if (sp == (splay_tree) 0) {
 		return ((splay_tree) 0);
@@ -1565,7 +1585,7 @@ static void splay_tree_insert(splay_tree sp, splay_tree_key key, splay_tree_valu
 	}
 
 	/* Create a new node, and insert it at the root.  */
-	spn = (splay_tree_node) dp_calloc(1, sizeof(struct splay_tree_node_n));
+	spn = (splay_tree_node) sfg_calloc(1, sizeof(struct splay_tree_node_n));
 
 	if (spn == (splay_tree_node) 0) {
 		/* shouldnothappen */
@@ -1811,10 +1831,8 @@ static void clear_nodelist(struct gml_graph *g)
 	lnll = g->nodelist;
 	while (lnll) {
 		nlnext = lnll->next;
-		dp_free(lnll->node);
-		lnll->node = NULL;
-		dp_free(lnll);
-		lnll = NULL;
+		lnll->node = (struct gml_node *) sfg_free(lnll->node);
+		lnll = (struct gml_nlist *) sfg_free(lnll);
 		lnll = nlnext;
 	}
 	g->nodelist = NULL;
@@ -1832,10 +1850,8 @@ static void clear_edgelist(struct gml_graph *g)
 	el = g->edgelist;
 	while (el) {
 		elnext = el->next;
-		dp_free(el->edge);
-		el->edge = NULL;
-		dp_free(el);
-		el = NULL;
+		el->edge = (struct gml_edge *) sfg_free(el->edge);
+		el = (struct gml_elist *) sfg_free(el);
 		el = elnext;
 	}
 	g->edgelist = NULL;
@@ -1879,7 +1895,7 @@ static void reorg(struct gml_graph *g)
 	while (nl) {
 		/* first the single nodes */
 		if (nl->node->indegree == 0 && nl->node->outdegree == 0) {
-			nn1 = dp_calloc(1, sizeof(struct gml_nlist));
+			nn1 = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 			if (nn1) {
 				nn1->node = nl->node;
 				if (nnl == NULL) {
@@ -1898,7 +1914,7 @@ static void reorg(struct gml_graph *g)
 	while (nl) {
 		/* second the starter nodes */
 		if (nl->node->indegree == 0 && nl->node->outdegree != 0) {
-			nn2 = dp_calloc(1, sizeof(struct gml_nlist));
+			nn2 = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 			if (nn2) {
 				nn2->node = nl->node;
 				if (nnl == NULL) {
@@ -1917,7 +1933,7 @@ static void reorg(struct gml_graph *g)
 	while (nl) {
 		/* third the middle nodes */
 		if (nl->node->indegree != 0 && nl->node->outdegree != 0) {
-			nn3 = dp_calloc(1, sizeof(struct gml_nlist));
+			nn3 = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 			if (nn3) {
 				nn3->node = nl->node;
 				if (nnl == NULL) {
@@ -1936,7 +1952,7 @@ static void reorg(struct gml_graph *g)
 	while (nl) {
 		/* fourth the tail nodes */
 		if (nl->node->indegree != 0 && nl->node->outdegree == 0) {
-			nn4 = dp_calloc(1, sizeof(struct gml_nlist));
+			nn4 = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 			if (nn4) {
 				nn4->node = nl->node;
 				if (nnl == NULL) {
@@ -1955,8 +1971,7 @@ static void reorg(struct gml_graph *g)
 	nl = g->nodelist;
 	while (nl) {
 		nlnext = nl->next;
-		dp_free(nl);
-		nl = NULL;
+		nl = (struct gml_nlist *) sfg_free(nl);
 		nl = nlnext;
 	}
 
@@ -2098,7 +2113,7 @@ static void make_stlist(struct gml_graph *g)
 		/* from/to nodes */
 		sn = edge->from_node;
 		tn = edge->to_node;
-		ne = dp_calloc(1, sizeof(struct gml_elist));
+		ne = (struct gml_elist *) sfg_calloc(1, sizeof(struct gml_elist));
 		if (ne == NULL) {
 			return;
 		}
@@ -2114,7 +2129,7 @@ static void make_stlist(struct gml_graph *g)
 		}
 
 		sn->outdegree++;
-		ne = dp_calloc(1, sizeof(struct gml_elist));
+		ne = (struct gml_elist *) sfg_calloc(1, sizeof(struct gml_elist));
 		if (ne == NULL) {
 			return;
 		}
@@ -2145,8 +2160,7 @@ static void clear_stlist(struct gml_node *node)
 	ell = node->outgoing_e;
 	while (ell) {
 		ellnext = ell->next;
-		dp_free(ell);
-		ell = NULL;
+		ell = (struct gml_elist *) sfg_free(ell);
 		ell = ellnext;
 	}
 
@@ -2157,8 +2171,7 @@ static void clear_stlist(struct gml_node *node)
 	ell = node->incoming_e;
 	while (ell) {
 		ellnext = ell->next;
-		dp_free(ell);
-		ell = NULL;
+		ell = (struct gml_elist *) sfg_free(ell);
 		ell = ellnext;
 	}
 
@@ -2184,7 +2197,7 @@ static void clear_stlist_all(struct gml_graph *g)
 static void add_singlenode(struct gml_graph *g, struct gml_node *node)
 {
 	struct gml_nlist *lnll = NULL;
-	lnll = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
+	lnll = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 	if (lnll) {
 		lnll->node = node;
 		if (g->singlenodelist == NULL) {
@@ -2282,7 +2295,7 @@ static void ylevels(struct gml_graph *g)
 	}
 
 	/* fill the table with startnodes */
-	g->startnodes = dp_calloc(1, g->nstartnodes * sizeof(int));
+	g->startnodes = (int *) sfg_calloc(1, g->nstartnodes * sizeof(int));
 	if (g->startnodes == NULL) {
 		return;
 	}
@@ -2534,15 +2547,15 @@ static void add_new_dummynode(struct gml_graph *g, int foundid)
 		return;
 	}
 
-	node = dp_calloc(1, sizeof(struct gml_node));
+	node = (struct gml_node *) sfg_calloc(1, sizeof(struct gml_node));
 	if (node == NULL) {
 		return;
 	}
 	node->nr = foundid;
 	uniqnode_add(maingraph, node);
-	lnll = dp_calloc(1, sizeof(struct gml_nlist));
+	lnll = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 	if (lnll == NULL) {
-		dp_free(node);
+		node = (struct gml_node *) sfg_free(node);
 		return;
 	}
 
@@ -2575,7 +2588,7 @@ static void add_new_dummyedge(struct gml_graph *g, int foundsource, int foundtar
 		return;
 	}
 
-	edge = dp_calloc(1, sizeof(struct gml_edge));
+	edge = (struct gml_edge *) sfg_calloc(1, sizeof(struct gml_edge));
 	if (edge == NULL) {
 		return;
 	}
@@ -2584,9 +2597,9 @@ static void add_new_dummyedge(struct gml_graph *g, int foundsource, int foundtar
 	edge->from_node = snode;	/* from-node */
 	edge->to_node = tnode;	/* to-node */
 	edge->reversed = reversed;	/* edge attr. edge-is-reversed */
-	el = dp_calloc(1, sizeof(struct gml_elist));
+	el = (struct gml_elist *) sfg_calloc(1, sizeof(struct gml_elist));
 	if (el == NULL) {
-		dp_free(edge);
+		edge = (struct gml_edge *) sfg_free(edge);
 		return;
 	}
 
@@ -2629,9 +2642,8 @@ static void del_edge(struct gml_graph *g, struct gml_elist *edgeel)
 			g->edgelistend = elprev;
 		}
 
-		dp_free(edgeel->edge);
-		edgeel->edge = NULL;
-		dp_free(edgeel);
+		edgeel->edge = (struct gml_edge *) sfg_free(edgeel->edge);
+		edgeel = (struct gml_elist *) sfg_free(edgeel);
 	} else {
 
 		elto = edgeel->next;
@@ -2650,9 +2662,8 @@ static void del_edge(struct gml_graph *g, struct gml_elist *edgeel)
 			g->edgelistend = elprev;
 		}
 
-		dp_free(edgeel->edge);
-		edgeel->edge = NULL;
-		dp_free(edgeel);
+		edgeel->edge = (struct gml_edge *) sfg_free(edgeel->edge);
+		edgeel = (struct gml_elist *) sfg_free(edgeel);
 	}
 
 	return;
@@ -2814,7 +2825,7 @@ static void nodecounts(struct gml_graph *g)
 	clear_stlist_all(g);
 	make_stlist(g);
 	/* table with number of nodes per level */
-	g->nnodes_of_level = dp_calloc((g->maxlevel + 1), sizeof(int));
+	g->nnodes_of_level = (int *) sfg_calloc((g->maxlevel + 1), sizeof(int));
 	if (g->nnodes_of_level == NULL) {
 		return;
 	}
@@ -3097,8 +3108,8 @@ static void store_new_positions(struct gml_graph *g, struct mmatrix *m, int leve
 /*  parts are Copyright (C) Felix von Leitner from dietlibc */
 static void *do_memmove(void *dst, void *src, size_t count)
 {
-	char *a = dst;
-	char *b = src;
+	char *a = (char *)dst;
+	char *b = (char *)src;
 	if (src != dst) {
 		if (src > dst) {
 			while (count--)
@@ -3633,17 +3644,17 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 	}
 
 	/* the whole graph structures */
-	a = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
-	a1 = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
-	a2 = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
-	as = dp_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	a = (struct mmatrix **) sfg_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	a1 = (struct mmatrix **) sfg_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	a2 = (struct mmatrix **) sfg_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
+	as = (struct mmatrix **) sfg_calloc(1, g->maxlevel * sizeof(struct mmatrix *));
 
 	/* get matrix struct */
 	for (i = 0; i < g->maxlevel; i++) {
-		a[i] = dp_calloc(1, sizeof(struct mmatrix));
-		a1[i] = dp_calloc(1, sizeof(struct mmatrix));
-		a2[i] = dp_calloc(1, sizeof(struct mmatrix));
-		as[i] = dp_calloc(1, sizeof(struct mmatrix));
+		a[i] = (struct mmatrix *) sfg_calloc(1, sizeof(struct mmatrix));
+		a1[i] = (struct mmatrix *) sfg_calloc(1, sizeof(struct mmatrix));
+		a2[i] = (struct mmatrix *) sfg_calloc(1, sizeof(struct mmatrix));
+		as[i] = (struct mmatrix *) sfg_calloc(1, sizeof(struct mmatrix));
 	}
 
 	/* get data inside struct */
@@ -3679,10 +3690,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 			as[i]->bbytes = ((as[i]->ncols + 1) * sizeof(double));
 		}
 
-		a[i]->b = dp_calloc(1, a[i]->bbytes);
-		a1[i]->b = dp_calloc(1, a1[i]->bbytes);
-		a2[i]->b = dp_calloc(1, a2[i]->bbytes);
-		as[i]->b = dp_calloc(1, as[i]->bbytes);
+		a[i]->b = (double *) sfg_calloc(1, a[i]->bbytes);
+		a1[i]->b = (double *) sfg_calloc(1, a1[i]->bbytes);
+		a2[i]->b = (double *) sfg_calloc(1, a2[i]->bbytes);
+		as[i]->b = (double *) sfg_calloc(1, as[i]->bbytes);
 
 		/* number of bytes used */
 		a[i]->nmi0 = ((a[i]->nrows + 1) * sizeof(int));
@@ -3691,10 +3702,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 		as[i]->nmi0 = ((a[i]->nrows + 1) * sizeof(int));
 
 		/* row node id's (int's) */
-		a[i]->mi0 = dp_calloc(1, a[i]->nmi0);
-		a1[i]->mi0 = dp_calloc(1, a1[i]->nmi0);
-		a2[i]->mi0 = dp_calloc(1, a2[i]->nmi0);
-		as[i]->mi0 = dp_calloc(1, as[i]->nmi0);
+		a[i]->mi0 = (int *) sfg_calloc(1, a[i]->nmi0);
+		a1[i]->mi0 = (int *) sfg_calloc(1, a1[i]->nmi0);
+		a2[i]->mi0 = (int *) sfg_calloc(1, a2[i]->nmi0);
+		as[i]->mi0 = (int *) sfg_calloc(1, as[i]->nmi0);
 
 		/* number of bytes used */
 		a[i]->nm0i = ((a[i]->ncols + 1) * sizeof(int));
@@ -3703,10 +3714,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 		as[i]->nm0i = ((a[i]->ncols + 1) * sizeof(int));
 
 		/* col node id's (int's) */
-		a[i]->m0i = dp_calloc(1, a[i]->nm0i);
-		a1[i]->m0i = dp_calloc(1, a1[i]->nm0i);
-		a2[i]->m0i = dp_calloc(1, a2[i]->nm0i);
-		as[i]->m0i = dp_calloc(1, as[i]->nm0i);
+		a[i]->m0i = (int *) sfg_calloc(1, a[i]->nm0i);
+		a1[i]->m0i = (int *) sfg_calloc(1, a1[i]->nm0i);
+		a2[i]->m0i = (int *) sfg_calloc(1, a2[i]->nm0i);
+		as[i]->m0i = (int *) sfg_calloc(1, as[i]->nm0i);
 
 		/* bits array for the matrix */
 		a[i]->nbytes = 1 + ((((a[i]->nrows + 1) * (a[i]->ncols + 1)) + CHAR_BIT) / CHAR_BIT);
@@ -3714,10 +3725,10 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 		a2[i]->nbytes = 1 + ((((a2[i]->nrows + 1) * (a2[i]->ncols + 1)) + CHAR_BIT) / CHAR_BIT);
 		as[i]->nbytes = 1 + ((((as[i]->nrows + 1) * (as[i]->ncols + 1)) + CHAR_BIT) / CHAR_BIT);
 
-		a[i]->bits = dp_calloc(1, a[i]->nbytes);
-		a1[i]->bits = dp_calloc(1, a1[i]->nbytes);
-		a2[i]->bits = dp_calloc(1, a2[i]->nbytes);
-		as[i]->bits = dp_calloc(1, as[i]->nbytes);
+		a[i]->bits = (unsigned char *) sfg_calloc(1, a[i]->nbytes);
+		a1[i]->bits = (unsigned char *) sfg_calloc(1, a1[i]->nbytes);
+		a2[i]->bits = (unsigned char *) sfg_calloc(1, a2[i]->nbytes);
+		as[i]->bits = (unsigned char *) sfg_calloc(1, as[i]->nbytes);
 	}
 
 	/* fill the matrix with data for all levels */
@@ -3912,45 +3923,42 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 
 	for (i = 0; i < g->maxlevel; i++) {
 		if (a[i]) {
-			dp_free(a[i]->b);
-			dp_free(a[i]->mi0);
-			dp_free(a[i]->m0i);
-			dp_free(a[i]->bits);
+			a[i]->b = (double *) sfg_free(a[i]->b);
+			a[i]->mi0 = (int *) sfg_free(a[i]->mi0);
+			a[i]->m0i = (int *) sfg_free(a[i]->m0i);
+			free(a[i]->bits);
 		}
 		if (a1[i]) {
-			dp_free(a1[i]->b);
-			dp_free(a1[i]->mi0);
-			dp_free(a1[i]->m0i);
-			dp_free(a1[i]->bits);
+			a1[i]->b = (double *) sfg_free(a1[i]->b);
+			a1[i]->mi0 = (int *) sfg_free(a1[i]->mi0);
+			a1[i]->m0i = (int *) sfg_free(a1[i]->m0i);
+			free(a1[i]->bits);
 		}
 		if (a2[i]) {
-			dp_free(a2[i]->b);
-			dp_free(a2[i]->mi0);
-			dp_free(a2[i]->m0i);
-			dp_free(a2[i]->bits);
+			a2[i]->b = (double *) sfg_free(a2[i]->b);
+			a2[i]->mi0 = (int *) sfg_free(a2[i]->mi0);
+			a2[i]->m0i = (int *) sfg_free(a2[i]->m0i);
+			free(a2[i]->bits);
 		}
 		if (as[i]) {
-			dp_free(as[i]->b);
-
-			dp_free(as[i]->mi0);
-
-			dp_free(as[i]->m0i);
-
-			dp_free(as[i]->bits);
+			as[i]->b = (double *) sfg_free(as[i]->b);
+			as[i]->mi0 = (int *) sfg_free(as[i]->mi0);
+			as[i]->m0i = (int *) sfg_free(as[i]->m0i);
+			free(as[i]->bits);
 		}
 	}
 
 	for (i = 0; i < g->maxlevel; i++) {
-		dp_free(a[i]);
-		dp_free(a1[i]);
-		dp_free(a2[i]);
-		dp_free(as[i]);
+		a[i] = (struct mmatrix *) sfg_free(a[i]);
+		a1[i] = (struct mmatrix *) sfg_free(a1[i]);
+		a2[i] = (struct mmatrix *) sfg_free(a2[i]);
+		as[i] = (struct mmatrix *) sfg_free(as[i]);
 	}
 
-	dp_free(a);
-	dp_free(a1);
-	dp_free(a2);
-	dp_free(as);
+	a = (struct mmatrix **) sfg_free(a);
+	a1 = (struct mmatrix **) sfg_free(a1);
+	a2 = (struct mmatrix **) sfg_free(a2);
+	as = (struct mmatrix **) sfg_free(as);
 
 	return;
 }
@@ -4221,7 +4229,7 @@ static void barycenter(struct gml_graph *g, int it1v, int it2v)
 
 	/* number of crossing edges at level */
 	if (g->numce == NULL) {
-		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
+		g->numce = (int *) sfg_calloc(1, (g->maxlevel + 1) * sizeof(int));
 	}
 
 	if (g->maxlevel == 0) {
@@ -4806,22 +4814,20 @@ static void improve_positions2local(struct gml_graph *g)
 		/* DOWN */
 		for (i = sl; i < g->maxlevel; i++) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *) sfg_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_down(i);
 				do_down(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = (struct node_data *) sfg_free(nl);
 			}
 		}
 
 		/* UP */
 		for (i = (g->maxlevel - 1); i >= sl; i--) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *) sfg_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_up(i);
 				do_up(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = (struct node_data *) sfg_free(nl);
 			}
 		}
 
@@ -4832,11 +4838,10 @@ static void improve_positions2local(struct gml_graph *g)
 
 		for (i = sl + 2; i >= sl; i--) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *) sfg_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_up(i);
 				do_up(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = (struct node_data *) sfg_free(nl);
 			}
 		}
 	}
@@ -4844,11 +4849,10 @@ static void improve_positions2local(struct gml_graph *g)
 	for (i = (g->maxlevel - 2); i <= g->maxlevel; i++) {
 		if (i >= 0) {
 			if (cnnodes_of_level[i]) {
-				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
+				nl = (struct node_data *) sfg_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_down(i);
 				do_down(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = (struct node_data *) sfg_free(nl);
 			}
 		}
 	}
@@ -4861,7 +4865,7 @@ static void make_cnnodes_at_level(struct gml_graph *g)
 {
 	struct gml_nlist *gnl = NULL;
 
-	cnnodes_of_level = (int *)dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
+	cnnodes_of_level = (int *) sfg_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
 
 	gnl = cnodelist;
 
@@ -4879,7 +4883,7 @@ static void clear_cnnodes_at_level(void)
 
 	/* number of nodes at level */
 	if (cnnodes_of_level) {
-		dp_free(cnnodes_of_level);
+		cnnodes_of_level = (int *) sfg_free(cnnodes_of_level);
 	}
 
 	/* number of nodes at level */
@@ -4901,7 +4905,7 @@ static void make_cnodelist(struct gml_graph *g)
 		/* check if node belongs to part of graph */
 		if (gnl->node->startnode == csn) {
 			/* copy node in new list */
-			newnl = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
+			newnl = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 			newnl->node = gnl->node;
 			if (cnodelist == NULL) {
 				cnodelist = newnl;
@@ -4928,7 +4932,7 @@ static void clear_cnodelist(void)
 
 	while (gnl) {
 		gnlnext = gnl->next;
-		(void)dp_free(gnl);
+		gnl = (struct gml_nlist *) sfg_free(gnl);
 		gnl = gnlnext;
 	}
 
@@ -5000,14 +5004,14 @@ static void make_cposnodes(void)
 	cwidestnnodes = maxrx;
 
 	/* x width at position */
-	cwpos = (int *)dp_calloc(1, (cwidestnnodes + 1) * sizeof(int));
+	cwpos = (int *) sfg_calloc(1, (cwidestnnodes + 1) * sizeof(int));
 
 	if (cwpos == NULL) {
 		return;
 	}
 
 	/* lists with nodes up to down at position */
-	cposnodes = (struct gml_nlist **)dp_calloc(1, (cwidestnnodes + 1) * sizeof(struct gml_nlist *));
+	cposnodes = (struct gml_nlist **) sfg_calloc(1, (cwidestnnodes + 1) * sizeof(struct gml_nlist *));
 
 	if (cposnodes == NULL) {
 		return;
@@ -5019,7 +5023,7 @@ static void make_cposnodes(void)
 	while (lnl) {
 		i = lnl->node->absx;
 
-		newl = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
+		newl = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
 			return;
@@ -5067,8 +5071,7 @@ static void clear_cposnodes(void)
 
 	/* width of positions */
 	if (cwpos) {
-		dp_free(cwpos);
-		cwpos = NULL;
+		cwpos = (int *) sfg_free(cwpos);
 	}
 
 	for (i = 0; i < (cwidestnnodes + 1); i++) {
@@ -5077,15 +5080,14 @@ static void clear_cposnodes(void)
 
 		while (lnl) {
 			nlnext = lnl->next;
-			dp_free(lnl);
+			lnl = (struct gml_nlist *) sfg_free(lnl);
 			lnl = nlnext;
 		}
 
 		cposnodes[i] = NULL;
 	}
 
-	dp_free(cposnodes);
-	cposnodes = NULL;
+	cposnodes = (struct gml_nlist **) sfg_free(cposnodes);
 
 	return;
 }
@@ -5098,13 +5100,13 @@ static void make_clevelnodes(struct gml_graph *g)
 	int i = 0;
 	int lmaxh = 0;
 
-	chpos = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
+	chpos = (int *) sfg_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	if (chpos == NULL) {
 		return;
 	}
 
-	clevelnodes = dp_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
+	clevelnodes = (struct gml_nlist **) sfg_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
 
 	if (clevelnodes == NULL) {
 		return;
@@ -5115,7 +5117,7 @@ static void make_clevelnodes(struct gml_graph *g)
 	while (lnl) {
 		i = lnl->node->absy;
 
-		newl = dp_calloc(1, sizeof(struct gml_nlist));
+		newl = (struct gml_nlist *) sfg_calloc(1, sizeof(struct gml_nlist));
 
 		if (newl == NULL) {
 			return;
@@ -5163,8 +5165,7 @@ static void clear_clevelnodes(struct gml_graph *g)
 
 	/* width of positions */
 	if (chpos) {
-		dp_free(chpos);
-		chpos = NULL;
+		chpos = (int *) sfg_free(chpos);
 	}
 
 	for (i = 0; i < (g->maxlevel + 1); i++) {
@@ -5173,15 +5174,14 @@ static void clear_clevelnodes(struct gml_graph *g)
 
 		while (lnl) {
 			nlnext = lnl->next;
-			dp_free(lnl);
+			lnl = (struct gml_nlist *) sfg_free(lnl);
 			lnl = nlnext;
 		}
 
 		clevelnodes[i] = NULL;
 	}
 
-	dp_free(clevelnodes);
-	clevelnodes = NULL;
+	clevelnodes = (struct gml_nlist **) sfg_free(clevelnodes);
 
 	return;
 }
@@ -5262,7 +5262,7 @@ static void cfinalxy(struct gml_graph *g)
 	yoff = 0;
 
 	/* number of edges between level n and n+1 */
-	g->nume = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
+	g->nume = (int *) sfg_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	/* scan vert. to adjust the y positions. */
 	for (i = 0; i < (g->maxlevel + 1); i++) {
@@ -5337,8 +5337,7 @@ static void cfinalxy(struct gml_graph *g)
 
 	/* clear number of edges between level n and n+1 */
 	if (g->nume) {
-		dp_free(g->nume);
-		g->nume = NULL;
+		g->nume = (int *) sfg_free(g->nume);
 	}
 
 	return;
