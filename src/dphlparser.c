@@ -368,25 +368,26 @@ static const unsigned short yyrline[] = {
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] = {
-	"$end", "error", "$undefined", "\"string\"", "\"<html\"", "\"</html\"",
-	"\"<b\"", "\"</b\"", "\"<br\"", "\"</br\"", "\"<font\"", "\"</font\"",
-	"\"<hr\"", "\"</hr\"", "\"<i\"", "\"</i\"", "\"<img\"", "\"</img\"",
-	"\"<o\"", "\"</o\"", "\"<s\"", "\"</s\"", "\"<sub\"", "\"</sub\"",
-	"\"<sup\"", "\"</sup\"", "\"<table\"", "\"</table\"", "\"<td\"",
-	"\"</td\"", "\"<tr\"", "\"</tr\"", "\"<u\"", "\"</u\"", "\"<vr\"",
-	"\"</vr\"", "\"/>\"", "\">\"", "\"=\"", "HL_QSTR", "\"text\"",
-	"\"align\"", "\"balign\"", "\"bgcolor\"", "\"border\"", "\"cellborder\"",
-	"\"cellpadding\"", "\"cellspacing\"", "\"color\"", "\"columns\"",
-	"\"colspan\"", "\"face\"", "\"fixedsize\"", "\"gradientangle\"",
-	"\"height\"", "\"href\"", "\"id\"", "\"port\"", "\"point-size\"",
-	"\"rows\"", "\"rowspan\"", "\"scale\"", "\"sides\"", "\"src\"",
-	"\"style\"", "\"target\"", "\"title\"", "\"tooltip\"", "\"valign\"",
-	"\"width\"", "$accept", "begin", "htmlparser", "htmlparser2", "items",
-	"item", "$@1", "$@2", "$@3", "$@4", "$@5", "fonttab2", "font", "$@6",
-	"italic", "overline", "bold", "underline", "tabe", "tab", "$@7", "rows",
-	"$@8", "$@9", "row", "$@10", "cells", "$@11", "$@12", "cell", "cellimg",
-	"celltd", "table_arg", "table_1arg", "td_arg", "td_1arg", "img_arg",
-	"img_1arg", "br_arg", "br_1arg", "font_arg", "font_1arg", YY_NULLPTR
+	"$end", "error", "$undefined", "\"stringdata\"", "\"<html\"",
+	"\"</html\"", "\"<b\"", "\"</b\"", "\"<br\"", "\"</br\"", "\"<font\"",
+	"\"</font\"", "\"<hr\"", "\"</hr\"", "\"<i\"", "\"</i\"", "\"<img\"",
+	"\"</img\"", "\"<o\"", "\"</o\"", "\"<s\"", "\"</s\"", "\"<sub\"",
+	"\"</sub\"", "\"<sup\"", "\"</sup\"", "\"<table\"", "\"</table\"",
+	"\"<td\"", "\"</td\"", "\"<tr\"", "\"</tr\"", "\"<u\"", "\"</u\"",
+	"\"<vr\"", "\"</vr\"", "\"/>\"", "\">\"", "\"=\"", "\"string\"",
+	"\"text\"", "\"align\"", "\"balign\"", "\"bgcolor\"", "\"border\"",
+	"\"cellborder\"", "\"cellpadding\"", "\"cellspacing\"", "\"color\"",
+	"\"columns\"", "\"colspan\"", "\"face\"", "\"fixedsize\"",
+	"\"gradientangle\"", "\"height\"", "\"href\"", "\"id\"", "\"port\"",
+	"\"point-size\"", "\"rows\"", "\"rowspan\"", "\"scale\"", "\"sides\"",
+	"\"src\"", "\"style\"", "\"target\"", "\"title\"", "\"tooltip\"",
+	"\"valign\"", "\"width\"", "$accept", "begin", "htmlparser",
+	"htmlparser2", "items", "item", "$@1", "$@2", "$@3", "$@4", "$@5",
+	"fonttab2", "font", "$@6", "italic", "overline", "bold", "underline",
+	"tabe", "tab", "$@7", "rows", "$@8", "$@9", "row", "$@10", "cells",
+	"$@11", "$@12", "cell", "cellimg", "celltd", "table_arg", "table_1arg",
+	"td_arg", "td_1arg", "img_arg", "img_1arg", "br_arg", "br_1arg",
+	"font_arg", "font_1arg", YY_NULLPTR
 };
 #endif
 
@@ -1167,7 +1168,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1228 "dphlparser.c"	/* glr.c:880  */
+#line 1229 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 7:
@@ -1177,7 +1178,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1234 "dphlparser.c"	/* glr.c:880  */
+#line 1235 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 8:
@@ -1187,7 +1188,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1240 "dphlparser.c"	/* glr.c:880  */
+#line 1241 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 9:
@@ -1195,7 +1196,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_data((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1246 "dphlparser.c"	/* glr.c:880  */
+#line 1247 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 10:
@@ -1203,7 +1204,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rbr();
 		}
-#line 1252 "dphlparser.c"	/* glr.c:880  */
+#line 1253 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 11:
@@ -1211,7 +1212,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ebr();
 		}
-#line 1258 "dphlparser.c"	/* glr.c:880  */
+#line 1259 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 12:
@@ -1219,7 +1220,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rbr();
 		}
-#line 1264 "dphlparser.c"	/* glr.c:880  */
+#line 1265 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 13:
@@ -1227,7 +1228,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ebr();
 		}
-#line 1270 "dphlparser.c"	/* glr.c:880  */
+#line 1271 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 14:
@@ -1235,7 +1236,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_efont();
 		}
-#line 1276 "dphlparser.c"	/* glr.c:880  */
+#line 1277 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 15:
@@ -1243,7 +1244,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ei();
 		}
-#line 1282 "dphlparser.c"	/* glr.c:880  */
+#line 1283 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 16:
@@ -1251,7 +1252,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_eb();
 		}
-#line 1288 "dphlparser.c"	/* glr.c:880  */
+#line 1289 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 17:
@@ -1259,7 +1260,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_eu();
 		}
-#line 1294 "dphlparser.c"	/* glr.c:880  */
+#line 1295 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 18:
@@ -1267,7 +1268,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_eo();
 		}
-#line 1300 "dphlparser.c"	/* glr.c:880  */
+#line 1301 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 19:
@@ -1275,7 +1276,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rsub();
 		}
-#line 1306 "dphlparser.c"	/* glr.c:880  */
+#line 1307 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 20:
@@ -1283,7 +1284,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_esub();
 		}
-#line 1312 "dphlparser.c"	/* glr.c:880  */
+#line 1313 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 21:
@@ -1291,7 +1292,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rsup();
 		}
-#line 1318 "dphlparser.c"	/* glr.c:880  */
+#line 1319 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 22:
@@ -1299,7 +1300,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_esup();
 		}
-#line 1324 "dphlparser.c"	/* glr.c:880  */
+#line 1325 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 23:
@@ -1307,7 +1308,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rs();
 		}
-#line 1330 "dphlparser.c"	/* glr.c:880  */
+#line 1331 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 24:
@@ -1315,7 +1316,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_es();
 		}
-#line 1336 "dphlparser.c"	/* glr.c:880  */
+#line 1337 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 26:
@@ -1323,7 +1324,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_efont();
 		}
-#line 1342 "dphlparser.c"	/* glr.c:880  */
+#line 1343 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 27:
@@ -1331,7 +1332,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ei();
 		}
-#line 1348 "dphlparser.c"	/* glr.c:880  */
+#line 1349 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 28:
@@ -1339,7 +1340,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_eb();
 		}
-#line 1354 "dphlparser.c"	/* glr.c:880  */
+#line 1355 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 29:
@@ -1347,7 +1348,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_eu();
 		}
-#line 1360 "dphlparser.c"	/* glr.c:880  */
+#line 1361 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 30:
@@ -1355,7 +1356,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_eo();
 		}
-#line 1366 "dphlparser.c"	/* glr.c:880  */
+#line 1367 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 31:
@@ -1363,7 +1364,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rfont();
 		}
-#line 1372 "dphlparser.c"	/* glr.c:880  */
+#line 1373 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 33:
@@ -1371,7 +1372,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ri();
 		}
-#line 1378 "dphlparser.c"	/* glr.c:880  */
+#line 1379 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 34:
@@ -1379,7 +1380,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ro();
 		}
-#line 1384 "dphlparser.c"	/* glr.c:880  */
+#line 1385 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 35:
@@ -1387,7 +1388,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rb();
 		}
-#line 1390 "dphlparser.c"	/* glr.c:880  */
+#line 1391 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 36:
@@ -1395,7 +1396,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_ru();
 		}
-#line 1396 "dphlparser.c"	/* glr.c:880  */
+#line 1397 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 37:
@@ -1403,7 +1404,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_tabledata((((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1402 "dphlparser.c"	/* glr.c:880  */
+#line 1403 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 39:
@@ -1411,7 +1412,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rtable();
 		}
-#line 1408 "dphlparser.c"	/* glr.c:880  */
+#line 1409 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 40:
@@ -1419,7 +1420,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_etable();
 		}
-#line 1414 "dphlparser.c"	/* glr.c:880  */
+#line 1415 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 43:
@@ -1427,7 +1428,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rhr();
 		}
-#line 1420 "dphlparser.c"	/* glr.c:880  */
+#line 1421 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 45:
@@ -1435,7 +1436,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rhr();
 		}
-#line 1426 "dphlparser.c"	/* glr.c:880  */
+#line 1427 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 47:
@@ -1443,7 +1444,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rtr();
 		}
-#line 1432 "dphlparser.c"	/* glr.c:880  */
+#line 1433 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 48:
@@ -1451,7 +1452,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_etr();
 		}
-#line 1438 "dphlparser.c"	/* glr.c:880  */
+#line 1439 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 51:
@@ -1459,7 +1460,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rvr();
 		}
-#line 1444 "dphlparser.c"	/* glr.c:880  */
+#line 1445 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 53:
@@ -1467,7 +1468,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rvr();
 		}
-#line 1450 "dphlparser.c"	/* glr.c:880  */
+#line 1451 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 55:
@@ -1475,7 +1476,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_etd(0);
 		}
-#line 1456 "dphlparser.c"	/* glr.c:880  */
+#line 1457 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 56:
@@ -1484,7 +1485,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_eimg();
 			dphl_etd(1);
 		}
-#line 1462 "dphlparser.c"	/* glr.c:880  */
+#line 1463 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 57:
@@ -1493,7 +1494,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_eimg();
 			dphl_etd(1);
 		}
-#line 1468 "dphlparser.c"	/* glr.c:880  */
+#line 1469 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 58:
@@ -1501,7 +1502,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_etd(2);
 		}
-#line 1474 "dphlparser.c"	/* glr.c:880  */
+#line 1475 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 59:
@@ -1509,7 +1510,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rimg();
 		}
-#line 1480 "dphlparser.c"	/* glr.c:880  */
+#line 1481 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 60:
@@ -1517,7 +1518,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 		{
 			dphl_rtd();
 		}
-#line 1486 "dphlparser.c"	/* glr.c:880  */
+#line 1487 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 63:
@@ -1527,7 +1528,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1492 "dphlparser.c"	/* glr.c:880  */
+#line 1493 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 64:
@@ -1538,7 +1539,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1498 "dphlparser.c"	/* glr.c:880  */
+#line 1499 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 65:
@@ -1549,7 +1550,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1504 "dphlparser.c"	/* glr.c:880  */
+#line 1505 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 66:
@@ -1559,7 +1560,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1510 "dphlparser.c"	/* glr.c:880  */
+#line 1511 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 67:
@@ -1570,7 +1571,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1516 "dphlparser.c"	/* glr.c:880  */
+#line 1517 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 68:
@@ -1581,7 +1582,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1522 "dphlparser.c"	/* glr.c:880  */
+#line 1523 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 69:
@@ -1591,7 +1592,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1528 "dphlparser.c"	/* glr.c:880  */
+#line 1529 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 70:
@@ -1601,7 +1602,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1534 "dphlparser.c"	/* glr.c:880  */
+#line 1535 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 71:
@@ -1612,7 +1613,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1540 "dphlparser.c"	/* glr.c:880  */
+#line 1541 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 72:
@@ -1623,7 +1624,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1546 "dphlparser.c"	/* glr.c:880  */
+#line 1547 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 73:
@@ -1634,7 +1635,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1552 "dphlparser.c"	/* glr.c:880  */
+#line 1553 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 74:
@@ -1644,7 +1645,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1558 "dphlparser.c"	/* glr.c:880  */
+#line 1559 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 75:
@@ -1654,7 +1655,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1564 "dphlparser.c"	/* glr.c:880  */
+#line 1565 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 76:
@@ -1664,7 +1665,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1570 "dphlparser.c"	/* glr.c:880  */
+#line 1571 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 77:
@@ -1674,7 +1675,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1576 "dphlparser.c"	/* glr.c:880  */
+#line 1577 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 78:
@@ -1684,7 +1685,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1582 "dphlparser.c"	/* glr.c:880  */
+#line 1583 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 79:
@@ -1694,7 +1695,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1588 "dphlparser.c"	/* glr.c:880  */
+#line 1589 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 80:
@@ -1705,7 +1706,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1594 "dphlparser.c"	/* glr.c:880  */
+#line 1595 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 81:
@@ -1715,7 +1716,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1600 "dphlparser.c"	/* glr.c:880  */
+#line 1601 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 82:
@@ -1725,7 +1726,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1606 "dphlparser.c"	/* glr.c:880  */
+#line 1607 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 83:
@@ -1736,7 +1737,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1612 "dphlparser.c"	/* glr.c:880  */
+#line 1613 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 84:
@@ -1746,7 +1747,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1618 "dphlparser.c"	/* glr.c:880  */
+#line 1619 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 85:
@@ -1755,7 +1756,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_attr_huh("<table>", (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				      (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1624 "dphlparser.c"	/* glr.c:880  */
+#line 1625 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 88:
@@ -1765,7 +1766,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1630 "dphlparser.c"	/* glr.c:880  */
+#line 1631 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 89:
@@ -1775,7 +1776,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1636 "dphlparser.c"	/* glr.c:880  */
+#line 1637 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 90:
@@ -1785,7 +1786,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1642 "dphlparser.c"	/* glr.c:880  */
+#line 1643 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 91:
@@ -1795,7 +1796,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1648 "dphlparser.c"	/* glr.c:880  */
+#line 1649 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 92:
@@ -1806,7 +1807,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1654 "dphlparser.c"	/* glr.c:880  */
+#line 1655 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 93:
@@ -1817,7 +1818,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1660 "dphlparser.c"	/* glr.c:880  */
+#line 1661 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 94:
@@ -1827,7 +1828,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1666 "dphlparser.c"	/* glr.c:880  */
+#line 1667 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 95:
@@ -1837,7 +1838,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1672 "dphlparser.c"	/* glr.c:880  */
+#line 1673 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 96:
@@ -1848,7 +1849,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1678 "dphlparser.c"	/* glr.c:880  */
+#line 1679 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 97:
@@ -1859,7 +1860,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1684 "dphlparser.c"	/* glr.c:880  */
+#line 1685 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 98:
@@ -1869,7 +1870,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1690 "dphlparser.c"	/* glr.c:880  */
+#line 1691 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 99:
@@ -1879,7 +1880,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1696 "dphlparser.c"	/* glr.c:880  */
+#line 1697 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 100:
@@ -1889,7 +1890,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1702 "dphlparser.c"	/* glr.c:880  */
+#line 1703 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 101:
@@ -1899,7 +1900,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1708 "dphlparser.c"	/* glr.c:880  */
+#line 1709 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 102:
@@ -1909,7 +1910,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1714 "dphlparser.c"	/* glr.c:880  */
+#line 1715 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 103:
@@ -1919,7 +1920,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1720 "dphlparser.c"	/* glr.c:880  */
+#line 1721 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 104:
@@ -1929,7 +1930,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1726 "dphlparser.c"	/* glr.c:880  */
+#line 1727 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 105:
@@ -1939,7 +1940,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1732 "dphlparser.c"	/* glr.c:880  */
+#line 1733 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 106:
@@ -1949,7 +1950,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1738 "dphlparser.c"	/* glr.c:880  */
+#line 1739 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 107:
@@ -1959,7 +1960,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1744 "dphlparser.c"	/* glr.c:880  */
+#line 1745 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 108:
@@ -1969,7 +1970,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1750 "dphlparser.c"	/* glr.c:880  */
+#line 1751 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 109:
@@ -1979,7 +1980,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1756 "dphlparser.c"	/* glr.c:880  */
+#line 1757 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 110:
@@ -1988,7 +1989,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_attr_huh("<td>", (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				      (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1762 "dphlparser.c"	/* glr.c:880  */
+#line 1763 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 113:
@@ -1998,7 +1999,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1768 "dphlparser.c"	/* glr.c:880  */
+#line 1769 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 114:
@@ -2008,7 +2009,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1774 "dphlparser.c"	/* glr.c:880  */
+#line 1775 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 115:
@@ -2017,7 +2018,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_attr_huh("<img>", (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				      (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1780 "dphlparser.c"	/* glr.c:880  */
+#line 1781 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 118:
@@ -2027,7 +2028,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1786 "dphlparser.c"	/* glr.c:880  */
+#line 1787 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 119:
@@ -2036,7 +2037,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_attr_huh("<br>", (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				      (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1792 "dphlparser.c"	/* glr.c:880  */
+#line 1793 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 122:
@@ -2046,7 +2047,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1798 "dphlparser.c"	/* glr.c:880  */
+#line 1799 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 123:
@@ -2056,7 +2057,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1804 "dphlparser.c"	/* glr.c:880  */
+#line 1805 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 124:
@@ -2066,7 +2067,7 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 				YYERROR;
 			}
 		}
-#line 1810 "dphlparser.c"	/* glr.c:880  */
+#line 1811 "dphlparser.c"	/* glr.c:880  */
 		break;
 
 	case 125:
@@ -2075,10 +2076,10 @@ static YYRESULTTAG yyuserAction(yyRuleNum yyn, int yyrhslen, yyGLRStackItem * yy
 			dphl_attr_huh("<font>", (((yyGLRStackItem const *)yyvsp)[YYFILL(-2)].yystate.yysemantics.yysval.string),
 				      (((yyGLRStackItem const *)yyvsp)[YYFILL(0)].yystate.yysemantics.yysval.string));
 		}
-#line 1816 "dphlparser.c"	/* glr.c:880  */
+#line 1817 "dphlparser.c"	/* glr.c:880  */
 		break;
 
-#line 1820 "dphlparser.c"	/* glr.c:880  */
+#line 1821 "dphlparser.c"	/* glr.c:880  */
 	default:
 		break;
 	}

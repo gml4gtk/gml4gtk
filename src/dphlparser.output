@@ -13,7 +13,7 @@ Grammar
     6 items: items item
     7      | item
 
-    8 item: "string"
+    8 item: "stringdata"
 
     9 $@1: %empty
 
@@ -59,7 +59,7 @@ Grammar
 
    35 underline: "<u" ">"
 
-   36 tabe: "string"
+   36 tabe: "stringdata"
    37     | %empty
 
    38 $@7: %empty
@@ -104,84 +104,84 @@ Grammar
    60 table_arg: table_arg table_1arg
    61          | %empty
 
-   62 table_1arg: "align" "=" HL_QSTR
-   63           | "bgcolor" "=" HL_QSTR
-   64           | "border" "=" HL_QSTR
-   65           | "cellborder" "=" HL_QSTR
-   66           | "cellpadding" "=" HL_QSTR
-   67           | "cellspacing" "=" HL_QSTR
-   68           | "color" "=" HL_QSTR
-   69           | "columns" "=" HL_QSTR
-   70           | "fixedsize" "=" HL_QSTR
-   71           | "gradientangle" "=" HL_QSTR
-   72           | "height" "=" HL_QSTR
-   73           | "href" "=" HL_QSTR
-   74           | "id" "=" HL_QSTR
-   75           | "port" "=" HL_QSTR
-   76           | "rows" "=" HL_QSTR
-   77           | "sides" "=" HL_QSTR
-   78           | "style" "=" HL_QSTR
-   79           | "target" "=" HL_QSTR
-   80           | "title" "=" HL_QSTR
-   81           | "tooltip" "=" HL_QSTR
-   82           | "valign" "=" HL_QSTR
-   83           | "width" "=" HL_QSTR
-   84           | "text" "=" HL_QSTR
+   62 table_1arg: "align" "=" "string"
+   63           | "bgcolor" "=" "string"
+   64           | "border" "=" "string"
+   65           | "cellborder" "=" "string"
+   66           | "cellpadding" "=" "string"
+   67           | "cellspacing" "=" "string"
+   68           | "color" "=" "string"
+   69           | "columns" "=" "string"
+   70           | "fixedsize" "=" "string"
+   71           | "gradientangle" "=" "string"
+   72           | "height" "=" "string"
+   73           | "href" "=" "string"
+   74           | "id" "=" "string"
+   75           | "port" "=" "string"
+   76           | "rows" "=" "string"
+   77           | "sides" "=" "string"
+   78           | "style" "=" "string"
+   79           | "target" "=" "string"
+   80           | "title" "=" "string"
+   81           | "tooltip" "=" "string"
+   82           | "valign" "=" "string"
+   83           | "width" "=" "string"
+   84           | "text" "=" "string"
 
    85 td_arg: td_arg td_1arg
    86       | %empty
 
-   87 td_1arg: "align" "=" HL_QSTR
-   88        | "balign" "=" HL_QSTR
-   89        | "bgcolor" "=" HL_QSTR
-   90        | "border" "=" HL_QSTR
-   91        | "cellpadding" "=" HL_QSTR
-   92        | "cellspacing" "=" HL_QSTR
-   93        | "color" "=" HL_QSTR
-   94        | "colspan" "=" HL_QSTR
-   95        | "fixedsize" "=" HL_QSTR
-   96        | "gradientangle" "=" HL_QSTR
-   97        | "height" "=" HL_QSTR
-   98        | "href" "=" HL_QSTR
-   99        | "id" "=" HL_QSTR
-  100        | "port" "=" HL_QSTR
-  101        | "rowspan" "=" HL_QSTR
-  102        | "sides" "=" HL_QSTR
-  103        | "style" "=" HL_QSTR
-  104        | "target" "=" HL_QSTR
-  105        | "title" "=" HL_QSTR
-  106        | "tooltip" "=" HL_QSTR
-  107        | "valign" "=" HL_QSTR
-  108        | "width" "=" HL_QSTR
-  109        | "text" "=" HL_QSTR
+   87 td_1arg: "align" "=" "string"
+   88        | "balign" "=" "string"
+   89        | "bgcolor" "=" "string"
+   90        | "border" "=" "string"
+   91        | "cellpadding" "=" "string"
+   92        | "cellspacing" "=" "string"
+   93        | "color" "=" "string"
+   94        | "colspan" "=" "string"
+   95        | "fixedsize" "=" "string"
+   96        | "gradientangle" "=" "string"
+   97        | "height" "=" "string"
+   98        | "href" "=" "string"
+   99        | "id" "=" "string"
+  100        | "port" "=" "string"
+  101        | "rowspan" "=" "string"
+  102        | "sides" "=" "string"
+  103        | "style" "=" "string"
+  104        | "target" "=" "string"
+  105        | "title" "=" "string"
+  106        | "tooltip" "=" "string"
+  107        | "valign" "=" "string"
+  108        | "width" "=" "string"
+  109        | "text" "=" "string"
 
   110 img_arg: img_arg img_1arg
   111        | %empty
 
-  112 img_1arg: "scale" "=" HL_QSTR
-  113         | "src" "=" HL_QSTR
-  114         | "text" "=" HL_QSTR
+  112 img_1arg: "scale" "=" "string"
+  113         | "src" "=" "string"
+  114         | "text" "=" "string"
 
   115 br_arg: br_arg br_1arg
   116       | %empty
 
-  117 br_1arg: "align" "=" HL_QSTR
-  118        | "text" "=" HL_QSTR
+  117 br_1arg: "align" "=" "string"
+  118        | "text" "=" "string"
 
   119 font_arg: font_arg font_1arg
   120         | %empty
 
-  121 font_1arg: "color" "=" HL_QSTR
-  122          | "face" "=" HL_QSTR
-  123          | "point-size" "=" HL_QSTR
-  124          | "text" "=" HL_QSTR
+  121 font_1arg: "color" "=" "string"
+  122          | "face" "=" "string"
+  123          | "point-size" "=" "string"
+  124          | "text" "=" "string"
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-"string" <string> (258) 8 36
+"stringdata" <string> (258) 8 36
 "<html" (259) 2
 "</html" (260) 2
 "<b" (261) 34
@@ -220,7 +220,7 @@ error (256)
 "=" (293) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
     81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102
     103 104 105 106 107 108 109 112 113 114 117 118 121 122 123 124
-HL_QSTR <string> (294) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76
+"string" <string> (294) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76
     77 78 79 80 81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99
     100 101 102 103 104 105 106 107 108 109 112 113 114 117 118 121
     122 123 124
@@ -350,17 +350,17 @@ State 0
 
     0 $accept: . begin $end
 
-    "string"  shift, and go to state 1
-    "<html"   shift, and go to state 2
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<html"       shift, and go to state 2
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -381,8 +381,8 @@ State 0
 
 State 1
 
-    8 item: "string" .
-   36 tabe: "string" .
+    8 item: "stringdata" .
+   36 tabe: "stringdata" .
 
     "<table"  reduce using rule 36 (tabe)
     $default  reduce using rule 8 (item)
@@ -491,16 +491,16 @@ State 15
     4 htmlparser2: items .
     6 items: items . item
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 4 (htmlparser2)
 
@@ -531,16 +531,16 @@ State 18
    13 item: font . items "</font" ">"
    25 fonttab2: font . tab "</font" ">"
 
-    "string"  shift, and go to state 1
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -560,16 +560,16 @@ State 19
    14 item: italic . items "</i" ">"
    26 fonttab2: italic . tab "</i" ">"
 
-    "string"  shift, and go to state 1
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -589,16 +589,16 @@ State 20
    17 item: overline . items "</o" ">"
    29 fonttab2: overline . tab "</o" ">"
 
-    "string"  shift, and go to state 1
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -618,16 +618,16 @@ State 21
    15 item: bold . items "</b" ">"
    27 fonttab2: bold . tab "</b" ">"
 
-    "string"  shift, and go to state 1
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -647,16 +647,16 @@ State 22
    16 item: underline . items "</u" ">"
    28 fonttab2: underline . tab "</u" ">"
 
-    "string"  shift, and go to state 1
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -689,16 +689,16 @@ State 25
 
     2 htmlparser: "<html" ">" . htmlparser2 "</html" ">"
 
-    "string"  shift, and go to state 1
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -806,7 +806,7 @@ State 36
 
 State 37
 
-    8 item: "string" .
+    8 item: "stringdata" .
 
     $default  reduce using rule 8 (item)
 
@@ -822,16 +822,16 @@ State 39
 
    13 item: font . items "</font" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 44
     item       go to state 16
@@ -846,16 +846,16 @@ State 40
 
    14 item: italic . items "</i" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 46
     item       go to state 16
@@ -870,16 +870,16 @@ State 41
 
    17 item: overline . items "</o" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 48
     item       go to state 16
@@ -894,16 +894,16 @@ State 42
 
    15 item: bold . items "</b" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 50
     item       go to state 16
@@ -918,16 +918,16 @@ State 43
 
    16 item: underline . items "</u" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 52
     item       go to state 16
@@ -943,17 +943,17 @@ State 44
     6 items: items . item
    13 item: font items . "</font" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "</font"  shift, and go to state 62
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "</font"      shift, and go to state 62
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -975,17 +975,17 @@ State 46
     6 items: items . item
    14 item: italic items . "</i" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "</i"     shift, and go to state 64
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "</i"         shift, and go to state 64
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -1007,17 +1007,17 @@ State 48
     6 items: items . item
    17 item: overline items . "</o" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "</o"     shift, and go to state 66
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "</o"         shift, and go to state 66
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -1039,17 +1039,17 @@ State 50
     6 items: items . item
    15 item: bold items . "</b" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "</b"     shift, and go to state 68
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "</b"         shift, and go to state 68
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -1071,17 +1071,17 @@ State 52
     6 items: items . item
    16 item: underline items . "</u" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
-    "</u"     shift, and go to state 70
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
+    "</u"         shift, and go to state 70
 
     item       go to state 38
     font       go to state 39
@@ -1151,16 +1151,16 @@ State 59
 
    23 item: "<s" ">" $@5 . items "</s" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 85
     item       go to state 16
@@ -1175,16 +1175,16 @@ State 60
 
    19 item: "<sub" ">" $@3 . items "</sub" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 86
     item       go to state 16
@@ -1199,16 +1199,16 @@ State 61
 
    21 item: "<sup" ">" $@4 . items "</sup" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     items      go to state 87
     item       go to state 16
@@ -1321,14 +1321,14 @@ State 75
 
 State 76
 
-  118 br_1arg: "text" . "=" HL_QSTR
+  118 br_1arg: "text" . "=" "string"
 
     "="  shift, and go to state 101
 
 
 State 77
 
-  117 br_1arg: "align" . "=" HL_QSTR
+  117 br_1arg: "align" . "=" "string"
 
     "="  shift, and go to state 102
 
@@ -1349,28 +1349,28 @@ State 79
 
 State 80
 
-  124 font_1arg: "text" . "=" HL_QSTR
+  124 font_1arg: "text" . "=" "string"
 
     "="  shift, and go to state 103
 
 
 State 81
 
-  121 font_1arg: "color" . "=" HL_QSTR
+  121 font_1arg: "color" . "=" "string"
 
     "="  shift, and go to state 104
 
 
 State 82
 
-  122 font_1arg: "face" . "=" HL_QSTR
+  122 font_1arg: "face" . "=" "string"
 
     "="  shift, and go to state 105
 
 
 State 83
 
-  123 font_1arg: "point-size" . "=" HL_QSTR
+  123 font_1arg: "point-size" . "=" "string"
 
     "="  shift, and go to state 106
 
@@ -1387,17 +1387,17 @@ State 85
     6 items: items . item
    23 item: "<s" ">" $@5 items . "</s" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "</s"     shift, and go to state 107
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "</s"         shift, and go to state 107
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -1412,17 +1412,17 @@ State 86
     6 items: items . item
    19 item: "<sub" ">" $@3 items . "</sub" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "</sub"   shift, and go to state 108
-    "<sup"    shift, and go to state 10
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "</sub"       shift, and go to state 108
+    "<sup"        shift, and go to state 10
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -1437,17 +1437,17 @@ State 87
     6 items: items . item
    21 item: "<sup" ">" $@4 items . "</sup" ">"
 
-    "string"  shift, and go to state 37
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "</sup"   shift, and go to state 109
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 37
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "</sup"       shift, and go to state 109
+    "<u"          shift, and go to state 11
 
     item       go to state 38
     font       go to state 39
@@ -1576,44 +1576,44 @@ State 100
 
 State 101
 
-  118 br_1arg: "text" "=" . HL_QSTR
+  118 br_1arg: "text" "=" . "string"
 
-    HL_QSTR  shift, and go to state 135
+    "string"  shift, and go to state 135
 
 
 State 102
 
-  117 br_1arg: "align" "=" . HL_QSTR
+  117 br_1arg: "align" "=" . "string"
 
-    HL_QSTR  shift, and go to state 136
+    "string"  shift, and go to state 136
 
 
 State 103
 
-  124 font_1arg: "text" "=" . HL_QSTR
+  124 font_1arg: "text" "=" . "string"
 
-    HL_QSTR  shift, and go to state 137
+    "string"  shift, and go to state 137
 
 
 State 104
 
-  121 font_1arg: "color" "=" . HL_QSTR
+  121 font_1arg: "color" "=" . "string"
 
-    HL_QSTR  shift, and go to state 138
+    "string"  shift, and go to state 138
 
 
 State 105
 
-  122 font_1arg: "face" "=" . HL_QSTR
+  122 font_1arg: "face" "=" . "string"
 
-    HL_QSTR  shift, and go to state 139
+    "string"  shift, and go to state 139
 
 
 State 106
 
-  123 font_1arg: "point-size" "=" . HL_QSTR
+  123 font_1arg: "point-size" "=" . "string"
 
-    HL_QSTR  shift, and go to state 140
+    "string"  shift, and go to state 140
 
 
 State 107
@@ -1649,161 +1649,161 @@ State 110
 
 State 111
 
-   84 table_1arg: "text" . "=" HL_QSTR
+   84 table_1arg: "text" . "=" "string"
 
     "="  shift, and go to state 147
 
 
 State 112
 
-   62 table_1arg: "align" . "=" HL_QSTR
+   62 table_1arg: "align" . "=" "string"
 
     "="  shift, and go to state 148
 
 
 State 113
 
-   63 table_1arg: "bgcolor" . "=" HL_QSTR
+   63 table_1arg: "bgcolor" . "=" "string"
 
     "="  shift, and go to state 149
 
 
 State 114
 
-   64 table_1arg: "border" . "=" HL_QSTR
+   64 table_1arg: "border" . "=" "string"
 
     "="  shift, and go to state 150
 
 
 State 115
 
-   65 table_1arg: "cellborder" . "=" HL_QSTR
+   65 table_1arg: "cellborder" . "=" "string"
 
     "="  shift, and go to state 151
 
 
 State 116
 
-   66 table_1arg: "cellpadding" . "=" HL_QSTR
+   66 table_1arg: "cellpadding" . "=" "string"
 
     "="  shift, and go to state 152
 
 
 State 117
 
-   67 table_1arg: "cellspacing" . "=" HL_QSTR
+   67 table_1arg: "cellspacing" . "=" "string"
 
     "="  shift, and go to state 153
 
 
 State 118
 
-   68 table_1arg: "color" . "=" HL_QSTR
+   68 table_1arg: "color" . "=" "string"
 
     "="  shift, and go to state 154
 
 
 State 119
 
-   69 table_1arg: "columns" . "=" HL_QSTR
+   69 table_1arg: "columns" . "=" "string"
 
     "="  shift, and go to state 155
 
 
 State 120
 
-   70 table_1arg: "fixedsize" . "=" HL_QSTR
+   70 table_1arg: "fixedsize" . "=" "string"
 
     "="  shift, and go to state 156
 
 
 State 121
 
-   71 table_1arg: "gradientangle" . "=" HL_QSTR
+   71 table_1arg: "gradientangle" . "=" "string"
 
     "="  shift, and go to state 157
 
 
 State 122
 
-   72 table_1arg: "height" . "=" HL_QSTR
+   72 table_1arg: "height" . "=" "string"
 
     "="  shift, and go to state 158
 
 
 State 123
 
-   73 table_1arg: "href" . "=" HL_QSTR
+   73 table_1arg: "href" . "=" "string"
 
     "="  shift, and go to state 159
 
 
 State 124
 
-   74 table_1arg: "id" . "=" HL_QSTR
+   74 table_1arg: "id" . "=" "string"
 
     "="  shift, and go to state 160
 
 
 State 125
 
-   75 table_1arg: "port" . "=" HL_QSTR
+   75 table_1arg: "port" . "=" "string"
 
     "="  shift, and go to state 161
 
 
 State 126
 
-   76 table_1arg: "rows" . "=" HL_QSTR
+   76 table_1arg: "rows" . "=" "string"
 
     "="  shift, and go to state 162
 
 
 State 127
 
-   77 table_1arg: "sides" . "=" HL_QSTR
+   77 table_1arg: "sides" . "=" "string"
 
     "="  shift, and go to state 163
 
 
 State 128
 
-   78 table_1arg: "style" . "=" HL_QSTR
+   78 table_1arg: "style" . "=" "string"
 
     "="  shift, and go to state 164
 
 
 State 129
 
-   79 table_1arg: "target" . "=" HL_QSTR
+   79 table_1arg: "target" . "=" "string"
 
     "="  shift, and go to state 165
 
 
 State 130
 
-   80 table_1arg: "title" . "=" HL_QSTR
+   80 table_1arg: "title" . "=" "string"
 
     "="  shift, and go to state 166
 
 
 State 131
 
-   81 table_1arg: "tooltip" . "=" HL_QSTR
+   81 table_1arg: "tooltip" . "=" "string"
 
     "="  shift, and go to state 167
 
 
 State 132
 
-   82 table_1arg: "valign" . "=" HL_QSTR
+   82 table_1arg: "valign" . "=" "string"
 
     "="  shift, and go to state 168
 
 
 State 133
 
-   83 table_1arg: "width" . "=" HL_QSTR
+   83 table_1arg: "width" . "=" "string"
 
     "="  shift, and go to state 169
 
@@ -1817,42 +1817,42 @@ State 134
 
 State 135
 
-  118 br_1arg: "text" "=" HL_QSTR .
+  118 br_1arg: "text" "=" "string" .
 
     $default  reduce using rule 118 (br_1arg)
 
 
 State 136
 
-  117 br_1arg: "align" "=" HL_QSTR .
+  117 br_1arg: "align" "=" "string" .
 
     $default  reduce using rule 117 (br_1arg)
 
 
 State 137
 
-  124 font_1arg: "text" "=" HL_QSTR .
+  124 font_1arg: "text" "=" "string" .
 
     $default  reduce using rule 124 (font_1arg)
 
 
 State 138
 
-  121 font_1arg: "color" "=" HL_QSTR .
+  121 font_1arg: "color" "=" "string" .
 
     $default  reduce using rule 121 (font_1arg)
 
 
 State 139
 
-  122 font_1arg: "face" "=" HL_QSTR .
+  122 font_1arg: "face" "=" "string" .
 
     $default  reduce using rule 122 (font_1arg)
 
 
 State 140
 
-  123 font_1arg: "point-size" "=" HL_QSTR .
+  123 font_1arg: "point-size" "=" "string" .
 
     $default  reduce using rule 123 (font_1arg)
 
@@ -1908,163 +1908,163 @@ State 146
 
 State 147
 
-   84 table_1arg: "text" "=" . HL_QSTR
+   84 table_1arg: "text" "=" . "string"
 
-    HL_QSTR  shift, and go to state 174
+    "string"  shift, and go to state 174
 
 
 State 148
 
-   62 table_1arg: "align" "=" . HL_QSTR
+   62 table_1arg: "align" "=" . "string"
 
-    HL_QSTR  shift, and go to state 175
+    "string"  shift, and go to state 175
 
 
 State 149
 
-   63 table_1arg: "bgcolor" "=" . HL_QSTR
+   63 table_1arg: "bgcolor" "=" . "string"
 
-    HL_QSTR  shift, and go to state 176
+    "string"  shift, and go to state 176
 
 
 State 150
 
-   64 table_1arg: "border" "=" . HL_QSTR
+   64 table_1arg: "border" "=" . "string"
 
-    HL_QSTR  shift, and go to state 177
+    "string"  shift, and go to state 177
 
 
 State 151
 
-   65 table_1arg: "cellborder" "=" . HL_QSTR
+   65 table_1arg: "cellborder" "=" . "string"
 
-    HL_QSTR  shift, and go to state 178
+    "string"  shift, and go to state 178
 
 
 State 152
 
-   66 table_1arg: "cellpadding" "=" . HL_QSTR
+   66 table_1arg: "cellpadding" "=" . "string"
 
-    HL_QSTR  shift, and go to state 179
+    "string"  shift, and go to state 179
 
 
 State 153
 
-   67 table_1arg: "cellspacing" "=" . HL_QSTR
+   67 table_1arg: "cellspacing" "=" . "string"
 
-    HL_QSTR  shift, and go to state 180
+    "string"  shift, and go to state 180
 
 
 State 154
 
-   68 table_1arg: "color" "=" . HL_QSTR
+   68 table_1arg: "color" "=" . "string"
 
-    HL_QSTR  shift, and go to state 181
+    "string"  shift, and go to state 181
 
 
 State 155
 
-   69 table_1arg: "columns" "=" . HL_QSTR
+   69 table_1arg: "columns" "=" . "string"
 
-    HL_QSTR  shift, and go to state 182
+    "string"  shift, and go to state 182
 
 
 State 156
 
-   70 table_1arg: "fixedsize" "=" . HL_QSTR
+   70 table_1arg: "fixedsize" "=" . "string"
 
-    HL_QSTR  shift, and go to state 183
+    "string"  shift, and go to state 183
 
 
 State 157
 
-   71 table_1arg: "gradientangle" "=" . HL_QSTR
+   71 table_1arg: "gradientangle" "=" . "string"
 
-    HL_QSTR  shift, and go to state 184
+    "string"  shift, and go to state 184
 
 
 State 158
 
-   72 table_1arg: "height" "=" . HL_QSTR
+   72 table_1arg: "height" "=" . "string"
 
-    HL_QSTR  shift, and go to state 185
+    "string"  shift, and go to state 185
 
 
 State 159
 
-   73 table_1arg: "href" "=" . HL_QSTR
+   73 table_1arg: "href" "=" . "string"
 
-    HL_QSTR  shift, and go to state 186
+    "string"  shift, and go to state 186
 
 
 State 160
 
-   74 table_1arg: "id" "=" . HL_QSTR
+   74 table_1arg: "id" "=" . "string"
 
-    HL_QSTR  shift, and go to state 187
+    "string"  shift, and go to state 187
 
 
 State 161
 
-   75 table_1arg: "port" "=" . HL_QSTR
+   75 table_1arg: "port" "=" . "string"
 
-    HL_QSTR  shift, and go to state 188
+    "string"  shift, and go to state 188
 
 
 State 162
 
-   76 table_1arg: "rows" "=" . HL_QSTR
+   76 table_1arg: "rows" "=" . "string"
 
-    HL_QSTR  shift, and go to state 189
+    "string"  shift, and go to state 189
 
 
 State 163
 
-   77 table_1arg: "sides" "=" . HL_QSTR
+   77 table_1arg: "sides" "=" . "string"
 
-    HL_QSTR  shift, and go to state 190
+    "string"  shift, and go to state 190
 
 
 State 164
 
-   78 table_1arg: "style" "=" . HL_QSTR
+   78 table_1arg: "style" "=" . "string"
 
-    HL_QSTR  shift, and go to state 191
+    "string"  shift, and go to state 191
 
 
 State 165
 
-   79 table_1arg: "target" "=" . HL_QSTR
+   79 table_1arg: "target" "=" . "string"
 
-    HL_QSTR  shift, and go to state 192
+    "string"  shift, and go to state 192
 
 
 State 166
 
-   80 table_1arg: "title" "=" . HL_QSTR
+   80 table_1arg: "title" "=" . "string"
 
-    HL_QSTR  shift, and go to state 193
+    "string"  shift, and go to state 193
 
 
 State 167
 
-   81 table_1arg: "tooltip" "=" . HL_QSTR
+   81 table_1arg: "tooltip" "=" . "string"
 
-    HL_QSTR  shift, and go to state 194
+    "string"  shift, and go to state 194
 
 
 State 168
 
-   82 table_1arg: "valign" "=" . HL_QSTR
+   82 table_1arg: "valign" "=" . "string"
 
-    HL_QSTR  shift, and go to state 195
+    "string"  shift, and go to state 195
 
 
 State 169
 
-   83 table_1arg: "width" "=" . HL_QSTR
+   83 table_1arg: "width" "=" . "string"
 
-    HL_QSTR  shift, and go to state 196
+    "string"  shift, and go to state 196
 
 
 State 170
@@ -2101,161 +2101,161 @@ State 173
 
 State 174
 
-   84 table_1arg: "text" "=" HL_QSTR .
+   84 table_1arg: "text" "=" "string" .
 
     $default  reduce using rule 84 (table_1arg)
 
 
 State 175
 
-   62 table_1arg: "align" "=" HL_QSTR .
+   62 table_1arg: "align" "=" "string" .
 
     $default  reduce using rule 62 (table_1arg)
 
 
 State 176
 
-   63 table_1arg: "bgcolor" "=" HL_QSTR .
+   63 table_1arg: "bgcolor" "=" "string" .
 
     $default  reduce using rule 63 (table_1arg)
 
 
 State 177
 
-   64 table_1arg: "border" "=" HL_QSTR .
+   64 table_1arg: "border" "=" "string" .
 
     $default  reduce using rule 64 (table_1arg)
 
 
 State 178
 
-   65 table_1arg: "cellborder" "=" HL_QSTR .
+   65 table_1arg: "cellborder" "=" "string" .
 
     $default  reduce using rule 65 (table_1arg)
 
 
 State 179
 
-   66 table_1arg: "cellpadding" "=" HL_QSTR .
+   66 table_1arg: "cellpadding" "=" "string" .
 
     $default  reduce using rule 66 (table_1arg)
 
 
 State 180
 
-   67 table_1arg: "cellspacing" "=" HL_QSTR .
+   67 table_1arg: "cellspacing" "=" "string" .
 
     $default  reduce using rule 67 (table_1arg)
 
 
 State 181
 
-   68 table_1arg: "color" "=" HL_QSTR .
+   68 table_1arg: "color" "=" "string" .
 
     $default  reduce using rule 68 (table_1arg)
 
 
 State 182
 
-   69 table_1arg: "columns" "=" HL_QSTR .
+   69 table_1arg: "columns" "=" "string" .
 
     $default  reduce using rule 69 (table_1arg)
 
 
 State 183
 
-   70 table_1arg: "fixedsize" "=" HL_QSTR .
+   70 table_1arg: "fixedsize" "=" "string" .
 
     $default  reduce using rule 70 (table_1arg)
 
 
 State 184
 
-   71 table_1arg: "gradientangle" "=" HL_QSTR .
+   71 table_1arg: "gradientangle" "=" "string" .
 
     $default  reduce using rule 71 (table_1arg)
 
 
 State 185
 
-   72 table_1arg: "height" "=" HL_QSTR .
+   72 table_1arg: "height" "=" "string" .
 
     $default  reduce using rule 72 (table_1arg)
 
 
 State 186
 
-   73 table_1arg: "href" "=" HL_QSTR .
+   73 table_1arg: "href" "=" "string" .
 
     $default  reduce using rule 73 (table_1arg)
 
 
 State 187
 
-   74 table_1arg: "id" "=" HL_QSTR .
+   74 table_1arg: "id" "=" "string" .
 
     $default  reduce using rule 74 (table_1arg)
 
 
 State 188
 
-   75 table_1arg: "port" "=" HL_QSTR .
+   75 table_1arg: "port" "=" "string" .
 
     $default  reduce using rule 75 (table_1arg)
 
 
 State 189
 
-   76 table_1arg: "rows" "=" HL_QSTR .
+   76 table_1arg: "rows" "=" "string" .
 
     $default  reduce using rule 76 (table_1arg)
 
 
 State 190
 
-   77 table_1arg: "sides" "=" HL_QSTR .
+   77 table_1arg: "sides" "=" "string" .
 
     $default  reduce using rule 77 (table_1arg)
 
 
 State 191
 
-   78 table_1arg: "style" "=" HL_QSTR .
+   78 table_1arg: "style" "=" "string" .
 
     $default  reduce using rule 78 (table_1arg)
 
 
 State 192
 
-   79 table_1arg: "target" "=" HL_QSTR .
+   79 table_1arg: "target" "=" "string" .
 
     $default  reduce using rule 79 (table_1arg)
 
 
 State 193
 
-   80 table_1arg: "title" "=" HL_QSTR .
+   80 table_1arg: "title" "=" "string" .
 
     $default  reduce using rule 80 (table_1arg)
 
 
 State 194
 
-   81 table_1arg: "tooltip" "=" HL_QSTR .
+   81 table_1arg: "tooltip" "=" "string" .
 
     $default  reduce using rule 81 (table_1arg)
 
 
 State 195
 
-   82 table_1arg: "valign" "=" HL_QSTR .
+   82 table_1arg: "valign" "=" "string" .
 
     $default  reduce using rule 82 (table_1arg)
 
 
 State 196
 
-   83 table_1arg: "width" "=" HL_QSTR .
+   83 table_1arg: "width" "=" "string" .
 
     $default  reduce using rule 83 (table_1arg)
 
@@ -2291,7 +2291,7 @@ State 200
 
    39 tab: tabe "<table" $@7 table_arg ">" rows "</table" ">" . tabe
 
-    "string"  shift, and go to state 207
+    "stringdata"  shift, and go to state 207
 
     $default  reduce using rule 37 (tabe)
 
@@ -2357,7 +2357,7 @@ State 206
 
 State 207
 
-   36 tabe: "string" .
+   36 tabe: "stringdata" .
 
     $default  reduce using rule 36 (tabe)
 
@@ -2474,19 +2474,19 @@ State 218
    56     | celltd td_arg ">" . cellimg img_arg ">" "</img" ">" "</td" ">"
    57     | celltd td_arg ">" . "</td" ">"
 
-    "string"  shift, and go to state 1
-    "<html"   shift, and go to state 2
-    "<b"      shift, and go to state 3
-    "<br"     shift, and go to state 4
-    "<font"   shift, and go to state 5
-    "<i"      shift, and go to state 6
-    "<img"    shift, and go to state 246
-    "<o"      shift, and go to state 7
-    "<s"      shift, and go to state 8
-    "<sub"    shift, and go to state 9
-    "<sup"    shift, and go to state 10
-    "</td"    shift, and go to state 247
-    "<u"      shift, and go to state 11
+    "stringdata"  shift, and go to state 1
+    "<html"       shift, and go to state 2
+    "<b"          shift, and go to state 3
+    "<br"         shift, and go to state 4
+    "<font"       shift, and go to state 5
+    "<i"          shift, and go to state 6
+    "<img"        shift, and go to state 246
+    "<o"          shift, and go to state 7
+    "<s"          shift, and go to state 8
+    "<sub"        shift, and go to state 9
+    "<sup"        shift, and go to state 10
+    "</td"        shift, and go to state 247
+    "<u"          shift, and go to state 11
 
     $default  reduce using rule 37 (tabe)
 
@@ -2507,161 +2507,161 @@ State 218
 
 State 219
 
-  109 td_1arg: "text" . "=" HL_QSTR
+  109 td_1arg: "text" . "=" "string"
 
     "="  shift, and go to state 250
 
 
 State 220
 
-   87 td_1arg: "align" . "=" HL_QSTR
+   87 td_1arg: "align" . "=" "string"
 
     "="  shift, and go to state 251
 
 
 State 221
 
-   88 td_1arg: "balign" . "=" HL_QSTR
+   88 td_1arg: "balign" . "=" "string"
 
     "="  shift, and go to state 252
 
 
 State 222
 
-   89 td_1arg: "bgcolor" . "=" HL_QSTR
+   89 td_1arg: "bgcolor" . "=" "string"
 
     "="  shift, and go to state 253
 
 
 State 223
 
-   90 td_1arg: "border" . "=" HL_QSTR
+   90 td_1arg: "border" . "=" "string"
 
     "="  shift, and go to state 254
 
 
 State 224
 
-   91 td_1arg: "cellpadding" . "=" HL_QSTR
+   91 td_1arg: "cellpadding" . "=" "string"
 
     "="  shift, and go to state 255
 
 
 State 225
 
-   92 td_1arg: "cellspacing" . "=" HL_QSTR
+   92 td_1arg: "cellspacing" . "=" "string"
 
     "="  shift, and go to state 256
 
 
 State 226
 
-   93 td_1arg: "color" . "=" HL_QSTR
+   93 td_1arg: "color" . "=" "string"
 
     "="  shift, and go to state 257
 
 
 State 227
 
-   94 td_1arg: "colspan" . "=" HL_QSTR
+   94 td_1arg: "colspan" . "=" "string"
 
     "="  shift, and go to state 258
 
 
 State 228
 
-   95 td_1arg: "fixedsize" . "=" HL_QSTR
+   95 td_1arg: "fixedsize" . "=" "string"
 
     "="  shift, and go to state 259
 
 
 State 229
 
-   96 td_1arg: "gradientangle" . "=" HL_QSTR
+   96 td_1arg: "gradientangle" . "=" "string"
 
     "="  shift, and go to state 260
 
 
 State 230
 
-   97 td_1arg: "height" . "=" HL_QSTR
+   97 td_1arg: "height" . "=" "string"
 
     "="  shift, and go to state 261
 
 
 State 231
 
-   98 td_1arg: "href" . "=" HL_QSTR
+   98 td_1arg: "href" . "=" "string"
 
     "="  shift, and go to state 262
 
 
 State 232
 
-   99 td_1arg: "id" . "=" HL_QSTR
+   99 td_1arg: "id" . "=" "string"
 
     "="  shift, and go to state 263
 
 
 State 233
 
-  100 td_1arg: "port" . "=" HL_QSTR
+  100 td_1arg: "port" . "=" "string"
 
     "="  shift, and go to state 264
 
 
 State 234
 
-  101 td_1arg: "rowspan" . "=" HL_QSTR
+  101 td_1arg: "rowspan" . "=" "string"
 
     "="  shift, and go to state 265
 
 
 State 235
 
-  102 td_1arg: "sides" . "=" HL_QSTR
+  102 td_1arg: "sides" . "=" "string"
 
     "="  shift, and go to state 266
 
 
 State 236
 
-  103 td_1arg: "style" . "=" HL_QSTR
+  103 td_1arg: "style" . "=" "string"
 
     "="  shift, and go to state 267
 
 
 State 237
 
-  104 td_1arg: "target" . "=" HL_QSTR
+  104 td_1arg: "target" . "=" "string"
 
     "="  shift, and go to state 268
 
 
 State 238
 
-  105 td_1arg: "title" . "=" HL_QSTR
+  105 td_1arg: "title" . "=" "string"
 
     "="  shift, and go to state 269
 
 
 State 239
 
-  106 td_1arg: "tooltip" . "=" HL_QSTR
+  106 td_1arg: "tooltip" . "=" "string"
 
     "="  shift, and go to state 270
 
 
 State 240
 
-  107 td_1arg: "valign" . "=" HL_QSTR
+  107 td_1arg: "valign" . "=" "string"
 
     "="  shift, and go to state 271
 
 
 State 241
 
-  108 td_1arg: "width" . "=" HL_QSTR
+  108 td_1arg: "width" . "=" "string"
 
     "="  shift, and go to state 272
 
@@ -2732,163 +2732,163 @@ State 249
 
 State 250
 
-  109 td_1arg: "text" "=" . HL_QSTR
+  109 td_1arg: "text" "=" . "string"
 
-    HL_QSTR  shift, and go to state 279
+    "string"  shift, and go to state 279
 
 
 State 251
 
-   87 td_1arg: "align" "=" . HL_QSTR
+   87 td_1arg: "align" "=" . "string"
 
-    HL_QSTR  shift, and go to state 280
+    "string"  shift, and go to state 280
 
 
 State 252
 
-   88 td_1arg: "balign" "=" . HL_QSTR
+   88 td_1arg: "balign" "=" . "string"
 
-    HL_QSTR  shift, and go to state 281
+    "string"  shift, and go to state 281
 
 
 State 253
 
-   89 td_1arg: "bgcolor" "=" . HL_QSTR
+   89 td_1arg: "bgcolor" "=" . "string"
 
-    HL_QSTR  shift, and go to state 282
+    "string"  shift, and go to state 282
 
 
 State 254
 
-   90 td_1arg: "border" "=" . HL_QSTR
+   90 td_1arg: "border" "=" . "string"
 
-    HL_QSTR  shift, and go to state 283
+    "string"  shift, and go to state 283
 
 
 State 255
 
-   91 td_1arg: "cellpadding" "=" . HL_QSTR
+   91 td_1arg: "cellpadding" "=" . "string"
 
-    HL_QSTR  shift, and go to state 284
+    "string"  shift, and go to state 284
 
 
 State 256
 
-   92 td_1arg: "cellspacing" "=" . HL_QSTR
+   92 td_1arg: "cellspacing" "=" . "string"
 
-    HL_QSTR  shift, and go to state 285
+    "string"  shift, and go to state 285
 
 
 State 257
 
-   93 td_1arg: "color" "=" . HL_QSTR
+   93 td_1arg: "color" "=" . "string"
 
-    HL_QSTR  shift, and go to state 286
+    "string"  shift, and go to state 286
 
 
 State 258
 
-   94 td_1arg: "colspan" "=" . HL_QSTR
+   94 td_1arg: "colspan" "=" . "string"
 
-    HL_QSTR  shift, and go to state 287
+    "string"  shift, and go to state 287
 
 
 State 259
 
-   95 td_1arg: "fixedsize" "=" . HL_QSTR
+   95 td_1arg: "fixedsize" "=" . "string"
 
-    HL_QSTR  shift, and go to state 288
+    "string"  shift, and go to state 288
 
 
 State 260
 
-   96 td_1arg: "gradientangle" "=" . HL_QSTR
+   96 td_1arg: "gradientangle" "=" . "string"
 
-    HL_QSTR  shift, and go to state 289
+    "string"  shift, and go to state 289
 
 
 State 261
 
-   97 td_1arg: "height" "=" . HL_QSTR
+   97 td_1arg: "height" "=" . "string"
 
-    HL_QSTR  shift, and go to state 290
+    "string"  shift, and go to state 290
 
 
 State 262
 
-   98 td_1arg: "href" "=" . HL_QSTR
+   98 td_1arg: "href" "=" . "string"
 
-    HL_QSTR  shift, and go to state 291
+    "string"  shift, and go to state 291
 
 
 State 263
 
-   99 td_1arg: "id" "=" . HL_QSTR
+   99 td_1arg: "id" "=" . "string"
 
-    HL_QSTR  shift, and go to state 292
+    "string"  shift, and go to state 292
 
 
 State 264
 
-  100 td_1arg: "port" "=" . HL_QSTR
+  100 td_1arg: "port" "=" . "string"
 
-    HL_QSTR  shift, and go to state 293
+    "string"  shift, and go to state 293
 
 
 State 265
 
-  101 td_1arg: "rowspan" "=" . HL_QSTR
+  101 td_1arg: "rowspan" "=" . "string"
 
-    HL_QSTR  shift, and go to state 294
+    "string"  shift, and go to state 294
 
 
 State 266
 
-  102 td_1arg: "sides" "=" . HL_QSTR
+  102 td_1arg: "sides" "=" . "string"
 
-    HL_QSTR  shift, and go to state 295
+    "string"  shift, and go to state 295
 
 
 State 267
 
-  103 td_1arg: "style" "=" . HL_QSTR
+  103 td_1arg: "style" "=" . "string"
 
-    HL_QSTR  shift, and go to state 296
+    "string"  shift, and go to state 296
 
 
 State 268
 
-  104 td_1arg: "target" "=" . HL_QSTR
+  104 td_1arg: "target" "=" . "string"
 
-    HL_QSTR  shift, and go to state 297
+    "string"  shift, and go to state 297
 
 
 State 269
 
-  105 td_1arg: "title" "=" . HL_QSTR
+  105 td_1arg: "title" "=" . "string"
 
-    HL_QSTR  shift, and go to state 298
+    "string"  shift, and go to state 298
 
 
 State 270
 
-  106 td_1arg: "tooltip" "=" . HL_QSTR
+  106 td_1arg: "tooltip" "=" . "string"
 
-    HL_QSTR  shift, and go to state 299
+    "string"  shift, and go to state 299
 
 
 State 271
 
-  107 td_1arg: "valign" "=" . HL_QSTR
+  107 td_1arg: "valign" "=" . "string"
 
-    HL_QSTR  shift, and go to state 300
+    "string"  shift, and go to state 300
 
 
 State 272
 
-  108 td_1arg: "width" "=" . HL_QSTR
+  108 td_1arg: "width" "=" . "string"
 
-    HL_QSTR  shift, and go to state 301
+    "string"  shift, and go to state 301
 
 
 State 273
@@ -2945,161 +2945,161 @@ State 278
 
 State 279
 
-  109 td_1arg: "text" "=" HL_QSTR .
+  109 td_1arg: "text" "=" "string" .
 
     $default  reduce using rule 109 (td_1arg)
 
 
 State 280
 
-   87 td_1arg: "align" "=" HL_QSTR .
+   87 td_1arg: "align" "=" "string" .
 
     $default  reduce using rule 87 (td_1arg)
 
 
 State 281
 
-   88 td_1arg: "balign" "=" HL_QSTR .
+   88 td_1arg: "balign" "=" "string" .
 
     $default  reduce using rule 88 (td_1arg)
 
 
 State 282
 
-   89 td_1arg: "bgcolor" "=" HL_QSTR .
+   89 td_1arg: "bgcolor" "=" "string" .
 
     $default  reduce using rule 89 (td_1arg)
 
 
 State 283
 
-   90 td_1arg: "border" "=" HL_QSTR .
+   90 td_1arg: "border" "=" "string" .
 
     $default  reduce using rule 90 (td_1arg)
 
 
 State 284
 
-   91 td_1arg: "cellpadding" "=" HL_QSTR .
+   91 td_1arg: "cellpadding" "=" "string" .
 
     $default  reduce using rule 91 (td_1arg)
 
 
 State 285
 
-   92 td_1arg: "cellspacing" "=" HL_QSTR .
+   92 td_1arg: "cellspacing" "=" "string" .
 
     $default  reduce using rule 92 (td_1arg)
 
 
 State 286
 
-   93 td_1arg: "color" "=" HL_QSTR .
+   93 td_1arg: "color" "=" "string" .
 
     $default  reduce using rule 93 (td_1arg)
 
 
 State 287
 
-   94 td_1arg: "colspan" "=" HL_QSTR .
+   94 td_1arg: "colspan" "=" "string" .
 
     $default  reduce using rule 94 (td_1arg)
 
 
 State 288
 
-   95 td_1arg: "fixedsize" "=" HL_QSTR .
+   95 td_1arg: "fixedsize" "=" "string" .
 
     $default  reduce using rule 95 (td_1arg)
 
 
 State 289
 
-   96 td_1arg: "gradientangle" "=" HL_QSTR .
+   96 td_1arg: "gradientangle" "=" "string" .
 
     $default  reduce using rule 96 (td_1arg)
 
 
 State 290
 
-   97 td_1arg: "height" "=" HL_QSTR .
+   97 td_1arg: "height" "=" "string" .
 
     $default  reduce using rule 97 (td_1arg)
 
 
 State 291
 
-   98 td_1arg: "href" "=" HL_QSTR .
+   98 td_1arg: "href" "=" "string" .
 
     $default  reduce using rule 98 (td_1arg)
 
 
 State 292
 
-   99 td_1arg: "id" "=" HL_QSTR .
+   99 td_1arg: "id" "=" "string" .
 
     $default  reduce using rule 99 (td_1arg)
 
 
 State 293
 
-  100 td_1arg: "port" "=" HL_QSTR .
+  100 td_1arg: "port" "=" "string" .
 
     $default  reduce using rule 100 (td_1arg)
 
 
 State 294
 
-  101 td_1arg: "rowspan" "=" HL_QSTR .
+  101 td_1arg: "rowspan" "=" "string" .
 
     $default  reduce using rule 101 (td_1arg)
 
 
 State 295
 
-  102 td_1arg: "sides" "=" HL_QSTR .
+  102 td_1arg: "sides" "=" "string" .
 
     $default  reduce using rule 102 (td_1arg)
 
 
 State 296
 
-  103 td_1arg: "style" "=" HL_QSTR .
+  103 td_1arg: "style" "=" "string" .
 
     $default  reduce using rule 103 (td_1arg)
 
 
 State 297
 
-  104 td_1arg: "target" "=" HL_QSTR .
+  104 td_1arg: "target" "=" "string" .
 
     $default  reduce using rule 104 (td_1arg)
 
 
 State 298
 
-  105 td_1arg: "title" "=" HL_QSTR .
+  105 td_1arg: "title" "=" "string" .
 
     $default  reduce using rule 105 (td_1arg)
 
 
 State 299
 
-  106 td_1arg: "tooltip" "=" HL_QSTR .
+  106 td_1arg: "tooltip" "=" "string" .
 
     $default  reduce using rule 106 (td_1arg)
 
 
 State 300
 
-  107 td_1arg: "valign" "=" HL_QSTR .
+  107 td_1arg: "valign" "=" "string" .
 
     $default  reduce using rule 107 (td_1arg)
 
 
 State 301
 
-  108 td_1arg: "width" "=" HL_QSTR .
+  108 td_1arg: "width" "=" "string" .
 
     $default  reduce using rule 108 (td_1arg)
 
@@ -3137,21 +3137,21 @@ State 305
 
 State 306
 
-  114 img_1arg: "text" . "=" HL_QSTR
+  114 img_1arg: "text" . "=" "string"
 
     "="  shift, and go to state 313
 
 
 State 307
 
-  112 img_1arg: "scale" . "=" HL_QSTR
+  112 img_1arg: "scale" . "=" "string"
 
     "="  shift, and go to state 314
 
 
 State 308
 
-  113 img_1arg: "src" . "=" HL_QSTR
+  113 img_1arg: "src" . "=" "string"
 
     "="  shift, and go to state 315
 
@@ -3186,23 +3186,23 @@ State 312
 
 State 313
 
-  114 img_1arg: "text" "=" . HL_QSTR
+  114 img_1arg: "text" "=" . "string"
 
-    HL_QSTR  shift, and go to state 318
+    "string"  shift, and go to state 318
 
 
 State 314
 
-  112 img_1arg: "scale" "=" . HL_QSTR
+  112 img_1arg: "scale" "=" . "string"
 
-    HL_QSTR  shift, and go to state 319
+    "string"  shift, and go to state 319
 
 
 State 315
 
-  113 img_1arg: "src" "=" . HL_QSTR
+  113 img_1arg: "src" "=" . "string"
 
-    HL_QSTR  shift, and go to state 320
+    "string"  shift, and go to state 320
 
 
 State 316
@@ -3221,21 +3221,21 @@ State 317
 
 State 318
 
-  114 img_1arg: "text" "=" HL_QSTR .
+  114 img_1arg: "text" "=" "string" .
 
     $default  reduce using rule 114 (img_1arg)
 
 
 State 319
 
-  112 img_1arg: "scale" "=" HL_QSTR .
+  112 img_1arg: "scale" "=" "string" .
 
     $default  reduce using rule 112 (img_1arg)
 
 
 State 320
 
-  113 img_1arg: "src" "=" HL_QSTR .
+  113 img_1arg: "src" "=" "string" .
 
     $default  reduce using rule 113 (img_1arg)
 

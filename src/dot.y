@@ -98,9 +98,9 @@ static void yyerror (const char *msg)
 %token TOKEN_NODE "node"
 %token TOKEN_EDGE "edge"
 
-%token <string> TOKEN_TEXT "string"
+%token <string> TOKEN_TEXT "text"
 %token <string> TOKEN_NUM "number"
-%token <string> TOKEN_QTEXT "\"string\""
+%token <string> TOKEN_QTEXT "string"
 %token <string> TOKEN_HTEXT "<html-string>"
 %token <string> TOKEN_EOP "-> or --"
 
@@ -149,6 +149,7 @@ ctext:
 	| ctext TOKEN_PLUS TOKEN_QTEXT { $$ = dp_ccat ($1,$3); }
 	;
 
+/* arg of attribute can be text, "string", "number" */
 text:
 	  TOKEN_TEXT { $$ = $1; }
 	| TOKEN_NUM { $$ = $1; }
@@ -217,15 +218,16 @@ nid:
 
 /* attribute value can be html string
  * as in label=<<value>>
+ * the left side of attribute must be text and not a string
  */
 sattr:
-	  text TOKEN_IS text  { /* string as in "string" */ dp_aset ($1,$3,0); }
-	| text TOKEN_IS htext { /* html string as in <html-label> */ dp_aset ($1,$3,1); }
+	  TOKEN_TEXT TOKEN_IS text  { /* string as in "string" */ dp_aset ($1,$3,0); }
+	| TOKEN_TEXT TOKEN_IS htext { /* html string as in <html-label> */ dp_aset ($1,$3,1); }
 	;
 
 sattr2:
 	  sattr
-	| text { dp_aset ($1,"true",0); }
+	| TOKEN_TEXT { dp_aset ($1,"true",0); }
 	;
 
 iattr:

@@ -1136,6 +1136,7 @@ static char *dp_randnname(void)
 	}
 
 	ret = dp_uniqstr(buf);
+
 	return (ret);
 }
 
@@ -1175,8 +1176,10 @@ int dotparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 	if (fname) {
 	}
 
+	/* static buffer for parser error message */
 	memset(parsermessage, 0, 256);
 	memset(dp_errmsg, 0, 256);
+
 	if (strcmp(argv0, "gml4gtkd") == 0) {
 		/* activate debug output */
 		dp_lex_init(f, 1);
@@ -1184,8 +1187,14 @@ int dotparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
 		dp_lex_init(f, 0);
 	}
 
+	/* turn on debug output */
+	if (0) {
+		dp_lex_init(f, 1);
+	}
+
 	/* run bison */
 	status = yyparse();
+
 	if (yydebug || 0) {
 		printf("%s(): status %d `%s' for dot file `%s'\n", __func__, status, dp_errmsg, fname);
 		fflush(stdout);

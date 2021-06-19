@@ -19,10 +19,10 @@ Grammar
    11 thename: text
    12        | %empty
 
-   13 ctext: "\"string\""
-   14      | ctext "+" "\"string\""
+   13 ctext: "string"
+   14      | ctext "+" "string"
 
-   15 text: "string"
+   15 text: "text"
    16     | "number"
    17     | ctext
 
@@ -55,11 +55,11 @@ Grammar
    35    | text ":" text
    36    | text ":" text ":" text
 
-   37 sattr: text "=" text
-   38      | text "=" htext
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
 
    39 sattr2: sattr
-   40       | text
+   40       | "text"
 
    41 iattr: sattr2 iattr
    42      | sattr2 "," iattr
@@ -134,9 +134,9 @@ error (256) 3
 "digraph" (271) 9 10
 "node" (272) 63
 "edge" (273) 64
-"string" <string> (274) 15
+"text" <string> (274) 15 37 38 40
 "number" <string> (275) 16
-"\"string\"" <string> (276) 13 14
+"string" <string> (276) 13 14
 "<html-string>" <string> (277) 18
 "-> or --" <string> (278) 54 56 57 59
 
@@ -158,8 +158,7 @@ thename <string> (29)
 ctext <string> (30)
     on left: 13 14, on right: 14 17
 text <string> (31)
-    on left: 15 16 17, on right: 11 31 32 33 34 35 36 37 38 40 65 66
-    70
+    on left: 15 16 17, on right: 11 31 32 33 34 35 36 37 65 66 70
 htext <string> (32)
     on left: 18, on right: 38 66
 statements (33)
@@ -300,9 +299,9 @@ State 9
 
     2 startdot: utf thetype . thename $@1 "{" statements "}"
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
 
     $default  reduce using rule 12 (thename)
 
@@ -327,7 +326,7 @@ State 11
 
 State 12
 
-   15 text: "string" .
+   15 text: "text" .
 
     $default  reduce using rule 15 (text)
 
@@ -341,7 +340,7 @@ State 13
 
 State 14
 
-   13 ctext: "\"string\"" .
+   13 ctext: "string" .
 
     $default  reduce using rule 13 (ctext)
 
@@ -357,7 +356,7 @@ State 15
 
 State 16
 
-   14 ctext: ctext . "+" "\"string\""
+   14 ctext: ctext . "+" "string"
    17 text: ctext .
 
     "+"  shift, and go to state 19
@@ -381,23 +380,23 @@ State 18
 
 State 19
 
-   14 ctext: ctext "+" . "\"string\""
+   14 ctext: ctext "+" . "string"
 
-    "\"string\""  shift, and go to state 21
+    "string"  shift, and go to state 21
 
 
 State 20
 
     2 startdot: utf thetype thename $@1 "{" . statements "}"
 
-    "{"           shift, and go to state 22
-    "graph"       shift, and go to state 23
-    "subgraph"    shift, and go to state 24
-    "node"        shift, and go to state 25
-    "edge"        shift, and go to state 26
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 27
@@ -417,7 +416,7 @@ State 20
 
 State 21
 
-   14 ctext: ctext "+" "\"string\"" .
+   14 ctext: ctext "+" "string" .
 
     $default  reduce using rule 14 (ctext)
 
@@ -443,9 +442,9 @@ State 24
    70 shead: "subgraph" . text
    71      | "subgraph" .
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
 
     $default  reduce using rule 71 (shead)
 
@@ -490,15 +489,15 @@ State 28
     2 startdot: utf thetype thename $@1 "{" statements . "}"
    19 statements: statements . statement
 
-    "{"           shift, and go to state 22
-    "}"           shift, and go to state 44
-    "graph"       shift, and go to state 23
-    "subgraph"    shift, and go to state 24
-    "node"        shift, and go to state 25
-    "edge"        shift, and go to state 26
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "}"         shift, and go to state 44
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 27
@@ -612,14 +611,14 @@ State 40
 
    69 sstatement: "{" $@10 . statements "}"
 
-    "{"           shift, and go to state 22
-    "graph"       shift, and go to state 23
-    "subgraph"    shift, and go to state 24
-    "node"        shift, and go to state 25
-    "edge"        shift, and go to state 26
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 27
@@ -651,9 +650,9 @@ State 42
    35 nid: text ":" . text
    36    | text ":" . text ":" text
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
 
     ctext  go to state 16
     text   go to state 56
@@ -664,9 +663,9 @@ State 43
    65 aset: text "=" . text
    66     | text "=" . htext
 
-    "string"         shift, and go to state 12
+    "text"           shift, and go to state 12
     "number"         shift, and go to state 13
-    "\"string\""     shift, and go to state 14
+    "string"         shift, and go to state 14
     "<html-string>"  shift, and go to state 57
 
     ctext  go to state 16
@@ -727,14 +726,10 @@ State 50
 
    45 tattr: "[" . iattr "]"
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"  shift, and go to state 64
 
     $default  reduce using rule 44 (iattr)
 
-    ctext   go to state 16
-    text    go to state 64
     sattr   go to state 65
     sattr2  go to state 66
     iattr   go to state 67
@@ -772,14 +767,14 @@ State 54
 
    67 sstatement: shead "{" . statements "}"
 
-    "{"           shift, and go to state 22
-    "graph"       shift, and go to state 23
-    "subgraph"    shift, and go to state 24
-    "node"        shift, and go to state 25
-    "edge"        shift, and go to state 26
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 27
@@ -802,15 +797,15 @@ State 55
    19 statements: statements . statement
    69 sstatement: "{" $@10 statements . "}"
 
-    "{"           shift, and go to state 22
-    "}"           shift, and go to state 71
-    "graph"       shift, and go to state 23
-    "subgraph"    shift, and go to state 24
-    "node"        shift, and go to state 25
-    "edge"        shift, and go to state 26
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "}"         shift, and go to state 71
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 27
@@ -887,11 +882,11 @@ State 62
    57     | "-> or --" . sstatement
    59     | "-> or --" . sstatement $@9 erhs
 
-    "{"           shift, and go to state 22
-    "subgraph"    shift, and go to state 24
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "subgraph"  shift, and go to state 24
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 74
@@ -911,9 +906,9 @@ State 63
 
 State 64
 
-   37 sattr: text . "=" text
-   38      | text . "=" htext
-   40 sattr2: text .
+   37 sattr: "text" . "=" text
+   38      | "text" . "=" htext
+   40 sattr2: "text" .
 
     "="  shift, and go to state 78
 
@@ -933,16 +928,12 @@ State 66
    42      | sattr2 . "," iattr
    43      | sattr2 . ";" iattr
 
-    ","           shift, and go to state 79
-    ";"           shift, and go to state 80
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    ","     shift, and go to state 79
+    ";"     shift, and go to state 80
+    "text"  shift, and go to state 64
 
     $default  reduce using rule 44 (iattr)
 
-    ctext   go to state 16
-    text    go to state 64
     sattr   go to state 65
     sattr2  go to state 66
     iattr   go to state 81
@@ -976,15 +967,15 @@ State 70
    19 statements: statements . statement
    67 sstatement: shead "{" statements . "}"
 
-    "{"           shift, and go to state 22
-    "}"           shift, and go to state 84
-    "graph"       shift, and go to state 23
-    "subgraph"    shift, and go to state 24
-    "node"        shift, and go to state 25
-    "edge"        shift, and go to state 26
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "{"         shift, and go to state 22
+    "}"         shift, and go to state 84
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
 
     ctext       go to state 16
     text        go to state 27
@@ -1013,9 +1004,9 @@ State 72
    33 nidid: text ":" text ":" . text
    36 nid: text ":" text ":" . text
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
 
     ctext  go to state 16
     text   go to state 85
@@ -1075,12 +1066,12 @@ State 77
 
 State 78
 
-   37 sattr: text "=" . text
-   38      | text "=" . htext
+   37 sattr: "text" "=" . text
+   38      | "text" "=" . htext
 
-    "string"         shift, and go to state 12
+    "text"           shift, and go to state 12
     "number"         shift, and go to state 13
-    "\"string\""     shift, and go to state 14
+    "string"         shift, and go to state 14
     "<html-string>"  shift, and go to state 57
 
     ctext  go to state 16
@@ -1092,14 +1083,10 @@ State 79
 
    42 iattr: sattr2 "," . iattr
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"  shift, and go to state 64
 
     $default  reduce using rule 44 (iattr)
 
-    ctext   go to state 16
-    text    go to state 64
     sattr   go to state 65
     sattr2  go to state 66
     iattr   go to state 92
@@ -1109,14 +1096,10 @@ State 80
 
    43 iattr: sattr2 ";" . iattr
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"  shift, and go to state 64
 
     $default  reduce using rule 44 (iattr)
 
-    ctext   go to state 16
-    text    go to state 64
     sattr   go to state 65
     sattr2  go to state 66
     iattr   go to state 93
@@ -1169,9 +1152,9 @@ State 86
    35 nid: text ":" . text
    36    | text ":" . text ":" text
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
 
     ctext  go to state 16
     text   go to state 95
@@ -1204,14 +1187,14 @@ State 89
 
 State 90
 
-   37 sattr: text "=" text .
+   37 sattr: "text" "=" text .
 
     $default  reduce using rule 37 (sattr)
 
 
 State 91
 
-   38 sattr: text "=" htext .
+   38 sattr: "text" "=" htext .
 
     $default  reduce using rule 38 (sattr)
 
@@ -1265,9 +1248,9 @@ State 98
 
    36 nid: text ":" text ":" . text
 
-    "string"      shift, and go to state 12
-    "number"      shift, and go to state 13
-    "\"string\""  shift, and go to state 14
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
 
     ctext  go to state 16
     text   go to state 99

@@ -126,7 +126,8 @@ splay_tree splay_tree_delete(splay_tree sp)
 		keys = (splay_tree_key *) splay_tree_free(keys);
 
 		/* keys is never read */
-		if (keys) { /* fix */ }
+		if (keys) {	/* fix */
+		}
 	}
 
 	/* wipe the pointers in the struct to make valgrind happy */
@@ -292,7 +293,8 @@ void splay_tree_remove(splay_tree sp, splay_tree_key key)
 	node = (splay_tree_node) splay_tree_free((void *)node);
 
 	/* node is never read */
-	if (node) { /* fix */ }
+	if (node) {		/* fix */
+	}
 
 	return;
 }

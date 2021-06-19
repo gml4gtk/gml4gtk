@@ -1,0 +1,20 @@
+/* syntax error at line 2 because it should be color="blue" */
+digraph conflict1edges {
+ /* dot supports splitting numbers in strings as in Z=9.8 below */
+ 1 -> 2 [Z=0.9 Z="9.9" Z="9"+".8"];
+ 6 -> 5 [K=1.2];
+ 2 -> 20 [color=blue"]; // here should be a parse error
+ 0 -> 1 [color=green"];
+}
+/*
+the parser sees this as:
+ 2 -> 20 [color=blue
+"];
+ 0 -> 1 [color=green"
+ ];
+
+which is
+ 2 -> 20 [color=blue "..." ];
+
+dot parser of version 7.2 did not find this syntax error
+*/

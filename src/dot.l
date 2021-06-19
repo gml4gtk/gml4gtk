@@ -248,6 +248,7 @@ void dp_lex_init (FILE *f, int debugflag)
   /* activate debug in glr parser */
   yydebug = debugflag;
   htmlnest = 0;
+  yyset_debug (debugflag);
   return;
 }
 

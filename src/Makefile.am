@@ -223,5 +223,6 @@ clean-generic:
 	rm -v -f ./*.res
 	rm -v -f ./gml4gtk-cg.gv
 	rm -v -f *.scallgraph.gv
+	rm -v -f -r .deps
 
 # /* end */

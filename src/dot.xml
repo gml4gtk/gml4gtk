@@ -96,7 +96,7 @@
       <rule number="13" usefulness="useful">
         <lhs>ctext</lhs>
         <rhs>
-          <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+          <symbol>&quot;string&quot;</symbol>
         </rhs>
       </rule>
       <rule number="14" usefulness="useful">
@@ -104,13 +104,13 @@
         <rhs>
           <symbol>ctext</symbol>
           <symbol>&quot;+&quot;</symbol>
-          <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+          <symbol>&quot;string&quot;</symbol>
         </rhs>
       </rule>
       <rule number="15" usefulness="useful">
         <lhs>text</lhs>
         <rhs>
-          <symbol>&quot;string&quot;</symbol>
+          <symbol>&quot;text&quot;</symbol>
         </rhs>
       </rule>
       <rule number="16" usefulness="useful">
@@ -261,7 +261,7 @@
       <rule number="37" usefulness="useful">
         <lhs>sattr</lhs>
         <rhs>
-          <symbol>text</symbol>
+          <symbol>&quot;text&quot;</symbol>
           <symbol>&quot;=&quot;</symbol>
           <symbol>text</symbol>
         </rhs>
@@ -269,7 +269,7 @@
       <rule number="38" usefulness="useful">
         <lhs>sattr</lhs>
         <rhs>
-          <symbol>text</symbol>
+          <symbol>&quot;text&quot;</symbol>
           <symbol>&quot;=&quot;</symbol>
           <symbol>htext</symbol>
         </rhs>
@@ -283,7 +283,7 @@
       <rule number="40" usefulness="useful">
         <lhs>sattr2</lhs>
         <rhs>
-          <symbol>text</symbol>
+          <symbol>&quot;text&quot;</symbol>
         </rhs>
       </rule>
       <rule number="41" usefulness="useful">
@@ -528,9 +528,9 @@
       <terminal symbol-number="16" token-number="271" name="&quot;digraph&quot;" usefulness="useful"/>
       <terminal symbol-number="17" token-number="272" name="&quot;node&quot;" usefulness="useful"/>
       <terminal symbol-number="18" token-number="273" name="&quot;edge&quot;" usefulness="useful"/>
-      <terminal symbol-number="19" token-number="274" name="&quot;string&quot;" usefulness="useful"/>
+      <terminal symbol-number="19" token-number="274" name="&quot;text&quot;" usefulness="useful"/>
       <terminal symbol-number="20" token-number="275" name="&quot;number&quot;" usefulness="useful"/>
-      <terminal symbol-number="21" token-number="276" name="&quot;\&quot;string\&quot;&quot;" usefulness="useful"/>
+      <terminal symbol-number="21" token-number="276" name="&quot;string&quot;" usefulness="useful"/>
       <terminal symbol-number="22" token-number="277" name="&quot;&lt;html-string&gt;&quot;" usefulness="useful"/>
       <terminal symbol-number="23" token-number="278" name="&quot;-&gt; or --&quot;" usefulness="useful"/>
     </terminals>
@@ -751,9 +751,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="thename" state="15"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="17"/>
@@ -870,9 +870,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
@@ -923,7 +923,7 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="21"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="21"/>
         </transitions>
         <errors/>
         <reductions/>
@@ -976,9 +976,9 @@
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
           <transition type="shift" symbol="&quot;node&quot;" state="25"/>
           <transition type="shift" symbol="&quot;edge&quot;" state="26"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="27"/>
           <transition type="goto" symbol="statements" state="28"/>
@@ -1061,9 +1061,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="41"/>
         </transitions>
@@ -1116,9 +1116,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="32" point="1"/>
@@ -1192,9 +1192,9 @@
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
           <transition type="shift" symbol="&quot;node&quot;" state="25"/>
           <transition type="shift" symbol="&quot;edge&quot;" state="26"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="27"/>
           <transition type="goto" symbol="statement" state="45"/>
@@ -1239,9 +1239,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="22" point="1"/>
@@ -1379,9 +1379,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="28" point="1"/>
@@ -1465,9 +1465,9 @@
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
           <transition type="shift" symbol="&quot;node&quot;" state="25"/>
           <transition type="shift" symbol="&quot;edge&quot;" state="26"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="27"/>
           <transition type="goto" symbol="statements" state="55"/>
@@ -1517,9 +1517,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="56"/>
         </transitions>
@@ -1542,9 +1542,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="shift" symbol="&quot;&lt;html-string&gt;&quot;" state="57"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="58"/>
@@ -1627,9 +1627,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
       </itemset>
@@ -1668,11 +1668,6 @@
 
     <state number="50">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
         <item rule-number="37" point="0"/>
         <item rule-number="38" point="0"/>
         <item rule-number="39" point="0"/>
@@ -1689,11 +1684,7 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
-          <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
-          <transition type="goto" symbol="ctext" state="16"/>
-          <transition type="goto" symbol="text" state="64"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="64"/>
           <transition type="goto" symbol="sattr" state="65"/>
           <transition type="goto" symbol="sattr2" state="66"/>
           <transition type="goto" symbol="iattr" state="67"/>
@@ -1735,9 +1726,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
       </itemset>
@@ -1819,9 +1810,9 @@
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
           <transition type="shift" symbol="&quot;node&quot;" state="25"/>
           <transition type="shift" symbol="&quot;edge&quot;" state="26"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="27"/>
           <transition type="goto" symbol="statements" state="70"/>
@@ -1888,9 +1879,9 @@
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
           <transition type="shift" symbol="&quot;node&quot;" state="25"/>
           <transition type="shift" symbol="&quot;edge&quot;" state="26"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="27"/>
           <transition type="goto" symbol="statement" state="45"/>
@@ -1924,9 +1915,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="33" point="3"/>
@@ -2007,9 +1998,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
       </itemset>
@@ -2064,9 +2055,9 @@
         <transitions>
           <transition type="shift" symbol="&quot;{&quot;" state="22"/>
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="74"/>
           <transition type="goto" symbol="nid" state="75"/>
@@ -2105,9 +2096,7 @@
             <symbol>&quot;,&quot;</symbol>
             <symbol>&quot;;&quot;</symbol>
             <symbol>&quot;]&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
-            <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
           </lookaheads>
         </item>
       </itemset>
@@ -2139,11 +2128,6 @@
 
     <state number="66">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
         <item rule-number="37" point="0"/>
         <item rule-number="38" point="0"/>
         <item rule-number="39" point="0"/>
@@ -2164,11 +2148,7 @@
         <transitions>
           <transition type="shift" symbol="&quot;,&quot;" state="79"/>
           <transition type="shift" symbol="&quot;;&quot;" state="80"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
-          <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
-          <transition type="goto" symbol="ctext" state="16"/>
-          <transition type="goto" symbol="text" state="64"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="64"/>
           <transition type="goto" symbol="sattr" state="65"/>
           <transition type="goto" symbol="sattr2" state="66"/>
           <transition type="goto" symbol="iattr" state="81"/>
@@ -2271,9 +2251,9 @@
           <transition type="shift" symbol="&quot;subgraph&quot;" state="24"/>
           <transition type="shift" symbol="&quot;node&quot;" state="25"/>
           <transition type="shift" symbol="&quot;edge&quot;" state="26"/>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="27"/>
           <transition type="goto" symbol="statement" state="45"/>
@@ -2320,9 +2300,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="85"/>
         </transitions>
@@ -2359,9 +2339,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
@@ -2393,9 +2373,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="55" point="0">
@@ -2431,9 +2411,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="58" point="0">
@@ -2470,9 +2450,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="50" point="4"/>
@@ -2504,9 +2484,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="shift" symbol="&quot;&lt;html-string&gt;&quot;" state="57"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="90"/>
@@ -2520,11 +2500,6 @@
 
     <state number="79">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
         <item rule-number="37" point="0"/>
         <item rule-number="38" point="0"/>
         <item rule-number="39" point="0"/>
@@ -2541,11 +2516,7 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
-          <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
-          <transition type="goto" symbol="ctext" state="16"/>
-          <transition type="goto" symbol="text" state="64"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="64"/>
           <transition type="goto" symbol="sattr" state="65"/>
           <transition type="goto" symbol="sattr2" state="66"/>
           <transition type="goto" symbol="iattr" state="92"/>
@@ -2560,11 +2531,6 @@
 
     <state number="80">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
         <item rule-number="37" point="0"/>
         <item rule-number="38" point="0"/>
         <item rule-number="39" point="0"/>
@@ -2581,11 +2547,7 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
-          <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
-          <transition type="goto" symbol="ctext" state="16"/>
-          <transition type="goto" symbol="text" state="64"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="64"/>
           <transition type="goto" symbol="sattr" state="65"/>
           <transition type="goto" symbol="sattr2" state="66"/>
           <transition type="goto" symbol="iattr" state="93"/>
@@ -2640,9 +2602,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="53" point="4"/>
@@ -2688,9 +2650,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
         <item rule-number="36" point="5">
@@ -2722,9 +2684,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="95"/>
         </transitions>
@@ -2869,9 +2831,9 @@
             <symbol>&quot;subgraph&quot;</symbol>
             <symbol>&quot;node&quot;</symbol>
             <symbol>&quot;edge&quot;</symbol>
-            <symbol>&quot;string&quot;</symbol>
+            <symbol>&quot;text&quot;</symbol>
             <symbol>&quot;number&quot;</symbol>
-            <symbol>&quot;\&quot;string\&quot;&quot;</symbol>
+            <symbol>&quot;string&quot;</symbol>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
@@ -2928,9 +2890,9 @@
       </itemset>
       <actions>
         <transitions>
-          <transition type="shift" symbol="&quot;string&quot;" state="12"/>
+          <transition type="shift" symbol="&quot;text&quot;" state="12"/>
           <transition type="shift" symbol="&quot;number&quot;" state="13"/>
-          <transition type="shift" symbol="&quot;\&quot;string\&quot;&quot;" state="14"/>
+          <transition type="shift" symbol="&quot;string&quot;" state="14"/>
           <transition type="goto" symbol="ctext" state="16"/>
           <transition type="goto" symbol="text" state="99"/>
         </transitions>

@@ -7749,6 +7749,11 @@ static void finalxy(struct gml_graph *g)
 
 	/* depends on positioning modus */
 
+	/* if set use priority algorithm for placement otherwise brandes and kopf */
+	if (option_priority) {
+
+	}
+
 	switch (postype) {
 	case 1:
 		finalxy1(g);

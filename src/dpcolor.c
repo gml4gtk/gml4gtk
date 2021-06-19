@@ -9005,6 +9005,12 @@ int dp_colorcode(const char *name)
 		return ((int)-3);
 	}
 
+	/* check for cr in colorname */
+	if (strchr(name, '\n')) {
+		/* unknown color, use default */
+		return ((int)-3);
+	}
+
 	if (gucolor == NULL) {
 		color_init();
 	}

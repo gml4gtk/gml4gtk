@@ -1245,21 +1245,29 @@ do_action:			/* This label is used only to access EOF actions. */
 #line 125 "dphl.l"
 				{	/* skip comment and it does not allow <> chars in it or nested comments */
 				}
-				YY_BREAK case 2:YY_RULE_SETUP
+			YY_BREAK case 2:
+				YY_RULE_SETUP
 #line 127 "dphl.l"
 				{	/* skip form feed chars and spaces */
-				} YY_BREAK case 3:YY_RULE_SETUP
+				}
+			YY_BREAK case 3:
+				YY_RULE_SETUP
 #line 128 "dphl.l"
 				{	/* skip tabs */
-				} YY_BREAK case 4:
+				}
+			YY_BREAK case 4:
 /* rule 4 can match eol */
-				 YY_RULE_SETUP
+				YY_RULE_SETUP
 #line 129 "dphl.l"
 				{	/* skip new line *//* lexer does update yylineno */
-				} YY_BREAK case 5:YY_RULE_SETUP
+				}
+			YY_BREAK case 5:
+				YY_RULE_SETUP
 #line 130 "dphl.l"
 				{	/* skip carriage return */
-				} YY_BREAK case 6:YY_RULE_SETUP
+				}
+			YY_BREAK case 6:
+				YY_RULE_SETUP
 #line 132 "dphl.l"
 				{
 					hlylval.string = dp_uniqstr(yytext);
@@ -1320,7 +1328,8 @@ do_action:			/* This label is used only to access EOF actions. */
 						return (EOF);
 					}
 				}
-				YY_BREAK case 7:YY_RULE_SETUP
+			YY_BREAK case 7:
+				YY_RULE_SETUP
 #line 190 "dphl.l"
 				{
 					hlylval.string = dp_uniqstr(yytext);
@@ -1373,27 +1382,33 @@ do_action:			/* This label is used only to access EOF actions. */
 						return (EOF);
 					}
 				}
-				YY_BREAK case 8:YY_RULE_SETUP
+			YY_BREAK case 8:
+				YY_RULE_SETUP
 #line 240 "dphl.l"
 				{
 					/* end tag for br and hr, vr and img */
 					hlylval.string = dp_uniqstr(yytext);
 					return (HL_SC);
-				} YY_BREAK case 9:YY_RULE_SETUP
+				}
+			YY_BREAK case 9:
+				YY_RULE_SETUP
 #line 246 "dphl.l"
 				{
 					/* end tag for others */
 					hlylval.string = dp_uniqstr(yytext);
 					return (HL_C);
-				} YY_BREAK case 10:YY_RULE_SETUP
+				}
+			YY_BREAK case 10:
+				YY_RULE_SETUP
 #line 252 "dphl.l"
 				{
 					/* as in var=value */
 					hlylval.string = dp_uniqstr(yytext);
 					return (HL_IS);
-				} YY_BREAK case 11:
+				}
+			YY_BREAK case 11:
 /* rule 11 can match eol */
-				 YY_RULE_SETUP
+				YY_RULE_SETUP
 #line 258 "dphl.l"
 				{
 					/* "string" as in var="value" */
@@ -1401,7 +1416,8 @@ do_action:			/* This label is used only to access EOF actions. */
 						hlylval.string = dp_uniqstr("");
 						return (HL_QSTR);
 					}
-					/* create copy buffer */ tmp = dp_calloc(1, (yyleng + 1));
+					/* create copy buffer */
+					tmp = dp_calloc(1, (yyleng + 1));
 					/* wipe last double quote */
 					yytext[yyleng - 1] = 0;
 					/* copy past first char */
@@ -1448,9 +1464,9 @@ do_action:			/* This label is used only to access EOF actions. */
 					q = NULL;
 					return (HL_QSTR);
 				}
-				YY_BREAK case 12:
+			YY_BREAK case 12:
 /* rule 12 can match eol */
-				 YY_RULE_SETUP
+				YY_RULE_SETUP
 #line 314 "dphl.l"
 				{
 					/* 'string' as in var='value' */
@@ -1458,7 +1474,8 @@ do_action:			/* This label is used only to access EOF actions. */
 						hlylval.string = dp_uniqstr("");
 						return (HL_QSTR);
 					}
-					/* create copy buffer */ tmp = dp_calloc(1, (yyleng + 1));
+					/* create copy buffer */
+					tmp = dp_calloc(1, (yyleng + 1));
 					/* wipe last quote */
 					yytext[yyleng - 1] = 0;
 					/* copy past first char */
@@ -1505,7 +1522,8 @@ do_action:			/* This label is used only to access EOF actions. */
 					q = NULL;
 					return (HL_QSTR);
 				}
-				YY_BREAK case 13:YY_RULE_SETUP
+			YY_BREAK case 13:
+				YY_RULE_SETUP
 #line 370 "dphl.l"
 				{
 					/* var */
@@ -1646,20 +1664,23 @@ do_action:			/* This label is used only to access EOF actions. */
 					/* unknown */
 					return (HL_STR);
 				}
-				YY_BREAK case YY_STATE_EOF(INITIAL):
+			YY_BREAK case YY_STATE_EOF(INITIAL):
 #line 511 "dphl.l"
 				{
 					/* end of buffer */
 					return (EOF);
 				}
-				YY_BREAK case 14:YY_RULE_SETUP
+			YY_BREAK case 14:
+				YY_RULE_SETUP
 #line 516 "dphl.l"
 				{
 					/* something unknown causes parse error */
 					return ((int)yytext[0]);
-				} YY_BREAK case 15:YY_RULE_SETUP
+				}
+			YY_BREAK case 15:
+				YY_RULE_SETUP
 #line 521 "dphl.l"
-				 ECHO;
+				    ECHO;
 				YY_BREAK
 #line 1716 "lex.hl.c"
 			case YY_END_OF_BUFFER:

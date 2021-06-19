@@ -81,7 +81,8 @@ skip_list skip_list_delete(skip_list sp)
 
 			q = (skip_list_node) skip_list_free(q);
 			/* q is never read */
-			if (q) { /* fix */ }
+			if (q) {	/* fix */
+			}
 			q = next;
 		}
 
@@ -267,7 +268,8 @@ void skip_list_remove(skip_list sp, skip_list_key key)
 	q = (skip_list_node) skip_list_free(q);
 
 	/* q is never read */
-	if (q) { /* fix */ }
+	if (q) {		/* fix */
+	}
 
 	return;
 }

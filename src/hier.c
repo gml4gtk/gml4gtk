@@ -56,6 +56,9 @@ struct gml_graph *maingraph = NULL;
 /* type of graph data 0=gml 1=dot 2=vcg */
 int graphtype = 0;
 
+/* if set use priority algorithm for placement otherwise brandes and kopf */
+int option_priority = 1;
+
 /* if set mirror in y direction */
 int option_mirrory = 0;
 

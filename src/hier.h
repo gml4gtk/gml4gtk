@@ -43,6 +43,9 @@ extern struct gml_graph *maingraph;
 /* type of graph data 0=gml 1=dot 2=vcg */
 extern int graphtype;
 
+/* if set use priority algorithm for placement otherwise brandes and kopf */
+extern int option_priority;
+
 /* if set do node names instead of node label */
 extern int option_nnames;
 

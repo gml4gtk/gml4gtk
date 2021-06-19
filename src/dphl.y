@@ -180,7 +180,7 @@ static void yyerror (const char *msg)
 /* u */
 %union { char *string; }
 
-%token <string>HL_DATA	"string" /* string with data area */
+%token <string>HL_DATA	"stringdata" /* string with data area */
 %token HL_HTML		"<html" /* "<html" */
 %token HL_C_HTML	"</html" /* "</html" */
 %token HL_B		"<b" /* "<b" */
