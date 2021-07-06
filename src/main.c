@@ -83,6 +83,8 @@
 #elif GTK_CHECK_VERSION (3,8,0)
 #elif GTK_CHECK_VERSION (3,12,0)
 #elif GTK_CHECK_VERSION (3,14,0)
+#elif GTK_CHECK_VERSION (2,0,0)
+#elif GTK_CHECK_VERSION (1,0,0)
 #else
 /* assume gtk-2 */
 #endif
@@ -237,6 +239,14 @@ static int mouse_oldy = 0;
 /* if set, draw dummy nodes */
 static int drawdummy = 0;
 
+#if GTK_HAVE_API_VERSION_0 == 1
+#warning "gtk-0 not implemented"
+#endif
+
+#if GTK_HAVE_API_VERSION_1 == 1
+#warning "gtk-1 not implemented"
+#endif
+
 /* sliders */
 #if GTK_HAVE_API_VERSION_2 == 1
 static GtkObject *adjvscale1 = NULL;
@@ -261,6 +271,8 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer user_data);
+static void on_top_level_window_fullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data);
+static void on_top_level_window_unfullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void xspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void yspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void pos_changed(GtkWidget * widget, gpointer spinbutton);
@@ -389,6 +401,10 @@ int main(int argc, char *argv[])
 	GtkWidget *nnames1;
 	GtkWidget *popup1;
 	GtkWidget *mirrory1;
+	GtkWidget *menuitem2;
+	GtkWidget *menuitem2_menu;
+	GtkWidget *fullscreen1;
+	GtkWidget *unfullscreen1;
 
 	/* */
 	dp_meminit();
@@ -579,6 +595,35 @@ int main(int argc, char *argv[])
 
 	/* run this routine when selected 'quit' in 'file' menu */
 	g_signal_connect(G_OBJECT(quit1), "activate", G_CALLBACK(on_top_level_window_quit1_activate), NULL);
+
+	/* --- */
+
+	/* menu items in menu bar in vbox1 */
+	menuitem2 = gtk_menu_item_new_with_mnemonic("Fullscreen");
+	gtk_container_add(GTK_CONTAINER(menubar1), menuitem2);
+	gtk_widget_show(menuitem2);
+
+	/* 'fullscreen' sub menu in menu items in menu bar in vbox1 */
+	menuitem2_menu = gtk_menu_new();
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem2), menuitem2_menu);
+
+	/* 'fullscreen->fullscreen' in 'fullscreen' sub menu in menu items in menu bar in vbox1 */
+	fullscreen1 = gtk_menu_item_new_with_mnemonic("Fullscreen");
+	gtk_container_add(GTK_CONTAINER(menuitem2_menu), fullscreen1);
+	gtk_widget_show(fullscreen1);
+
+	/* run this routine when selected 'fullscreen->fullscreen in 'fullscreen' menu */
+	g_signal_connect(G_OBJECT(fullscreen1), "activate", G_CALLBACK(on_top_level_window_fullscreen1_activate), NULL);
+
+	/* 'fullscreen->normal' in 'fullscreen' sub menu in menu items in menu bar in vbox1 */
+	unfullscreen1 = gtk_menu_item_new_with_mnemonic("Normal");
+	gtk_container_add(GTK_CONTAINER(menuitem2_menu), unfullscreen1);
+	gtk_widget_show(unfullscreen1);
+
+	/* run this routine when selected 'fullscreen->normal' in 'fullscreen' menu */
+	g_signal_connect(G_OBJECT(unfullscreen1), "activate", G_CALLBACK(on_top_level_window_unfullscreen1_activate), NULL);
+
+	/* -- */
 
 	/*
 	 * in hbox1
@@ -2236,7 +2281,7 @@ static void do_clear_all(int mode)
 	return;
 }
 
-	/* finally stop the gui */
+/* finally stop the gui */
 static void top_level_window_main_quit(void)
 {
 
@@ -2254,6 +2299,28 @@ static void top_level_window_main_quit(void)
 	/* run the gtk internal routine to stop gtk_main() which is a for(){} loop */
 	gtk_main_quit();
 
+	return;
+}
+
+/* use full screen */
+static void on_top_level_window_fullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data)
+{
+	if (menuitem) {
+	}
+	if (user_data) {
+	}
+	gtk_window_fullscreen(GTK_WINDOW(mainwindow1));
+	return;
+}
+
+/* use screen in a window */
+static void on_top_level_window_unfullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data)
+{
+	if (menuitem) {
+	}
+	if (user_data) {
+	}
+	gtk_window_unfullscreen(GTK_WINDOW(mainwindow1));
 	return;
 }
 
@@ -5848,7 +5915,7 @@ static struct gml_p *static_maingtk_textsizes1sz(struct gml_rl *info)
 	struct gml_p *dsub = NULL;
 	int i = 0;
 
-	data = calloc(1, sizeof(struct gml_p));
+	data = dp_calloc(1, sizeof(struct gml_p));
 
 	if (info == NULL) {
 		return (data);
@@ -6277,6 +6344,11 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 	static_maingtk_textsizes1rl(node->rlabel);
 
 	data = static_maingtk_textsizes1sz(node->rlabel);
+
+	if (data == NULL) {
+		/* shouldnothappen */
+		return;
+	}
 
 	if (yydebug || 0) {
 		printf("%s(): d is (%d,%d) versus bbxy(%d,%d)\n", __func__, data->x, data->y, node->bbx, node->bby);
@@ -7978,14 +8050,20 @@ static void show_about(GtkWidget * widget, gpointer data)
 	char *pbuf = NULL;
 	char *text0 = "This is a GML (Graph-Markup_Language) graph viewer program.\n"
 	    "This program is free to share, copy, use, modify or fork.\n"
+	    "This program does not have network telemetry or creates files.\n"
 	    "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n";
+#ifdef WIN32
+	char *text1 = "Product key: GML4-GTKVE-RSION-73YEA-R2021"
+#else
+	char *text1 = "Product Key: GNU-GPL";
+#endif
 
 	if (widget) {
 	}
 	if (data) {
 	}
 
-	buflen = 384;
+	buflen = 512;
 
 	buf = dp_calloc(1, buflen);
 
@@ -8005,10 +8083,12 @@ static void show_about(GtkWidget * widget, gpointer data)
 	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), xpmdata);
 
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), PACKAGE_VERSION);
-	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "Copyright is GNU GPL Version 3, see http://www.gnu.org/");
+	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "Copyright is GNU GPL Version 3+, see http://www.gnu.org/");
 	snprintf(buf, (buflen), "%sCompiled on %s\n", text0, COMPILE_DATE);
 	pbuf = buf + (int)(strlen(buf));
 	/* */
+	snprintf(pbuf, (buflen - (int)(strlen(buf))), "%s\n", text1);
+	pbuf = buf + (int)(strlen(buf));
 	snprintf(pbuf, (buflen - (int)(strlen(buf))), "compiled with gtk %d.%d.%d glib %d.%d.%d pango %s cairo %s\n",
 		 GTK_MAJOR_VERSION, GTK_MINOR_VERSION, GTK_MICRO_VERSION,
 		 GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION, PANGO_VERSION_STRING, CAIRO_VERSION_STRING);

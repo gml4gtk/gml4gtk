@@ -90,6 +90,8 @@ struct skip_list_t {
 
 extern skip_list skip_list_new(skip_list_compare_fn fnc, skip_list_delete_key_fn fndk, skip_list_delete_value_fn fndv);
 extern skip_list skip_list_delete(skip_list sp);
+extern skip_list_node skip_list_lookup(skip_list sp, skip_list_key key);
+
 extern void skip_list_insert(skip_list sp, skip_list_key k, skip_list_value v);
 extern void skip_list_remove(skip_list sp, skip_list_key key);
 

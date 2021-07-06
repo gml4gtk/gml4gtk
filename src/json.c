@@ -368,8 +368,8 @@ static const uint8_t utf8_continuation_table[256] = {
 
 static inline void *memory_realloc(void *(*realloc_fct)(void *, size_t), void *ptr, size_t size)
 {
-	if(realloc_fct) {
-		return(realloc_fct(ptr, size));
+	if (realloc_fct) {
+		return (realloc_fct(ptr, size));
 	} else {
 		return (realloc(ptr, size));
 	}
@@ -377,8 +377,8 @@ static inline void *memory_realloc(void *(*realloc_fct)(void *, size_t), void *p
 
 static inline void *memory_calloc(void *(*calloc_fct)(size_t, size_t), size_t nmemb, size_t size)
 {
-	if(calloc_fct) {
-		return(calloc_fct(nmemb, size));
+	if (calloc_fct) {
+		return (calloc_fct(nmemb, size));
 	} else {
 		return (calloc(nmemb, size));
 	}
@@ -386,7 +386,7 @@ static inline void *memory_calloc(void *(*calloc_fct)(size_t, size_t), size_t nm
 
 static inline void memory_free(void (*free_fct)(void *ptr), void *ptr)
 {
-	if(free_fct) {
+	if (free_fct) {
 		free_fct(ptr);
 	} else {
 		free(ptr);
@@ -1143,9 +1143,9 @@ int json_parser_dom_callback(void *userdata, int type, const char *data, uint32_
 	case JSON_KEY:
 		stack = &(ctx->stack[ctx->stack_offset - 1]);
 		stack->key = memory_calloc(ctx->user_calloc, length + 1, sizeof(char));
-		stack->key_length = length;
 		if (!stack->key)
 			return JSON_ERROR_NO_MEMORY;
+		stack->key_length = length;
 		memcpy(stack->key, data, length);
 		break;
 	case JSON_STRING:

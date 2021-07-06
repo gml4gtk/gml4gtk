@@ -1261,6 +1261,11 @@ void improve_positions2(struct gml_graph *g)
 		gnl->node->absy = gnl->node->rely;
 		gnl->node->finx = 0;
 		gnl->node->finy = 0;
+		gnl->node->lx0 = 0;
+		gnl->node->lx1 = 1;
+		if (gnl->node->startnode < 0) {
+			printf("%s(): node %s has no startnode\n", __func__, gnl->node->name);
+		}
 		if (yydebug || 0) {
 			printf("%s(): node \"%s\" is at level %d position %d startnode %d\n", __func__, gnl->node->nlabel,
 			       gnl->node->rely, gnl->node->relx, gnl->node->startnode);

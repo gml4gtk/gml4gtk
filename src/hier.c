@@ -75,10 +75,10 @@ int incrlayout = 0;		/* 1 */
 int ranktype = 1;
 
 /* type of barycenter, 1 is sugi2, 2 is sugi3, 3 is is rhp */
-int barytype = 1;
+int barytype = 2;		/* 2 is faster */
 
 /* edgelabels on/off */
-int option_edgelabels = 1;	/* default show edgelabels (1) */
+int option_edgelabels = 0;	/* off is faster *//* default show edgelabels (1) */
 
 /* labels on/off */
 int option_labels = 1;		/* default show labels (1) */
@@ -266,6 +266,7 @@ void prep(struct gml_graph *g)
 	struct gml_elist *enl2 = NULL;
 	struct gml_edge *edge2 = NULL;
 	struct gml_edge *edge = NULL;
+	int i = 0;
 
 	if (g == NULL) {
 		return;
@@ -433,6 +434,42 @@ void prep(struct gml_graph *g)
 		if (lnl->node->nselfedges) {
 			/* add node in list with self-edge nodes */
 			add_selfedgenode(maingraph, lnl->node);
+		}
+		lnl = lnl->next;
+	}
+
+	/* number of start nodes in the graph */
+	g->nstartnodes = 0;
+
+	make_stlist(g);
+
+	lnl = g->nodelist;
+
+	while (lnl) {
+		if (yydebug || 0) {
+			printf("%s(): node \"%s\" indegree=%d outdegree=%d\n", __func__, lnl->node->name, lnl->node->indegree,
+			       lnl->node->outdegree);
+		}
+		if (lnl->node->indegree == 0 && lnl->node->outdegree != 0) {
+			g->nstartnodes++;
+		}
+		lnl = lnl->next;
+	}
+
+	/* fill the table with startnodes */
+	if (g->startnodes) {
+		dp_free(g->startnodes);
+	}
+
+	/*  original graph can have zero start nodes but avoid malloc(0) */
+	g->startnodes = dp_calloc(1, ((g->nstartnodes + 1) * sizeof(int)));
+
+	i = 0;
+	lnl = g->nodelist;
+	while (lnl) {
+		if (lnl->node->indegree == 0 && lnl->node->outdegree != 0) {
+			g->startnodes[i] = lnl->node->nr;
+			i++;
 		}
 		lnl = lnl->next;
 	}
@@ -2157,9 +2194,6 @@ void make_stlist(struct gml_graph *g)
 		sn = edge->from_node;
 		tn = edge->to_node;
 		ne = dp_calloc(1, sizeof(struct gml_elist));
-		if (ne == NULL) {
-			return;
-		}
 
 		ne->edge = edge;
 		/* list of outgoing edges */
@@ -2173,9 +2207,6 @@ void make_stlist(struct gml_graph *g)
 
 		sn->outdegree++;
 		ne = dp_calloc(1, sizeof(struct gml_elist));
-		if (ne == NULL) {
-			return;
-		}
 
 		ne->edge = edge;
 		/* list of incoming edges */
@@ -3157,8 +3188,8 @@ void ylevels(struct gml_graph *g)
 	struct gml_nlist *lnll = NULL;
 	int start2 = 0;
 	int i = 0;
-	int special = 0;
 	int nnodes = 0;
+
 	if (g->nodelist == NULL) {
 		/* nothing to do */
 		return;
@@ -3220,6 +3251,7 @@ void ylevels(struct gml_graph *g)
 				/* cluster: start at level 0 always */
 				start2 = 0;
 			}
+
 		} else {
 			/* no incr. layout */
 			start2 = 1;
@@ -3236,41 +3268,44 @@ void ylevels(struct gml_graph *g)
 		printf("%s(): doing bfs placement\n", __func__);
 	}
 
-	/* number of start nodes in the graph */
-	g->nstartnodes = 0;
+	/* number of start nodes in the graph g->nstartnodes */
+
 	/* where the actual drawing starts at y-level */
 	g->startnodeslevel = start2;
 	span = start2;
-	special = 0;
-	/* dfs */
-	lnll = g->nodelist;
-	while (lnll) {
-		if (lnll->node->y == -1) {
-			/* select start nodes */
-			if (lnll->node->indegree == 0 && lnll->node->outdegree != 0) {
-				g->nstartnodes++;
-				if (ranktype == 3) {
-					/* topological sort to set y level */
-					span = start2;
-					set_tlevel0(g, lnll->node, start2, lnll->node->nr);
-				} else if (ranktype == 2) {
-					/* bfs */
-					span = start2;
-					set_bfslevel(g, lnll->node, start2, lnll->node->nr);
+
+	for (i = 0; i < g->nstartnodes; i++) {
+		lnll = g->nodelist;
+		while (lnll) {
+			if (lnll->node->nr == g->startnodes[i]) {
+				break;
+			}
+			lnll = lnll->next;
+		}
+		if (lnll) {
+			if (ranktype == 3) {
+				/* topological sort to set y level */
+				span = start2;
+				set_tlevel0(g, lnll->node, start2, g->startnodes[i]);
+			} else if (ranktype == 2) {
+				/* bfs */
+				span = start2;
+				set_bfslevel(g, lnll->node, start2, g->startnodes[i]);
+			} else {
+
+				/* dfs type must be level2() */
+				if (1) {
+					set_level(g, lnll->node, start2, g->startnodes[i]);
 				} else {
-					/* dfs type must be level2() */
-					if (0) {
-						set_level(g, lnll->node, start2, lnll->node->nr);
-					} else {
-						if (yydebug || 0) {
-							printf("%s(): startnode %d\n", __func__, lnll->node->nr);
-						}
-						set_level2(g, lnll->node, start2, lnll->node->nr);
+					if (yydebug || 0) {
+						printf("%s(): startnode %d\n", __func__, g->startnodes[i]);
 					}
+					set_level2(g, lnll->node, start2, g->startnodes[i]);
 				}
 			}
+		} else {
+			printf("%s(): startnode with number %d at index %d not found\n", __func__, g->startnodes[i], i);
 		}
-		lnll = lnll->next;
 	}
 
 	/* */
@@ -3336,42 +3371,17 @@ void ylevels(struct gml_graph *g)
 	if (g->nstartnodes == 0) {
 		/* shouldnothappen */
 		printf("%s(): no startnodes in `%s' of %d nodes\n", __func__, g->graphname, nnodes);
-		g->nstartnodes++;
+		g->nstartnodes = 1;
+		/* fill the table with startnodes */
+		if (g->startnodes) {
+			dp_free(g->startnodes);
+		}
+
+		g->startnodes = dp_calloc(1, (g->nstartnodes * sizeof(int)));
+
 		if (g->nodelist) {
 			set_level(g, g->nodelist->node, start2, g->nodelist->node->nr);
-		}
-		special = 1;
-	}
-
-	/* fill the table with startnodes */
-	g->startnodes = dp_calloc(1, g->nstartnodes * sizeof(int));
-	if (g->startnodes == NULL) {
-		return;
-	}
-
-	/* special case if there were no startnodes */
-	if (special) {
-		/* set first node as startnode */
-		if (g->nodelist) {
 			g->startnodes[0] = g->nodelist->node->nr;
-		}
-	} else {
-
-		/* copy the startnodes numbers in the table */
-		i = 0;
-		lnll = g->nodelist;
-		while (lnll) {
-			/* no incoming edges and at least one outgoing edge */
-			if ((lnll->node->incoming_e == NULL && lnll->node->outgoing_e != NULL)) {
-				/* set node number. this is not the id number in the input. */
-				g->startnodes[i] = lnll->node->nr;
-				i++;
-			}
-			lnll = lnll->next;
-		}
-
-		if (i != g->nstartnodes) {
-			printf("%s(): found %d startnodes, should be %d shouldnothappen\n", __func__, i, g->nstartnodes);
 		}
 	}
 

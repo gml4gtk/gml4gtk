@@ -234,6 +234,8 @@ AC_SUBST(HAVE_ISFINITE)
 
 
 # default to gtk+-2.0 setting to 1
+GTK_HAVE_API_VERSION_0=0
+GTK_HAVE_API_VERSION_1=0
 GTK_HAVE_API_VERSION_2=0
 GTK_HAVE_API_VERSION_3=1
 GTK_HAVE_API_VERSION_4=0
@@ -249,34 +251,58 @@ fi])
 
 AC_MSG_CHECKING([which gtk+ version to compile against])
 
+# set [with_gtk=0.0] to default for gtk-0
+# set [with_gtk=1.0] to default for gtk-1
 # set [with_gtk=2.0] to default for gtk-2
 # set [with_gtk=3.0] to default for gtk-3
 # set [with_gtk=4.0] to default for gtk-4
 
 AC_ARG_WITH([gtk],
-  [AS_HELP_STRING([--with-gtk=2.0|3.0|4.0],[which gtk+ version to compile against (default: 3.0)])],
+  [AS_HELP_STRING([--with-gtk=0.0|1.0|2.0|3.0|4.0],[which gtk+ version to compile against (default: 3.0)])],
   [case "$with_gtk" in
-     2.0|3.0|4.0) ;;
+     0.0|1.0|2.0|3.0|4.0) ;;
      *) AC_MSG_ERROR([invalid gtk version specified]) ;;
    esac],
   [with_gtk=3.0])
 AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in
+  0.0) GTK_API_VERSION=0.0
+       GTK_REQUIRED=0.0.0
+       GTK_HAVE_API_VERSION_0=1
+       GTK_HAVE_API_VERSION_1=0
+       GTK_HAVE_API_VERSION_2=0
+       GTK_HAVE_API_VERSION_3=0
+       GTK_HAVE_API_VERSION_4=0
+       ;;
+  1.0) GTK_API_VERSION=1.0
+       GTK_REQUIRED=1.0.0
+       GTK_HAVE_API_VERSION_0=0
+       GTK_HAVE_API_VERSION_1=1
+       GTK_HAVE_API_VERSION_2=0
+       GTK_HAVE_API_VERSION_3=0
+       GTK_HAVE_API_VERSION_4=0
+       ;;
   2.0) GTK_API_VERSION=2.0
        GTK_REQUIRED=2.0.0
+       GTK_HAVE_API_VERSION_0=0
+       GTK_HAVE_API_VERSION_1=0
        GTK_HAVE_API_VERSION_2=1
        GTK_HAVE_API_VERSION_3=0
        GTK_HAVE_API_VERSION_4=0
        ;;
   3.0) GTK_API_VERSION=3.0
        GTK_REQUIRED=2.91.0
+       GTK_HAVE_API_VERSION_0=0
+       GTK_HAVE_API_VERSION_1=0
        GTK_HAVE_API_VERSION_2=0
        GTK_HAVE_API_VERSION_3=1
        GTK_HAVE_API_VERSION_4=0
        ;;
   4.0) GTK_API_VERSION=4.0
        GTK_REQUIRED=3.91.0
+       GTK_HAVE_API_VERSION_0=0
+       GTK_HAVE_API_VERSION_1=0
        GTK_HAVE_API_VERSION_2=0
        GTK_HAVE_API_VERSION_3=0
        GTK_HAVE_API_VERSION_4=1
@@ -289,11 +315,15 @@ AC_SUBST([GTK_REQUIRED])
 
 
 #
+AM_CONDITIONAL([HAVE_GTK_0],[test "$with_gtk" = "0.0"])
+AM_CONDITIONAL([HAVE_GTK_1],[test "$with_gtk" = "1.0"])
 AM_CONDITIONAL([HAVE_GTK_2],[test "$with_gtk" = "2.0"])
 AM_CONDITIONAL([HAVE_GTK_3],[test "$with_gtk" = "3.0"])
 AM_CONDITIONAL([HAVE_GTK_4],[test "$with_gtk" = "4.0"])
 
 #
+AC_DEFINE_UNQUOTED([GTK_HAVE_API_VERSION_0], [$GTK_HAVE_API_VERSION_0], [gtk version 0])
+AC_DEFINE_UNQUOTED([GTK_HAVE_API_VERSION_1], [$GTK_HAVE_API_VERSION_1], [gtk version 1])
 AC_DEFINE_UNQUOTED([GTK_HAVE_API_VERSION_2], [$GTK_HAVE_API_VERSION_2], [gtk version 2])
 AC_DEFINE_UNQUOTED([GTK_HAVE_API_VERSION_3], [$GTK_HAVE_API_VERSION_3], [gtk version 3])
 AC_DEFINE_UNQUOTED([GTK_HAVE_API_VERSION_4], [$GTK_HAVE_API_VERSION_4], [gtk version 4])
@@ -336,7 +366,6 @@ elif test "$prefer_gtk2" = "no" ; then
       GTK_LIBS=$GTK3_LIBS
       CFLAGS="$CFLAGS $GTK_CFLAGS"
       LIBS="$LIBS $GTK_LIBS"
-      dnl AC_DEFINE(USE_GTK3)
       gtk_version="3.0"
       fake_gtkspinner="no",
       echo "GTK 3 >= 3.0.1 not found"
@@ -374,7 +403,8 @@ AC_SUBST([PLATFORM_WIN32])
 AC_DEFINE_UNQUOTED([PLATFORM_WIN32], [$HAVE_PLATFORM_WIN32], [using a windows compiler])
 
 # compilation date in config.h
-CONFIG_DATE=`date +"%a %x %Y"`
+# CONFIG_DATE=`date +"%a %x %Y"`
+CONFIG_DATE=`date +"%a %d %b %Y"`
 
 AC_SUBST(CONFIG_DATE)
 
@@ -425,6 +455,8 @@ The following settings will be used:
 
 Use "make" to compile $PACKAGE_NAME $VERSION.
 
+use ./configure --with-gtk=0.0 for gtk-0
+use ./configure --with-gtk=1.0 for gtk-1
 use ./configure --with-gtk=2.0 for gtk-2
 use ./configure --with-gtk=3.0 for gtk-3
 use ./configure --with-gtk=4.0 for gtk-4

@@ -1,7 +1,7 @@
 /* generated with gprof2dot.py */
 digraph {
 	graph [fontname=Arial, nodesep=0.125, ranksep=0.25];
-	node [fontcolor=white, fontname=Arial, height=0.1, shape=box, style=filled, width=0.1];
+	node [fontcolor=white, fontname=Arial, height=0, shape=box, style=filled, width=0];
 	edge [fontname=Arial];
 	1 [color="#ff0000", fontcolor="#ffffff", fontsize="10.00", label="splay_tree_compare_strings\n100.00%\n(100.00%)\n11056×"];
 	2 [color="#ff0000", fontcolor="#ffffff", fontsize="10.00", label="rotate_right\n100.00%\n(100.00%)\n4811×"];

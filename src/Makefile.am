@@ -189,6 +189,7 @@ gml4gtkexe: main.c
 	x86_64-w64-mingw32-gcc -c $(gml4gtk_exeCFLAGS)  -I. -I.. $(gml4gtk_exeincludes) $(gml4gtk_SOURCES)
 	x86_64-w64-mingw32-gcc *.o -Wl,-Bstatic $(gml4gtk_exedlla) -o gml4gtk.exe
 
+
 #
 clean-generic:
 	rm -v -f *.bc
@@ -224,5 +225,11 @@ clean-generic:
 	rm -v -f ./gml4gtk-cg.gv
 	rm -v -f *.scallgraph.gv
 	rm -v -f -r .deps
+	rm -v -f *graph-info.gv
+	rm -v -f *graph-info.svg
+	rm -v -f *graph-info.ci
+	rm -v -f *.ci
+	rm -v -f gml4gtk-*
+
 
 # /* end */

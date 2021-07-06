@@ -73,10 +73,11 @@ MAINTAINERCLEANFILES = \
 	$(NULL)
 
 #
-cleaner:
+cleaner: ## make cleaner then make distclean
 	make clean
 	make maintainer-clean-generic
 	rm -vfr autom4te.cache
+	rm -vf src/Makefile.in
 	rm -vfr src/.deps
 	rm -vfr src/.libs
 	rm -vf ./libtool
@@ -89,17 +90,22 @@ cleaner:
 	rm -vf ./*.o
 	rm -vf ./*.dot
 	rm -vf ./*.gml
+	rm -vf a-conftest*
 
 
 # generate git statistics
 # %d\t%d number is lines added/deleted in a file
-gitlog:
+gitlog: ## generate git statistics
 	git log --numstat >gitlog.txt
 
-# use as sudo dbain check install to create R=rpm, S=slackware or D=debian package
+# use as sudo debain check install to create R=rpm, S=slackware or D=debian package
 # first run autogen.sh and make for a binary
-checkinstall:
+checkinstall: ## create rpm, deb or tgz package using the checkinstall program
 	checkinstall -D --install=no
 
+.PHONY: help
+
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 # end

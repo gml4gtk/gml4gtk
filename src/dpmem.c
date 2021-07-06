@@ -89,10 +89,15 @@ void *dp_malloc(size_t n)
 /* */
 void *dp_calloc(size_t nmemb, size_t size)
 {
+	char *p = NULL;
 	void *ret = NULL;
 	if ((nmemb * size) == 0) {
 		/* shouldnothappen */
 		printf("%s(): nmemb=%d, size=%d 0 bytes\n", __func__, (int)nmemb, (int)size);
+		if (0) {
+			/* this is used when using gdb and bt */
+			*p = 9;
+		}
 	}
 	ret = memcheck_calloc(nmemb, size);
 	if (ret == NULL) {
@@ -694,7 +699,7 @@ static void *memcheck_calloc(size_t nmemb, size_t size)
 	total = (nmemb * size);
 	ret = calloc(1, total);
 	m_splay_tree_insert(memdata, (splay_tree_key) ret, (splay_tree_value) total);
-	return (ret);
+	return (ret);		/* possible memory leak ? because of m_splay_tree_insert() */
 }
 
 static void *memcheck_realloc(void *ptr, size_t size)

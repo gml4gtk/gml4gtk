@@ -1,0 +1,32 @@
+/* generated with https://github.com/chrisseaton/rhizome
+A JIT for Ruby, implemented in pure Ruby 
+Each node (oval) in the graph is a computation. Each edge (line) in the graph is something passing from one node to another. Red edges are control flow. A red arrow from one node to another means the first node must run before the second. Blue edges are data flow. A blue arrow from one node to another means the second node does some computation on the data from the first.
+
+This example shows a graph for a simple add function in Ruby.
+
+def add(a, b)
+  a + b
+end
+*/
+digraph {
+  node70172598584460[label="start"];
+  node70172598584460 -> node70172598584340[color="red"];
+  node70172598584460 -> node70172598585720[color="red"];
+  node70172598585720[label="merge"];
+  node70172598585720 -> node70172598585220[color="red"];
+  node70172598585220[label="trace(27)"];
+  node70172598585220 -> node70172598585060[color="red"];
+  node70172598585060[label="trace(28)"];
+  node70172598585060 -> node70172598584860[color="red"];
+  node70172598584860[label="#+"];
+  node70172598584860 -> node70172598584660[color="red"];
+  node70172598584860 -> node70172598584340[color="blue", dir="back"];
+  node70172598584340[label="finish"];
+  node70172598584660[label="trace(29)"];
+  node70172598584660 -> node70172598584340[color="red"];
+  node70172598585540[label="arg(0)"];
+  node70172598585540 -> node70172598584860[color="blue", label="receiver", dir="back"];
+  node70172598585380[label="arg(1)"];
+  node70172598585380 -> node70172598584860[color="blue", label="arg(0)", dir="back"];
+}
+

@@ -1048,7 +1048,7 @@ void rhp_layout_callback(int (*getlayoutdata)
 {
 
 	/* check for callback() */
-	if(getlayoutdata == NULL) {
+	if (getlayoutdata == NULL) {
 		rhp_log("%s(): no callback routine shouldnothappen!\n", __func__);
 		return;
 	}
@@ -1063,7 +1063,7 @@ void rhp_layout_callback(int (*getlayoutdata)
 int rhp_node_foreach(int (*getnodedata)
 		      (int num, int level, int pos, void *data))
 {
-	struct rhp_spn *spn =(struct rhp_spn *)0;
+	struct rhp_spn *spn = (struct rhp_spn *)0;
 	struct rhpnode *nd = (struct rhpnode *)0;
 	int status = 0;
 
@@ -1203,7 +1203,7 @@ void *rhp_node_get_data(int num)
 int rhp_edge_foreach(int (*getedgedata)
 		      (int num, int fnum, int flevel, int fpos, int tnum, int tlevel, int tpos, int64_t ecross, void *data))
 {
-	struct rhp_spn *spn =(struct rhp_spn *)0;
+	struct rhp_spn *spn = (struct rhp_spn *)0;
 	struct rhpedge *ed = (struct rhpedge *)0;
 	int status = 0;
 
@@ -1912,7 +1912,12 @@ label:
 	return;
 }
 
-/* print to log */
+/* print to log
+ * next line is needed because clang warning at line:
+ * vfprintf(stderr, format, ap);
+ * format is not a string literal
+ */
+__attribute__((__format__ (__printf__, 1, 0)))
 static void rhp_log(char *format, ...)
 {
 	va_list ap;
@@ -1978,9 +1983,7 @@ static void rhp_empty_best_crossings_order(void)
 	for (level = 0; level < rhp_nlevels; level++) {
 		if (rhp_best_crossings_order->node_ptr_on_layer[level]) {
 			rhp_best_crossings_order->node_ptr_on_layer[level] = (struct rhpnode * *)rhp_free((void *)
-													  rhp_best_crossings_order->
-													  node_ptr_on_layer[level],
-													  __func__, __LINE__);
+													  rhp_best_crossings_order->node_ptr_on_layer[level], __func__, __LINE__);
 		}
 	}
 

@@ -422,9 +422,18 @@ static skip_list_node skip_list_create_node(int level, skip_list_key key, skip_l
 static int skip_list_randomlevel(void)
 {
 	int level = 1;
+	double d = 0.0;
+	int c = 0;
 
-	while (((double)rand() / (double)SKIP_LIST_MAX_LEVEL) < 0.5) {
-		level++;
+	for (;;) {
+		c = rand();
+		d = (double)c;
+		if ((d / SKIP_LIST_MAX_LEVEL) < 0.50) {
+			level++;
+			if (level > SKIP_LIST_MAX_LEVEL) {
+				break;
+			}
+		}
 	}
 
 	if (level > SKIP_LIST_MAX_LEVEL) {
