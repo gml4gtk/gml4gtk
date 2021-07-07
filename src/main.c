@@ -8053,7 +8053,7 @@ static void show_about(GtkWidget * widget, gpointer data)
 	    "This program does not have network telemetry or creates files.\n"
 	    "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n";
 #ifdef WIN32
-	char *text1 = "Product key: GML4-GTKVE-RSION-73YEA-R2021"
+	char *text1 = "Product key: GML4-GTKVE-RSION-73YEA-R2021";
 #else
 	char *text1 = "Product Key: GNU-GPL";
 #endif
