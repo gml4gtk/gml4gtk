@@ -186,6 +186,8 @@ The source is checked and used with clang-12 and gcc-11 compiler development ver
 
 To make a package for debian, slackware, fedora, ubuntu the checkinstall program can be used.
 
+Settings for autoconf can be changed editing the .autom4te.cfg file
+
 And donations of samples of graph data to layout are needed
 or financial means to buy programming and graph books.
 
