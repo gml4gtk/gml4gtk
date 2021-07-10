@@ -56,7 +56,9 @@
 #include <string.h>
 #include <errno.h>
 #include <math.h>
+#include <zlib.h>
 
+/* math.h should have set this */
 #ifndef M_PI
 #define M_PI 3.141592
 #endif
@@ -361,6 +363,7 @@ int main(int argc, char *argv[])
 	char *s = NULL;
 	char *fnam = NULL;
 	FILE *f = NULL;
+	gzFile fgml = (gzFile) 0;
 	GtkWidget *vbox1;
 	GtkWidget *menubar1;
 	GtkWidget *menuitem1;
@@ -1061,10 +1064,17 @@ int main(int argc, char *argv[])
 	/* put on screen */
 	gtk_widget_show(mainwindow1);
 
-	/* check for optinal gml file on commandline */
+	/* check for optinal gml file on commandline
+	 * on commandline file.gml.gz is supported
+	 * but not dot.gz or vcg.gz
+	 */
 	if (argc > 1) {
 		fnam = argv[1];
 		if ((*fnam) != '-') {
+			/* find the last '.' 
+			 * if (strcmp(s, ".gz") == 0)
+			 * then it is gzipped, but need to know the part before
+			 */
 			s = strrchr(fnam, '.');
 			if (s) {
 
@@ -1206,8 +1216,8 @@ int main(int argc, char *argv[])
 					/* end of dot file at start */
 				} else {
 					/* assume gml file */
-					f = fopen(fnam, "r");
-					if (f) {
+					fgml = gzopen(fnam, "r");
+					if (fgml) {
 						/* type of graph data 0=gml 1=dot 2=vcg */
 						graphtype = 0;
 
@@ -1215,7 +1225,7 @@ int main(int argc, char *argv[])
 						create_maingraph();
 
 						/* parse the gml data */
-						if (gmlparse(maingraph, f, fnam)) {
+						if (gmlparse(maingraph, fgml, fnam)) {
 							/* parse error */
 							if (strlen(parsermessage) == 0) {
 								strcpy(parsermessage, "no parser message");
@@ -1264,7 +1274,7 @@ int main(int argc, char *argv[])
 								validdata = 0;
 							}
 						}
-						fclose(f);
+						gzclose(fgml);
 					} else {
 						printf("%s(): cannot open `%s' file for reading\n", __func__, fnam);
 						fflush(stdout);
@@ -2336,7 +2346,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	char *inputfilename = (char *)0;
 	char *baseinputfilename = (char *)0;
 	char *baseinputfilename2 = (char *)0;
-	FILE *f = NULL;
+	gzFile fgml = (gzFile) 0;
 	char *bname = NULL;
 	int cnt = 0;
 
@@ -2417,9 +2427,9 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 
 	/* open file to parse */
 	errno = 0;
-	f = fopen(inputfilename, "r");
+	fgml = gzopen(inputfilename, "r");
 
-	if (f == NULL) {
+	if (fgml == (gzFile) 0) {
 		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_ERROR,
@@ -2447,7 +2457,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	create_maingraph();
 
 	/* parse the gml data */
-	if (gmlparse(maingraph, f, baseinputfilename2)) {
+	if (gmlparse(maingraph, fgml, baseinputfilename2)) {
 		/* parse error */
 		if (strlen(parsermessage) == 0) {
 			strcpy(parsermessage, "no parser message");
@@ -2459,7 +2469,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_widget_destroy(pdialog);
 		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
-		fclose(f);
+		gzclose(fgml);
 		/* data is invalid at this point */
 		validdata = 0;
 		do_clear_all(0);
@@ -2470,7 +2480,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		return;
 	}
 
-	fclose(f);
+	gzclose(fgml);
 
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
@@ -8053,7 +8063,7 @@ static void show_about(GtkWidget * widget, gpointer data)
 	    "This program does not have network telemetry or creates files.\n"
 	    "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n";
 #ifdef WIN32
-	char *text1 = "Product key: GML4-GTKVE-RSION-73YEA-R2021";
+	char *text1 = "Product key: GML4-GTKVE-RSION-74YEA-R2021";
 #else
 	char *text1 = "Product Key: GNU-GPL";
 #endif
@@ -8097,6 +8107,10 @@ static void show_about(GtkWidget * widget, gpointer data)
 	snprintf(pbuf, (buflen - (int)(strlen(buf))), "running with gtk %d.%d.%d glib %d.%d.%d pango %s cairo %s\n",
 		 gtk_major_version, gtk_minor_version, gtk_micro_version,
 		 glib_major_version, glib_minor_version, glib_micro_version, pango_version_string(), cairo_version_string());
+
+	pbuf = buf + (int)(strlen(buf));
+	snprintf(pbuf, (buflen - (int)(strlen(buf))), "running with zlib version %s\n", zlibVersion());
+
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), buf);
 	gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
 

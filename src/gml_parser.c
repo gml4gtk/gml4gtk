@@ -53,6 +53,7 @@
 #include <string.h>
 #include <strings.h>
 #include <errno.h>
+#include <zlib.h>
 
 #include "splay-tree.h"
 #include "main.h"
@@ -87,7 +88,7 @@ struct edgegr {
 
 static splay_tree gmlparser_splaytree = NULL;
 
-struct GML_pair *GML_parser(FILE * source, struct GML_stat *stat, int open)
+struct GML_pair *GML_parser(gzFile source, struct GML_stat *stat, int open)
 {
 
 	struct GML_token token;
@@ -1042,7 +1043,7 @@ static void GT_parse_list(struct gml_graph *g, struct GML_pair *pairs)
 	return;
 }
 
-int gmlparse(struct gml_graph *g, FILE * f, char *fname)
+int gmlparse(struct gml_graph *g, gzFile f, char *fname)
 {
 	struct GML_pair *data = NULL;
 	struct GML_stat *status = NULL;

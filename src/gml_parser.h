@@ -67,19 +67,19 @@ struct GML_stat {
  * in GML_stat, i.e. the key_list, will be *lost*.
  */
 
-struct GML_pair *GML_parser(FILE *, struct GML_stat *, int);
+extern struct GML_pair *GML_parser(gzFile stream, struct GML_stat *status, int code);
 
 /*
  * free memory used in a list of GML_pair
  */
 
-void GML_free_list(struct GML_pair *, struct GML_list_elem *);
+extern void GML_free_list(struct GML_pair *pl, struct GML_list_elem *el);
 
 /*
  * debugging
  */
 
-void GML_print_list(struct GML_pair *, int);
+extern void GML_print_list(struct GML_pair *pl, int code);
 
 /* memory wrapping */
 extern void gmlparser_free(void *ptr);
@@ -88,7 +88,7 @@ extern void gmlparser_free(void *ptr);
 extern void *gmlparser_calloc(int nn, size_t sz);
 
 /* */
-extern int gmlparse(struct gml_graph *g, FILE * f, char *fname);
+extern int gmlparse(struct gml_graph *g, gzFile f, char *fname);
 
 #endif
 

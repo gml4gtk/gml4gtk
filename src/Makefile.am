@@ -71,8 +71,8 @@ gml4gtk_SOURCES = \
 gml4gtk_CFLAGS = \
 	@CFLAGS@ @PACKAGE_CFLAGS@ @WARNING_CFLAGS@ @GTK_CFLAGS@
 
-#
-gml4gtk_tolink = @GTK_LIBS@
+# added zlib
+gml4gtk_tolink = @GTK_LIBS@ -lz
 
 #
 gml4gtk$(EXEEXT): $(gml4gtk_SOURCES)
@@ -137,6 +137,7 @@ gml4gtk_exeCFLAGS = \
 	-DWIN32 \
 	-D_WIN32
 
+# also need zlib.h
 gml4gtk_exeincludes = \
 	-I../w64/include/gtk-3.0 \
 	-I../w64/include/glib-2.0 \
@@ -144,8 +145,8 @@ gml4gtk_exeincludes = \
 	-I../w64/include/pango-1.0 \
 	-I../w64/include/cairo \
 	-I../w64/include/gdk-pixbuf-2.0 \
-	-I../w64/include/atk-1.0
-
+	-I../w64/include/atk-1.0 \
+	-I../w64/include/
 
 # static link with the dll.a files
 gml4gtk_exedlla = \

@@ -46,6 +46,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "main.h"
 #include "gml_scanner.h"
@@ -192,7 +193,7 @@ void GML_init(void)
 	return;
 }
 
-struct GML_token GML_scanner(FILE * source)
+struct GML_token GML_scanner(gzFile source)
 {
 	unsigned int cur_max_size = INITIAL_SIZE;
 	static char buffer[INITIAL_SIZE];
@@ -207,12 +208,12 @@ struct GML_token GML_scanner(FILE * source)
 
 	assert(source != NULL);
 
-	/* 
+	/*
 	 * eliminate preceeding white spaces
 	 */
 
 	do {
-		next = fgetc(source);
+		next = gzgetc(source);
 		GML_column++;
 
 		if (next == '\n') {
@@ -253,7 +254,7 @@ struct GML_token GML_scanner(FILE * source)
 
 			buffer[count] = next;
 			count++;
-			next = fgetc(source);
+			next = gzgetc(source);
 
 		}
 		while (!isspace(next) && next != ']' && next != EOF);
@@ -261,7 +262,7 @@ struct GML_token GML_scanner(FILE * source)
 		buffer[count] = 0;
 
 		if (next == ']') {
-			ungetc(next, source);
+			gzungetc(next, source);
 		}
 
 		if (next == '\n') {
@@ -304,7 +305,7 @@ struct GML_token GML_scanner(FILE * source)
 
 			*tmp++ = next;
 			count++;
-			next = fgetc(source);
+			next = gzgetc(source);
 		}
 		while (isalnum(next) || next == '_');
 
@@ -316,7 +317,7 @@ struct GML_token GML_scanner(FILE * source)
 		}
 
 		if (next == '[') {
-			ungetc(next, source);
+			gzungetc(next, source);
 		} else if (!isspace(next)) {
 			token.value.err.err_num = GML_UNEXPECTED;
 			token.value.err.line = GML_line;
@@ -350,7 +351,7 @@ struct GML_token GML_scanner(FILE * source)
 		switch (next) {
 		case '#':
 			do {
-				next = fgetc(source);
+				next = gzgetc(source);
 			}
 			while (next != '\n' && next != EOF);
 
@@ -367,7 +368,7 @@ struct GML_token GML_scanner(FILE * source)
 			return token;
 
 		case '"':
-			next = fgetc(source);
+			next = gzgetc(source);
 			GML_column++;
 
 			while (next != '"') {
@@ -391,7 +392,7 @@ struct GML_token GML_scanner(FILE * source)
 
 					while (next != ';') {
 						if (next == '"' || next == EOF) {
-							ungetc(next, source);
+							gzungetc(next, source);
 							ISO_count = 0;
 							break;
 						}
@@ -401,7 +402,7 @@ struct GML_token GML_scanner(FILE * source)
 							ISO_count++;
 						}
 
-						next = fgetc(source);
+						next = gzgetc(source);
 					}
 
 					if (ISO_count == 8) {
@@ -424,7 +425,7 @@ struct GML_token GML_scanner(FILE * source)
 				count++;
 				GML_column++;
 
-				next = fgetc(source);
+				next = gzgetc(source);
 
 				if (next == EOF) {
 					token.value.err.err_num = GML_PREMATURE_EOF;

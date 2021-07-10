@@ -92,7 +92,7 @@ extern void GML_init(void);
  * GML_token.
  */
 
-extern struct GML_token GML_scanner(FILE *);
+extern struct GML_token GML_scanner(gzFile stream);
 
 extern int GML_search_ISO(char *str, int len);
 
