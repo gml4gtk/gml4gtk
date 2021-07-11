@@ -1,6 +1,6 @@
 
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -106,6 +106,7 @@
 #include "dot.tab.h"
 #include "vcg.h"
 #include "jgf.h"
+#include "bgv.h"
 #include "dpmem.h"
 
 /* todo the pango font routines can be improved */
@@ -269,6 +270,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer user_data);
+static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer user_data);
@@ -362,8 +364,9 @@ int main(int argc, char *argv[])
 	int status = 0;
 	char *s = NULL;
 	char *fnam = NULL;
-	FILE *f = NULL;
+	gzFile fgv = (gzFile) 0;
 	gzFile fgml = (gzFile) 0;
+	gzFile fvcg = (gzFile) 0;
 	GtkWidget *vbox1;
 	GtkWidget *menubar1;
 	GtkWidget *menuitem1;
@@ -372,6 +375,7 @@ int main(int argc, char *argv[])
 	GtkWidget *open2;	/* open dot file */
 	GtkWidget *open3;	/* open vcg file */
 	GtkWidget *open4;	/* open jgf file */
+	GtkWidget *open5;	/* open bgv file */
 	GtkWidget *svg1;
 	GtkWidget *dia1;
 	GtkWidget *jgf1;
@@ -530,6 +534,7 @@ int main(int argc, char *argv[])
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem1), menuitem1_menu);
 
 	/* --- */
+
 	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
 	open2 = gtk_menu_item_new_with_mnemonic("Open DOT graph");
 	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open2);
@@ -561,6 +566,14 @@ int main(int argc, char *argv[])
 
 	/* run this routine when selected 'open' in 'file' menu */
 	g_signal_connect(G_OBJECT(open4), "activate", G_CALLBACK(on_top_level_window_open4_activate), NULL);
+
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open5 = gtk_menu_item_new_with_mnemonic("Open BGV graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open5);
+	gtk_widget_show(open5);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open5), "activate", G_CALLBACK(on_top_level_window_open5_activate), NULL);
 
 	svg1 = gtk_menu_item_new_with_mnemonic("Save as SVG");
 	gtk_container_add(GTK_CONTAINER(menuitem1_menu), svg1);
@@ -1084,8 +1097,8 @@ int main(int argc, char *argv[])
 				 */
 				if ((strcmp(s, ".vcg") == 0) || (strcmp(s, ".ci") == 0)) {
 					/* assume this is a gcc vcg file */
-					f = fopen(fnam, "r");
-					if (f) {
+					fvcg = gzopen(fnam, "r");
+					if (fvcg) {
 						/* type of graph data 0=gml 1=dot 2=vcg */
 						graphtype = 2;
 
@@ -1093,14 +1106,14 @@ int main(int argc, char *argv[])
 						create_maingraph();
 
 						/* parse the data */
-						if (vcgparse(maingraph, f, fnam, argv0)) {
+						if (vcgparse(maingraph, fvcg, fnam, argv0)) {
 							/* parse error */
 							if (strlen(parsermessage) == 0) {
 								strcpy(parsermessage, "no parser message");
 							}
 							printf("%s\n", parsermessage);
 							fflush(stdout);
-							fclose(f);
+							gzclose(fvcg);
 							/* data is invalid at this point */
 							validdata = 0;
 						} else {
@@ -1142,7 +1155,7 @@ int main(int argc, char *argv[])
 								validdata = 0;
 							}
 						}
-						fclose(f);
+						gzclose(fvcg);
 					} else {
 						printf("%s(): cannot open `%s' file for reading\n", __func__, fnam);
 						fflush(stdout);
@@ -1150,8 +1163,8 @@ int main(int argc, char *argv[])
 					/* end of vcg file at start */
 				} else if ((strcmp(s, ".dot") == 0) || (strcmp(s, ".gv") == 0)) {
 					/* assume this is a dot file */
-					f = fopen(fnam, "r");
-					if (f) {
+					fgv = gzopen(fnam, "r");
+					if (fgv) {
 						/* type of graph data 0=gml 1=dot 2=vcg */
 						graphtype = 1;
 
@@ -1159,14 +1172,14 @@ int main(int argc, char *argv[])
 						create_maingraph();
 
 						/* parse the data */
-						if (dotparse(maingraph, f, fnam, argv0)) {
+						if (dotparse(maingraph, fgv, fnam, argv0)) {
 							/* parse error */
 							if (strlen(parsermessage) == 0) {
 								strcpy(parsermessage, "no parser message");
 							}
 							printf("%s\n", parsermessage);
 							fflush(stdout);
-							fclose(f);
+							gzclose(fgv);
 							/* data is invalid at this point */
 							validdata = 0;
 						} else {
@@ -1208,7 +1221,7 @@ int main(int argc, char *argv[])
 								validdata = 0;
 							}
 						}
-						fclose(f);
+						gzclose(fgv);
 					} else {
 						printf("%s(): cannot open `%s' file for reading\n", __func__, fnam);
 						fflush(stdout);
@@ -1232,7 +1245,7 @@ int main(int argc, char *argv[])
 							}
 							printf("%s\n", parsermessage);
 							fflush(stdout);
-							fclose(f);
+							gzclose(fgml);
 							/* data is invalid at this point */
 							validdata = 0;
 						} else {
@@ -2551,6 +2564,233 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 }
 
 /* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
+static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer user_data)
+{
+	GtkWidget *edialog = (GtkWidget *) 0;
+	GtkWidget *pdialog = (GtkWidget *) 0;
+	GtkWidget *dialog = (GtkWidget *) 0;
+	char *file_chooser_filename = (char *)0;
+	char *file_chooser_dir = (char *)0;
+	GtkFileChooser *chooser = NULL;
+	char *inputfilename = (char *)0;
+	char *baseinputfilename = (char *)0;
+	char *baseinputfilename2 = (char *)0;
+	gzFile f = NULL;
+	char *bname = NULL;
+	int cnt = 0;
+
+	if (menuitem) {
+	}
+	if (user_data) {
+	}
+
+#if GTK_HAVE_API_VERSION_2 == 1
+
+	/* see gimp source code howto */
+	dialog = gtk_file_chooser_dialog_new("Select BGV Graph File", 0,	/* parent_window */
+					     GTK_FILE_CHOOSER_ACTION_OPEN,
+					     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT, NULL);
+
+#endif
+
+#if GTK_HAVE_API_VERSION_3 == 1
+
+	/* see gimp source code howto */
+	dialog = gtk_file_chooser_dialog_new("Select BGV Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
+					     ,
+					     GTK_FILE_CHOOSER_ACTION_OPEN,
+					     "Cancel", GTK_RESPONSE_CANCEL, "Open", GTK_RESPONSE_ACCEPT, NULL);
+
+#endif
+
+	chooser = GTK_FILE_CHOOSER(dialog);
+
+	/* use same dir if opened in earlier dir */
+	if (lastopendir) {
+		gtk_file_chooser_set_current_folder(chooser, lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	/* run the window to select a input file */
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+		/* open button */
+		file_chooser_filename = (char *)gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+		file_chooser_dir = (char *)gtk_file_chooser_get_current_folder(chooser);
+	} else {
+		/* cancel button */
+		(void)gtk_widget_destroy(dialog);
+		return;
+	}
+
+	/* */
+	(void)gtk_widget_destroy(dialog);
+
+	/* update last-used-dir */
+	if (file_chooser_dir) {
+		if (lastopendir) {
+			(void)dp_free(lastopendir);
+		}
+		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+		strcpy(lastopendir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
+	}
+
+	/* copy the input filename from gtk */
+	if (file_chooser_filename) {
+		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+		if (inputfilename) {
+			strcpy(inputfilename, file_chooser_filename);
+		}
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
+	} else {
+		return;
+	}
+
+	/* set filename in window */
+	bname = g_path_get_basename(inputfilename);
+	baseinputfilename2 = dp_calloc(1, (strlen(bname) + 1));
+	strcpy(baseinputfilename2, bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
+
+	/* open file to parse */
+	errno = 0;
+	f = gzopen(inputfilename, "r");
+
+	if (f == NULL) {
+		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
+		gtk_dialog_run(GTK_DIALOG(edialog));
+		gtk_widget_destroy(edialog);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the dot data */
+	if (bgvparse(maingraph, f, baseinputfilename2, argv0)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+		pdialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_dialog_run(GTK_DIALOG(pdialog));
+		gtk_widget_destroy(pdialog);
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
+		fflush(stdout);
+		gzclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	gzclose(f);
+
+	bname = g_path_get_basename(inputfilename);
+
+	baseinputfilename = uniqstr(bname);
+
+	/* not dp_free() because gtk allocated */
+	g_free(bname);
+
+	gtk_window_set_title(GTK_WINDOW(mainwindow1), baseinputfilename);
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, baseinputfilename2);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		cnt = 1000;
+		while (gtk_events_pending()) {
+			cnt--;
+			if (cnt > 0) {
+				gtk_main_iteration();
+				/* this updates the status text */
+			}
+		}
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		cnt = 1000;
+		while (gtk_main_iteration()) {
+			cnt--;
+			if (cnt > 0) {
+				/* this should update the status text */ ;
+			}
+		}
+
+		/* set sliders to defaults */
+		zfactor = 1.0;
+		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
+
+		vxmin = 0;
+		vymin = 0;
+		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
+		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+
+		/* filename is not saved */
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+	} else {
+		/* filename is not saved */
+		dp_free(inputfilename);
+		dp_free(baseinputfilename2);
+
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	/* re draw screen */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+/* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	GtkWidget *edialog = (GtkWidget *) 0;
@@ -2562,7 +2802,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 	char *inputfilename = (char *)0;
 	char *baseinputfilename = (char *)0;
 	char *baseinputfilename2 = (char *)0;
-	FILE *f = NULL;
+	gzFile f = NULL;
 	char *bname = NULL;
 	int cnt = 0;
 
@@ -2646,7 +2886,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 
 	/* open file to parse */
 	errno = 0;
-	f = fopen(inputfilename, "r");
+	f = gzopen(inputfilename, "r");
 
 	if (f == NULL) {
 		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
@@ -2689,7 +2929,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
 		fflush(stdout);
-		fclose(f);
+		gzclose(f);
 		/* data is invalid at this point */
 		validdata = 0;
 		do_clear_all(0);
@@ -2700,7 +2940,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		return;
 	}
 
-	fclose(f);
+	gzclose(f);
 
 	bname = g_path_get_basename(inputfilename);
 
@@ -2789,7 +3029,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	char *inputfilename = (char *)0;
 	char *baseinputfilename = (char *)0;
 	char *baseinputfilename2 = (char *)0;
-	FILE *f = NULL;
+	gzFile fvcg = (gzFile) 0;
 	char *bname = NULL;
 
 	if (menuitem) {
@@ -2873,9 +3113,9 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 
 	/* open file to parse */
 	errno = 0;
-	f = fopen(inputfilename, "r");
+	fvcg = gzopen(inputfilename, "r");
 
-	if (f == NULL) {
+	if (fvcg == (gzFile) 0) {
 		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_ERROR,
@@ -2903,7 +3143,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	create_maingraph();
 
 	/* parse the vcg data */
-	if (vcgparse(maingraph, f, baseinputfilename2, argv0)) {
+	if (vcgparse(maingraph, fvcg, baseinputfilename2, argv0)) {
 		/* parse error */
 		if (strlen(parsermessage) == 0) {
 			strcpy(parsermessage, "no parser message");
@@ -2916,7 +3156,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		dp_free(inputfilename);
 		dp_free(baseinputfilename2);
 		fflush(stdout);
-		fclose(f);
+		gzclose(fvcg);
 		/* data is invalid at this point */
 		validdata = 0;
 		do_clear_all(0);
@@ -2927,7 +3167,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		return;
 	}
 
-	fclose(f);
+	gzclose(fvcg);
 
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);

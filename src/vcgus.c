@@ -1,6 +1,6 @@
 
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <zlib.h>
 
 #include "splay-tree.h"
 #include "main.h"

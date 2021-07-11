@@ -1,6 +1,6 @@
 
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,9 +29,6 @@
  *       ): :(
  *       :o_o:
  *        "-"
- *
- * SPDX-License-Identifier: GPL-3.0+
- * License-Filename: LICENSE
  */
 
 #ifndef DPUN_H

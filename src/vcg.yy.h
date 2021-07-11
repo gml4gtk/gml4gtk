@@ -33,7 +33,7 @@ extern char *vcglaststring;
 extern int vcglineno;
 
 /* */
-extern void vcg_lex_init(FILE * f, int debug);
+extern void vcg_lex_init(gzFile f, int debug);
 
 /* */
 extern void vcg_lex_clear(void);

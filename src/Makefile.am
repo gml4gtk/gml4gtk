@@ -1,5 +1,7 @@
 #
 # /*
+#  *  Copyright 2021
+#  *
 #  *  This program is free software: you can redistribute it and/or modify
 #  *  it under the terms of the GNU General Public License as published by
 #  *  the Free Software Foundation, either version 3 of the License, or
@@ -64,7 +66,8 @@ gml4gtk_SOURCES = \
 	dphl.c \
 	dpmem.c \
 	json.c \
-	jgf.c
+	jgf.c \
+	bgv.c
 
 
 #

@@ -15,37 +15,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  These are the four essential freedoms with GNU GPL software:
- *  1: freedom to run the program, for any purpose
- *  2: freedom to study how the program works, and change it to make it do what you wish
- *  3: freedom to redistribute copies to help your Free Software friends
- *  4: freedom to distribute copies of your modified versions to your Free Software friends
- *   ,           ,
- *  /             \
- * ((__-^^-,-^^-__))
- * `-_---'  `---_-'
- *  `--|o`   'o|--'
- *      \  `  /
- *       ): :(
- *       :o_o:
- *        "-"
- *
  * SPDX-License-Identifier: GPL-3.0+
  * License-Filename: LICENSE
  */
 
-#ifndef VCGUN_H
-#define VCGUN_H 1
+#ifndef BGV_H
+#define BGV_H 1
 
-/* */
-extern void clear_vcguniqnode(void);
-
-/* */
-extern void vcguniqnode_add(struct vcgn *node);
-
-/* */
-extern struct vcgn *vcguniqnode(char *name);
+/* parse bgv file */
+extern int bgvparse(struct gml_graph *g, gzFile f, char *fname, char *argv0);
 
 #endif
 
 /* end */
+

@@ -1,7 +1,8 @@
 
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *  (C) Universitaet Passau 1986-1991 (34 year old c-source)
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -33,6 +34,8 @@
  * SPDX-License-Identifier: GPL-3.0+
  * License-Filename: LICENSE
  */
+
+/* this is a re-work of 1 file part of graphlet program */
 
 /* graphviz dot does layout in multiple steps of parts of the graph
  * todo this is prepared for similar task but need more updates.

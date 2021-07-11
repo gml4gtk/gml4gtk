@@ -1,6 +1,6 @@
 
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ extern void *dp_calloc(size_t nmemb, size_t size);
 extern void *dp_realloc(void *ptr, size_t n);
 
 /* */
-extern void dp_memreport (void);
+extern void dp_memreport(void);
 
 /* */
 extern void dp_meminit(void);

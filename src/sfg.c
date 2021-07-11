@@ -1,6 +1,6 @@
 
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *  parts are (C) Universitaet Passau 1986-1991
  *  parts are Copyright (C) 1998-2021 Free Software Foundation, Inc.
  *  parts are Copyright (C) Felix von Leitner from dietlibc

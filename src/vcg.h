@@ -1,5 +1,7 @@
 
 /*
+ *  Copyright 2021
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -47,13 +49,13 @@ struct vcge {
 };
 
 /* parse gcc vcg file */
-extern int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0);
+extern int vcgparse(struct gml_graph *g, gzFile f, char *fname, char *argv0);
 
 /* in vcg.l */
 extern int vcglex(void);
 
 /* in vcg.l */
-extern void vcg_lex_init(FILE * f, int debugflag);
+extern void vcg_lex_init(gzFile f, int debugflag);
 
 /* in vcg.l */
 extern void vcg_lex_clear(void);

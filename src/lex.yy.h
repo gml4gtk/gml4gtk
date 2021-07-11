@@ -30,7 +30,7 @@ extern int yylineno;
 extern int yyparse(void);
 
 /* */
-extern void dp_lex_init(FILE * f, int debug);
+extern void dp_lex_init(gzFile f, int debug);
 
 /* */
 extern void dp_lex_deinit(void);

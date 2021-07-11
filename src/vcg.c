@@ -1,5 +1,7 @@
 
 /*
+ *  Copright 2021
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -41,6 +43,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "splay-tree.h"
 #include "main.h"
@@ -663,7 +666,7 @@ static void copyall(struct gml_graph *g)
 }
 
 /* */
-int vcgparse(struct gml_graph *g, FILE * f, char *fname, char *argv0)
+int vcgparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 {
 	curfname = fname;
 

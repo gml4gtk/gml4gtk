@@ -1,5 +1,7 @@
 
 /*
+ *  Copyright 2021
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -23,6 +25,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <zlib.h>
 
 #include "splay-tree.h"
 #include "lex.yy.h"
@@ -44,11 +47,21 @@
 #undef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
 
-#undef YY_INPUT
-#define YY_INPUT(buf,result,max_size) \
-  if ( (result = fread( (char*)buf, sizeof(char), max_size, yyin)) < 0) \
-		YY_FATAL_ERROR( "fread() in dot.l flex scanner failed");
+static gzFile gvzin = (gzFile)0;
 
+#undef YY_INPUT
+#define YY_INPUT(buf,result,max_size) do { \
+	if ( (result = gzfread( (char*)buf, sizeof(char), max_size, gvzin)) == 0) { \
+		int estatus = 0; \
+		const char *es = gzerror (gvzin, &estatus); \
+		if (estatus == Z_STREAM_ERROR) { \
+			YY_FATAL_ERROR( "gzfread() in dot.l flex scanner failed"); \
+		} else { \
+			if (estatus) { \
+				printf ("%s(): zlib error status %d %s in dot.l\n",__func__,(int)estatus,es); \
+			} \
+		} \
+	} } while (0);
 
 static char *tmpp = NULL;
 static char *p = NULL;
@@ -239,10 +252,11 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 %%
 
 /* */
-void dp_lex_init (FILE *f, int debugflag)
+void dp_lex_init (gzFile f, int debugflag)
 {
-  yylineno=1;
-  yyin = f;
+  yylineno = 1;
+  gvzin = f;
+  yyin = NULL;
   /* activate debug in lexer */
   yy_flex_debug = debugflag;
   /* activate debug in glr parser */
@@ -271,6 +285,8 @@ void dp_lex_deinit (void)
   yy_flex_debug = 0;
   dp_lex_clear ();
   yylex_destroy ();
+  gvzin = (gzFile)0;
+  yyin = NULL;
   return;
 }
 

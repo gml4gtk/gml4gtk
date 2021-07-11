@@ -3,7 +3,7 @@
     <title>jgf4web</title>
 <!--
 /*
- *  Copyright t lefering
+ *  Copyright 2021
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -210,6 +210,7 @@ Enter your jgf json graph data in the text area below or try the sample buttons.
 <script language="javascript" type="text/javascript" src="d3.js"> </script>
 <script language="javascript" type="text/javascript" src="dagre-d3.js"> </script>
 <script language="javascript" type="text/javascript" src="site.js"> </script>
+<script language="javascript" type="text/javascript" src="svg-export.js"> </script>
 
 <script type="bogus" id="sample1_text">
 {
@@ -218,246 +219,119 @@ Enter your jgf json graph data in the text area below or try the sample buttons.
     "type": "schema test",
     "label": "gml4gtk",
     "nodes": {
-      "0": {
-        "label": "Washington CDC",
-        "metadata": {
-        }
-      },
-      "1": {
-        "label": "New York",
-        "metadata": {
-        }
-      },
-      "2": {
-        "label": "Atlanta",
-        "metadata": {
-        }
-      },
-      "3": {
-        "label": "Miami",
-        "metadata": {
-        }
-      },
       "4": {
-        "label": "Boston",
+        "label": "rhp_init ()\nENTRY",
         "metadata": {
         }
       },
       "5": {
-        "label": "London",
+        "label": "rhp_init ()\nEXIT",
         "metadata": {
         }
       },
       "6": {
-        "label": "Philadelphia",
+        "label": "    5: NOTE_INSN_BASIC_BLOCK 2\n    2: [r77:DI-0x8]=di:DI\n    3: [r77:DI-0xc]=si:SI\n    4: NOTE_INSN_FUNCTION_BEG\n    7: r82:SI=[`rhp_inited']\n    8: flags:CCZ=cmp(r82:SI,0)\n    9: pc={(flags:CCZ==0)?L16:pc}\n",
         "metadata": {
         }
       },
       "7": {
-        "label": "Baltimore",
+        "label": "   10: NOTE_INSN_BASIC_BLOCK 4\n   11: si:DI=`__FUNCTION__.51'\n   12: di:DI=`*.LC1'\n   13: ax:QI=0\n   14: call [`rhp_log'] argc:0\n   15: call [`rhp_deinit'] argc:0\n",
         "metadata": {
         }
       },
       "8": {
-        "label": "Amsterdam",
+        "label": "   16: L16:\n   17: NOTE_INSN_BASIC_BLOCK 5\n   18: [`rhp_logstream']=0\n   19: [`rhp_dolog']=0\n   20: [`rhp_logname']=0\n   21: flags:CCZ=cmp([r77:DI-0x8],0)\n   22: pc={(flags:CCZ==0)?L55:pc}\n",
         "metadata": {
         }
       },
       "9": {
-        "label": "Frankfurt",
+        "label": "   23: NOTE_INSN_BASIC_BLOCK 6\n   24: r91:DI=[r77:DI-0x8]\n   25: r83:QI=[r91:DI]\n   26: flags:CCZ=cmp(r83:QI,0)\n   27: pc={(flags:CCZ!=0)?L33:pc}\n",
         "metadata": {
         }
       },
       "10": {
-        "label": "Houston",
+        "label": "   28: NOTE_INSN_BASIC_BLOCK 7\n   29: r84:DI=[`stdout']\n   30: [`rhp_logstream']=r84:DI\n   31: pc=L47\n",
         "metadata": {
         }
       },
       "11": {
-        "label": "None",
+        "label": "   33: L33:\n   34: NOTE_INSN_BASIC_BLOCK 8\n   35: r92:DI=[r77:DI-0x8]\n   36: si:DI=`*.LC2'\n   37: di:DI=r92:DI\n   38: ax:DI=call [`fopen'] argc:0\n   39: r85:DI=ax:DI\n   40: [`rhp_logstream']=r85:DI\n   41: r86:DI=[`rhp_logstream']\n   42: flags:CCZ=cmp(r86:DI,0)\n   43: pc={(flags:CCZ!=0)?L47:pc}\n",
         "metadata": {
         }
       },
       "12": {
-        "label": "Paris",
+        "label": "   44: NOTE_INSN_BASIC_BLOCK 9\n   45: r87:DI=[`stdout']\n   46: [`rhp_logstream']=r87:DI\n",
         "metadata": {
         }
       },
       "13": {
-        "label": "Dallas",
+        "label": "   47: L47:\n   48: NOTE_INSN_BASIC_BLOCK 10\n   49: r93:SI=[r77:DI-0xc]\n   50: [`rhp_dolog']=r93:SI\n   51: si:DI=`__FUNCTION__.51'\n   52: di:DI=`*.LC3'\n   53: ax:QI=0\n   54: call [`rhp_log'] argc:0\n",
         "metadata": {
         }
       },
       "14": {
-        "label": "Austin",
-        "metadata": {
-        }
-      },
-      "15": {
-        "label": "Seattle",
-        "metadata": {
-        }
-      },
-      "16": {
-        "label": "Portland",
-        "metadata": {
-        }
-      },
-      "17": {
-        "label": "Tokyo",
-        "metadata": {
-        }
-      },
-      "18": {
-        "label": "San Francisco",
-        "metadata": {
-        }
-      },
-      "19": {
-        "label": "Los Angeles",
-        "metadata": {
-        }
-      },
-      "20": {
-        "label": "Phoenix",
-        "metadata": {
-        }
-      },
-      "21": {
-        "label": "Denver",
-        "metadata": {
-        }
-      },
-      "22": {
-        "label": "Chicago",
+        "label": "   55: L55:\n   56: NOTE_INSN_BASIC_BLOCK 11\n   57: di:SI=0x1\n   58: ax:DI=call [`rhp_sp_new'] argc:0\n   59: r88:DI=ax:DI\n   60: [`rhp_sp_master_node_list']=r88:DI\n   61: di:SI=0x1\n   62: ax:DI=call [`rhp_sp_new'] argc:0\n   63: r89:DI=ax:DI\n   64: [`rhp_sp_master_edge_list']=r89:DI\n   65: [`rhp_uniq_nodenum']=0\n   66: [`rhp_uniq_edgenum']=0\n   67: [`rhp_number_of_nodes']=0\n   68: [`rhp_number_of_edges']=0\n   69: [`rhp_number_of_isolated_nodes']=0\n   70: di:SI=0x1\n   71: ax:DI=call [`rhp_sp_new'] argc:0\n   72: r90:DI=ax:DI\n   73: [`rhp_sp_between_layers']=r90:DI\n   74: [`rhp_maxlevel']=0\n   75: [`rhp_nlevels']=0\n   76: [`rhp_crossings']=0xffffffffffffffff\n   77: [`rhp_start_crossings']=0xffffffffffffffff\n   78: [`rhp_best_crossings_order']=0\n   79: [`rhp_getlayoutdata']=0\n   80: [`rhp_improvements']=0\n   81: [`rhp_notimprovements']=0\n   82: dx:SI=0x4\n   83: si:DI=`__FUNCTION__.51'\n   84: di:DI=`*.LC4'\n   85: ax:QI=0\n   86: call [`rhp_log'] argc:0\n   87: dx:SI=0x8\n   88: si:DI=`__FUNCTION__.51'\n   89: di:DI=`*.LC5'\n   90: ax:QI=0\n   91: call [`rhp_log'] argc:0\n   92: dx:SI=0x8\n   93: si:DI=`__FUNCTION__.51'\n   94: di:DI=`*.LC6'\n   95: ax:QI=0\n   96: call [`rhp_log'] argc:0\n   97: dx:SI=0x8\n   98: si:DI=`__FUNCTION__.51'\n   99: di:DI=`*.LC7'\n  100: ax:QI=0\n  101: call [`rhp_log'] argc:0\n  102: dx:SI=0x20\n  103: si:DI=`__FUNCTION__.51'\n  104: di:DI=`*.LC8'\n  105: ax:QI=0\n  106: call [`rhp_log'] argc:0\n  107: dx:SI=0x10\n  108: si:DI=`__FUNCTION__.51'\n  109: di:DI=`*.LC9'\n  110: ax:QI=0\n  111: call [`rhp_log'] argc:0\n  112: dx:SI=0x50\n  113: si:DI=`__FUNCTION__.51'\n  114: di:DI=`*.LC10'\n  115: ax:QI=0\n  116: call [`rhp_log'] argc:0\n  117: dx:SI=0x38\n  118: si:DI=`__FUNCTION__.51'\n  119: di:DI=`*.LC11'\n  120: ax:QI=0\n  121: call [`rhp_log'] argc:0\n  122: dx:SI=0x10\n  123: si:DI=`__FUNCTION__.51'\n  124: di:DI=`*.LC12'\n  125: ax:QI=0\n  126: call [`rhp_log'] argc:0\n  127: dx:SI=0x18\n  128: si:DI=`__FUNCTION__.51'\n  129: di:DI=`*.LC13'\n  130: ax:QI=0\n  131: call [`rhp_log'] argc:0\n  132: dx:SI=0x18\n  133: si:DI=`__FUNCTION__.51'\n  134: di:DI=`*.LC14'\n  135: ax:QI=0\n  136: call [`rhp_log'] argc:0\n  137: [`rhp_inited']=0x1\n  142: 0\n",
         "metadata": {
         }
       }
     },
     "edges": [
       {
-        "source": "0",
-        "target": "2"
-      },
-      {
-        "source": "0",
-        "target": "4"
-      },
-      {
-        "source": "0",
-        "target": "5"
-      },
-      {
-        "source": "0",
-        "target": "7"
-      },
-      {
-        "source": "1",
-        "target": "8"
-      },
-      {
-        "source": "1",
+        "source": "4",
         "target": "6"
-      },
-      {
-        "source": "1",
-        "target": "4"
-      },
-      {
-        "source": "1",
-        "target": "5"
-      },
-      {
-        "source": "1",
-        "target": "22"
-      },
-      {
-        "source": "2",
-        "target": "10"
-      },
-      {
-        "source": "2",
-        "target": "3"
-      },
-      {
-        "source": "3",
-        "target": "10"
-      },
-      {
-        "source": "5",
-        "target": "12"
-      },
-      {
-        "source": "5",
-        "target": "8"
       },
       {
         "source": "6",
         "target": "7"
       },
       {
+        "source": "6",
+        "target": "8"
+      },
+      {
+        "source": "7",
+        "target": "8"
+      },
+      {
         "source": "8",
         "target": "9"
       },
       {
-        "source": "9",
-        "target": "12"
-      },
-      {
-        "source": "10",
-        "target": "20"
-      },
-      {
-        "source": "10",
-        "target": "13"
-      },
-      {
-        "source": "10",
+        "source": "8",
         "target": "14"
       },
       {
-        "source": "11",
+        "source": "9",
+        "target": "10"
+      },
+      {
+        "source": "9",
+        "target": "11"
+      },
+      {
+        "source": "10",
         "target": "13"
       },
       {
         "source": "11",
-        "target": "22"
+        "target": "12"
       },
       {
         "source": "11",
-        "target": "21"
+        "target": "13"
+      },
+      {
+        "source": "12",
+        "target": "13"
       },
       {
         "source": "13",
         "target": "14"
       },
       {
-        "source": "15",
-        "target": "16"
-      },
-      {
-        "source": "15",
-        "target": "22"
-      },
-      {
-        "source": "16",
-        "target": "18"
-      },
-      {
-        "source": "17",
-        "target": "18"
-      },
-      {
-        "source": "18",
-        "target": "19"
-      },
-      {
-        "source": "18",
-        "target": "21"
-      },
-      {
-        "source": "19",
-        "target": "20"
+        "label": "[100%]",
+        "source": "14",
+        "target": "5"
       }
     ],
     "metadata": {}
@@ -1371,6 +1245,14 @@ Enter your jgf json graph data in the text area below or try the sample buttons.
 </script>
 <br>
 See also <a href="https://graphviewer.nl">graphviewer.nl</a>
+<br>
+<br>
+<button id="btn_export_svg">Save as SVG image</button>
+<script>
+document.querySelector("#btn_export_svg").onclick = function(){
+	svgExport.downloadSvg(document.querySelector("#svg"), "jgf4web");
+};
+</script>
 
 </body>
 

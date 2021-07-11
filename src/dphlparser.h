@@ -128,7 +128,7 @@ extern int hlydebug;
 
 union HLYSTYPE
 {
-#line 181 "dphl.y" /* glr.c:197  */
+#line 183 "dphl.y" /* glr.c:197  */
  char *string; 
 
 #line 135 "dphlparser.h" /* glr.c:197  */

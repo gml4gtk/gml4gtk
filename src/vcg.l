@@ -1,5 +1,7 @@
 
 /*
+ *  Copyright 2021
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -40,6 +42,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <zlib.h>
 
 #include "splay-tree.h"
 #include "vcg.yy.h"
@@ -60,16 +63,28 @@
 #undef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
 
-#undef YY_INPUT
-#define YY_INPUT(buf,result,max_size) \
-  if ( (result = fread( (char*)buf, sizeof(char), max_size, yyin)) < 0) \
-		YY_FATAL_ERROR( "fread() in vcg.l flex scanner failed");
 
 static char *p = NULL;
 static char *q = NULL;
 static char *tmpp = NULL;
 
 char *vcglaststring = NULL;
+
+static gzFile vcgzin = (gzFile)0;
+
+#undef YY_INPUT
+#define YY_INPUT(buf,result,max_size) do { \
+	if ( (result = gzfread( (char*)buf, sizeof(char), max_size, vcgzin)) == 0) { \
+		int estatus = 0; \
+		const char *es = gzerror (vcgzin, &estatus); \
+		if (estatus == Z_STREAM_ERROR) { \
+			YY_FATAL_ERROR( "gzfread() in vcg.l flex scanner failed"); \
+		} else { \
+			if (estatus) { \
+				printf ("%s(): zlib error status %d %s in vcg.l\n",__func__,(int)estatus,es); \
+			} \
+		} \
+	} } while (0);
 
 /* own yyalloc
  * void *yyalloc (size_t n) { return(calloc(1,n)); }
@@ -185,10 +200,11 @@ CCE	\/\/[^\n]*
 %%
 
 /* */
-void vcg_lex_init (FILE *f, int debugflag)
+void vcg_lex_init (gzFile f, int debugflag)
 {
   vcglineno=1;
-  vcgin = f;
+  vcgin = (FILE *)0;
+  vcgzin = (gzFile)f;
   /* activate debug in lexer */
   vcg_flex_debug = debugflag;
   /* activate debug in vcg parser */
@@ -202,6 +218,8 @@ void vcg_lex_clear (void)
   vcglineno=1;
   yylex_destroy();
   vcg_flex_debug = 0;
+  vcgzin = (gzFile)0;
+  vcgin = (FILE *)0;
   return;
 }
 

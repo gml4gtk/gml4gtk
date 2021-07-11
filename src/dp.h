@@ -1,5 +1,7 @@
 
 /*
+ *  Copyright 2021
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -1229,7 +1231,7 @@ struct trdata {
 	struct tabledata *table;	/* rooted on this table or 0 */
 	struct tdldata *td;	/* td items in tr */
 	struct tdldata *tdend;
-	int hastab;	/* set if <tr> has <td> elements with a <table> */
+	int hastab;		/* set if <tr> has <td> elements with a <table> */
 	struct trdata *next;
 };
 

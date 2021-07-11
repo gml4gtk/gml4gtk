@@ -43,9 +43,10 @@ Because this is a gtk program it can be compiled for windows or mac osx.
 
 When compiled for windows it needs all gtk dll's to run the program.
 
-The gml4gtk reads most GML files and partial DOT graph files,
-and DOT data from gcc,bison,llvm,radare2 and more can be used.
-The dot html labels with <table> elements are partial supported in version 7.2
+The gml4gtk reads most GML files, BGV files and partial DOT graph files from
+gcc, bison, llvm, radare2 and more tools can be used.
+
+The dot html labels with <table> elements are partial supported in version 7.3
 It can happen the drawing is not oke, then switch to pos mode 1
 
 In the data directory are few sample graph files to try it.

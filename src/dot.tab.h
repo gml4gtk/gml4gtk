@@ -74,7 +74,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 74 "dot.y" /* glr.c:197  */
+#line 77 "dot.y" /* glr.c:197  */
  char *string; struct dpepoint *dp; 
 
 #line 81 "dot.tab.h" /* glr.c:197  */
