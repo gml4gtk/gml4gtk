@@ -1,0 +1,17 @@
+/*
+This is a graph without a start node.
+A start node is a node with no incoming edges
+and one or more outgoing edges.
+The start nodes are put at top of drawing.
+But after cycle removal and reversing
+few edges to break the cycle there is
+a new start node. node 1 in this example.
+*/
+digraph "nos"
+{
+ 1->2; // a cycle at 1->2->3
+ 2->3;
+ 3->1;
+ 3->4;
+}
+/* end. */

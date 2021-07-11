@@ -1,0 +1,148 @@
+digraph Top {
+    page = "36, 24";
+    rankdir = BT
+
+    /* {rank = source;
+    fontsize = 20;
+    shape = plaintext;
+    Topology;} */
+
+    subgraph cluster_separation {
+        label = "Separation properties";
+	labelloc = b;
+	color = black;
+	style = dashed;
+
+	norm [label = "Normal"];
+	comp_norm [label = "Completely normal"];
+	perf_norm [label = "Perfectly normal"];
+	reg [label = "Regular"];
+	comp_reg [label = "Completely regular"];
+	t0 [label="Kolmogorov (T0)"];
+    	t1 [label="Fréchet (T1)"];
+    	hausd [label = "Hausdorff (T2)"];
+    	t25 [label="Urysohn (T2.5)"];
+	t3 [label = "Regular Hausdorff (T3)"];
+	tych [label = "Tychonoff (T3.5)"];
+	comp_hausd [label = "Completely Hausdorff"];
+	comp_norm_hausd [label = "Completely normal Hausdorff (T5)"];
+	perf_norm_hausd [label = "Perfectly normal Hausdorff (T6)"];
+	norm_hausd [label = "Normal Hausdorff (T4)"];
+
+	tych -> t3 -> t25 -> hausd -> t1 -> t0;
+	tych -> comp_hausd -> t25;
+	comp_reg -> reg;
+	t3 -> reg;
+	tych -> comp_reg;
+	perf_norm_hausd -> comp_norm_hausd -> norm_hausd -> tych;
+	perf_norm -> comp_norm -> norm;
+	norm_hausd -> norm;
+	comp_norm_hausd -> comp_norm;
+	perf_norm_hausd -> perf_norm;
+    }
+    
+    subgraph cluster_metrisable {
+        label = "Metrisability properties";
+	labelloc = b;
+	color = black;
+	style = dashed;
+
+	metr [label = "Metrisable"];
+	loc_metr [label = "Locally metrisable"];
+
+	metr -> loc_metr;
+    }
+
+    subgraph cluster_countability {
+        label = "Countability properties";
+	labelloc = b;
+	color = black;
+	style = dashed;
+
+	seq [label = "Sequential"];
+	first_count [label = "First-countable"];
+	second_count [label = "Second-countable"];
+	sep [label = "Separable"];
+	lind [label = "Lindelöf"];
+	sigma_compact [label = "Sigma-compact"];
+
+	second_count -> first_count -> seq;
+	second_count -> sep;
+	second_count -> lind;
+	sigma_compact -> lind;
+    }
+
+    subgraph cluster_compactness {
+        label = "Compactness properties";
+	labelloc = b;
+	color = black;
+	style = dashed;
+
+	loc_compact [label = "Locally compact"];
+	compact [label = "Compact"];
+	count_compact [label = "Countably compact"];
+	lim_point_compact [label = "Limit point compact"];
+	pseud_compact [label = "Pseudocompact"];
+	seq_compact [label = "Sequentially compact"];
+	paracompact [label = "Paracompact"];
+	compact_gen [label = "Compactly generated"];
+
+	compact -> count_compact -> lim_point_compact;
+	seq_compact -> count_compact -> pseud_compact;
+	compact -> paracompact;
+	compact -> loc_compact -> compact_gen;
+    }
+
+    compact -> sigma_compact;
+    first_count -> compact_gen;
+    metr -> first_count;
+    metr -> paracompact;
+    metr -> perf_norm_hausd;
+
+    subgraph cluster_connected {
+        label = "Connectedness properties";
+	labelloc = b;
+	color = black;
+	style = dashed;
+
+	conn [label="Connected"];
+	path_conn [label = "Path connected"];
+	arc_conn [label = "Arc connected"];
+	simp_conn [label = "Simply connected"];
+	/* ultraconn [label = "Ultraconnected"]; */
+	hyperconn [label = "Hyperconnected"];
+	loc_path_conn [label = "Locally path connected"];
+	loc_conn [label = "Locally connected"];
+	disconn [label = "Disconnected"];
+	tot_disconn [label = "Totally disconnected"];
+	tot_sep [label = "Totally separated"];
+
+	arc_conn -> path_conn -> conn;
+	simp_conn -> path_conn;
+	/* ultraconn -> path_conn; */
+	hyperconn -> conn;
+	loc_path_conn -> loc_conn;
+	hyperconn -> loc_conn;
+	tot_sep -> tot_disconn -> disconn;
+    }
+
+    /* ultraconn -> norm;
+    ultraconn -> pseud_compact;
+    ultraconn -> lim_point_compact; */
+
+    /* loc_metr -> perf_norm_hausd [style = invis];
+    seq -> tych [style = invis];
+    compact_gen -> tych [style = invis];
+    pseud_compact -> tych [style = invis];
+    lim_point_compact -> tych [style = invis]; */
+    /* loc_conn -> perf_norm_hausd [style = invis];
+    conn -> perf_norm_hausd [style = invis];
+    disconn -> perf_norm_hausd [style = invis];
+    tot_disconn -> perf_norm_hausd [style = invis];
+    path_conn -> perf_norm_hausd [style = invis];
+    hyperconn -> perf_norm_hausd [style = invis];
+    loc_path_conn -> perf_norm_hausd [style = invis]; */
+
+    loc_metr -> tot_sep [style = invis];
+    seq -> tot_sep [style = invis];
+}

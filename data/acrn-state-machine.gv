@@ -1,0 +1,22 @@
+/*
+https://projectacrn.github.io/latest/index.html
+ 
+Project ACRN
+
+A flexible, light-weight, open source reference hypervisor for IoT devices
+
+ACRN is a flexible, lightweight reference hypervisor, built with real-time and safety-criticality in mind, optimized to streamline embedded development through an open source platform.
+
+*/
+digraph gaspump {
+        rankdir=LR;
+        node [shape = circle;];
+        edge [color = grey; fontsize=10];
+        S0 -> S1 [ label = "Lift Nozzle" ]
+        S1 -> S0 [ label = "Replace Nozzle" ]
+        S1 -> S2 [ label = "Authorize Pump" ]
+        S2 -> S0 [ label = "Replace Nozzle" ]
+        S2 -> S3 [ label = "Pull Trigger" ]
+        S3 -> S2 [ label = "Release Trigger" ]
+}
+

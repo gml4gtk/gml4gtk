@@ -103,6 +103,9 @@ extern void reorg(struct gml_graph *g);
 /* prepare */
 extern void prep(struct gml_graph *g);
 
+/* determine startnodes */
+extern void startnodes(struct gml_graph *g);
+
 /* prepare */
 extern void prepincr(struct gml_graph *g);
 

@@ -1,0 +1,13 @@
+/* generated with sparsegen */
+digraph sparsegen {
+subgraph cluster0x7fe3717c1010 {
+    color=blue;
+    label="1test.c\lsfg_version()\l    file=1test.c;\l    fun=sfg_version;\l    ep=bb0x7fe3717b9010;\l"
+    bb0x7fe3717b9010 [shape=ellipse,label="sfg_version() line 3 file 1test.c\lbasic block number 0\l.L0\l  <entry-point>\l  copy.32     %r2 <- $20\l  dead        %r2\l  ret.32      %r2\l",line=3,col=12,op=ret];
+}
+subgraph cluster0x7fe3717c1048 {
+    color=blue;
+    label="1test.c\lmain()\l    file=1test.c;\l    fun=main;\l    ep=bb0x7fe3717b90e0;\l"
+    bb0x7fe3717b90e0 [shape=ellipse,label="main() line 7 file 1test.c\lbasic block number 2\l.L2\l  <entry-point>\l  copy.32     %r5 <- sfg_version\l  dead        %r5\l  call.32     %r3 <- %r5\l  copy.32     %r6 <- $0\l  dead        %r6\l  ret.32      %r6\l",line=7,col=5,op=ret];
+}
+}

@@ -1,0 +1,32 @@
+/* ast of a parser generated with lemon-py parser tool
+https://github.com/aubreyrjones/lemon-py
+This project wraps the Lemon parser generator.
+lemon-py provides functions that compile a EBNF grammar and a lexer definition into a standalone native module for Python 3.x or (with a little work) C++ . The resulting lexer+parser is implemented entirely in native code, and has no external dependencies (including on this project or any Python code) and is suitable for use as a submodule in other projects. You can just import it and run parse().
+*/
+digraph "AST" {
+node [shape=record, style=filled];
+
+0 [shape=record, label="{<f0>line:1 | <f1> + }",shape=record];
+node [shape=record, label="{<f0>line:1 | <f1> / }"] 1;
+0 -> 1;
+node [shape=record, label="{<f0>line:1 | <f1> + }"] 2;
+1 -> 2;
+node [shape=record, label="{<f0>line:1 | { <f1> INT_LIT | <f2> 5}}"] 3;
+2 -> 3;
+node [shape=record, label="{<f0>line:1 | { <f1> FLOAT_LIT | <f2> 7.2}}"] 4;
+2 -> 4;
+node [shape=record, label="{<f0>line:1 | <f1> fncall }"] 5;
+1 -> 5;
+node [shape=record, label="{<f0>line:1 | { <f1> FNCALL | <f2> log}}"] 6;
+5 -> 6;
+node [shape=record, label="{<f0>line:1 | <f1> arglist }"] 7;
+5 -> 7;
+node [shape=record, label="{<f0>line:1 | <f1> neg }"] 8;
+7 -> 8;
+node [shape=record, label="{<f0>line:1 | { <f1> INT_LIT | <f2> 24}}"] 9;
+8 -> 9;
+node [shape=record, label="{<f0>line:1 | { <f1> STRING | <f2> nonsense}}"] 10;
+0 -> 10;
+
+}
+

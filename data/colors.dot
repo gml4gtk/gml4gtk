@@ -1,0 +1,12 @@
+/* how to set the bordercolor of a node to green */
+digraph "g"
+{
+ "test1" [style="filled",color=red,fillcolor=green,label="filled\ncolor=red\nfillcolor=green"];
+ "test2" [style="filled",fillcolor=red,label="filled\nfillcolor=red"];
+ "test3" [style="filled",color=green,label="filled\ncolor=green"];
+ "test4" [style="filled",label="filled"];
+
+ "test5" [color=green,fillcolor=red,label="color=green\nfillcolor=red"];
+ "test6" [fillcolor=red,label="fillcolor=red"];
+ "test7" [color=green,label="color=green"];
+}

@@ -266,7 +266,6 @@ void prep(struct gml_graph *g)
 	struct gml_elist *enl2 = NULL;
 	struct gml_edge *edge2 = NULL;
 	struct gml_edge *edge = NULL;
-	int i = 0;
 
 	if (g == NULL) {
 		return;
@@ -436,6 +435,19 @@ void prep(struct gml_graph *g)
 			add_selfedgenode(maingraph, lnl->node);
 		}
 		lnl = lnl->next;
+	}
+
+	return;
+}
+
+/* determine startnodes */
+void startnodes(struct gml_graph *g)
+{
+	struct gml_nlist *lnl = NULL;
+	int i = 0;
+
+	if (g == NULL) {
+		return;
 	}
 
 	/* number of start nodes in the graph */

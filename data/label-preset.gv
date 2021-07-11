@@ -1,0 +1,8 @@
+/* using node label presets, see also lemon-py.gv */
+digraph t {
+node[label="l1"] 0;
+1;
+node[label="l2"] 2;
+
+}
+

@@ -1,0 +1,25 @@
+/* dot crashes on this */
+digraph G {
+ranksep = 1.0; size = "10,10";
+{
+    node [shape = plaintext, fontsize = 20];
+    GAWM1 -> GAWM2 -> 0;
+}
+
+node [shape = box];
+{rank = same;0;wx1;wx2;rx1;}
+
+wx1 -> wx2;
+wx2 -> rx1;
+wx1 -> rx1[color = blue];
+
+subgraph struct
+{
+    node [shape = record];
+    rx11 [shape = record, label = "rx1 | [x=[wx2]]"];
+}
+{rank = same; GAWM1; "rx11";}
+
+// W'WR Order:
+wx2 -> wx1[style = dashed, color = red, label = "1"]; }
+

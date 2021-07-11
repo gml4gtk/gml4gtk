@@ -1,0 +1,467 @@
+/* biological graph */
+digraph "CoopSW4_002" {
+	graph
+	[
+		center="true"
+		overlap="false"
+		Damping=0.999
+		fontname="Helvetica"
+		maxiter=1000000
+		splines="true"
+		sep=0.8
+		epsilon=0.0000001
+		label="CoopSW4_002"
+		ratio="auto"
+	]
+
+	node
+	[
+		fontsize=9
+		fontname="Helvetica-bold"
+		shape="circle"
+		style="bold"
+	]
+
+	edge
+	[
+		fontsize=9
+		fontname="Helvetica"
+		color="blue"
+		arrowhead="normal"
+		len=2.5
+	]
+
+	G2 -> G1
+	G100 -> G1
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G2
+	G1 -> G2
+	G63 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G21 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G12 -> G4
+	G5 -> G4
+		[arrowhead="tee"
+		color="red"]
+	G6 -> G5
+	G4 -> G5
+	G7 -> G6
+	G5 -> G6
+		[arrowhead="tee"
+		color="red"]
+	G8 -> G7
+	G6 -> G7
+		[arrowhead="tee"
+		color="red"]
+	G9 -> G8
+	G7 -> G8
+		[arrowhead="tee"
+		color="red"]
+	G8 -> G9
+	G10 -> G9
+		[arrowhead="tee"
+		color="red"]
+	G11 -> G10
+		[arrowhead="tee"
+		color="red"]
+	G9 -> G10
+		[arrowhead="tee"
+		color="red"]
+	G12 -> G11
+		[arrowhead="tee"
+		color="red"]
+	G56 -> G11
+		[arrowhead="tee"
+		color="red"]
+	G13 -> G12
+	G11 -> G12
+		[arrowhead="tee"
+		color="red"]
+	G14 -> G13
+	G12 -> G13
+		[arrowhead="tee"
+		color="red"]
+	G15 -> G14
+	G13 -> G14
+		[arrowhead="tee"
+		color="red"]
+	G14 -> G15
+	G16 -> G15
+		[arrowhead="tee"
+		color="red"]
+	G17 -> G16
+	G15 -> G16
+		[arrowhead="tee"
+		color="red"]
+	G16 -> G17
+		[arrowhead="tee"
+		color="red"]
+	G73 -> G17
+		[arrowhead="tee"
+		color="red"]
+	G19 -> G18
+	G17 -> G18
+		[arrowhead="tee"
+		color="red"]
+	G20 -> G19
+	G72 -> G19
+		[arrowhead="tee"
+		color="red"]
+	G21 -> G20
+		[arrowhead="tee"
+		color="red"]
+	G86 -> G20
+		[arrowhead="tee"
+		color="red"]
+	G20 -> G21
+	G22 -> G21
+		[arrowhead="tee"
+		color="red"]
+	G23 -> G22
+		[arrowhead="tee"
+		color="red"]
+	G21 -> G22
+		[arrowhead="tee"
+		color="red"]
+	G24 -> G23
+	G22 -> G23
+		[arrowhead="tee"
+		color="red"]
+	G23 -> G24
+	G25 -> G24
+		[arrowhead="tee"
+		color="red"]
+	G26 -> G25
+		[arrowhead="tee"
+		color="red"]
+	G24 -> G25
+		[arrowhead="tee"
+		color="red"]
+	G27 -> G26
+	G25 -> G26
+		[arrowhead="tee"
+		color="red"]
+	G28 -> G27
+		[arrowhead="tee"
+		color="red"]
+	G26 -> G27
+		[arrowhead="tee"
+		color="red"]
+	G29 -> G28
+	G27 -> G28
+	G28 -> G29
+		[arrowhead="tee"
+		color="red"]
+	G55 -> G29
+		[arrowhead="tee"
+		color="red"]
+	G31 -> G30
+	G29 -> G30
+	G32 -> G31
+	G30 -> G31
+		[arrowhead="tee"
+		color="red"]
+	G33 -> G32
+	G31 -> G32
+	G32 -> G33
+	G89 -> G33
+		[arrowhead="tee"
+		color="red"]
+	G35 -> G34
+	G33 -> G34
+		[arrowhead="tee"
+		color="red"]
+	G34 -> G35
+	G36 -> G35
+		[arrowhead="tee"
+		color="red"]
+	G37 -> G36
+	G35 -> G36
+	G38 -> G37
+	G36 -> G37
+		[arrowhead="tee"
+		color="red"]
+	G39 -> G38
+		[arrowhead="tee"
+		color="red"]
+	G37 -> G38
+		[arrowhead="tee"
+		color="red"]
+	G40 -> G39
+		[arrowhead="tee"
+		color="red"]
+	G38 -> G39
+		[arrowhead="tee"
+		color="red"]
+	G41 -> G40
+		[arrowhead="tee"
+		color="red"]
+	G50 -> G40
+		[arrowhead="tee"
+		color="red"]
+	G42 -> G41
+	G68 -> G41
+		[arrowhead="tee"
+		color="red"]
+	G43 -> G42
+	G41 -> G42
+		[arrowhead="tee"
+		color="red"]
+	G44 -> G43
+		[arrowhead="tee"
+		color="red"]
+	G42 -> G43
+		[arrowhead="tee"
+		color="red"]
+	G45 -> G44
+		[arrowhead="tee"
+		color="red"]
+	G43 -> G44
+		[arrowhead="tee"
+		color="red"]
+	G44 -> G45
+		[arrowhead="tee"
+		color="red"]
+	G32 -> G45
+		[arrowhead="tee"
+		color="red"]
+	G47 -> G46
+	G45 -> G46
+		[arrowhead="tee"
+		color="red"]
+	G48 -> G47
+	G46 -> G47
+		[arrowhead="tee"
+		color="red"]
+	G49 -> G48
+	G92 -> G48
+		[arrowhead="tee"
+		color="red"]
+	G50 -> G49
+		[arrowhead="tee"
+		color="red"]
+	G75 -> G49
+		[arrowhead="tee"
+		color="red"]
+	G49 -> G50
+	G51 -> G50
+		[arrowhead="tee"
+		color="red"]
+	G52 -> G51
+		[arrowhead="tee"
+		color="red"]
+	G50 -> G51
+		[arrowhead="tee"
+		color="red"]
+	G53 -> G52
+	G51 -> G52
+		[arrowhead="tee"
+		color="red"]
+	G52 -> G53
+	G54 -> G53
+		[arrowhead="tee"
+		color="red"]
+	G55 -> G54
+		[arrowhead="tee"
+		color="red"]
+	G73 -> G54
+		[arrowhead="tee"
+		color="red"]
+	G56 -> G55
+	G54 -> G55
+	G55 -> G56
+		[arrowhead="tee"
+		color="red"]
+	G51 -> G56
+		[arrowhead="tee"
+		color="red"]
+	G56 -> G57
+	G58 -> G57
+		[arrowhead="tee"
+		color="red"]
+	G59 -> G58
+		[arrowhead="tee"
+		color="red"]
+	G57 -> G58
+		[arrowhead="tee"
+		color="red"]
+	G60 -> G59
+	G58 -> G59
+	G61 -> G60
+		[arrowhead="tee"
+		color="red"]
+	G59 -> G60
+		[arrowhead="tee"
+		color="red"]
+	G62 -> G61
+	G60 -> G61
+		[arrowhead="tee"
+		color="red"]
+	G63 -> G62
+	G61 -> G62
+		[arrowhead="tee"
+		color="red"]
+	G64 -> G63
+	G62 -> G63
+	G65 -> G64
+		[arrowhead="tee"
+		color="red"]
+	G63 -> G64
+		[arrowhead="tee"
+		color="red"]
+	G66 -> G65
+	G64 -> G65
+	G67 -> G66
+	G65 -> G66
+		[arrowhead="tee"
+		color="red"]
+	G68 -> G67
+	G66 -> G67
+	G69 -> G68
+		[arrowhead="tee"
+		color="red"]
+	G67 -> G68
+		[arrowhead="tee"
+		color="red"]
+	G70 -> G69
+	G68 -> G69
+		[arrowhead="tee"
+		color="red"]
+	G71 -> G70
+	G69 -> G70
+	G72 -> G71
+	G70 -> G71
+		[arrowhead="tee"
+		color="red"]
+	G71 -> G72
+	G54 -> G72
+		[arrowhead="tee"
+		color="red"]
+	G72 -> G73
+	G74 -> G73
+		[arrowhead="tee"
+		color="red"]
+	G75 -> G74
+	G73 -> G74
+	G76 -> G75
+	G74 -> G75
+	G77 -> G76
+	G75 -> G76
+	G78 -> G77
+	G76 -> G77
+		[arrowhead="tee"
+		color="red"]
+	G77 -> G78
+	G69 -> G78
+		[arrowhead="tee"
+		color="red"]
+	G80 -> G79
+	G78 -> G79
+		[arrowhead="tee"
+		color="red"]
+	G79 -> G80
+	G81 -> G80
+		[arrowhead="tee"
+		color="red"]
+	G82 -> G81
+	G80 -> G81
+		[arrowhead="tee"
+		color="red"]
+	G81 -> G82
+	G83 -> G82
+		[arrowhead="tee"
+		color="red"]
+	G84 -> G83
+		[arrowhead="tee"
+		color="red"]
+	G82 -> G83
+		[arrowhead="tee"
+		color="red"]
+	G85 -> G84
+	G83 -> G84
+		[arrowhead="tee"
+		color="red"]
+	G86 -> G85
+		[arrowhead="tee"
+		color="red"]
+	G84 -> G85
+		[arrowhead="tee"
+		color="red"]
+	G85 -> G86
+	G87 -> G86
+		[arrowhead="tee"
+		color="red"]
+	G88 -> G87
+	G86 -> G87
+		[arrowhead="tee"
+		color="red"]
+	G89 -> G88
+		[arrowhead="tee"
+		color="red"]
+	G87 -> G88
+		[arrowhead="tee"
+		color="red"]
+	G88 -> G89
+	G90 -> G89
+		[arrowhead="tee"
+		color="red"]
+	G91 -> G90
+		[arrowhead="tee"
+		color="red"]
+	G89 -> G90
+		[arrowhead="tee"
+		color="red"]
+	G90 -> G91
+	G92 -> G91
+		[arrowhead="tee"
+		color="red"]
+	G93 -> G92
+	G91 -> G92
+		[arrowhead="tee"
+		color="red"]
+	G94 -> G93
+		[arrowhead="tee"
+		color="red"]
+	G92 -> G93
+		[arrowhead="tee"
+		color="red"]
+	G95 -> G94
+		[arrowhead="tee"
+		color="red"]
+	G93 -> G94
+		[arrowhead="tee"
+		color="red"]
+	G94 -> G95
+		[arrowhead="tee"
+		color="red"]
+	G27 -> G95
+		[arrowhead="tee"
+		color="red"]
+	G97 -> G96
+	G90 -> G96
+		[arrowhead="tee"
+		color="red"]
+	G96 -> G97
+	G98 -> G97
+		[arrowhead="tee"
+		color="red"]
+	G97 -> G98
+		[arrowhead="tee"
+		color="red"]
+	G65 -> G98
+		[arrowhead="tee"
+		color="red"]
+	G100 -> G99
+	G7 -> G99
+		[arrowhead="tee"
+		color="red"]
+	G99 -> G100
+	G1 -> G100
+		[arrowhead="tee"
+		color="red"]
+
+}

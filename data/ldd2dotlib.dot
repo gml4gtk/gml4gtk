@@ -1,0 +1,68 @@
+digraph g {
+    graph [ranksep=0.2 nodesep=0.1];
+
+
+    "/lib/ld-linux.so.2" [shape="Mrecord" label="{/lib|ld-linux.so.2}"];
+    "/lib32/libcrypt.so.1" [shape="Mrecord" label="{/lib32|libcrypt.so.1}"];
+    "/lib/i386-linux-gnu/libc.so.6" [shape="Mrecord" label="{/lib/i386-linux-gnu|libc.so.6}"];
+    "/lib32/libcrypt.so.1" -> "/lib/i386-linux-gnu/libc.so.6" [color="steelblue" style=dotted arrowsize=0.5];
+    "/lib/i386-linux-gnu/libc.so.6" -> "/lib/ld-linux.so.2" [color="steelblue" style=dotted arrowsize=0.5];
+    "/lib32/libcrypt.so.1" -> "/lib/ld-linux.so.2" [color="steelblue" style=dotted arrowsize=0.5];
+}
+
+@
+
+# make a graph of the ldd info as dot graph, example:
+# python ldd2dot.py /lib64/libcups.so.2 > libcups.dot
+import os
+import re
+import sys
+from subprocess import Popen, PIPE
+
+MAXDEPTH = 10
+
+
+def ldd(depth, tl, nodes, deps):
+   if depth >= MAXDEPTH:
+      return
+   proc = Popen(['ldd', tl], stdout=PIPE)
+   stdo, stde = proc.communicate()
+   for line in stdo.split("\n"):
+      m1 = re.search(r"[ \t]+(.*)[ \t]+=>[ \t]*(.*)[ \t]+\(.*\)", line)
+      m2 = re.search(r"[ \t]+(.*)[ \t]+\(.*\)", line)
+      s = ""
+      if m1:
+         if m1.group(2):
+            s = m1.group(2)
+         else:
+            s = m1.group(1)
+      elif m2:
+         s = m2.group(1)
+      item = (tl, s)
+      if s.startswith("/"):
+         if s not in nodes:
+            nodes.add(s)
+         if item not in deps:
+            deps.append(item)
+            ldd(depth + 1, s, nodes, deps)
+
+
+tl = sys.argv[1]
+nodes = set([tl])
+deps = []
+ldd(1, tl, nodes, deps)
+print("""\
+digraph g {
+    graph [ranksep=0.2 nodesep=0.1];
+
+""")
+for node in nodes:
+   print('    "%s" [shape="Mrecord" label="{%s|%s}"];' % (
+      node, os.path.dirname(node), os.path.basename(node)))
+for tl, ch in deps:
+   print(
+      '    "%s" -> "%s" '
+      '[color="steelblue" style=dotted arrowsize=0.5];' % (
+      tl, ch))
+print("}")
+

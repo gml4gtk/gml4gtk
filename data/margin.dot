@@ -1,0 +1,70 @@
+digraph G {
+    graph [style=rounded];
+    node [fontname=Arial,
+        shape=none];
+bgcolor="orchid";
+    Staff_0 [label=<
+        <TABLE BORDER="2" CELLPADDING="5">
+            <TR>
+                <TD BORDER="0">Staff</TD>
+            </TR>
+        </TABLE>>,
+        margin=0.05,
+        style=rounded];
+    subgraph Staff {
+        graph [color=grey75,
+            penwidth=2];
+        Note_0 [label=<
+            <TABLE BORDER="2" CELLPADDING="5">
+                <TR>
+                    <TD BORDER="0">Note</TD>
+                </TR>
+                <HR/>
+                <TR>
+                    <TD BORDER="0">c'4</TD>
+                </TR>
+            </TABLE>>,
+            margin=0.05,
+            style=rounded];
+        Note_1 [label=<
+            <TABLE BORDER="2" CELLPADDING="5">
+                <TR>
+                    <TD BORDER="0">Note</TD>
+                </TR>
+                <HR/>
+                <TR>
+                    <TD BORDER="0">d'4</TD>
+                </TR>
+            </TABLE>>,
+            margin=0.05,
+            style=rounded];
+        Note_2 [label=<
+            <TABLE BORDER="2" CELLPADDING="5">
+                <TR>
+                    <TD BORDER="0">Note</TD>
+                </TR>
+                <HR/>
+                <TR>
+                    <TD BORDER="0">e'4</TD>
+                </TR>
+            </TABLE>>,
+            margin=0.05,
+            style=rounded];
+        Note_3 [label=<
+            <TABLE BORDER="2" CELLPADDING="5">
+                <TR>
+                    <TD BORDER="0">Note</TD>
+                </TR>
+                <HR/>
+                <TR>
+                    <TD BORDER="0">f'4</TD>
+                </TR>
+            </TABLE>>,
+            margin=0.05,
+            style=rounded];
+    }
+    Staff_0 -> Note_0;
+    Staff_0 -> Note_1;
+    Staff_0 -> Note_2;
+    Staff_0 -> Note_3;
+}

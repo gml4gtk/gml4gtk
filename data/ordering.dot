@@ -1,0 +1,149 @@
+/* example using ordering, values in or out */
+digraph sw_blackboard {
+
+center=true;
+graph [ label="Blackboard Architecture - Information Flow",
+        fontsize=16, fontname="Helvetica-Bold" ];
+ordering=out;
+ranksep=0.75;
+decorate=true;
+node [shape=box];
+size="8,8";
+
+  /* SIDE BAR */	
+  {
+     ordering=out;
+     node [shape=plaintext];
+     l1->l2 [ dir=both ]
+     l2->l3 [ dir=both ]
+     l3->l7 [ dir=both ]
+     l7->l9 [ color=white, dir=none ]
+     l9->l10 [ color=white, dir=none ]
+
+     l1 [ label="Information\nRepositories" ];
+     l2 [ label="Local Agents" ];
+     l3 [ label="Converters" ];
+     l7 [ label="Blackboard" ];
+     l9 [ fontname="Times-Italic", label="Meta-Queries\n(internal)" ];
+     l10 [ fontname="Times-Italic", label="Queries" ];
+  }
+
+  /* RANKINGS */
+//  { rank=same;  
+//  l1; web; sql; rbb; files; kernel; human; mem;
+//  } 
+
+  { rank=same; 
+    l2;  weba -> rbba -> pure -> otha [ style=invis ];
+  }
+
+  { rank=same;
+    l3; p; g;
+  }
+
+  { rank=same;
+    l7; db; q;
+  }
+
+  { rank=same;
+    l9; x1; x2
+  }
+
+  { rank=same;
+    l10; x3; x4
+  }
+
+  /* NODES */
+/*
+ subgraph cluster1 {
+   style=filled;
+   label="HTTP Agent"
+   color=white;
+   a1;
+ } */
+ 
+/*  info1 [ shape=plaintext, label="Web Pages" ]
+  a1 [ label="Objects In\nMemory" ]
+  info2 [ label="Objects In\nMemory" ]
+  info3 [ shape=plaintext, label="SQL\nDatabases" ]
+  info4 [ shape=plaintext, label="Other\nBlackboard\nServers" ]
+  info5 [ shape=plaintext, label="Human User\nInterface Objects" ] */
+  web [ label="Web Servers" ];
+  weba [ label="HTTP Agent" ];
+  rbb  [ label="Blackboard\nServers" ];
+  rbba [ label="Blackboard\nRelay" ];
+  oth  [ label="SQL Databases, local files, local kernel,\nobjects in memory, human users, etc." ];
+  otha [ label="Other" ];
+  pure [ label="Pure Local" ];
+  p [ label="\nParsers\n(extract semantics into assertions)\n\n" ]
+  g [ label="\nGenerators\n(express asserted\nknowledge in appropriate syntax)\n\n" ]
+  db [ label="\nTuple Database\nwith Triggers\n\n",
+  fontname="Times-Bold", URL="#\N" ]
+  q [ label="\nQuery Loopback Manager\n\n" ]
+
+  {
+    node [ fontname="Times-Italic", ];
+
+  x1 [ fontname="Times-Italic", shape=plaintext, 
+       label="Look for Tuples\nDescribing\nReified Queries" ]
+  x2 [ fontname="Times-Italic", shape=plaintext, 
+       label="Tuples Describing\nReified Queries" ]
+  x3 [ fontname="Times-Italic", shape=plaintext, 
+       label="Look for Matches to Reified Queries" ]
+  x4 [ fontname="Times-Italic", shape=plaintext, 
+       label="Tuples Matching Reified Queries" ]
+  }
+  /* EDGES */
+  
+ web -> weba [ dir=both, color=blue, style=bold ];
+ g -> weba -> p [ color=blue, style=bold ];
+
+/*
+ sql -> otha [ dir=both ];
+ files -> otha [ dir=both ];
+ kernel -> otha [ dir=both ];
+ human -> otha [ dir=both ];
+ mem -> otha [ dir=both ];
+*/
+ oth -> otha [ dir=both ];
+ g -> otha -> p;
+ rbb -> rbba [ dir=both ];
+ g -> rbba -> p;
+ g -> pure -> p;
+
+/*
+ info2 -> p [ color=blue, style=bold ] ; 
+ info3 -> p;
+ info4 -> p;
+ info5 -> p;
+*/
+
+ p -> db [ style=bold, color=blue,
+    label=" assertion tuples\l (including reified queries)\l" ]
+ q -> g [ style=bold, color=blue, 
+  label=" assertion tuples (including\ltuples matching reified queries)\l" ]
+
+
+/*
+ q -> db  [ style=dotted, label="Look for Reified Queries" ] 
+ db -> q  [ style=dotted, label="Reified Query Data" ]
+ q -> db  [ label="Look for Matches to Reified Queries" ]
+ db -> q  [ label="Reified Query Match Data" ]
+*/
+
+ q ->x1-> db [ style=dotted ]
+ db ->x2-> q [ style=dotted ]
+ q ->x3-> db 
+ db ->x4-> q [ style=bold, color=blue ]
+
+/*
+ g -> a1;
+ g -> info2 [ color=blue, style=bold ] ; 
+ g -> info3; 
+ g -> info4;
+ g -> info5;
+*/
+
+
+}
+

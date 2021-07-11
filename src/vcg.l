@@ -72,12 +72,13 @@ char *vcglaststring = NULL;
 
 static gzFile vcgzin = (gzFile)0;
 
+/* gzfread cannot be used because of older zlib in the dll */
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do { \
-	if ( (result = gzfread( (char*)buf, sizeof(char), max_size, vcgzin)) == 0) { \
+	if ( (result = gzread(vcgzin, (char*)buf, (sizeof(char) * max_size) )) == 0) { \
 		int estatus = 0; \
 		const char *es = gzerror (vcgzin, &estatus); \
-		if (estatus == Z_STREAM_ERROR) { \
+		if (estatus == Z_BUF_ERROR) { \
 			YY_FATAL_ERROR( "gzfread() in vcg.l flex scanner failed"); \
 		} else { \
 			if (estatus) { \

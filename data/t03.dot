@@ -1,0 +1,30 @@
+graph "graph.dot" {
+
+   size="6.0,7.0";
+
+node [shape=circle,fixedsize=true,style=filled,
+      color="khaki",fontcolor="black",fontsize=18];
+
+   1  [label="1", pos="0.635165,0.371837"];
+   2  [label="2", pos="0.772244,0.103298"];
+   3  [label="3", pos="0.746953,0.702926"];
+   4  [label="4", pos="0.914539,0.257016"];
+   5  [label="5", pos="0.246665,0.339202"];
+   6  [label="6", pos="1.000000,0.036644"];
+   7  [label="7", pos="0.843329,0.963356"];
+   8  [label="8", pos="0.026225,0.164762"];
+   9  [label="9", pos="0.000000,0.472168"];
+
+edge [color="blue"];
+
+   1  --   2;
+   1  --   3;
+   1  --   4;
+   1  --   5;
+   2  --   6;
+   3  --   7;
+   4  --   6;
+   5  --   8;
+   5  --   9;
+
+}

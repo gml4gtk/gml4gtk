@@ -1,0 +1,83 @@
+/* 
+
+dot -oconcept2.png -Tpng concept2.dot 
+
+*/
+digraph concept{
+  label="master concept";
+	rankdir=LR;
+	size="10,11";		
+	ranksep=0.25;
+	nodesep=0.18;
+
+	 graph [compound=true,
+		mclimit=4,		
+		remincross=true,
+		nodesep = 0.1,
+	size="12,12"
+	];
+
+node [shape=none];
+
+DigLib;
+
+DigLib -> FedSearch;
+LRT -> FedSearch;
+
+
+node [shape=box];
+LinkedData;
+DigLib -> MD;
+LRT -> MD;
+LRT -> Content;
+DigLib -> Content;
+Ontologies[peripheries=2] ;
+Vocabulary;
+
+node [shape=ellipse];
+SemanticSearch -> LinkedData[label="uses"];
+SemanticMapping -> LinkedData [label="produces"];
+
+OntoMapping;
+MD -> CatalogSearch;
+Content -> ContentSearch;
+FedSearch -> ContentSearch;
+//Ontology -> NavigateGraph;
+//Ontology -> OntoSearch;
+Ontologies -> SemanticMapping;
+
+	subgraph cluster_clarin {
+		label="CLARIN";
+		
+		MDService;
+		FCS;
+		MDService -> CDMDC;
+		FCS -> CDMDC;		
+		DataCatRegistry -> ComponentRegistry -> MDService;
+		DataCatRegistry -> Vocabulary -> RelationRegistry;
+		
+		RelationRegistry -> SemanticMapping;
+		MDService -> SemanticMapping;
+		
+	
+	}
+	
+		
+		CatalogSearch -> MDService[style=dashed,arrowhead=none];
+		ContentSearch -> FCS[style=dashed,arrowhead=none];		
+		OntoMapping -> SemanticMapping [style=dashed,arrowhead=none];
+		
+	/* user */
+node [shape=circle];
+
+SemanticSearch -> Researcher [arrowhead=none, arrowtail=none, style=dotted];
+FCS -> Researcher [arrowhead=none, arrowtail=none, style=dotted];
+CDMDC -> Researcher [arrowhead=none, arrowtail=none, style=dotted];
+SemanticMapping -> Modeler [arrowhead=none, arrowtail=none, style=dotted];
+RelationRegistry -> Modeler [arrowhead=none, arrowtail=none, style=dotted];
+
+ComponentRegistry -> Modeler [arrowhead=none, arrowtail=none, style=dotted];
+
+	
+	
+}

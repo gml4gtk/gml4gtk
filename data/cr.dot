@@ -1,0 +1,33 @@
+/* clusterrank to control the subgraphs */
+digraph "cr"
+{
+ yydebug=true;
+ /* clusterrank=global; */
+ /* clusterrank=none; is same as global */
+ clusterrank=local; /* give cluster separate layout */
+ 10;
+ subgraph cluster_1
+ {
+   a1->a2->a3;
+ }
+ subgraph cluster_2
+ {
+   b1->b2->b3;
+ }
+ 10->a1;
+ 10->a3;
+ a3->b3;
+ /* now the same but without cluster */
+ 20;
+ subgraph sg_1
+ {
+   aa1->aa2->aa3;
+ }
+ subgraph sg_2
+ {
+   bb1->bb2->bb3;
+ }
+ 20->aa1;
+ 20->aa3;
+ aa3->bb3;
+}

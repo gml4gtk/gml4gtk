@@ -1,0 +1,46 @@
+digraph G {
+    compound=true;
+    subgraph cluster_1{
+        label="splitter_lib";
+        color=red;
+        penwidth=3.0;
+        node_2[label="splitter_lib.bsd_sockets"];
+        node_3[label="splitter_lib.stream_table"];
+        subgraph cluster_4{
+            label="splitter_lib.controller";
+            color=red;
+            penwidth=3.0;
+            node_5[label="splitter_lib.controller.talker"];
+        }
+        subgraph cluster_6{
+            label="splitter_lib.network";
+            color=red;
+            penwidth=3.0;
+            node_10[label="splitter_lib.network.self_address"];
+        }
+        node_7[label="splitter_lib.splitter"];
+        node_8[label="splitter_lib.players"];
+        node_9[label="splitter_lib.command_parser"];
+        node_12[label="splitter_lib.rtp_streams"];
+    }
+    node_11[label="real_splitter"];
+    node_3 -> node_12;
+    node_5 -> node_8 [ltail=cluster_4];
+    node_5 -> node_10 [lhead=cluster_6];
+    node_10 -> node_2 [ltail=cluster_6];
+    node_7 -> node_3;
+    node_7 -> node_5 [lhead=cluster_4];
+    node_7 -> node_10 [lhead=cluster_6];
+    node_7 -> node_8;
+    node_7 -> node_9;
+    node_7 -> node_12;
+    node_9 -> node_2;
+    node_10 -> node_2;
+    node_11 -> node_5 [lhead=cluster_4];
+    node_11 -> node_7;
+    node_11 -> node_9;
+    node_12 -> node_5 [lhead=cluster_4];
+    node_12 -> node_10 [lhead=cluster_6];
+    node_12 -> node_8;
+}
+

@@ -51,11 +51,11 @@ static gzFile gvzin = (gzFile)0;
 
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do { \
-	if ( (result = gzfread( (char*)buf, sizeof(char), max_size, gvzin)) == 0) { \
+	if ( (result = gzread(gvzin, (char*)buf, (sizeof(char) * max_size) )) < 0) { \
 		int estatus = 0; \
 		const char *es = gzerror (gvzin, &estatus); \
-		if (estatus == Z_STREAM_ERROR) { \
-			YY_FATAL_ERROR( "gzfread() in dot.l flex scanner failed"); \
+		if (estatus == Z_BUF_ERROR) { \
+			YY_FATAL_ERROR( "gzread() in dot.l flex scanner failed"); \
 		} else { \
 			if (estatus) { \
 				printf ("%s(): zlib error status %d %s in dot.l\n",__func__,(int)estatus,es); \

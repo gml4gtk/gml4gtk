@@ -1,0 +1,10 @@
+
+digraph "huh"
+{
+ /* in subgraph attrib is possible */
+ subgraph "bar1" { 10[label="oh"] }[label="f1"]
+
+ /* in a edge the attrib is not possible */
+ subgraph "bar2" { 10[label="OH"] } -> 20
+}
+

@@ -1,0 +1,230 @@
+digraph "Web100-008" {
+	graph
+	[
+		center="true"
+		overlap="false"
+		Damping=0.999
+		fontname="Helvetica"
+		maxiter=1000000
+		splines="true"
+		sep=0.8
+		epsilon=0.0000001
+		label="Web100-008"
+		ratio="auto"
+	]
+
+	node
+	[
+		fontsize=9
+		fontname="Helvetica-bold"
+		shape="circle"
+		style="bold"
+	]
+
+	edge
+	[
+		fontsize=9
+		fontname="Helvetica"
+		color="blue"
+		arrowhead="normal"
+		len=2.5
+	]
+
+	G3 -> G1
+	G2 -> G1
+		[arrowhead="tee"
+		color="red"]
+	G7 -> G1
+		[arrowhead="tee"
+		color="red"]
+	G13 -> G2
+	G9 -> G2
+	G5 -> G2
+	G2 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G1 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G17 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G36 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G43 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G44 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G50 -> G2
+		[arrowhead="tee"
+		color="red"]
+	G2 -> G3
+	G3 -> G3
+	G4 -> G3
+	G10 -> G3
+	G26 -> G3
+	G19 -> G3
+	G18 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G16 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G27 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G29 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G42 -> G3
+		[arrowhead="tee"
+		color="red"]
+	G15 -> G4
+	G8 -> G4
+	G14 -> G4
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G4
+		[arrowhead="tee"
+		color="red"]
+	G34 -> G4
+		[arrowhead="tee"
+		color="red"]
+	G35 -> G4
+		[arrowhead="tee"
+		color="red"]
+	G4 -> G5
+	G10 -> G5
+	G5 -> G6
+	G2 -> G6
+		[arrowhead="tee"
+		color="red"]
+	G2 -> G7
+	G50 -> G7
+	G4 -> G8
+		[arrowhead="tee"
+		color="red"]
+	G19 -> G8
+		[arrowhead="tee"
+		color="red"]
+	G7 -> G9
+	G38 -> G9
+		[arrowhead="tee"
+		color="red"]
+	G10 -> G10
+	G21 -> G10
+		[arrowhead="tee"
+		color="red"]
+	G4 -> G11
+	G3 -> G11
+		[arrowhead="tee"
+		color="red"]
+	G4 -> G12
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G12
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G13
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G15
+	G25 -> G15
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G16
+	G33 -> G16
+	G17 -> G17
+	G46 -> G17
+	G20 -> G17
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G17
+		[arrowhead="tee"
+		color="red"]
+	G21 -> G18
+	G4 -> G18
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G20
+	G22 -> G20
+		[arrowhead="tee"
+		color="red"]
+	G47 -> G21
+	G15 -> G22
+	G15 -> G23
+	G10 -> G23
+		[arrowhead="tee"
+		color="red"]
+	G2 -> G24
+	G20 -> G24
+		[arrowhead="tee"
+		color="red"]
+	G4 -> G25
+	G2 -> G26
+	G40 -> G26
+	G41 -> G26
+		[arrowhead="tee"
+		color="red"]
+	G4 -> G27
+		[arrowhead="tee"
+		color="red"]
+	G31 -> G27
+		[arrowhead="tee"
+		color="red"]
+	G7 -> G28
+		[arrowhead="tee"
+		color="red"]
+	G15 -> G28
+		[arrowhead="tee"
+		color="red"]
+	G10 -> G29
+	G30 -> G29
+	G37 -> G29
+	G4 -> G30
+	G39 -> G30
+	G3 -> G31
+	G42 -> G31
+	G20 -> G32
+	G19 -> G32
+		[arrowhead="tee"
+		color="red"]
+	G1 -> G33
+		[arrowhead="tee"
+		color="red"]
+	G19 -> G34
+		[arrowhead="tee"
+		color="red"]
+	G30 -> G35
+		[arrowhead="tee"
+		color="red"]
+	G31 -> G37
+	G25 -> G38
+	G48 -> G38
+	G38 -> G39
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G40
+		[arrowhead="tee"
+		color="red"]
+	G2 -> G41
+	G7 -> G43
+	G5 -> G44
+	G27 -> G45
+		[arrowhead="tee"
+		color="red"]
+	G33 -> G45
+		[arrowhead="tee"
+		color="red"]
+	G4 -> G46
+	G4 -> G47
+		[arrowhead="tee"
+		color="red"]
+	G3 -> G48
+	G3 -> G49
+	G4 -> G49
+
+}

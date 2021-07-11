@@ -1,0 +1,208 @@
+
+    digraph "Linux Audio Output APIs" {
+    	node [ shape=ellipse style=filled ];
+    	label="Linux Audio Output APIs
+    	CC-BY 4.0 © 2020 Haelwenn (lanodan) Monnier
+    	https://hacktivis.me/articles/linux-audio-output";
+    	
+    	"network card" [ shape=box fillcolor=cyan ];
+    	"sound card" [ shape=box fillcolor=cyan ];
+    	"phone modem" [ shape=box fillcolor=cyan ];
+    	"Bluetooth card" [ shape=box fillcolor=cyan ];
+    	filesystem [ shape=octagon fillcolor=yellow ];
+    	null [ shape=diamond fillcolor=red ];
+    	"?" [ shape=circle fillcolor=red ];
+
+    	portaudio [ URL="https://app.assembla.com/spaces/portaudio/git/source/master/src/hostapi/" ];
+    	portaudio -> ALSA;
+    	portaudio -> JACK;
+    	portaudio -> OSS;
+    	portaudio -> asihpi;
+    	asihpi [ shape=octagon fillcolor=yellow ];
+    	asihpi -> "sound card" [ color=green ];
+    	// through a patch
+    	portaudio -> sndio;
+
+    	// https://rudd-o.com/linux-and-free-software/how-pulseaudio-works
+    	PulseAudio [ URL="https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Modules/" ];
+    	PulseAudio -> ALSA;
+    	PulseAudio -> OSS [ dir=both ];
+    	PulseAudio -> "network card" [ label="DLNA, RTP, SDP, SAP, RAOP, Tunnel, HTTP" dir=both color=green fontcolor=green ];
+    	PulseAudio -> null [ color=red ];
+    	PulseAudio -> "sound card" [ color=green ];
+    	PulseAudio -> JACK;
+    	PulseAudio -> bluez;
+    	PulseAudio -> ofono;
+    	PulseAudio -> sox;
+    	"X11 bell" -> PulseAudio;
+
+    	ofono [ shape=octagon fillcolor=yellow ];
+    	ofono -> "phone modem" [ color=green ];
+
+    	bluez [ label="BlueZ" shape=octagon fillcolor=yellow ];
+    	ALSA -> bluez;
+    	bluez -> "Bluetooth card" [ color=green ];
+
+    	sox [ URL="http://sox.sourceforge.net/Docs/Features" ];
+    	sox -> filesystem;
+    	sox -> null [ color=red ];
+    	sox -> libao;
+    	sox -> PulseAudio;
+    	sox -> ALSA;
+
+    	libao [ URL="https://www.xiph.org/ao/" ];
+    	libao -> filesystem;
+    	libao -> OSS;
+    	libao -> ALSA;
+    	libao -> aRts;
+    	libao -> PulseAudio;
+    	libao -> ESD;
+    	libao -> null [ color=red ];
+    	libao -> NAS;
+    	libao -> RoarAudio;
+    	libao -> sndio;
+
+    	RoarAudio [ URL="http://roaraudio.keep-cool.org/" ];
+    	OSS -> RoarAudio;
+    	RoarAudio -> sndio;
+    	RoarAudio -> PulseAudio;
+    	RoarAudio -> ESD;
+    	RoarAudio -> aRts;
+    	RoarAudio -> "network card" [ label="IPv4, DECnet, OpenSLP" dir=both ];
+
+    	// Probably incomplete, need some proper documentation
+    	ESD -> OSS;
+    	ESD -> ALSA;
+    	ESD -> "network card";
+
+    	libcanberra [ URL="http://git.0pointer.net/libcanberra.git/tree/src/driver-order.c" ];
+    	libcanberra -> PulseAudio;
+    	libcanberra -> OSS;
+    	libcanberra -> ALSA;
+    	libcanberra -> gstreamer;
+    	libcanberra -> null [ color=red ];
+
+    	PipeWire [ URL="http://pipewire.org/" ];
+    	PulseAudio -> PipeWire [ dir=both ];
+    	ALSA -> PipeWire;
+    	JACK -> PipeWire;
+    	gstreamer -> PipeWire;
+    	PipeWire -> "?" [ color=red ];
+
+    	sndio [ URL="http://www.sndio.org/" ];
+    	sndio -> ALSA;
+    	sndio -> "network card" [ dir=both ];
+    	PulseAudio -> sndio;
+    	ALSA -> sndio;
+    	gstreamer -> sndio;
+
+    	OpenAL [ URL="https://www.openal-soft.org/" ];
+    	OpenAL -> PulseAudio;
+    	OpenAL -> ALSA;
+    	OpenAL -> OSS;
+    	OpenAL -> SoundIO;
+    	OpenAL -> portaudio;
+    	OpenAL -> JACK;
+    	OpenAL -> filesystem;
+    	OpenAL -> null [ color=red ];
+
+    	SoundIO [ URL="http://libsound.io/" ];
+    	SoundIO -> JACK;
+    	SoundIO -> PulseAudio;
+    	SoundIO -> ALSA;
+    	SoundIO -> null [ color=red ];
+
+    	RtAudio [ URL="https://www.music.mcgill.ca/~gary/rtaudio/apinotes.html" ];
+    	RtAudio -> OSS [ label="OSS 4.0+" ];
+    	RtAudio -> ALSA;
+    	RtAudio -> JACK;
+    	RtAudio -> PulseAudio;
+
+    	// This shit is the hardest to find any documentation for
+    	JUCE -> ALSA;
+    	JUCE -> JACK;
+    	JUCE -> "?" [ color=red ];
+
+    	ALSA [ shape=octagon URL="https://alsa-project.org/wiki/Asoundrc#Plugins"  fillcolor=yellow ];
+    	ALSA -> "sound card" [ color=green ];
+    	ALSA -> "network card" [ color=green ];
+    	ALSA -> PulseAudio;
+    	ALSA -> JACK;
+    	ALSA -> aRts;
+    	ALSA -> null [ color=red ];
+    	ALSA -> filesystem;
+    	OSS -> ALSA;
+
+    	OSS [ shape=octagon fillcolor=yellow ];
+    	OSS -> "sound card" [ color=green fontcolor=green label="third-party drivers from opensound.com" ];
+    	// OSS -> "sound card"; Got removed in the linux kernel
+
+    	// https://wiki.libsdl.org/FAQUsingSDL
+    	SDL1 [ label="libSDL-1.2" URL="https://hg.libsdl.org/SDL/file/fba40d9f4a73/src/audio" ];
+    	SDL1 -> ALSA;
+    	SDL1 -> aRts;
+    	SDL1 -> ESD;
+    	SDL1 -> filesystem;
+    	SDL1 -> NAS;
+    	SDL1 -> OSS;
+    	SDL1 -> PulseAudio;
+    	SDL1 -> null [ color=red ];
+
+    	SDL2 [ label="libSDL-2.0" URL="https://hg.libsdl.org/SDL/file/355a4f94a782" ];
+    	SDL2 -> ALSA;
+    	SDL2 -> aRts;
+    	SDL2 -> ESD;
+    	SDL2 -> filesystem;
+    	SDL2 -> FusionSound [ color=red ];
+    	SDL2 -> JACK;
+    	SDL2 -> NAS;
+    	SDL2 -> "OpenSL ES"; // Gonna have to check again on the others
+    	// Maybe SDL2 -> "NaCL";
+    	SDL2 -> null [ color=red ];
+    	SDL2 -> OSS;
+    	SDL2 -> PulseAudio;
+    	SDL2 -> sndio;
+
+    	FusionSound [ label="DirectFB/FusionSound\n[dead]" fillcolor=red ];
+    	FusionSound -> "?" [ color=red ];
+
+    	// And then where the hell does it goes?
+    	NAS [ label="Network Audio Server" ]
+    	NAS -> "network card";
+
+    	gstreamer -> ALSA;
+    	gstreamer -> OSS;
+    	gstreamer -> JACK;
+    	gstreamer -> PulseAudio;
+
+    	phonon -> gstreamer;
+    	phonon -> VLC;
+    	phonon -> PulseAudio;
+
+    	ClanLib [ URL="https://github.com/sphair/ClanLib/tree/master/Sources/Sound/Platform/Linux" ];
+    	ClanLib -> ALSA;
+    	ClanLib -> OSS;
+
+    	allegro [ URL="https://github.com/liballeg/allegro5/tree/master/addons/audio" ];
+    	allegro -> OSS;
+    	allegro -> OpenAL;
+    	allegro -> PulseAudio;
+    	allegro -> "OpenSL ES";
+    	allegro -> SDL1;
+    	allegro -> SDL2;
+
+    	telepathy -> "phone modem" [ label="?" fontcolor=red ];
+    	telepathy -> "?" [ color=red ];
+
+    	VLC [ URL="https://code.videolan.org/videolan/vlc/-/tree/master/modules/audio_output" ];
+    	VLC -> null [ color=red ];
+    	VLC -> ALSA;
+    	VLC -> filesystem;
+    	VLC -> JACK;
+    	VLC -> "OpenSL ES";
+    	VLC -> OSS;
+    	VLC -> PulseAudio;
+    	VLC -> sndio;
+
+    	"OpenSL ES" -> "?" [ color=red ];
+    }

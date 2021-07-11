@@ -1,0 +1,91 @@
+digraph dotfile{ 
+node [fontname=arial,fontsize=10,color=Black,fontcolor=Blue];
+edge [fontname=arial,fontsize=10,color=Darkgreen,fontcolor=Red];
+rankdir=LR;
+
+// -------------------- labels --------------------
+
+// Namespace  expands to http://dev.w3.org/cvsweb/2002/issues/schema/issues.rdf.
+// Namespace xlink expands to http://www.w3.org/1999/xlink.
+// Namespace this expands to file://na/home/eric/WWW/2002/08/06-issuesRDF/example.rdf#.
+// Namespace rdf expands to http://www.w3.org/1999/02/22-rdf-syntax-ns#.
+// Namespace lists expands to http://lists.w3.org/Archives/Public/www-dom/2002JulSep/0017.htm.
+
+
+// -------------------- nodes --------------------
+
+"GenId8791bc4"[label="[genid4]",shape="octagon"];
+"String87baea0"[label="Brad Pettit",shape="box"];
+"GenId879dec0"[label="[genid7]",shape="octagon"];
+"GenId87a16ec"[label="[genid3]",shape="octagon"];
+"Uri87b1d98"[label="Transition",shape="ellipse"];
+"Uri87bab10"[label="Person",shape="ellipse"];
+"String87b1d50"[label="Given that the support of prevValue in MODIFICATION\n	      mutations can have a significant performance and design\n	      impact on an implementation, is it acceptable to claim\n	      support for MutationEvent events if NULL is always\n	      returned for prevValue/newValue of\n	      implementation-generated mutation events?",shape="box"];
+"GenId8789b0c"[label="[genid8]",shape="octagon"];
+"GenId87b6f98"[label="[genid5]",shape="octagon"];
+"String879dfe0"[label="DOM Working Group",shape="box"];
+"GenId8796b5c"[label="[genid6]",shape="octagon"];
+"String8796a9c"[label="---12",shape="box"];
+"String87a6658"[label="\n      <p>\n	This document contains a list of issues regarding the <loc xlink:href=\"http://www.w3.org/TR/DOM-Level-3-Events\" xlink:type=\"simple\">DOM Level 3\n	Events specification</loc> Last Call period. All comments or\n	issues regarding the specification or this document must be\n	reported to <loc xlink:href=\"mailto:www-dom@w3.org\" xlink:type=\"simple\">www-dom@w3.org</loc> (<loc xlink:href=\"http://lists.w3.org/Archives/Public/www-dom/\" xlink:type=\"simple\">public\n	archives</loc>) <",shape="box"];
+"GenId87bab40"[label="[genid2]",shape="octagon"];
+"String87a01f8"[label="\n      <p>This is the official issues list for the DOM Level 3 Events Last Call period.</p>\n    ",shape="box"];
+"Uri87b4244"[label="lists:l",shape="ellipse"];
+"String878f7dc"[label="DOM Level 3 Events Issues List",shape="box"];
+"String8796c94"[label="2002",shape="box"];
+"Uri879aea8"[label="<http://www.w3.org/2002/07/DOM-Level-3-Events-issues>",shape="ellipse"];
+"Uri87ac6e4"[label="Clarification",shape="ellipse"];
+"String87a4dbc"[label="$Revision: 1.2 $",shape="box"];
+"String8793608"[label="Issues List",shape="box"];
+"GenId878a8cc"[label="[genid10]",shape="octagon"];
+"Uri87c2ff8"[label="<mailto:bradp@microsoft.com>",shape="ellipse"];
+"Uri879de90"[label="Author",shape="ellipse"];
+"String8791bf4"[label="$Date: 2002/08/06 19:53:05 $",shape="box"];
+"GenId87b1dc8"[label="[genid9]",shape="octagon"];
+"String8796b80"[label="July",shape="box"];
+"String87a165c"[label="http://www.w3.org/DOM/",shape="box"];
+"GenId87b4028"[label="[genid1]",shape="octagon"];
+"String87a80d8"[label="Mutation event types",shape="box"];
+"Uri87ac7b0"[label="this:pettit8",shape="ellipse"];
+"String87a16a4"[label="simple",shape="box"];
+"Uri878a77c"[label="IssueList",shape="ellipse"];
+"String87b4010"[label="2002-07-13",shape="box"];
+
+// -------------------- arcs --------------------
+
+"GenId87b4028"->"GenId87bab40"[label="originatedBy"];
+"GenId87a16ec"->"String87a165c"[label="xlink:href"];
+"GenId8791bc4"->"String8793608"[label="w3c-doctype"];
+"GenId87b4028"->"GenId87b6f98"[label="description"];
+"Uri87ac7b0"->"Uri87ac6e4"[label="rdf:type"];
+"GenId8791bc4"->"Uri879aea8"[label="latestloc"];
+"GenId8791bc4"->"GenId8796b5c"[label="pubdate"];
+"GenId879dec0"->"Uri879de90"[label="rdf:type"];
+"GenId8796b5c"->"String8796b80"[label="month"];
+"GenId8791bc4"->"GenId8789b0c"[label="revisiondesc"];
+"GenId8796b5c"->"String8796c94"[label="year"];
+"GenId87b4028"->"Uri87b4244"[label="transitionSource"];
+"GenId8791bc4"->"Uri879aea8"[label="publoc"];
+"Uri87ac7b0"->"GenId87b1dc8"[label="hasTransition"];
+"GenId87b1dc8"->"GenId87b4028"[label="raised"];
+"GenId8796b5c"->"String8796a9c"[label="day"];
+"GenId87b1dc8"->"Uri87b1d98"[label="rdf:type"];
+"GenId879dec0"->"String879dfe0"[label="name"];
+"GenId878a8cc"->"Uri87ac7b0"[label="hasIssue"];
+"GenId87b6f98"->"String87b1d50"[label="p"];
+"GenId8791bc4"->"GenId879dec0"[label="authlist"];
+"GenId878a8cc"->"Uri878a77c"[label="rdf:type"];
+"Uri87ac7b0"->"String87a80d8"[label="ihead-title"];
+"GenId8791bc4"->"String8791bf4"[label="version"];
+"GenId8791bc4"->"String87a01f8"[label="abstract"];
+"GenId87bab40"->"Uri87bab10"[label="rdf:type"];
+"GenId878a8cc"->"GenId8791bc4"[label="header"];
+"GenId879dec0"->"GenId87a16ec"[label="uri"];
+"GenId87a16ec"->"String87a16a4"[label="xlink:type"];
+"GenId8791bc4"->"String87a6658"[label="status"];
+"GenId87b4028"->"String87b4010"[label="date"];
+"GenId87bab40"->"Uri87c2ff8"[label="email"];
+"GenId87bab40"->"String87baea0"[label="name"];
+"GenId8791bc4"->"String878f7dc"[label="title"];
+"GenId8789b0c"->"String87a4dbc"[label="p"];
+}
+

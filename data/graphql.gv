@@ -1,0 +1,31 @@
+digraph {
+    0 [ label = "Orphan (Object)\l\l[ID]" ]
+    1 [ label = "Human (Object)\l\l[Character, Episode, Float, FriendsConnection, ID, Int, LengthUnit, Starship, String]" ]
+    2 [ label = "Droid (Object)\l\l[Character, Episode, FriendsConnection, ID, Int, String]" ]
+    3 [ label = "FriendsConnection (Object)\l\l[Character, FriendsEdge, Int, PageInfo]" ]
+    4 [ label = "FriendsEdge (Object)\l\l[Character, ID]" ]
+    5 [ label = "PageInfo (Object)\l\l[@test, Boolean, ID]" ]
+    6 [ label = "Review (Object)\l\l[@test, DateTime, Episode, Int, String]" ]
+    7 [ label = "Query (Object)\l\l[Character, Droid, Episode, Human, ID, Review, SearchResult, Starship, String]" ]
+    8 [ label = "Mutation (Object)\l\l[Episode, Review, ReviewInput]" ]
+    9 [ label = "Subscription (Object)\l\l[Episode, Review]" ]
+    10 [ label = "Starship (Object extension)\l\l[Boolean, Starship]" ]
+    11 [ label = "Starship (Object)\l\l[@deprecated, Float, ID, LengthUnit, String]" ]
+    4 -> 3 [ ]
+    5 -> 3 [ ]
+    10 -> 11 [ ]
+    2 -> 7 [ ]
+    1 -> 7 [ ]
+    6 -> 7 [ ]
+    11 -> 7 [ ]
+    6 -> 9 [ ]
+    3 -> 2 [ ]
+    6 -> 8 [ ]
+    3 -> 1 [ ]
+    11 -> 1 [ ]
+}
+/*
+https://github.com/yamafaktory/craftql
+A CLI tool to visualize GraphQL schemas and to output a graph data structure as a graphviz .dot format
+*/
+

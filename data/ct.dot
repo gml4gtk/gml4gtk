@@ -1,0 +1,34 @@
+digraph "Car - General fault isolation procedure" {
+graph [splines=ortho]
+/* issue on next line */
+
+{idm [label="boo"]}[label="pl"]->bar
+
+{idm2 [label="boo2"]}->bar2
+
+{idm6273072 [label="Car will not start" shape=rectangle color=green style="solid" fontcolor=black tooltip="Preliminary requirement"]} -> idm5499232 [ style="solid" tooltip="Preliminary requirement" labeltooltip="Preliminary requirement"]
+
+{idm5499232 [label="Do warning lights appear?" shape=diamond color=blue style="solid" fontcolor=black tooltip="Step 1"]} -> idm5496368 [xlabel=" Yes " style="solid" tooltip="Step 1.1" labeltooltip="Step 1.1"]
+
+{idm5499232 [ style="solid" fontcolor=black tooltip="Step 1"]} -> idm5495360 [xlabel=" No " style="solid" tooltip="Step 1.2" labeltooltip="Step 1.2"]
+
+{idm5496368 [label="Battery is flat, call 
+mechanic" shape=rectangle color=red style="solid" fontcolor=black tooltip="Step 2"]}
+ [ style="solid" tooltip="Step 2" labeltooltip="Step 2"]
+
+{idm5495360 [label="Lock & unlock car to disable 
+immobiliser and try starting 
+again" shape=rectangle color=red style="solid" fontcolor=black tooltip="Step 3"]} -> idm5494816 [ style="solid" tooltip="Step 3" labeltooltip="Step 3"]
+
+{idm5494816 [label="Does the engine still not 
+start?" shape=diamond color=blue style="solid" fontcolor=black tooltip="Step 4"]} -> idm5492048 [xlabel=" Yes " style="solid" tooltip="Step 4.1" labeltooltip="Step 4.1"]
+
+{idm5494816 [ style="solid" fontcolor=black tooltip="Step 4"]} -> idm5491040 [xlabel=" No " style="solid" tooltip="Step 4.2" labeltooltip="Step 4.2"]
+
+{idm5492048 [label="Engine is flooded/other 
+technical issue, call 
+mechanic" shape=rectangle color=red style="solid" fontcolor=black tooltip="Step 5"]} [ style="solid" tooltip="Step 5" labeltooltip="Step 5"]
+
+{idm5491040 [label="Car is working" shape=rectangle color=red style="solid" fontcolor=black tooltip="Step 6"]} [ style="solid" tooltip="Step 6" labeltooltip="Step 6"]
+
+}

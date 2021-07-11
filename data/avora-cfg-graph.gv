@@ -1,0 +1,22 @@
+/*
+What is Avrora?
+
+Avrora, a research project of the UCLA Compilers Group, is a set of simulation and analysis tools for programs written for the AVR microcontroller produced by Atmel and the Mica2 sensor nodes. Avrora contains a flexible framework for simulating and analyzing assembly programs, providing a clean Java API and infrastructure for experimentation, profiling, and analysis. 
+
+Simulation is an important step in the development cycle of embedded systems, allowing more detailed inspection of the dynamic execution of microcontroller programs and diagnosis of software problems before the software is deployed onto the target hardware. Avrora is a clean and open implementation motivated by this need.
+
+Avrora also provides a framework for program analysis, allowing static checking of embedded software and an infrastructure for future program analysis research. Avrora is flexible, providing a Java API for developing analyses and removes the need to build a large support structure to investigate program analysis. 
+
+A control flow graph is a representation of a program where contiguous regions of code without branches, known as basic blocks, are represented as nodes in a graph and edges between nodes indicate the possible flow of the program. Avrora includes a tool to generate a control flow graph for AVR programs, which can shed light on the structure and organization of machine code programs.
+
+The control flow graph tool can be invoked with the -action=cfg option to Avrora. It can generate output in one of two formats: a text-based straight-line representation of each basic block with successors listed at the end of the code for each block, and as a textual format supported by the dot graph rendering tool that is freely available. These two output formats can be selected with the -output option.
+
+
+http://compiler.cs.ucla.edu/avrora/
+
+% avrora -action=cfg -output=dot -file=cfg.dot cfg.asm 
+*/
+digraph "todo"
+{
+ "1" label="put a generated graph here"];
+}

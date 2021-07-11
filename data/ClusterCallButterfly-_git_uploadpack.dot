@@ -1,0 +1,14 @@
+/* dot crashes on this */
+digraph "" {
+  graph [fontcolor="#ffffff", pack="true", packmode="clust", ranksep="1.0", style="rounded", bgcolor="#1E1E1E", fontname="Arial", fontsize="9", label="", compound="true", fillcolor="#afd870", rankdir="LR"];
+  node [fontcolor="#ffffff", shape="rectangle", node_initialized="no", fixedsize="false", style="filled", color="grey", fontname="Arial", fontsize="9", width="0.0", height="0.0", fillcolor="#1e1e1e", label="", compound="true"];
+  edge [arrowtail="none", dir="forward", arrowhead="normal", fontcolor="#ffffff", arrowsize="0.5", ltail="", lhead="", color="black", fontname="Arial", fontsize="9", label="", compound="true"];
+  subgraph "cluster_1" {
+    graph [fontcolor="#afd870", color="#afd870", label="A"];
+    __N2 [fontcolor="white", shape="note", style="filled", color="#90c4e4", label="a", fillcolor="#1976d2"];
+    __N3 [shape="note", style="filled", color="#90c4e4", label="b", fillcolor="#1e1e1e"];
+    __N3 -> __N2 [arrowtail="none", dir="forward", arrowhead="normal", style="solid", color="#4e8cb9", label=""];
+  }
+  __N4 [shape="box3d", style="filled", color="#90c4e4", label="c", fillcolor="#1e1e1e"];
+  __N2 -> __N4 [arrowtail="none", dir="forward", arrowhead="normal", style="solid", color="#4e8cb9", label=""];
+}

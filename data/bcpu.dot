@@ -1,0 +1,20 @@
+/* state diagram of the 1 bit bcpu cpu */
+
+digraph bcpu {
+	reset -> fetch [label="start"]
+	fetch -> execute
+	fetch -> indirect [label="flag(IND) = '1'\n and op < 8"]
+	fetch -> reset  [label="flag(RST) = '1'"]
+	fetch -> halt  [label="flag(HLT) = '1'"]
+	indirect -> operand
+	operand -> execute
+	execute -> advance
+	execute -> store   [label="op = 'store'"]
+	execute -> load   [label="op = 'load'"]
+	execute -> fetch [label="(op = 'jumpz' and acc = 0)\n or op ='jump'"]
+	store -> advance
+	load -> advance
+	advance -> fetch
+	halt -> halt
+}
+

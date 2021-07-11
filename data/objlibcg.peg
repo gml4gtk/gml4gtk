@@ -1,0 +1,161 @@
+# objdump language lexer+parser to use with packcc parser generator
+%prefix "objlibcg"
+
+%source{
+
+/*
+This is a objdump output parser created using packcc parser tool
+
+This is used to generate a callgraph of a binary file with only calls to library routines
+
+Compile a test program with symbols like this
+
+gcc -g -O0 test.c -o test
+
+Create a assembly listing using objdump like this
+
+objdump -d -j .text --demangle=auto --show-raw-insn test >out.txt
+
+To create a callgraph
+
+cat out.txt |./objcg
+
+To see all possible binary formats objdump supports use
+
+objdump --help
+
+This is used with x86_64 elf binary on Linux
+
+For other type of binary formats the objdump command must be different
+
+For other type of binary formats the peg file must be edited
+
+Then generate new parser using
+
+packcc objcg.peg
+
+The peg scans for funtion start which look like this
+
+0000000000001b4a <sfg_init>:
+
+The peg scans for function call which look like this
+
+    1418:	e8 2d 07 00 00       	callq  1b4a <sfg_init>
+
+This is a indirect call
+
+    2eb3:	ff d0                	callq  *%rax
+
+This is a call to glibc
+
+    1104:	ff 15 d6 de 00 00    	callq  *0xded6(%rip)        # efe0 <__libc_start_main@GLIBC_2.2.5>
+
+This is a call to a external library function
+
+    4140:	e8 3b cf ff ff       	callq  1080 <calloc@plt>
+
+When the binary is stripped with strip -s only the calls to lib routines are available
+*/
+
+#include <stdio.h>
+#include <string.h>
+
+/* set to 1 to get parse debug info */
+static int debug = 0;
+
+static const char *dbg_str[] = { "Evaluating rule", "Matched rule", "Abandoning rule" };
+
+#define PCC_DEBUG(event, rule, level, pos, buffer, length) \
+    if (debug) fprintf(stdout, "%*s%s %s @%d [%.*s]\n", (int)(level * 2), "", dbg_str[event], rule, (int)pos, (int)length,  buffer); fflush(stdout)
+
+    /* NOTE: To guarantee the output order, stderr, which can lead a race condition with stdout, is not used. */
+
+static int linenr = 1;
+
+static char *curfname = "";
+
+static void edgeto (char *str)
+{
+ char *p0=NULL;
+ char *p1=NULL;
+ char *p2 = NULL;
+ char *p=NULL;
+ if(str==NULL) { return; }
+ if(strlen(str)==0) { return; }
+ /* if this is allowed the calls to libs are included. here is a option. */
+ if (strchr(str,'@')) {
+ p0 = strchr(str,'<');
+ if (p0==NULL) { return; }
+ p1 = strstr (str,"callq");
+ if (p1 == NULL) { return; }
+ p2 = strstr (str, "@plt");
+ if (p2) { /* allow these lib calls return; */ }
+ printf ("  \"%s\" -> \"",curfname);
+ p = strchr (str,'<');
+ p++;
+ while (*p)
+ {
+  if (*p == '@') { break; }
+  if (*p == '>') { break ; }
+  if(*p =='+') { break; }
+  fputc (*p, stdout);
+  p++;
+ }
+ printf("\";\n");
+ }
+ return;
+}
+
+}
+
+# start of input
+file <- lines* !.
+
+lines	<- line endofline  { if (debug) { fprintf(stderr,"%s",$0); } linenr++; }
+
+line	<- funcdef
+	/ (!endofline .)* { edgeto ($0); }
+
+
+# function entry looks like this
+# 0000000000001b4a <sfg_init>:
+funcdef	<- fdaddr _ '<' fdname '>:'
+
+fdaddr	<- (!'<' .)*
+
+fdname	<- (!'>' .)* { curfname = strdup($0); printf ("  /* at function %s() */\n",$0); }
+
+# call looks like this
+#    1418:	e8 2d 07 00 00       	callq  1b4a <sfg_init>
+#    2eb3:	ff d0                	callq  *%rax
+#    1104:	ff 15 d6 de 00 00    	callq  *0xded6(%rip)        # efe0 <__libc_start_main@GLIBC_2.2.5>
+#    4140:	e8 3b cf ff ff       	callq  1080 <calloc@plt>
+
+#calldef	<- callopc 'callq' _ calladr  endofline
+
+#callopc	<- (!'callq' .)*
+
+#calladr	<- (!'<' .)* '<' callname '>'
+#	/ (!endofline .)*
+
+#callname	<- callname1 '@plt'
+#		/  callname1 { edgeto ($0); }
+
+#callname1	<- (!'>' !'@' .)*
+
+_	<-	space*
+
+space	<-	(' ' / '\t')
+
+endofline	<-	( '\r\n' / '\n' / '\r' / '\n\r' )
+
+%%
+
+int main() {
+    objlibcg_context_t *ctx = objlibcg_create(NULL);
+    printf ("/* generated callgraph from binary by objlibcg.peg */\ndigraph objlibcg {\n");
+    while (objlibcg_parse(ctx, NULL)){;}
+    objlibcg_destroy(ctx);
+    printf ("  /* %d lines parsed */\n}\n",linenr);
+    return 0;
+}

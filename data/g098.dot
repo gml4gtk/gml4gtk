@@ -1,0 +1,53 @@
+digraph G {
+    graph [bgcolor=transparent,
+        fontname=Arial,
+        penwidth=2,
+        truecolor=true];
+    node [fontname=Arial,
+        fontsize=12,
+        penwidth=2];
+    edge [penwidth=2];
+    node_0 [label="3/4",
+        shape=triangle];
+    node_1 [label="1/4",
+        shape=box];
+    node_2 [label="1/4",
+        shape=box];
+    node_3 [label="1/4",
+        shape=box];
+    subgraph cluster_offsets {
+        graph [style=rounded];
+        node_4_0 [color=white,
+            fillcolor=black,
+            fontcolor=white,
+            fontname="Arial bold",
+            label="{ <f_0_0> 0 | <f_0_1> ++ }",
+            shape=Mrecord,
+            style=filled];
+        node_4_1 [color=white,
+            fillcolor=black,
+            fontcolor=white,
+            fontname="Arial bold",
+            label="{ <f_0_0> 1/4 | <f_0_1> + }",
+            shape=Mrecord,
+            style=filled];
+        node_4_2 [color=white,
+            fillcolor=black,
+            fontcolor=white,
+            fontname="Arial bold",
+            label="{ <f_0_0> 1/2 | <f_0_1> + }",
+            shape=Mrecord,
+            style=filled];
+        node_4_3 [label="{ <f_0_0> 3/4 | <f_0_1> ++ }",
+            shape=Mrecord];
+    }
+    node_0 -> node_1;
+    node_0 -> node_2;
+    node_0 -> node_3;
+    node_1 -> node_4_0 [style=dotted];
+    node_1 -> node_4_1 [style=dotted];
+    node_2 -> node_4_1 [style=dotted];
+    node_2 -> node_4_2 [style=dotted];
+    node_3 -> node_4_2 [style=dotted];
+    node_3 -> node_4_3 [style=dotted];
+}

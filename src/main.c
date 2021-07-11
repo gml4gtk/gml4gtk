@@ -2053,6 +2053,9 @@ static void do_layout_all_r(struct gml_graph *g)
 	/* re-organize nodelist */
 	reorg(g);
 
+	/* determine startnodes */
+	startnodes(g);
+
 	/* longest path algorithm */
 	longestpath(g);
 
@@ -2136,6 +2139,9 @@ static void do_layout_all(struct gml_graph *g)
 
 		/* re-organize nodelist */
 		reorg(g);
+
+		/* determine startnodes */
+		startnodes(g);
 
 		/* longest path algorithm */
 		longestpath(g);

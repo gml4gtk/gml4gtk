@@ -1,0 +1,433 @@
+/* generated callgraph from binary by objcg.peg */
+digraph objcg {
+  /* at function _start() */
+  /* at function deregister_tm_clones() */
+  /* at function register_tm_clones() */
+  /* at function __do_global_dtors_aux() */
+  "__do_global_dtors_aux" -> "deregister_tm_clones";
+  /* at function frame_dummy() */
+  /* at function main() */
+  "main" -> "sfg_version";
+  "main" -> "sfg_init";
+  "main" -> "sfg_addnode";
+  "main" -> "sfg_addedge";
+  "main" -> "sfg_addedge";
+  "main" -> "sfg_xspacing";
+  "main" -> "sfg_yspacing";
+  "main" -> "sfg_layout";
+  "main" -> "sfg_nlevels";
+  "main" -> "sfg_maxy";
+  "main" -> "sfg_maxx";
+  "main" -> "sfg_node_foreach";
+  "main" -> "sfg_edge_foreach";
+  "main" -> "sfg_deinit";
+  "main" -> "sfg_init";
+  "main" -> "readfile";
+  "main" -> "sfg_layout";
+  "main" -> "sfg_nedges";
+  "main" -> "sfg_nnodes";
+  "main" -> "sfg_nlevels";
+  "main" -> "sfg_maxy";
+  "main" -> "sfg_maxx";
+  "main" -> "head";
+  "main" -> "sfg_node_foreach";
+  "main" -> "sfg_edge_foreach";
+  "main" -> "tail";
+  "main" -> "sfg_deinit";
+  /* at function getnodedata() */
+  /* at function getedgedata() */
+  /* at function readfile() */
+  "readfile" -> "sfg_addnode";
+  "readfile" -> "sfg_addedge";
+  /* at function getnodedataps() */
+  /* at function getedgedataps() */
+  "getedgedataps" -> "sfg_nodetype";
+  "getedgedataps" -> "sfg_nodetype";
+  "getedgedataps" -> "sfg_nodexpos";
+  "getedgedataps" -> "sfg_nodeypos";
+  "getedgedataps" -> "sfg_nodexpos";
+  "getedgedataps" -> "sfg_nodeypos";
+  "getedgedataps" -> "sfg_nodexsize";
+  "getedgedataps" -> "sfg_nodeysize";
+  "getedgedataps" -> "sfg_nodexsize";
+  "getedgedataps" -> "sfg_nodeysize";
+  "getedgedataps" -> "sfg_noderelypos";
+  "getedgedataps" -> "sfg_noderelypos";
+  /* at function head() */
+  "head" -> "sfg_maxy";
+  "head" -> "sfg_maxx";
+  /* at function tail() */
+  /* at function sfg_version() */
+  /* at function sfg_init() */
+  "sfg_init" -> "splay_tree_new";
+  /* at function sfg_deinit() */
+  "sfg_deinit" -> "clear_stlist_all";
+  "sfg_deinit" -> "clear_edgelist";
+  "sfg_deinit" -> "clear_nodelist";
+  "sfg_deinit" -> "splay_tree_delete";
+  /* at function sfg_addnode() */
+  "sfg_addnode" -> "uniqnode";
+  "sfg_addnode" -> "uniqnode_add";
+  /* at function sfg_addedge() */
+  "sfg_addedge" -> "uniqnode";
+  "sfg_addedge" -> "uniqnode";
+  /* at function sfg_layout() */
+  "sfg_layout" -> "prep";
+  "sfg_layout" -> "reorg";
+  "sfg_layout" -> "uncycle";
+  "sfg_layout" -> "reorg";
+  "sfg_layout" -> "ylevels";
+  "sfg_layout" -> "shorteredges";
+  "sfg_layout" -> "edgesdownwards";
+  "sfg_layout" -> "edgelen";
+  "sfg_layout" -> "doublespacey";
+  "sfg_layout" -> "edgelabels";
+  "sfg_layout" -> "splitedges";
+  "sfg_layout" -> "nodecounts";
+  "sfg_layout" -> "barycenter";
+  "sfg_layout" -> "improve_positions";
+  "sfg_layout" -> "finalxy";
+  "sfg_layout" -> "setminmax";
+  /* at function sfg_crossings() */
+  /* at function sfg_initialcrossings() */
+  /* at function sfg_edgelabels() */
+  /* at function sfg_nodexpos() */
+  "sfg_nodexpos" -> "uniqnode";
+  /* at function sfg_nodeypos() */
+  "sfg_nodeypos" -> "uniqnode";
+  /* at function sfg_noderelxpos() */
+  "sfg_noderelxpos" -> "uniqnode";
+  /* at function sfg_noderelypos() */
+  "sfg_noderelypos" -> "uniqnode";
+  /* at function sfg_nodely0() */
+  "sfg_nodely0" -> "uniqnode";
+  /* at function sfg_nodely1() */
+  "sfg_nodely1" -> "uniqnode";
+  /* at function sfg_nodexsize() */
+  "sfg_nodexsize" -> "uniqnode";
+  /* at function sfg_nodeysize() */
+  "sfg_nodeysize" -> "uniqnode";
+  /* at function sfg_xspacing() */
+  /* at function sfg_yspacing() */
+  /* at function sfg_maxx() */
+  /* at function sfg_maxy() */
+  /* at function sfg_nodemin() */
+  /* at function sfg_nodemax() */
+  /* at function sfg_edgemin() */
+  /* at function sfg_edgemax() */
+  /* at function sfg_nlevels() */
+  /* at function sfg_nnodes() */
+  /* at function sfg_nedges() */
+  /* at function sfg_nodetype() */
+  "sfg_nodetype" -> "uniqnode";
+  /* at function sfg_nodeselfedges() */
+  "sfg_nodeselfedges" -> "uniqnode";
+  /* at function sfg_nodeindegree() */
+  "sfg_nodeindegree" -> "uniqnode";
+  /* at function sfg_nodeoutdegree() */
+  "sfg_nodeoutdegree" -> "uniqnode";
+  /* at function sfg_nodeenum() */
+  "sfg_nodeenum" -> "uniqnode";
+  /* at function sfg_nodedata() */
+  "sfg_nodedata" -> "uniqnode";
+  /* at function sfg_setnodedata() */
+  "sfg_setnodedata" -> "uniqnode";
+  /* at function sfg_node_foreach() */
+  /* at function sfg_edgefrom() */
+  "sfg_edgefrom" -> "findedge";
+  /* at function sfg_edgeto() */
+  "sfg_edgeto" -> "findedge";
+  /* at function sfg_edgetype() */
+  "sfg_edgetype" -> "findedge";
+  /* at function sfg_edgerev() */
+  "sfg_edgerev" -> "findedge";
+  /* at function sfg_edge_foreach() */
+  /* at function splay_tree_delete_helper() */
+  "splay_tree_delete_helper" -> "splay_tree_delete_helper";
+  "splay_tree_delete_helper" -> "splay_tree_delete_helper";
+  /* at function splay_tree_delete() */
+  "splay_tree_delete" -> "splay_tree_delete_helper";
+  /* at function splay_tree_new() */
+  /* at function splay_tree_insert() */
+  "splay_tree_insert" -> "splay_tree_lookup";
+  /* at function splay_tree_lookup() */
+  "splay_tree_lookup" -> "splay";
+  /* at function splay_tree_compare_ints() */
+  /* at function splay() */
+  /* at function uniqnode() */
+  "uniqnode" -> "splay_tree_lookup";
+  /* at function uniqnode_add() */
+  "uniqnode_add" -> "splay_tree_new";
+  "uniqnode_add" -> "splay_tree_lookup";
+  "uniqnode_add" -> "splay_tree_insert";
+  /* at function clear_nodelist() */
+  /* at function clear_edgelist() */
+  /* at function prep() */
+  /* at function reorg() */
+  /* at function decycle3() */
+  "decycle3" -> "decycle3";
+  /* at function uncycle() */
+  "uncycle" -> "clear_stlist_all";
+  "uncycle" -> "make_stlist";
+  "uncycle" -> "decycle3";
+  "uncycle" -> "decycle3";
+  "uncycle" -> "clear_stlist_all";
+  "uncycle" -> "make_stlist";
+  /* at function make_stlist() */
+  /* at function clear_stlist() */
+  /* at function clear_stlist_all() */
+  "clear_stlist_all" -> "clear_stlist";
+  /* at function add_singlenode() */
+  /* at function ylevels() */
+  "ylevels" -> "add_singlenode";
+  "ylevels" -> "set_level2";
+  "ylevels" -> "set_level2";
+  "ylevels" -> "set_level2";
+  /* at function set_level2() */
+  "set_level2" -> "set_level2";
+  /* at function unrev() */
+  "unrev" -> "clear_stlist_all";
+  "unrev" -> "make_stlist";
+  /* at function do_abs() */
+  /* at function shorteredges() */
+  "shorteredges" -> "unrev";
+  "shorteredges" -> "do_abs";
+  "shorteredges" -> "do_abs";
+  /* at function edgesdownwards() */
+  "edgesdownwards" -> "clear_stlist_all";
+  "edgesdownwards" -> "make_stlist";
+  /* at function edgelen() */
+  "edgelen" -> "clear_stlist_all";
+  "edgelen" -> "make_stlist";
+  /* at function doublespacey() */
+  /* at function add_new_dummynode() */
+  "add_new_dummynode" -> "uniqnode";
+  "add_new_dummynode" -> "uniqnode_add";
+  /* at function add_new_dummyedge() */
+  "add_new_dummyedge" -> "uniqnode";
+  "add_new_dummyedge" -> "uniqnode";
+  /* at function del_edge() */
+  /* at function edgelabels() */
+  "edgelabels" -> "add_new_dummynode";
+  "edgelabels" -> "uniqnode";
+  "edgelabels" -> "add_new_dummyedge";
+  "edgelabels" -> "add_new_dummyedge";
+  "edgelabels" -> "del_edge";
+  "edgelabels" -> "clear_stlist_all";
+  "edgelabels" -> "make_stlist";
+  /* at function splitedges() */
+  "splitedges" -> "add_new_dummynode";
+  "splitedges" -> "uniqnode";
+  "splitedges" -> "add_new_dummyedge";
+  "splitedges" -> "add_new_dummyedge";
+  "splitedges" -> "del_edge";
+  /* at function nodecounts() */
+  "nodecounts" -> "clear_stlist_all";
+  "nodecounts" -> "make_stlist";
+  /* at function setbit() */
+  /* at function clearbit() */
+  /* at function testbit() */
+  /* at function mget() */
+  "mget" -> "testbit";
+  /* at function mget_set() */
+  "mget_set" -> "setbit";
+  "mget_set" -> "clearbit";
+  /* at function number_of_crossings2() */
+  "number_of_crossings2" -> "mget";
+  "number_of_crossings2" -> "mget";
+  /* at function number_of_crossings3() */
+  "number_of_crossings3" -> "mget";
+  "number_of_crossings3" -> "mget";
+  /* at function number_of_crossings_a() */
+  "number_of_crossings_a" -> "number_of_crossings3";
+  /* at function make_matrix() */
+  "make_matrix" -> "mget_set";
+  "make_matrix" -> "mget_set";
+  /* at function su_find_node_with_number() */
+  "su_find_node_with_number" -> "uniqnode";
+  /* at function store_new_positions() */
+  "store_new_positions" -> "su_find_node_with_number";
+  "store_new_positions" -> "su_find_node_with_number";
+  /* at function do_memmove() */
+  /* at function copy_m() */
+  "copy_m" -> "do_memmove";
+  "copy_m" -> "do_memmove";
+  "copy_m" -> "do_memmove";
+  "copy_m" -> "do_memmove";
+  /* at function equal_m() */
+  "equal_m" -> "mget";
+  "equal_m" -> "mget";
+  /* at function equal_a() */
+  "equal_a" -> "equal_m";
+  /* at function copy_a() */
+  "copy_a" -> "copy_m";
+  /* at function exch_rows() */
+  "exch_rows" -> "mget";
+  "exch_rows" -> "mget";
+  "exch_rows" -> "mget_set";
+  "exch_rows" -> "mget_set";
+  /* at function exch_columns() */
+  "exch_columns" -> "mget";
+  "exch_columns" -> "mget";
+  "exch_columns" -> "mget_set";
+  "exch_columns" -> "mget_set";
+  /* at function reverse_r() */
+  "reverse_r" -> "exch_rows";
+  /* at function reverse_c() */
+  "reverse_c" -> "exch_columns";
+  /* at function row_barycenter() */
+  "row_barycenter" -> "mget";
+  /* at function column_barycenter() */
+  "column_barycenter" -> "mget";
+  /* at function r_r() */
+  "r_r" -> "row_barycenter";
+  "r_r" -> "reverse_r";
+  "r_r" -> "reverse_c";
+  /* at function r_c() */
+  "r_c" -> "column_barycenter";
+  "r_c" -> "reverse_c";
+  "r_c" -> "reverse_r";
+  /* at function b_r() */
+  "b_r" -> "row_barycenter";
+  "b_r" -> "exch_rows";
+  "b_r" -> "exch_columns";
+  /* at function b_c() */
+  "b_c" -> "column_barycenter";
+  "b_c" -> "exch_columns";
+  "b_c" -> "exch_rows";
+  /* at function sorted() */
+  /* at function phase1_down() */
+  "phase1_down" -> "b_c";
+  "phase1_down" -> "b_c";
+  /* at function phase1_up() */
+  "phase1_up" -> "b_r";
+  "phase1_up" -> "b_r";
+  /* at function phase2_down() */
+  "phase2_down" -> "column_barycenter";
+  "phase2_down" -> "sorted";
+  "phase2_down" -> "r_c";
+  "phase2_down" -> "column_barycenter";
+  "phase2_down" -> "sorted";
+  "phase2_down" -> "r_c";
+  /* at function phase2_up() */
+  "phase2_up" -> "row_barycenter";
+  "phase2_up" -> "sorted";
+  "phase2_up" -> "r_r";
+  "phase2_up" -> "row_barycenter";
+  "phase2_up" -> "sorted";
+  "phase2_up" -> "r_r";
+  /* at function bc_n() */
+  "bc_n" -> "make_matrix";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "phase1_down";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_up";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_down";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_up";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "equal_a";
+  "bc_n" -> "equal_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase2_down";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_down";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_up";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "equal_a";
+  "bc_n" -> "phase2_up";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_up";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "phase1_down";
+  "bc_n" -> "number_of_crossings_a";
+  "bc_n" -> "copy_a";
+  "bc_n" -> "equal_a";
+  "bc_n" -> "equal_a";
+  "bc_n" -> "store_new_positions";
+  "bc_n" -> "store_new_positions";
+  /* at function barycenter() */
+  "barycenter" -> "bc_n";
+  /* at function is_dummy() */
+  /* at function upper_connectivity() */
+  /* at function lower_connectivity() */
+  /* at function do_floor() */
+  /* at function upper_barycenter() */
+  "upper_barycenter" -> "upper_connectivity";
+  "upper_barycenter" -> "upper_connectivity";
+  "upper_barycenter" -> "do_floor";
+  /* at function lower_barycenter() */
+  "lower_barycenter" -> "lower_connectivity";
+  "lower_barycenter" -> "lower_connectivity";
+  "lower_barycenter" -> "do_floor";
+  /* at function sort() */
+  /* at function make_node_list_up() */
+  "make_node_list_up" -> "is_dummy";
+  "make_node_list_up" -> "lower_connectivity";
+  "make_node_list_up" -> "sort";
+  /* at function make_node_list_down() */
+  "make_node_list_down" -> "is_dummy";
+  "make_node_list_down" -> "upper_connectivity";
+  "make_node_list_down" -> "sort";
+  /* at function find_next() */
+  /* at function do_down() */
+  "do_down" -> "find_next";
+  "do_down" -> "upper_barycenter";
+  /* at function do_up() */
+  "do_up" -> "find_next";
+  "do_up" -> "lower_barycenter";
+  /* at function improve_positions2local() */
+  "improve_positions2local" -> "make_node_list_down";
+  "improve_positions2local" -> "do_down";
+  "improve_positions2local" -> "make_node_list_up";
+  "improve_positions2local" -> "do_up";
+  "improve_positions2local" -> "make_node_list_up";
+  "improve_positions2local" -> "do_up";
+  "improve_positions2local" -> "make_node_list_down";
+  "improve_positions2local" -> "do_down";
+  /* at function make_cnnodes_at_level() */
+  /* at function clear_cnnodes_at_level() */
+  /* at function make_cnodelist() */
+  /* at function clear_cnodelist() */
+  /* at function move0() */
+  /* at function make_cposnodes() */
+  /* at function clear_cposnodes() */
+  /* at function make_clevelnodes() */
+  /* at function clear_clevelnodes() */
+  /* at function cfinalxy() */
+  "cfinalxy" -> "make_cposnodes";
+  "cfinalxy" -> "clear_cposnodes";
+  "cfinalxy" -> "make_clevelnodes";
+  "cfinalxy" -> "clear_clevelnodes";
+  /* at function movefinal() */
+  /* at function tunedummy() */
+  /* at function tunenodes() */
+  /* at function improve_positions() */
+  "improve_positions" -> "make_cnodelist";
+  "improve_positions" -> "make_cnnodes_at_level";
+  "improve_positions" -> "improve_positions2local";
+  "improve_positions" -> "move0";
+  "improve_positions" -> "cfinalxy";
+  "improve_positions" -> "tunedummy";
+  "improve_positions" -> "tunenodes";
+  "improve_positions" -> "movefinal";
+  "improve_positions" -> "clear_cnnodes_at_level";
+  "improve_positions" -> "clear_cnodelist";
+  /* at function finalxy() */
+  /* at function findedge() */
+  /* at function setminmax() */
+  /* at function __libc_csu_init() */
+  "__libc_csu_init" -> "_init";
+  /* at function __libc_csu_fini() */
+  /* 11476 lines parsed */
+}

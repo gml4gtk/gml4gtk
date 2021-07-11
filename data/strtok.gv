@@ -1,0 +1,17 @@
+/*
+because dot uses strtok() to parse strings
+it does not detect unusual strings or empty
+strings like:
+style=",,,,,,";
+when expected something like:
+style="invis,dotted";
+
+It is easy to fix to have a warning on such strings
+Here is a test:
+*/
+digraph "strtok"
+{
+ style=",,,,,,,,,,,,,,,,";
+ "a";
+}
+

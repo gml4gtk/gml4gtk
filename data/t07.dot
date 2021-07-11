@@ -1,0 +1,23 @@
+graph "graph.dot" {
+
+   size="6.0,7.0";
+
+node [shape=circle,fixedsize=true,style=filled,
+      color="khaki",fontcolor="black",fontsize=18];
+
+   1  [label="1", pos="0.423526,0.046359"];
+   2  [label="2", pos="0.629522,0.470435"];
+   3  [label="3", pos="0.886755,1.000000"];
+   4  [label="4", pos="0.866506,0.000000"];
+   5  [label="5", pos="0.113245,0.365895"];
+
+edge [color="blue"];
+
+   1  --   2;
+   1  --   4;
+   1  --   5;
+   2  --   3;
+   2  --   4;
+   2  --   5;
+
+}

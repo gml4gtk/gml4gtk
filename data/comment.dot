@@ -1,0 +1,73 @@
+digraph network {
+    /* the links to the nodes */
+    "S1" -> "H1" [ comment = "H1" ];
+    "S1" -> "H2" [ comment = "H2" ];
+    "S1" -> "H3" [ comment = "H3" ];
+    "S1" -> "H4" [ comment = "H4" ];
+    "S2" -> "H5" [ comment = "H5" ];
+    "S2" -> "H6" [ comment = "H6" ];
+    "S2" -> "H7" [ comment = "H7" ];
+    "S2" -> "H8" [ comment = "H8" ];
+    "S3" -> "H9" [ comment = "H9" ];
+    "S3" -> "H10" [ comment = "H10" ];
+    "S3" -> "H11" [ comment = "H11" ];
+    "S3" -> "H12" [ comment = "H12" ];
+    "S4" -> "H13" [ comment = "H13" ];
+    "S4" -> "H14" [ comment = "H14" ];
+    "S4" -> "H15" [ comment = "H15" ];
+    "S4" -> "H16" [ comment = "H16" ];
+
+    /* the links from the nodes */
+    "H1"  -> "S1" [ comment = "*" ];
+    "H2"  -> "S1" [ comment = "*" ];
+    "H3"  -> "S1" [ comment = "*" ];
+    "H4"  -> "S1" [ comment = "*" ];
+    "H5"  -> "S2" [ comment = "*" ];
+    "H6"  -> "S2" [ comment = "*" ];
+    "H7"  -> "S2" [ comment = "*" ];
+    "H8"  -> "S2" [ comment = "*" ];
+    "H9"  -> "S3" [ comment = "*" ];
+    "H10" -> "S3" [ comment = "*" ];
+    "H11" -> "S3" [ comment = "*" ];
+    "H12" -> "S3" [ comment = "*" ];
+    "H13" -> "S4" [ comment = "*" ];
+    "H14" -> "S4" [ comment = "*" ];
+    "H15" -> "S4" [ comment = "*" ];
+    "H16" -> "S4" [ comment = "*" ];
+
+    /* the links up */
+    "S1" -> "S11" [ comment = "H5,H9,H13" ];
+    "S1" -> "S11" [ comment = "H6,H10,H14" ];
+    "S1" -> "S12" [ comment = "H7,H11,H15" ];
+    "S1" -> "S12" [ comment = "H8,H12,H16" ];
+    "S2" -> "S11" [ comment = "H1,H9,H13" ];
+    "S2" -> "S11" [ comment = "H2,H10,H14" ];
+    "S2" -> "S12" [ comment = "H3,H11,H15" ];
+    "S2" -> "S12" [ comment = "H4,H12,H16" ];
+    "S3" -> "S11" [ comment = "H1,H5,H13" ];
+    "S3" -> "S11" [ comment = "H2,H6,H14" ];
+    "S3" -> "S12" [ comment = "H3,H7,H15" ];
+    "S3" -> "S12" [ comment = "H4,H8,H16" ];
+    "S4" -> "S11" [ comment = "H1,H5,H9" ];
+    "S4" -> "S11" [ comment = "H2,H6,H10" ];
+    "S4" -> "S12" [ comment = "H3,H7,H11" ];
+    "S4" -> "S12" [ comment = "H4,H8,H12" ];
+
+    /* the links down */
+    "S11" -> "S1" [ comment = "H1,H2" ];
+    "S11" -> "S1" [ comment = "H3,H4" ];
+    "S11" -> "S2" [ comment = "H5,H6" ];
+    "S11" -> "S2" [ comment = "H7,H8" ];
+    "S11" -> "S3" [ comment = "H9,H10" ];
+    "S11" -> "S3" [ comment = "H11,H12" ];
+    "S11" -> "S4" [ comment = "H13,H14" ];
+    "S11" -> "S4" [ comment = "H15,H16" ];
+    "S12" -> "S1" [ comment = "H1,H2" ];
+    "S12" -> "S1" [ comment = "H3,H4" ];
+    "S12" -> "S2" [ comment = "H5,H6" ];
+    "S12" -> "S2" [ comment = "H7,H8" ];
+    "S12" -> "S3" [ comment = "H9,H10" ];
+    "S12" -> "S3" [ comment = "H11,H12" ];
+    "S12" -> "S4" [ comment = "H13,H14" ];
+    "S12" -> "S4" [ comment = "H15,H16" ];
+}

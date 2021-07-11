@@ -1,0 +1,16 @@
+/* gv_fsm tool example */
+digraph "gv_fsm example" {
+  init
+  idle [label="do_idle"]
+  setup [label="do_setup"]
+  running [label="do_running"]
+  stop [label="do_stop"]
+
+  init -> idle [label="init_to_idle"]
+  idle -> idle [label="stay"]
+  idle -> setup [label="to_setup"]
+  setup -> running  [label="#"]
+  running -> running [label="stay"]
+  running -> idle [label="to_idle"]
+  running -> stop
+}

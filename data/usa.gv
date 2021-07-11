@@ -1,0 +1,46 @@
+graph "USA" {
+  AL -- FL, GA, MS, TN
+  AK
+  AZ -- CA, NV, NM, UT
+  AR -- LA, MS, MO, OK, TN, TX
+  CA -- NV, OR
+  CO -- KS, NE, NM, OK, UT, WY
+  CT -- MA, NY, RI
+  DE -- MD, NJ, PA
+  FL -- GA
+  GA -- NC, SC, TN
+  HI
+  ID -- MT, NV, OR, UT, WA, WY
+  IL -- IN, IA, MI, KY, MO, WI
+  IN -- KY, MI, OH
+  IA -- MN, MO, NE, SD, WI
+  KS -- MO, NE, OK
+  KY -- MO, OH, TN, VA, WV
+  LA -- MS, TX
+  ME -- NH
+  MD -- PA, VA, WV
+  MA -- NH, NY, RI, VT
+  MI -- MN, OH, WI
+  MN -- ND, SD, WI
+  MS -- TN
+  MO -- NE, OK, TN
+  MT -- ND, SD, WY
+  NE -- SD, WY
+  NV -- OR, UT
+  NH -- VT
+  NJ -- NY, PA
+  NM -- OK, TX
+  NY -- PA, RI, VT
+  NC -- SC, TN, VA
+  ND -- SD
+  OH -- PA, WV
+  OK -- TX
+  OR -- WA
+  PA -- WV
+  SD -- WY
+  TN -- VA
+  UT -- WY
+  VA -- WV
+}
+
+

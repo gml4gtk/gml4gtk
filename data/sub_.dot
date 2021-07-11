@@ -1,0 +1,78 @@
+digraph foo {
+graph[fontsize="40" label="Call graph for 537c5eb03c149f721b8d193ff04023af_unpacked.exe" ];
+node[style=filled];
+sub_401028 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401028", fillcolor=tan, label="sub_401028\nEvents (1)"]
+sub_401EF0 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401EF0", fillcolor=lightblue, label="sub_401EF0\nSystem (1)\nDynamic-Link Library (1)\nProcess and Thread (1)\nSocket (1)\nString (1)"]
+sub_402959 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_402959", label="sub_402959\nProcess and Thread (1)"]
+sub_403CF4 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_403CF4", label="sub_403CF4\nRtl (1)"]
+sub_402029 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_402029", label="sub_402029\nRtl (1)\nProcess and Thread (2)\nSynchronization (1)\nSystem Shutdown (1)\nTime (1)"]
+sub_403D2A [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_403D2A", fillcolor=tan, label="sub_403D2A\nRtl (1)"]
+sub_4033C0 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4033C0", fillcolor=orange, label="sub_4033C0\nError Handling (1)"]
+sub_4035C9 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4035C9", label="sub_4035C9\nDynamic-Link Library (1)\nFile Management (1)\nConsole (1)"]
+sub_403C87 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_403C87", label="sub_403C87\nRtl (1)"]
+sub_401398 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401398", fillcolor=tan, label="sub_401398\nString (2)\nSocket (7)"]
+sub_401E65 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401E65", fillcolor=orange, label="sub_401E65\nProcess and Thread (2)\nSocket (6)"]
+sub_401153 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401153", label="sub_401153\nSocket (4)"]
+sub_401B08 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401B08", fillcolor=lightblue, label="sub_401B08\nSystem (2)\nDynamic-Link Library (1)\nSocket (6)\nString (1)"]
+sub_403D93 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_403D93", fillcolor=tan, label="sub_403D93\nRtl (1)\nMemory Management (1)"]
+sub_40127D [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_40127D", label="sub_40127D\nProcess and Thread (1)\nSocket (5)\nString (2)"]
+sub_4020D7 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4020D7", fillcolor=tan, label="sub_4020D7\nDynamic-Link Library (1)\nFile Management (1)\nRegistry (3)\nSystem Information (1)"]
+sub_40371C [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_40371C", fillcolor=tan, label="sub_40371C\nUnicode and Character Set (1)\nString (2)"]
+sub_4046FE [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4046FE", fillcolor=tan, label="sub_4046FE\nUnicode and Character Set (2)\nNational Language Support (2)"]
+sub_402BC3 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_402BC3", fillcolor=tan, label="sub_402BC3\nStructured Exception Handling (1)"]
+sub_4043C7 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4043C7", fillcolor=tan, label="sub_4043C7\nRtl (3)\nMemory Management (1)"]
+sub_4031D7 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4031D7", label="sub_4031D7\nConsole (1)\nProcess and Thread (1)\nFile Management (1)"]
+sub_401045 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401045", fillcolor=tan, label="sub_401045\nSocket (1)"]
+sub_outside [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_outside", fillcolor=lightblue, label="sub_outside\nDynamic-Link Library (1)\nProcess and Thread (2)\nSystem Information (1)"]
+sub_403382 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_403382", label="sub_403382\nMemory Management (2)"]
+sub_402B10 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_402B10", fillcolor=tan, label="sub_402B10\nProcess and Thread (3)"]
+sub_403AE6 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_403AE6", label="sub_403AE6\nNational Language Support (1)"]
+sub_402E58 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_402E58", label="sub_402E58\nDynamic-Link Library (1)"]
+sub_40159E [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_40159E", label="sub_40159E\nProcess and Thread (1)\nString (1)\nSocket (6)"]
+sub_4038A7 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4038A7", label="sub_4038A7\nKeyboard Input (1)\nNational Language Support (1)"]
+sub_404573 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_404573", fillcolor=tan, label="sub_404573\nDynamic-Link Library (2)\nWindow (1)\nDialog Box (1)\nKeyboard Input (1)"]
+sub_404478 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_404478", fillcolor=tan, label="sub_404478\nMemory Management (1)"]
+sub_4010D2 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4010D2", label="sub_4010D2\nSocket (3)\nString (1)"]
+sub_4030A5 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4030A5", label="sub_4030A5\nProcess and Thread (4)\nUnicode and Character Set (1)"]
+sub_4011D5 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_4011D5", fillcolor=tan, label="sub_4011D5\nSocket (2)"]
+sub_401210 [URL="537c5eb03c149f721b8d193ff04023af_unpacked.apicalls.html#sub_401210", fillcolor=tan, label="sub_401210\nString (1)\nSystem (2)"]
+sub_401EF0 -> sub_4010D2;
+sub_401EF0 -> sub_401153;
+sub_402959 -> sub_4035C9;
+sub_403CF4 -> sub_4043C7;
+sub_403CF4 -> sub_404478;
+sub_402029 -> sub_401028;
+sub_402029 -> sub_4020D7;
+sub_402029 -> sub_401398;
+sub_402029 -> sub_40159E;
+sub_402029 -> sub_40127D;
+sub_4035C9 -> sub_404573;
+sub_403C87 -> sub_403D93;
+sub_401153 -> sub_4011D5;
+sub_401B08 -> sub_4011D5;
+sub_401B08 -> sub_40371C;
+sub_40127D -> sub_4011D5;
+sub_40127D -> sub_4010D2;
+sub_40127D -> sub_401210;
+sub_4031D7 -> sub_403CF4;
+sub_4031D7 -> sub_4035C9;
+sub_outside -> sub_403382;
+sub_outside -> sub_402959;
+sub_outside -> sub_4031D7;
+sub_outside -> sub_4030A5;
+sub_outside -> sub_402E58;
+sub_outside -> sub_402029;
+sub_outside -> sub_402BC3;
+sub_outside -> sub_402B10;
+sub_403382 -> sub_403D2A;
+sub_403AE6 -> sub_40371C;
+sub_403AE6 -> sub_4046FE;
+sub_402E58 -> sub_4038A7;
+sub_402E58 -> sub_403CF4;
+sub_402E58 -> sub_4035C9;
+sub_40159E -> sub_4011D5;
+sub_4038A7 -> sub_403AE6;
+sub_4010D2 -> sub_401045;
+sub_4030A5 -> sub_403C87;
+sub_4030A5 -> sub_403CF4;
+}

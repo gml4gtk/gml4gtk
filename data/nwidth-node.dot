@@ -1,0 +1,19 @@
+/* node width is a double number, default 0.75, minimum 0.01
+ * if fixedsize=true this will be the node width in inches
+ * otherwise the node will be large enough to hold the label
+ */
+digraph "nwidth"
+{
+ /* default is 0.75 */
+ "a"[label="width=default"];
+ /* negative number, no warning */
+ "b"[label="width=-1",width="-1"];
+ /* zero number, no warning */
+ "c"[label="width=0",width="0"];
+ /* minimum is 0.01 */
+ "d"[label="width=0.02",width="0.02"];
+ /* bigger */
+ "e"[label="width=2",width="2"];
+ /* bigger */
+ "f"[label="width=4",width="4"];
+}

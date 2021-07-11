@@ -1,0 +1,95 @@
+{
+  "graph": {
+    "id": "gml4gtk",
+    "type": "schema test",
+    "label": "gml4gtk",
+    "nodes": {
+      "0": {
+        "id": "0",
+        "label": "n0",
+        "metadata": {
+          "fillcolor": "#f00000",
+          "bordercolor": "#000000",
+          "fontcolor": "#000000"
+        }
+      },
+      "1": {
+        "id": "1",
+        "label": "n1",
+        "metadata": {
+          "fillcolor": "#00ff00",
+          "bordercolor": "#ff0000",
+          "fontcolor": "#000000"
+        }
+      },
+      "2": {
+        "id": "2",
+        "label": "n2",
+        "metadata": {
+          "fillcolor": "#f0ff00",
+          "bordercolor": "#00ff00",
+          "fontcolor": "#000000"
+        }
+      },
+      "3": {
+        "id": "3",
+        "label": "n3",
+        "metadata": {
+          "fillcolor": "#f08000",
+          "bordercolor": "#0000ff",
+          "fontcolor": "#000000"
+        }
+      },
+      "4": {
+        "id": "4",
+        "label": "n4",
+        "metadata": {
+          "fillcolor": "#f0000f",
+          "bordercolor": "#000000",
+          "fontcolor": "#000000"
+        }
+      },
+      "5": {
+        "id": "5",
+        "label": "n5",
+        "metadata": {
+          "fillcolor": "#ffffff",
+          "bordercolor": "#f0000f",
+          "fontcolor": "#000000"
+        }
+      }
+    },
+    "edges": [
+      {
+        "source": "4",
+        "target": "0"
+      },
+      {
+        "label": "foo",
+        "source": "0",
+        "target": "1"
+      },
+      {
+        "source": "1",
+        "target": "2"
+      },
+      {
+        "source": "2",
+        "target": "3"
+      },
+      {
+        "source": "3",
+        "target": "0"
+      },
+      {
+        "source": "3",
+        "target": "0"
+      },
+      {
+        "source": "5",
+        "target": "0"
+      }
+    ],
+    "metadata": {}
+  }
+}

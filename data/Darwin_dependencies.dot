@@ -1,0 +1,97 @@
+digraph G {
+	graph [label="Second Life Viewer dependencies for darwin",
+		labeljust=center,
+		labelloc=top,
+		overlap=false,
+		scale=2,
+		smoothType=spring,
+		splines=true
+	];
+	node [shape=box];
+	"Second Life Viewer"	 [label="Second Life Viewer\n5.0.0.319431\n319431",
+		root=true,
+		shape=octagon];
+	libxml2	 [label="libxml2\n2.9.1.297050\n297050"];
+	libxml2 -> "Second Life Viewer";
+	colladadom	 [label="colladadom\n2.3.297450\n297450"];
+	libxml2 -> colladadom;
+	zlib	 [label="zlib\n1.2.8.296881\n296881"];
+	zlib -> "Second Life Viewer";
+	zlib -> libxml2;
+	curl	 [label="curl\n7.47.0.312763\n312763"];
+	zlib -> curl;
+	openssl	 [label="openssl\n1.0.1h.297168\n297168"];
+	zlib -> openssl;
+	boost	 [label="boost\n1.57\n297445"];
+	zlib -> boost;
+	libpng	 [label="libpng\n1.6.8.297708\n297708"];
+	zlib -> libpng	 [minlen=1];
+	zlib -> colladadom;
+	freetype	 [label="freetype\n2.4.4.297053\n297053"];
+	zlib -> freetype	 [minlen=2];
+	expat	 [label="expat\n2.0.1.297014\n297014"];
+	expat -> "Second Life Viewer";
+	apr_suite	 [label="apr_suite\n1.4.5.297252\n297252"];
+	expat -> apr_suite	 [minlen=1];
+	"xmlrpc-epi"	 [label="xmlrpc-epi\n0.54.1.297075\n297075"];
+	expat -> "xmlrpc-epi"	 [minlen=2];
+	llphysicsextensions_source	 [label="llphysicsextensions_source\n1.0.313564\n313564"];
+	llphysicsextensions_source -> "Second Life Viewer"	 [minlen=1];
+	jpeglib	 [label="jpeglib\n8c.296854\n296854"];
+	jpeglib -> "Second Life Viewer"	 [minlen=2];
+	kdu	 [label="kdu\n7.2.296932\n296932"];
+	kdu -> "Second Life Viewer"	 [minlen=3];
+	curl -> "Second Life Viewer";
+	openssl -> "Second Life Viewer";
+	openssl -> curl;
+	pcre	 [label="pcre\n8.35.\n297155"];
+	pcre -> "Second Life Viewer";
+	pcre -> colladadom;
+	fmodex	 [label="fmodex\n4.44.31.297261\n297261"];
+	fmodex -> "Second Life Viewer"	 [minlen=4];
+	libndofdev	 [label="libndofdev\n0.1.297264\n297264"];
+	libndofdev -> "Second Life Viewer"	 [minlen=5];
+	googlemock	 [label="googlemock\n1.7.0.297460\n297460"];
+	googlemock -> "Second Life Viewer";
+	boost -> "Second Life Viewer";
+	boost -> googlemock	 [minlen=1];
+	boost -> colladadom;
+	llceflib	 [label="llceflib\n1.5.3.311349\n311349"];
+	boost -> llceflib	 [minlen=2];
+	icu4c	 [label="icu4c\n4.8.1\n295486"];
+	icu4c -> boost	 [minlen=1];
+	libpng -> "Second Life Viewer";
+	apr_suite -> "Second Life Viewer";
+	colladadom -> "Second Life Viewer";
+	freetype -> "Second Life Viewer";
+	uriparser	 [label="uriparser\n0.8.0.1\n299435"];
+	uriparser -> "Second Life Viewer"	 [minlen=6];
+	ogg_vorbis	 [label="ogg_vorbis\n1.2.2-1.3.2.296878\n296878"];
+	ogg_vorbis -> "Second Life Viewer"	 [minlen=1];
+	tut	 [label="tut\n2008.11.30\n297257"];
+	tut -> "Second Life Viewer"	 [minlen=2];
+	glod	 [label="glod\n1.0pre4.296895\n296895"];
+	glod -> "Second Life Viewer"	 [minlen=3];
+	"glh-linear"	 [label="glh-linear\n0.0.0\n303446"];
+	"glh-linear" -> "Second Life Viewer"	 [minlen=4];
+	libhunspell	 [label="libhunspell\n1.3.2.296916\n296916"];
+	libhunspell -> "Second Life Viewer"	 [minlen=5];
+	openjpeg	 [label="openjpeg\n1.4.297018\n297018"];
+	openjpeg -> "Second Life Viewer"	 [minlen=6];
+	"havok-source"	 [label="havok-source\n2012.1\n297312"];
+	"havok-source" -> "Second Life Viewer";
+	"havok-llvm"	 [label="havok-llvm\n2.8\n296936"];
+	"havok-llvm" -> "havok-source"	 [minlen=1];
+	"havok-libs"	 [label="havok-libs\n2012.1\n297298"];
+	"havok-libs" -> "havok-source"	 [minlen=2];
+	"xmlrpc-epi" -> "Second Life Viewer";
+	google_breakpad	 [label="google_breakpad\n1413.298033\n298033"];
+	google_breakpad -> "Second Life Viewer"	 [minlen=1];
+	dictionaries	 [label="dictionaries\n1.297347\n297347"];
+	dictionaries -> "Second Life Viewer"	 [minlen=2];
+	jsoncpp	 [label="jsoncpp\n0.5.0.297281\n297281"];
+	jsoncpp -> "Second Life Viewer"	 [minlen=3];
+	llceflib -> "Second Life Viewer";
+	slvoice	 [label="slvoice\n4.6.0017.22050.302004\n302004"];
+	slvoice -> "Second Life Viewer"	 [minlen=4];
+}

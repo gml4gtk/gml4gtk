@@ -1,0 +1,77 @@
+digraph code {
+	graph [bgcolor=white fontsize=8 fontname="Courier"];
+	node [fillcolor=gray style=filled shape=box];
+	edge [arrowhead="vee"];
+	"0x0003a000" -> "0x0003a049" [color="green"];
+	"0x0003a000" -> "0x0003a024" [color="red"];
+	"0x0003a000" [URL="method.rShader.CompileShader/0x0003a000", fillcolor="lightgray", color="black", label="  ;-- rShader::CompileShader:\l/ (fcn) method.rShader.CompileShader 893\l|   method.rShader.CompileShader ();\l| ; var int local_8h @ rsp+0x8\l| ; var int local_10h @ rsp+0x10\l| ; var int local_14h @ rsp+0x14\l| ; var int local_18h @ rsp+0x18\l| ; var int local_1ch @ rsp+0x1c\l| 0x0003a000      push r13\l| 0x0003a002      push r12\l| 0x0003a004      mov r12, rdi\l| 0x0003a007      push rbp\l| 0x0003a008      push rbx\l| 0x0003a009      mov rbx, rsi\l| 0x0003a00c      sub rsp, 0x28\l| 0x0003a010      mov rax, qword [reloc.g_OpenGL_NoGLSLBinding_160]\l| 0x0003a017      mov qword [local_8h], rsi\l| 0x0003a01c      mov r8d, dword [rax]\l| 0x0003a01f      test r8d, r8d\l| 0x0003a022      je 0x3a049\l"]
+	"0x0003a024" -> "0x0003a049" [color="green"];
+	"0x0003a024" -> "0x0003a03d" [color="red"];
+	"0x0003a024" [URL="method.rShader.CompileShader/0x0003a024", fillcolor="lightgray", color="black", label="| 0x0003a024      mov rbx, qword [local_8h]\l| 0x0003a029      lea rsi, str._define_OPENGL_LAYOUT_BINDING_1\l| 0x0003a030      mov rdi, rbx\l| 0x0003a033      call sym.imp.strstr\l| 0x0003a038      test rax, rax\l| 0x0003a03b      je 0x3a049\l"]
+	"0x0003a03d" -> "0x0003a049" [color="blue"];
+	"0x0003a03d" [URL="method.rShader.CompileShader/0x0003a03d", fillcolor="lightgray", color="black", label="| 0x0003a03d      mov byte [rax], 0x2f\l| 0x0003a040      mov byte [rax + 1], 0x2f\l| 0x0003a044      mov rbx, qword [local_8h]\l"]
+	"0x0003a049" -> "0x0003a076" [color="green"];
+	"0x0003a049" -> "0x0003a056" [color="red"];
+	"0x0003a049" [URL="method.rShader.CompileShader/0x0003a049", fillcolor="lightgray", color="black", label="| 0x0003a049      mov rax, qword [reloc.g_OpenGL_NoFloatSwizzles_192]\l| 0x0003a050      mov edi, dword [rax]\l| 0x0003a052      test edi, edi\l| 0x0003a054      je 0x3a076\l"]
+	"0x0003a056" -> "0x0003a076" [color="green"];
+	"0x0003a056" -> "0x0003a06a" [color="red"];
+	"0x0003a056" [URL="method.rShader.CompileShader/0x0003a056", fillcolor="lightgray", color="black", label="| 0x0003a056      lea rsi, str._define_OPENGL_FLOAT_SWIZZLES_1\l| 0x0003a05d      mov rdi, rbx\l| 0x0003a060      call sym.imp.strstr\l| 0x0003a065      test rax, rax\l| 0x0003a068      je 0x3a076\l"]
+	"0x0003a06a" -> "0x0003a076" [color="blue"];
+	"0x0003a06a" [URL="method.rShader.CompileShader/0x0003a06a", fillcolor="lightgray", color="black", label="| 0x0003a06a      mov byte [rax], 0x2f\l| 0x0003a06d      mov byte [rax + 1], 0x2f\l| 0x0003a071      mov rbx, qword [local_8h]\l"]
+	"0x0003a076" -> "0x0003a0a3" [color="green"];
+	"0x0003a076" -> "0x0003a083" [color="red"];
+	"0x0003a076" [URL="method.rShader.CompileShader/0x0003a076", fillcolor="yellow", color="black", label="| 0x0003a076      mov rax, qword [reloc.g_OpenGL_DeclareVertexId_152]\l| 0x0003a07d      mov esi, dword [rax]\l| 0x0003a07f      test esi, esi\l| 0x0003a081      jne 0x3a0a3\l"]
+	"0x0003a083" -> "0x0003a0a3" [color="green"];
+	"0x0003a083" -> "0x0003a097" [color="red"];
+	"0x0003a083" [URL="method.rShader.CompileShader/0x0003a083", fillcolor="lightgray", color="black", label="| 0x0003a083      lea rsi, str._define_OPENGL_DECLARE_VERTEX_ID_1\l| 0x0003a08a      mov rdi, rbx\l| 0x0003a08d      call sym.imp.strstr\l| 0x0003a092      test rax, rax\l| 0x0003a095      je 0x3a0a3\l"]
+	"0x0003a097" -> "0x0003a0a3" [color="blue"];
+	"0x0003a097" [URL="method.rShader.CompileShader/0x0003a097", fillcolor="lightgray", color="black", label="| 0x0003a097      mov byte [rax], 0x2f\l| 0x0003a09a      mov byte [rax + 1], 0x2f\l| 0x0003a09e      mov rbx, qword [local_8h]\l"]
+	"0x0003a0a3" -> "0x0003a2a0" [color="green"];
+	"0x0003a0a3" -> "0x0003a0b7" [color="red"];
+	"0x0003a0a3" [URL="method.rShader.CompileShader/0x0003a0a3", fillcolor="lightgray", color="black", label="| 0x0003a0a3      mov rbp, qword [reloc.g_OpenGLHelpers_96]\l| 0x0003a0aa      mov rax, qword [rbp]\l| 0x0003a0ae      cmp dword [rax], 1\l| 0x0003a0b1      je 0x3a2a0\l"]
+	"0x0003a0b7" -> "0x0003a0e4" [color="green"];
+	"0x0003a0b7" -> "0x0003a0c4" [color="red"];
+	"0x0003a0b7" [URL="method.rShader.CompileShader/0x0003a0b7", fillcolor="lightgray", color="black", label="| 0x0003a0b7      mov rax, qword [reloc.g_OpenGL_NoSSBO_48]\l| 0x0003a0be      mov ecx, dword [rax]\l| 0x0003a0c0      test ecx, ecx\l| 0x0003a0c2      je 0x3a0e4\l"]
+	"0x0003a0c4" -> "0x0003a0e4" [color="green"];
+	"0x0003a0c4" -> "0x0003a0d8" [color="red"];
+	"0x0003a0c4" [URL="method.rShader.CompileShader/0x0003a0c4", fillcolor="lightgray", color="black", label="| 0x0003a0c4      lea rsi, str.___define_OPENGL_NO_SSBO_1\l| 0x0003a0cb      mov rdi, rbx\l| 0x0003a0ce      call sym.imp.strstr\l| 0x0003a0d3      test rax, rax\l| 0x0003a0d6      je 0x3a0e4\l"]
+	"0x0003a0d8" -> "0x0003a0e4" [color="blue"];
+	"0x0003a0d8" [URL="method.rShader.CompileShader/0x0003a0d8", fillcolor="lightgray", color="black", label="| 0x0003a0d8      mov byte [rax], 0x20\l| 0x0003a0db      mov byte [rax + 1], 0x20\l| 0x0003a0df      mov rbx, qword [local_8h]\l"]
+	"0x0003a0e4" -> "0x0003a118" [color="green"];
+	"0x0003a0e4" -> "0x0003a0fd" [color="red"];
+	"0x0003a0e4" [URL="method.rShader.CompileShader/0x0003a0e4", fillcolor="lightgray", color="black", label="| 0x0003a0e4      lea rsi, str._version\l| 0x0003a0eb      mov rdi, rbx\l| 0x0003a0ee      call sym.imp.strstr\l| 0x0003a0f3      mov rdx, qword [rbp]\l| 0x0003a0f7      cmp dword [rdx + 4], 5\l| 0x0003a0fb      ja 0x3a118\l"]
+	"0x0003a0fd" [URL="method.rShader.CompileShader/0x0003a0fd", fillcolor="lightgray", color="black", label="| 0x0003a0fd      mov ecx, dword [rdx + 4]\l| 0x0003a100      lea rdx, 0x000488b0\l| 0x0003a107      movsxd rcx, dword [rdx + rcx*4]\l| 0x0003a10b      add rdx, rcx\l| 0x0003a10e      jmp rdx\l"]
+	"0x0003a118" -> "0x0003a13b" [color="green"];
+	"0x0003a118" -> "0x0003a131" [color="red"];
+	"0x0003a118" [URL="method.rShader.CompileShader/0x0003a118", fillcolor="lightgray", color="black", label="| 0x0003a118      mov rax, qword [reloc.__glewDisablei_32]\l| 0x0003a11f      mov edi, 0x8b31\l| 0x0003a124      mov rdx, qword [rax]\l| 0x0003a127      mov eax, dword [r12 + 0x18]\l| 0x0003a12c      cmp eax, 5\l| 0x0003a12f      ja 0x3a13b\l"]
+	"0x0003a131" -> "0x0003a13b" [color="blue"];
+	"0x0003a131" [URL="method.rShader.CompileShader/0x0003a131", fillcolor="lightgray", color="black", label="| 0x0003a131      lea rcx, 0x00048910\l| 0x0003a138      mov edi, dword [rcx + rax*4]\l"]
+	"0x0003a13b" -> "0x0003a200" [color="green"];
+	"0x0003a13b" -> "0x0003a187" [color="red"];
+	"0x0003a13b" [URL="method.rShader.CompileShader/0x0003a13b", fillcolor="lightgray", color="black", label="| 0x0003a13b      call rdx\l| 0x0003a13d      mov ebx, eax\l| 0x0003a13f      mov edi, eax\l| 0x0003a141      mov rax, qword [0x002e4e18]\l| 0x0003a148      xor ecx, ecx\l| 0x0003a14a      lea rdx, [local_8h]\l| 0x0003a14f      mov esi, 1\l| 0x0003a154      call qword [rax]\l| 0x0003a156      mov rax, qword [0x002e4ca8]\l| 0x0003a15d      mov edi, ebx\l| 0x0003a15f      call qword [rax]\l| 0x0003a161      mov rbp, qword [reloc.__glewDisablei_8]\l| 0x0003a168      lea rdx, [local_10h]\l| 0x0003a16d      mov dword [local_10h], 0\l| 0x0003a175      mov esi, 0x8b81\l| 0x0003a17a      mov edi, ebx\l| 0x0003a17c      call qword [rbp]\l| 0x0003a17f      mov edx, dword [local_10h]\l| 0x0003a183      test edx, edx\l| 0x0003a185      jne 0x3a200\l"]
+	"0x0003a187" -> "0x0003a310" [color="green"];
+	"0x0003a187" -> "0x0003a1ad" [color="red"];
+	"0x0003a187" [URL="method.rShader.CompileShader/0x0003a187", fillcolor="lightgray", color="black", label="| 0x0003a187      mov dword [local_18h], 0\l| 0x0003a18f      lea rdx, [local_18h]\l| 0x0003a194      mov esi, 0x8b84\l| 0x0003a199      mov edi, ebx\l| 0x0003a19b      call qword [rbp]\l| 0x0003a19e      mov r12d, dword [local_18h]\l| 0x0003a1a3      cmp r12d, -1\l| 0x0003a1a7      jne 0x3a310\l"]
+	"0x0003a1ad" -> "0x0003a1cf" [color="blue"];
+	"0x0003a1ad" [URL="method.rShader.CompileShader/0x0003a1ad", fillcolor="lightgray", color="black", label="| 0x0003a1ad      mov rax, qword [0x002e4b38]\l| 0x0003a1b4      mov edi, 1\l| 0x0003a1b9      mov dword [local_1ch], 0\l| 0x0003a1c1      mov r13, qword [rax]\l| 0x0003a1c4      call sym.imp.malloc\l| 0x0003a1c9      mov rbp, rax\l| 0x0003a1cc      mov byte [rax], 0\l"]
+	"0x0003a1cf" [URL="method.rShader.CompileShader/0x0003a1cf", fillcolor="lightgray", color="black", label="| 0x0003a1cf      lea rdx, [local_1ch]\l| 0x0003a1d4      mov rcx, rbp\l| 0x0003a1d7      mov esi, r12d\l| 0x0003a1da      mov edi, ebx\l| 0x0003a1dc      call r13\l| 0x0003a1df      mov rax, qword [0x002e4e40]\l| 0x0003a1e6      mov edi, ebx\l| 0x0003a1e8      call qword [rax]\l| 0x0003a1ea      mov rdi, rbp\l| 0x0003a1ed      call sym.imp.free\l| 0x0003a1f2      add rsp, 0x28\l| 0x0003a1f6      xor eax, eax\l| 0x0003a1f8      pop rbx\l| 0x0003a1f9      pop rbp\l| 0x0003a1fa      pop r12\l| 0x0003a1fc      pop r13\l| 0x0003a1fe      ret\l"]
+	"0x0003a200" -> "0x0003a340" [color="green"];
+	"0x0003a200" -> "0x0003a28b" [color="red"];
+	"0x0003a200" [URL="method.rShader.CompileShader/0x0003a200", fillcolor="lightgray", color="black", label="| 0x0003a200      mov rax, qword [0x002e4bf0]\l| 0x0003a207      call qword [rax]\l| 0x0003a209      mov r13, qword [0x002e4cd0]\l| 0x0003a210      mov ebp, eax\l| 0x0003a212      mov edi, eax\l| 0x0003a214      mov edx, 1\l| 0x0003a219      mov esi, 0x8258\l| 0x0003a21e      call qword [r13]\l| 0x0003a222      mov edx, 1\l| 0x0003a227      mov esi, 0x8257\l| 0x0003a22c      mov edi, ebp\l| 0x0003a22e      call qword [r13]\l| 0x0003a232      mov rax, qword [0x002e4d80]\l| 0x0003a239      mov esi, ebx\l| 0x0003a23b      mov edi, ebp\l| 0x0003a23d      call qword [rax]\l| 0x0003a23f      mov rax, qword [0x002e4d90]\l| 0x0003a246      mov edi, ebp\l| 0x0003a248      call qword [rax]\l| 0x0003a24a      mov rax, qword [reloc.__glewDisablei_80]\l| 0x0003a251      mov esi, ebx\l| 0x0003a253      mov edi, ebp\l| 0x0003a255      call qword [rax]\l| 0x0003a257      mov rax, qword [0x002e4e40]\l| 0x0003a25e      mov edi, ebx\l| 0x0003a260      call qword [rax]\l| 0x0003a262      mov rbx, qword [0x002e4b40]\l| 0x0003a269      mov dword [local_14h], 0\l| 0x0003a271      lea rdx, [local_14h]\l| 0x0003a276      mov esi, 0x8b82\l| 0x0003a27b      mov edi, ebp\l| 0x0003a27d      call qword [rbx]\l| 0x0003a27f      mov eax, dword [local_14h]\l| 0x0003a283      test eax, eax\l| 0x0003a285      je 0x3a340\l"]
+	"0x0003a28b" [URL="method.rShader.CompileShader/0x0003a28b", fillcolor="lightgray", color="black", label="| 0x0003a28b      test ebp, ebp\l| 0x0003a28d      mov dword [r12], ebp\l| 0x0003a291      setne al\l| 0x0003a294      add rsp, 0x28\l| 0x0003a298      pop rbx\l| 0x0003a299      pop rbp\l| 0x0003a29a      pop r12\l| 0x0003a29c      pop r13\l| 0x0003a29e      ret\l"]
+	"0x0003a2a0" -> "0x0003a0b7" [color="green"];
+	"0x0003a2a0" -> "0x0003a2b8" [color="red"];
+	"0x0003a2a0" [URL="method.rShader.CompileShader/0x0003a2a0", fillcolor="lightgray", color="black", label="| 0x0003a2a0      lea rsi, str.___define_OPENGL_AMD_SHADOW_HOOK_1\l| 0x0003a2a7      mov rdi, rbx\l| 0x0003a2aa      call sym.imp.strstr\l| 0x0003a2af      test rax, rax\l| 0x0003a2b2      je 0x3a0b7\l"]
+	"0x0003a2b8" -> "0x0003a0b7" [color="blue"];
+	"0x0003a2b8" [URL="method.rShader.CompileShader/0x0003a2b8", fillcolor="lightgray", color="black", label="| 0x0003a2b8      mov byte [rax], 0x20\l| 0x0003a2bb      mov byte [rax + 1], 0x20\l| 0x0003a2bf      mov rbx, qword [local_8h]\l| 0x0003a2c4      jmp 0x3a0b7\l"]
+	"0x0003a310" -> "0x0003a1cf" [color="blue"];
+	"0x0003a310" [URL="method.rShader.CompileShader/0x0003a310", fillcolor="lightgray", color="black", label="| 0x0003a310      lea edi, [r12 + 2]\l| 0x0003a315      call sym.imp.malloc\l| 0x0003a31a      mov byte [rax], 0\l| 0x0003a31d      mov rbp, rax\l| 0x0003a320      mov rax, qword [0x002e4b38]\l| 0x0003a327      mov dword [local_1ch], 0\l| 0x0003a32f      mov r13, qword [rax]\l| 0x0003a332      jmp 0x3a1cf\l"]
+	"0x0003a340" -> "0x0003a3b8" [color="green"];
+	"0x0003a340" -> "0x0003a361" [color="red"];
+	"0x0003a340" [URL="method.rShader.CompileShader/0x0003a340", fillcolor="lightgray", color="black", label="| 0x0003a340      mov dword [local_18h], 0\l| 0x0003a348      lea rdx, [local_18h]\l| 0x0003a34d      mov esi, 0x8b84\l| 0x0003a352      mov edi, ebp\l| 0x0003a354      call qword [rbx]\l| 0x0003a356      mov r12d, dword [local_18h]\l| 0x0003a35b      cmp r12d, -1\l| 0x0003a35f      jne 0x3a3b8\l"]
+	"0x0003a361" -> "0x0003a383" [color="blue"];
+	"0x0003a361" [URL="method.rShader.CompileShader/0x0003a361", fillcolor="lightgray", color="black", label="| 0x0003a361      mov rax, qword [0x002e4d78]\l| 0x0003a368      mov edi, 1\l| 0x0003a36d      mov dword [local_1ch], 0\l| 0x0003a375      mov r13, qword [rax]\l| 0x0003a378      call sym.imp.malloc\l| 0x0003a37d      mov rbx, rax\l| 0x0003a380      mov byte [rax], 0\l"]
+	"0x0003a383" [URL="method.rShader.CompileShader/0x0003a383", fillcolor="lightgray", color="black", label="| 0x0003a383      lea rdx, [local_1ch]\l| 0x0003a388      mov rcx, rbx\l| 0x0003a38b      mov esi, r12d\l| 0x0003a38e      mov edi, ebp\l| 0x0003a390      call r13\l| 0x0003a393      mov rax, qword [0x002e4d18]\l| 0x0003a39a      mov edi, ebp\l| 0x0003a39c      call qword [rax]\l| 0x0003a39e      mov rdi, rbx\l| 0x0003a3a1      call sym.imp.free\l| 0x0003a3a6      add rsp, 0x28\l| 0x0003a3aa      xor eax, eax\l| 0x0003a3ac      pop rbx\l| 0x0003a3ad      pop rbp\l| 0x0003a3ae      pop r12\l| 0x0003a3b0      pop r13\l| 0x0003a3b2      ret\l"]
+	"0x0003a3b8" -> "0x0003a383" [color="blue"];
+	"0x0003a3b8" [URL="method.rShader.CompileShader/0x0003a3b8", fillcolor="lightgray", color="black", label="| 0x0003a3b8      lea edi, [r12 + 2]\l| 0x0003a3bd      call sym.imp.malloc\l| 0x0003a3c2      mov byte [rax], 0\l| 0x0003a3c5      mov rbx, rax\l| 0x0003a3c8      mov rax, qword [0x002e4d78]\l| 0x0003a3cf      mov dword [local_1ch], 0\l| 0x0003a3d7      mov r13, qword [rax]\l\\ 0x0003a3da      jmp 0x3a383\l"]
+}

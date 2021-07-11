@@ -1,10 +1,10 @@
 # gml4gtk
-
+  
 Linux GTK+ gui program for gml or graphviz dot graph sugiyama layout algorithm. <https://graphviewer.nl/>  
-
+  
 ![download gml4gtk on sourceforge](https://sourceforge.net/projects/gml4gtk/)
-
-This program support partial graphviz dot, gml or vcg graph data and has own graph layout routines and does not depend on graphviz or others.  
+  
+This program support partial graphviz dot, gml ,bgv or vcg graph data and has own graph layout routines and does not depend on graphviz or others.  
 This program has a GTK+ gui interactive user interface and can be compiled for gtk-2 or gtk-3 using configure:  
 ./autogen.sh  
 ./configure --with-gtk=2.0  
@@ -29,10 +29,12 @@ The gml4gtk program can be compiled for windows using the mingw gcc compiler and
 The node labels can be turned off in the gui and popup selected then the labels will be in a popup window which is needed for large graph drawings  
 The gml4gtk program supports the usage of gzip'ed input graph data files using zlib  
 For other details see the README1 file  
+scan-build: No bugs found.  
 
 ![screenshot](./screenshot.png)
 
 SPDX-License-Identifier: GPL-3.0+  
 License-Filename: LICENSE  
-
+  
 Made with ❤️️ <span>🇳🇱</span>
+  

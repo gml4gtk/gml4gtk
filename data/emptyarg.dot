@@ -1,0 +1,19 @@
+/*
+In dot empty argument using "" is to change to default value
+*/
+digraph "emptyarg"
+{
+ node [color="red"]
+ /* color is default red */
+ a;
+ /* color is now default black */
+ b[color=""];
+ a->b;
+ /* switch to default */
+ node [color=""];
+ /* color is defauklt black */
+ aa;
+ /* color is green */
+ bb [color="green"];
+ aa->bb;
+}

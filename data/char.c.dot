@@ -1,4 +1,4 @@
-/* generated using sparse tool */
+/* generated using linux kernel sparse program */
 digraph call_graph {
 subgraph cluster0x7f26210be010 {
     color=blue;

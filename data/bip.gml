@@ -1,23 +1,373 @@
-graph [
-comment "mincut value of 47"
-directed 0
-
-node [ id 0 label "0" graphics [fill "#000000"] LabelGraphics [type "text" fill "#ffffff"] ]
-node [ id 3 label "3" graphics [type "oval" fill "#000000"]  LabelGraphics [type "text" fill "#ffffff"] ]
-node [ id 4 label "4" graphics [fill "#000000"] LabelGraphics [type "text" fill "#ffffff"] ]
-node [ id 5 label "5" graphics [fill "#000000"] LabelGraphics [type "text" fill "#ffffff"] ]
-node [ id 6 label "6" graphics [fill "#000000"] LabelGraphics [type "text" fill "#ffffff"] ]
-node [ id 7 label "7" graphics [type "oval" fill "#000000"] LabelGraphics [type "text" fill "#ffffff"] ]
-
-edge [ source 0 target 3 weight 13 label "13"]
-edge [ source 0 target 4 weight 12 label "12"]
-edge [ source 0 target 7 weight 8 label "8"]
-edge [ source 0 target 6 weight 71 label "71"]
-edge [ source 3 target 7 weight 84 label "84"]
-edge [ source 3 target 6 weight 8 label "8"]
-edge [ source 4 target 7 weight 18 label "18"]
-edge [ source 4 target 6 weight 11 label "11"]
-edge [ source 4 target 5 weight 51 label "51"]
-edge [ source 5 target 6 weight 87 label "87"]
- 
+Creator	"yFiles"
+Version	"2.4.2.2"
+graph
+[
+	hierarchic	1
+	label	""
+	directed	1
+	node
+	[
+		id	0
+		label	"1"
+		graphics
+		[
+			x	57.5
+			y	15.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"1"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	1
+		label	"2"
+		graphics
+		[
+			x	107.5
+			y	15.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"2"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	2
+		label	"3"
+		graphics
+		[
+			x	215.0
+			y	15.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"3"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	3
+		label	"4"
+		graphics
+		[
+			x	165.0
+			y	15.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"4"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	4
+		label	"A"
+		graphics
+		[
+			x	65.0
+			y	85.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"A"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	5
+		label	"B"
+		graphics
+		[
+			x	115.0
+			y	85.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"B"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	6
+		label	"C"
+		graphics
+		[
+			x	165.0
+			y	85.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"C"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	7
+		label	"D"
+		graphics
+		[
+			x	15.0
+			y	85.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"D"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	node
+	[
+		id	8
+		label	"E"
+		graphics
+		[
+			x	215.0
+			y	85.0
+			w	30.0
+			h	30.0
+			type	"rectangle"
+			fill	"#FFCC00"
+			outline	"#000000"
+		]
+		LabelGraphics
+		[
+			text	"E"
+			fontSize	13
+			fontName	"Dialog"
+			anchor	"c"
+		]
+	]
+	edge
+	[
+		source	0
+		target	4
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			ySource	1.0
+			xTarget	-0.5
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	0
+		target	5
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.6666666865348816
+			ySource	1.0
+			xTarget	-0.5
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	0
+		target	7
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	-0.6666666865348816
+			ySource	1.0
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	1
+		target	4
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	-0.5
+			ySource	1.0
+			xTarget	0.5
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	1
+		target	6
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.5
+			ySource	1.0
+			xTarget	-0.6666666865348816
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	2
+		target	6
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	-0.5
+			ySource	1.0
+			xTarget	0.6666666865348816
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	2
+		target	8
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.5
+			ySource	1.0
+			xTarget	0.5
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	3
+		target	5
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	-0.6666666865348816
+			ySource	1.0
+			xTarget	0.5
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	3
+		target	6
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			ySource	1.0
+			yTarget	-1.0
+		]
+	]
+	edge
+	[
+		source	3
+		target	8
+		graphics
+		[
+			fill	"#000000"
+			targetArrow	"standard"
+		]
+		edgeAnchor
+		[
+			xSource	0.6666666865348816
+			ySource	1.0
+			xTarget	-0.5
+			yTarget	-1.0
+		]
+	]
 ]
+

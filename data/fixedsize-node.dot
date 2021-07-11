@@ -1,0 +1,13 @@
+/* if boolean fixedsize is set true in a node
+ * the width param is used for node width.
+ * and the height can be set.
+ * default node width is 0.75 inch, minimum 0.01
+ */
+digraph "fixedsize"
+{
+ /* this gives warning width is too small */
+ "a"[fixedsize=true, width=0.5, label="fixedsize=true"];
+ "b"[fixedsize=true, width=5, label="fixedsize=true"];
+ /* when a not boolean arg */
+ "c"[fixedsize=NotBoolean, width=0.5, label="fixedsize=NotBoolean"];
+}

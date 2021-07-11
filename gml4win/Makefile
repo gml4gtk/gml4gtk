@@ -78,7 +78,7 @@ gml4win_LIBS = \
 # main entry
 all:
 	rm -v -f ./gml4win.exe
-	./Lindent gml4win.c
+	./lindent.sh gml4win.c
 	$(gml4win_WINDRES) gml4win.rc demo.o
 	$(gml4win_CC) -g -c $(gml4win_CFLAGS) $(gml4win_SOURCES)
 	$(gml4win_CC) *.o $(gml4win_LIBS) -o gml4win.exe
@@ -90,4 +90,3 @@ clean:
 	rm -v -f *.o
 
 # end
-

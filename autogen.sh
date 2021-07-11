@@ -203,6 +203,4 @@ echo "./autogen.sh: done with autoconf"
 #./configure --enable-gcc-warnings CC=clang
 #./configure --with-gtk=2.0
 
-
-
 # end.

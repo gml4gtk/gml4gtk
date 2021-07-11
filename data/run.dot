@@ -1,0 +1,72 @@
+
+digraph "run" {
+
+	//-------------------------------------------------- options generales
+
+	overlap=false;
+	splines=true;
+
+	//-------------------------------------------------- liste des noeuds
+
+	"run.en" [label="run", tooltip="run", style=bold, fontcolor=green, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=run" target="_parent"]
+	"terminate.1a.en" [label="terminate.1a (vi)", tooltip="terminate.1a (vi)", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=terminate" target="_parent"]
+	"speed.en" [label="speed", tooltip="speed", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=speed" target="_parent"]
+	"execute.2a.en" [label="execute.2a (vi)", tooltip="execute: Patient{task} ~ ", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=execute" target="_parent"]
+	"crash.1b.en" [label="crash.1b (vt)", tooltip="crash.1b (vt)", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=crash" target="_parent"]
+	"execute.1a.en" [label="execute.1a (vi)", tooltip="execute: Patient{program 1} ~ on Environment{operating system 1computer 1}", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=execute" target="_parent"]
+	"execute.en" [label="execute", tooltip="execute", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=execute" target="_parent"]
+	"program.2.en" [label="program.2", tooltip="program.2", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=program" target="_parent"]
+	"hardware.1.en" [label="hardware.1", tooltip="hardware.1", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=hardware" target="_parent"]
+	"operating system.en" [label="operating system", tooltip="operating system", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=operating system" target="_parent"]
+	"user.1.en" [label="user.1", tooltip="user.1", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=user" target="_parent"]
+	"computer.1.en" [label="computer.1", tooltip="computer.1", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=computer" target="_parent"]
+	"crash.1a.en" [label="crash.1a (vi)", tooltip="crash.1a (vi)", fontcolor=black, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=crash" target="_parent"]
+	"run.2b.en" [label="run.2b (vt)", tooltip="run.2b (vt)", style=bold, fontcolor=green, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=run" target="_parent"]
+	"run.2a.en" [label="run.2a (vi)", tooltip="run.2a (vi)", style=bold, fontcolor=green, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=run" target="_parent"]
+	"run.1a.en" [label="run.1a (vi)", tooltip="run.1a (vi)", style=bold, fontcolor=green, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=run" target="_parent"]
+	"run.1b.en" [label="run.1b (vt)", tooltip="run: Agent{user 1} ~ s Patient{program 2} on Environment1{computer 1} or under Environment2{operating system 1}", style=bold, fontcolor=green, href="http://olst.ling.umontreal.ca/dicoinfo/visuel.php?op=22222222222222222231&rq=run" target="_parent"]
+
+	//-------------------------------------------------- QSyn
+
+	"run.1b.en" -> "execute.en" [minlen=1, color=green, style=dashed, weight=10]
+	"execute.1a.en" -> "run.1a.en" [minlen=1, color=green, style=dashed, weight=10]
+	"execute.2a.en" -> "run.en" [minlen=1, color=green, style=dashed, weight=10]
+
+	//-------------------------------------------------- Contr
+
+	"run.1a.en" -> "crash.1a.en" [minlen=1, color=red1, arrowhead=tee, arrowtail=tee, style=dotted, dir=both]
+	"run.1a.en" -> "terminate.1a.en" [minlen=1, color=red1, arrowhead=tee, arrowtail=tee, style=dotted, dir=both]
+	"run.1b.en" -> "crash.1b.en" [minlen=1, color=red1, arrowhead=tee, arrowtail=tee, style=dotted, dir=both]
+	"run.2a.en" -> "crash.1a.en" [minlen=1, color=red1, arrowhead=tee, arrowtail=tee, style=dotted]
+
+	//-------------------------------------------------- Derive
+
+	"run.1a.en" -> "run.1b.en" [minlen=1, color=purple, weight=10, dir=both]
+	"run.2b.en" -> "run.2a.en" [minlen=1, color=purple, weight=10]
+
+	//-------------------------------------------------- Patient_actant
+
+	"run.1a.en" -> "program.2.en" [minlen=1, label="Patient", fontsize=8, color=orange]
+	"run.1b.en" -> "program.2.en" [minlen=1, label="Patient", fontsize=8, color=orange]
+	"run.2a.en" -> "hardware.1.en" [minlen=1, label="Patient", fontsize=8, color=orange]
+	"run.2b.en" -> "hardware.1.en" [minlen=1, label="Patient", fontsize=8, color=orange]
+
+	//-------------------------------------------------- Environment1_actant
+
+	"run.1a.en" -> "computer.1.en" [minlen=1, label="Environment1", fontsize=8, color=orange]
+	"run.1b.en" -> "computer.1.en" [minlen=1, label="Environment1", fontsize=8, color=orange]
+
+	//-------------------------------------------------- Environment2_actant
+
+	"run.1a.en" -> "operating system.en" [minlen=1, label="Environment2", fontsize=8, color=orange]
+	"run.1b.en" -> "operating system.en" [minlen=1, label="Environment2", fontsize=8, color=orange]
+
+	//-------------------------------------------------- Agent_actant
+
+	"run.1b.en" -> "user.1.en" [minlen=1, label="Agent", fontsize=8, color=orange]
+	"run.2b.en" -> "user.1.en" [minlen=1, label="Agent", fontsize=8, color=orange]
+
+	//-------------------------------------------------- Manner_actant
+
+	"run.2a.en" -> "speed.en" [minlen=1, label="Manner", fontsize=8, color=orange]
+}

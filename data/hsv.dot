@@ -1,0 +1,26 @@
+/* hsv values in range 0...1 */
+digraph "hsv"
+{
+w1 [label="White" color="#ffffff"];
+w2 [label="0,0,1" color="0.000 0.000 1.000"];
+w1->w2;
+
+
+b1 [label="Black" color="#000000"];
+b2 [color="0.000 0.000 0.000"];
+b1->b2;
+
+r1 [label="Red" color="#ff0000"];
+r2 [color="0.000 1.000 1.000"];
+r1->r2;
+
+t1 [label="Turquoise" color="#40e0d0"];
+t2 [color="0.482 0.714 0.878"];
+t1->t2;
+
+s1 [label="Sienna" color="#a0522d"];
+s2 [color="0.051 0.718 0.627"];
+s1->s2;
+}
+
+

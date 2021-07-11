@@ -1,0 +1,22 @@
+digraph G {
+  center=true;
+  ratio=compress;
+  rankdir="TB";
+  page="8.5,11";
+  orientation="portrait";
+  size="6,10";
+  relayfs_remove [ fillcolor="#FFFFCC" style=filled fontname="Arial" fontsize=100 label="relayfs_remove" ]; 
+  relay_mmap_buf [ fillcolor="#FFFFCC" style=filled fontname="Arial" fontsize=100 label="relay_mmap_buf" ]; 
+  relayfs_read [ fillcolor="#FFFFCC" style=filled fontname="Arial" fontsize=100 label="relayfs_read" ]; 
+  relayfs_fill_super [ fillcolor="#FFFFCC" style=filled fontname="Arial" fontsize=100 label="relayfs_fill_super" ]; 
+  relayfs_remove_dir [ fillcolor="white" style=filled fontname="Arial" fontsize=100 label="relayfs_remove_dir" ]; 
+  relayfs_remove_dir -> relayfs_remove [minlen=15 style="setlinewidth(1)" arrowsize=0 color="black"]; 
+  relayfs_remove_dir [ fillcolor="white" style=filled fontname="Arial" fontsize=100 label="relayfs_remove_dir" ]; 
+  relay_remove_buf [ fillcolor="#660000" fontcolor="white" style=filled fontname="Arial" fontsize=100 label="relay_remove_buf" ]; 
+  relay_remove_buf -> relayfs_remove /* fs/relayfs/buffers.c 188 1 */ [minlen=15 style="setlinewidth(1)" arrowsize=0 color="red" label="1" fontcolor="red" fontsize=150 fontname="Arial" ]; 
+  relay_remove_buf [ fillcolor="#660000" fontcolor="white" style=filled fontname="Arial" fontsize=100 label="relay_remove_buf" ]; 
+  init_relayfs_fs [ fillcolor="#FFFFCC" style=filled fontname="Arial" fontsize=100 label="init_relayfs_fs" ]; 
+  relayfs_mmap [ fillcolor="white" style=filled fontname="Arial" fontsize=100 label="relayfs_mmap" ]; 
+  relayfs_mmap -> relay_mmap_buf [minlen=15 style="setlinewidth(1)" arrowsize=0 color="black"]; 
+  relayfs_mmap [ fillcolor="white" style=filled fontname="Arial" fontsize=100 label="relayfs_mmap" ]; 
+}

@@ -1,0 +1,161 @@
+/* -*- mode: graphviz-dot; -*- */
+
+digraph unix {
+        /*ratio="fill";*/
+        /*size="11.692,8.267!";*/
+        /*size="8.267,11.692!";*/
+        /*size="8,10.5!";*/
+        margin=0;
+        /*resolution=72;*/
+        ratio=0.5625; /* 9/16 */
+
+        taxpayer              [shape=rectangle, label="public (taxpayer)"];
+        outsider              [shape=rectangle, label="public (outsiders)"];
+        taxpayer -> rucschool [label="feeds public money to", color=green];
+        taxpayer -> ucschool  [label="feeds public money to", color=green];
+        octave -> taxpayer    [label="ROI: benefits\lfree s/w community\l\& by extension\lbenefits\l"];
+        matlablic -> taxpayer [label="ROI: none;\lgives no benefit to\l"];
+        outsider -> mxserver  [label="are all\lpermitted\lto e-mail\l"];
+        outsider -> msmx      [label="are blocked\lif DNSBL'd by\l"];
+        msmx -> outsider      [label="forces e-mail\lsharing via\lrelay on\l"];
+        
+        subgraph cluster_uc {
+                label = "University of California (\"UC\")";
+                ucschool                [shape=rectangle, label="UC (all locations)"];
+                octave                  [shape=rectangle, label="GNU Octave"];
+                swfreedom               [shape=egg, label="rights to study &\l modify source code"];
+                ucedu                   [shape=egg, label="education"];
+                ucsdstudent             [shape=rectangle, label="UCSD students"];
+                ucbstudent              [shape=rectangle, label="UC Berkeley students"];
+                mastodon                [shape=rectangle, label="mastodon node\n(for micro-blogging)"];
+                mua                     [shape=rectangle, label="open-standards-respecting\lopenpgp mail client (e.g. K-9)"];
+                mxserver                [shape=rectangle, label="in-house mail server"];
+                ucsd                    [shape=rectangle, label="UC San Diego"];
+                /*ucb                     [shape=rectangle, label="UC Berkeley"];*/
+                ucbstaff                [shape=rectangle, label="UC Berkeley staff"];
+                ucsd -> octave          [label="uses, supports,\land improves\l(possibly using\lpublic money)\l"];
+                octave -> swfreedom     [label="freely gives\l"];
+                ucsd -> mxserver        [label="maintains"];
+                mxserver -> ucsdstudent [label="respects\lprivacy of\l"];
+                mastodon -> ucbstudent  [label="respects\lprivacy of\l"];
+                ucbstudent -> mastodon  [label="may all\laccess\l"];
+                ucbstaff -> mastodon    [label="maintains"];
+                ucsdstudent -> mua      [label="may utilize"];
+                mua -> mxserver         [label="interoperates with"];
+                swfreedom -> ucedu      [label="promotes"];
+                
+                warning [
+shape=note,
+label="UC schools and services cherry-picked to show\l how a single school can be socially responsible.\lAll UC schools likely also have some harmful\l relationships showing in the RUC diagram.\l"
+];
+        }
+
+        subgraph cluster_ruc {
+                label = "Roskilde University (\"RUC\")";
+                /*taxpayer     [shape=rectangle];*/
+                stats        [shape=rectangle, label="RUC statistics class"];
+                /*rucstudents  [shape=rectangle, label="RUC students"];*/
+                rucschool    [shape=rectangle, label="RUC (administration)"];
+                most         [shape=rectangle, label="RUC (most offices)"];
+                mathworks    [shape=rectangle, label="MathWorks, Inc."];
+                tor          [shape=rectangle, label="Tor network", URL=<https://torproject.org>,];
+                mwemail      [shape=egg, label="Bulk e-mail promoting their products\nand requesting advertising help"];
+                matlablic    [shape=rectangle, label="Matlab licenses\llimited in duration\l& quantity\l"];
+                css          [shape=egg, label="proprietary\lclosed technology\lthat blocks students\l& professors from\lstudying & modifying\lsource code\l"];
+                library      [shape=rectangle, label="Copenhagen Library"];
+                fb           [shape=rectangle, label="Facebook"];
+                gdprv        [shape=egg, label="GDPR violations"];
+                dpa          [shape=rectangle, label="Danish DPA"];
+                moodle       [shape=egg, label="moodle website\n(in-house)"];
+                ms           [shape=rectangle, label="Microsoft Corporation\n(PRISM)"];
+                google       [shape=rectangle, label="Google, Inc.\n(PRISM)"];
+                gs           [shape=rectangle, label="Google Scholar"];
+                gdocs        [shape=rectangle, label="Google Docs"];
+                o365         [shape=rectangle, label="Office 365"];
+                msmx         [shape=egg, label="restrictive\ne-mail service"];
+                worldpol     [shape=egg, label="politicians worldwide"];
+                /*o365 -> privacy [label="violates GDPR\l& abuses\l"];*/
+                o365 -> gdprv       [label="causes"];
+                rucschool -> ms     [label="outsources\le-mail to\l"; color=green];
+                rucschool -> moodle [label="operates"];
+                rucschool -> tor    [label="blocks ingress\lconnections from\l"];
+                tor -> privacy      [label="provides"; color=blue];
+                ms -> o365          [label="supplies"];
+                ms -> msmx          [label="supplies"];
+                /*recordscorp      [shape=record, label="{scriborder.com|parchment.com}"];*/
+                Twitter       [shape=rectangle, label="Twitter"];
+                CA            [shape=rectangle, label="Cambridge\nAnalytica\n& AggregateIQ"];
+                GA            [shape=rectangle, label="Google Analytics with\lIP anonymization disabled\l"];
+                CloudFlare    [shape=rectangle];
+                repubs        [shape=rectangle, label="Trump &\lTed Cruz"];
+                edu           [shape=egg, label="education"];
+                nophone       [shape=egg, label="*students without phones\l*students with VOIP phones only\l*students unwilling to compromise\l their private phone numbers\l*students who disagree with the ToS\l*anyone the private vendor\l chooses not to serve\l"];
+                privacy       [shape=egg, label="student privacy"];
+                nophone_split [shape=circle,width=.01,height=.01,label="",invisible=true];
+                privacy_split [shape=circle,width=.01,height=.01,label="",invisible=true];
+                NRAtv         [shape=rectangle];
+                violence      [shape=egg, label="violence\nagainst progressives"];
+
+                nophone -> most            [label="are excluded from\lFacebook-announced\lsocial events\lhosted by\l"];
+                rucschool -> library       [label="outsources\lresearch\lservices to\l"];
+                library -> CloudFlare      [label="sends students to\lProquest, in the\lwalled-garden of\l"];
+                Twitter -> NRAtv           [label="delivers\lpromoted\ltweets for"; color=blue];
+                rucschool -> Twitter       [label="microblogs using"; color=blue];
+                most -> fb                 [label="informs\lstudents via\l"; color=blue];
+                mathworks -> matlablic     [label="supplies"];
+                mathworks -> mwemail       [label="often pushes\lto students\l"];
+                stats -> matlablic         [label="spends\lpublic money\lon costly\l"; color=green];
+                matlablic -> css           [label="facilitate"];
+                css -> edu                 [label="reduces"];
+                CloudFlare -> privacy      [label="centralizes \l& controls\l10+% of\lthe web\l& abuses\l"];
+                CloudFlare -> tor          [label="hostily treats"];
+                rucschool -> privacy       [label="forces phone number\l disclosure for VPN \laccess, thus abusing\l"];
+                fb -> privacy_split        [arrowhead=none];
+                msmx -> privacy_split      [arrowhead=none];
+                google -> privacy_split    [arrowhead=none];
+                gdprv -> privacy_split     [arrowhead=none];
+                msmx -> edu                [label="blocks Matlab data\lfile attachments,\lthus hindering\l"];
+                Twitter -> nophone_split   [arrowhead=none];
+                fb -> nophone_split        [arrowhead=none];
+                gdocs -> nophone_split     [arrowhead=none];
+                nophone_split -> nophone   [label="denies\laccess to\l"];
+                privacy_split -> privacy   [label="abuses"];
+                fb -> CA                   [label="leaked\ldata to\l"; color=red];
+                CA -> repubs               [label="manipulated\lthe election\lto favor\l"; color=red];
+                NRAtv -> violence          [label="produces\lpropaganda\l(e.g. youtube.com/watch?v=tOfLjGg5gP0)\lthat incites\l"; color=red];
+                moodle -> GA               [label="is configured\lto use\l"];
+                GA -> gdprv                [label="causes"];
+                GA -> google               [label="feeds"];
+                google -> gs               [label="supplies"];
+                google -> gdocs            [label="supplies"];
+                library -> gs              [label="sends\lstudents to\l"];
+                dpa -> gdprv               [label="ignores\lreports of\l"];
+                fb -> worldpol             [label="lobbies for\lreduced privacy to\l"];
+
+                { rank=same; fb; Twitter; gdocs; gdprv}
+                
+                advice [shape=note; label="Why RUC should cut ties with\lMicrosoft and Google,\lreplace Twitter and Facebook\l"];
+        }
+        /*
+        subgraph cluster_mb {
+                label = "micro-blogging";
+                twtr [shape=rectangle, label="Twitter"];
+                mdon [shape=rectangle, label="Mastodon"];
+        }
+        mdon -> ucbstudent    [label="respects\lprivacy of\l"];
+        ucbstudent -> mdon    [label="may all\laccess\l"];
+        ucbstaff -> mdon      [label="maintains"];
+        twtr -> NRAtv         [label="delivers\lpromoted\ltweets for"; color=blue];
+        rucschool -> twtr     [label="uses"; color=blue];
+        twtr -> nophone_split [arrowhead=none];
+        */
+        
+        /*{ rank=same; fedex; NRA; NRAtv}
+        { rank=source; hs}*/
+        /*{ rankdir=BT; revenue_split}*/
+        /*{ rank=same; cluster_ruc; advice}*/
+        labelloc="t";
+        labelfontsize=28.0; 
+        label="RUC harmful ties";
+}
+

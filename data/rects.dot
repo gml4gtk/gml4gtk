@@ -1,0 +1,1323 @@
+strict digraph {
+	graph [bb="0,0,15598,1570",
+		label="autochk.exe",
+		labeljust=left,
+		labelloc=top,
+		lp="50.5,1557.5",
+		rankdir=LR
+	];
+	node [color=black,
+		fontsize=8,
+		label="\N",
+		shape=record
+	];
+	edge [fontsize=8];
+	4200448	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_00401800\l | <f1> 00401800   mov     esi, [bp-0x14]\l00401803   movzx \
+  eax, word [bp-0x18]\l00401807   test    esi, esi\l00401809   jz      dword 0x4\
+01a13L\l",
+		pos="2892,1140",
+		rects="2804,1155,2980,1173 2804,1107,2980,1155",
+		style=filled,
+		width="2.4444"];
+	4200463	 [fillcolor=cornsilk,
+		height="2.3194",
+		label=" <f0> loc_0040180f\l | <f1> 0040180F   mov     edx, [fs:0x18]\l00401816   movzx \
+  eax, ax\l00401819   add     eax, 0x2\l0040181C   mov     [esp+0x8], eax\l00401\
+820   mov     dword [esp+0x4], 0x0\l00401828   mov     eax, [dx+0x30]\l0040182B \
+  mov     eax, [ax+0x18]\l0040182E   mov     [esp], eax\l00401831   call    dwor\
+d [0x4030c4]   ; ntdll.dll!RtlAllocateHeap\l00401837   sub     esp, 0xc\l0040183\
+A   mov     edi, [bp-0x30]\l0040183D   mov     dword [bp-0x2c], 0x0\l00401844   \
+test    eax, eax\l00401846   jnz     dword 0x4018d0L\l",
+		pos="3149,1310",
+		rects="3018,1375,3280,1393 3018,1227,3280,1375",
+		style=filled,
+		width="3.6389"];
+	4200448 -> 4200463	 [color=red,
+		pos="e,3023.3,1226.8 2942.2,1173.2 2963.3,1187.1 2988.9,1204.1 3014.8,1221.3"];
+	4200979	 [fillcolor=cornsilk,
+		height="1.4861",
+		label=" <f0> loc_00401a13\l | <f1> 00401A13   mov     eax, [bp-0x30]\l00401A16   mov   \
+  dword [ax], 0x0\l00401A1C   mov     edi, eax\l00401A1E   add     edi, 0x4\l004\
+01A21   mov     ecx, [bx+0x48]\l00401A24   mov     dword [bp-0x2c], 0x0\l00401A2\
+B   test    ecx, ecx\l00401A2D   jnz     dword 0x401902L\l",
+		pos="3590,915",
+		rects="3504,950,3676,968 3504,862,3676,950",
+		style=filled,
+		width="2.3889"];
+	4200448 -> 4200979	 [color=green,
+		pos="e,3503.9,942.77 2980,1111.6 3111.6,1069.2 3358.4,989.65 3494.3,945.86"];
+	4200656	 [fillcolor=cornsilk,
+		height="0.79167",
+		label=" <f0> loc_004018d0\l | <f1> 004018D0   movzx   edx, byte [si]\l004018D3   test  \
+  dl, dl\l004018D5   jz      0x4018deL\l",
+		pos="3392,1310",
+		rects="3318.5,1320,3465.5,1338 3318.5,1282,3465.5,1320",
+		style=filled,
+		width="2.0278"];
+	4200463 -> 4200656	 [color=green,
+		pos="e,3318.4,1310 3280.1,1310 3289.6,1310 3299.1,1310 3308.2,1310"];
+	4200524	 [fillcolor=cornsilk,
+		height="1.3472",
+		label=" <f0> loc_0040184c\l | <f1> 0040184C   mov     dword [esp+0x8], 0x87\l00401854  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l0040185C   mo\
+v     dword [esp], 0x4022b7   ; '(%s:%d) ERR: no mem!'\l00401863   call    0x401\
+a50L   ; jmp ntdll.dll!DbgPrint\l00401868   mov     esi, 0xc0000017\l0040186D   \
+test    eax, eax\l0040186F   jz      dword 0x4019fdL\l",
+		pos="6084,1318",
+		rects="5927.5,1348,6240.5,1366 5927.5,1270,6240.5,1348",
+		style=filled,
+		width="4.3333"];
+	4200463 -> 4200524	 [color=red,
+		pos="e,5933.1,1366 3205.5,1393.3 3249.3,1447 3315.3,1507 3392,1507 3392,1507 3392,150\
+7 5795,1507 5875.2,1507 5850.7,1418.7 5918,1375 5920,1373.7 5922,1372.5 5924,137\
+1.2"];
+	4200706	 [fillcolor=cornsilk,
+		height="0.51389",
+		label=" <f0> loc_00401902\l | <f1> 00401902   mov     eax, ecx\l",
+		pos="3787,1031",
+		rects="3728,1031,3846,1049 3728,1013,3846,1031",
+		style=filled,
+		width="1.6389"];
+	4200979 -> 4200706	 [color=green,
+		pos="e,3756.3,1012.9 3676.1,965.71 3701,980.37 3727,995.66 3747.5,1007.8"];
+	4200915	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004019d3\l | <f1> 004019D3   cmp     dword [bx+0xc], 0x0\l004019D7   j\
+z      0x4019deL\l",
+		pos="5795,961",
+		rects="5710,966,5880,984 5710,938,5880,966",
+		style=filled,
+		width="2.3611"];
+	4200979 -> 4200915	 [color=red,
+		pos="e,5762,937.94 3676.2,892.3 3710.4,885.11 3750.3,879 3787,879 3787,879 3787,879 5\
+597,879 5654.4,879 5714.4,908.73 5753.1,932.39",
+		style=dashed];
+	4200708	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401904\l | <f1> 00401904   cmp     word [ax], 0x0\l00401908   jnz   \
+  0x4018f3L\l",
+		pos="3970,1154",
+		rects="3898.5,1159,4041.5,1177 3898.5,1131,4041.5,1159",
+		style=filled,
+		width="1.9722"];
+	4200706 -> 4200708	 [color=black,
+		pos="e,3935.7,1130.9 3814,1049.1 3843.8,1069.2 3892.1,1101.7 3927.1,1125.2"];
+	4200926	 [fillcolor=cornsilk,
+		height="1.625",
+		label=" <f0> loc_004019de\l | <f1> 004019DE   mov     eax, [bx+0xc]\l004019E1   mov    \
+ [esp+0xc], eax\l004019E5   mov     [esp+0x8], edi\l004019E9   mov     eax, [bp-\
+0x30]\l004019EC   mov     [esp+0x4], eax\l004019F0   mov     eax, [bp-0x2c]\l004\
+019F3   mov     [esp], eax\l004019F6   call    0x4010d4L   ; (1)\l004019FB   mov\
+     esi, eax\l",
+		pos="6445,1007",
+		rects="6371,1047,6519,1065 6371,949,6519,1047",
+		style=filled,
+		width="2.0556"];
+	4200915 -> 4200926	 [color=green,
+		pos="e,6370.9,1008.5 5880,981.74 5892.7,984.23 5905.6,986.43 5918,988 6073.4,1007.7 6\
+256.4,1009.5 6360.8,1008.6"];
+	4200921	 [fillcolor=cornsilk,
+		height="0.51389",
+		label=" <f0> loc_004019d9\l | <f1> 004019D9   call    0x401a90L   ; jmp ntdll.dll!DbgBr\
+eakPoint\l",
+		pos="6084,961",
+		rects="5960,961,6208,979 5960,943,6208,961",
+		style=filled,
+		width="3.4444"];
+	4200915 -> 4200921	 [color=red,
+		pos="e,5959.8,961 5880.1,961 5902,961 5926,961 5949.7,961"];
+	4200670	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_004018de\l | <f1> 004018DE   mov     dword [di], 0x0\l004018E4   add  \
+   edi, 0x4\l004018E7   mov     ecx, [bx+0x48]\l004018EA   test    ecx, ecx\l004\
+018EC   jnz     0x401902L\l",
+		pos="3590,1031",
+		rects="3516.5,1051,3663.5,1069 3516.5,993,3663.5,1051",
+		style=filled,
+		width="2.0278"];
+	4200656 -> 4200670	 [color=green,
+		pos="e,3562.9,1069.2 3411.9,1282 3445.9,1234 3515.6,1135.8 3557,1077.5"];
+	4200663	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004018d7\l | <f1> 004018D7   cmp     dl, 0x20\l004018DA   jle     0x40\
+1896L\l",
+		pos="3590,1390",
+		rects="3529.5,1395,3650.5,1413 3529.5,1367,3650.5,1395",
+		style=filled,
+		width="1.6667"];
+	4200656 -> 4200663	 [color=red,
+		pos="e,3533.1,1367 3461.5,1338.1 3481.7,1346.3 3503.7,1355.1 3523.7,1363.2"];
+	4200565	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_00401875\l | <f1> 00401875   mov     dword [esp+0x8], 0x87\l0040187D  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l00401885   mo\
+v     dword [esp], 0x4022cc   ; '(%s:%d) DbgPrint() failed!\\n'\l0040188C   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l00401891   jmp     0x4019fdL\l",
+		pos="6445,1253",
+		rects="6288,1273,6602,1291 6288,1215,6602,1273",
+		style=filled,
+		width="4.3611"];
+	4200524 -> 4200565	 [color=red,
+		pos="e,6287.9,1281.3 6240.5,1289.8 6252.9,1287.6 6265.4,1285.3 6277.9,1283.1"];
+	4200957	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_004019fd\l | <f1> 004019FD   mov     [esp+0x4], esi\l00401A01   mov   \
+  dword [esp], 0xffffffff\l00401A08   call    dword [0x4030c0]   ; ntdll.dll!NtT\
+erminateProcess\l00401A0E   sub     esp, 0x8\l00401A11   jmp     near 0x401a35L\\
+l",
+		pos="6802,1187",
+		rects="6661,1207,6943,1225 6661,1149,6943,1207",
+		style=filled,
+		width="3.9167"];
+	4200524 -> 4200957	 [color=green,
+		pos="e,6750.8,1225.1 6240.5,1331.7 6344.9,1336.2 6484,1333.2 6602,1300 6652.7,1285.7 \
+6704.3,1256.1 6742.4,1230.8"];
+	4198400	 [fillcolor=cornsilk,
+		height="4.6806",
+		label=" <f0> loc_00401000\l | <f1> 00401000   push    ebp\l00401001   mov     ebp, esp\\
+l00401003   push    ebx\l00401004   sub     esp, 0x224\l0040100A   lea     eax, \
+[bp+0xc]\l0040100D   mov     [esp+0x8], eax\l00401011   mov     eax, [bp+0x8]\l0\
+0401014   mov     [esp+0x4], eax\l00401018   lea     ebx, [bp-0x208]\l0040101E  \
+ mov     [esp], ebx\l00401021   call    0x401a40L   ; jmp ntdll.dll!vsprintf\l00\
+401026   mov     [esp+0x4], ebx\l0040102A   lea     ebx, [bp-0x218]\l00401030   \
+mov     [esp], ebx\l00401033   call    dword [0x4030dc]   ; ntdll.dll!RtlInitAns\
+iString\l00401039   sub     esp, 0x8\l0040103C   mov     dword [esp+0x8], 0x1\l0\
+0401044   mov     [esp+0x4], ebx\l00401048   lea     ebx, [bp-0x210]\l0040104E  \
+ mov     [esp], ebx\l00401051   call    dword [0x4030c8]   ; ntdll.dll!RtlAnsiSt\
+ringToUnicodeString\l00401057   sub     esp, 0xc\l0040105A   mov     [esp], ebx\\
+l0040105D   call    dword [0x4030b4]   ; ntdll.dll!NtDisplayString\l00401063   s\
+ub     esp, 0x4\l00401066   mov     [esp], ebx\l00401069   call    dword [0x4030\
+d8]   ; ntdll.dll!RtlFreeUnicodeString\l0040106F   sub     esp, 0x4\l00401072   \
+mov     ebx, [bp-0x4]\l00401075   leave   \l00401076   ret     \l",
+		pos="15438,450",
+		rects="15278,600,15598,618 15278,282,15598,600",
+		style=filled,
+		width="4.4167"];
+	4200670 -> 4200706	 [color=green,
+		pos="e,3727.9,1031 3663.6,1031 3681.4,1031 3700.2,1031 3717.7,1031"];
+	4200670 -> 4200915	 [color=red,
+		pos="e,5726.2,937.97 3663.7,1014.6 3680.2,1011 3697.7,1007.3 3714,1004 4023.5,941.57 \
+4103.3,917 4419,917 4419,917 4419,917 5597,917 5636.9,917 5680.3,925.63 5716.3,9\
+35.24",
+		style=dashed];
+	4200598	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_00401896\l | <f1> 00401896   add     esi, 0x1\l00401899   movzx   edx,\
+ byte [si]\l0040189C   cmp     dl, 0x20\l0040189F   jg      0x4018a5L\l",
+		pos="3787,1390",
+		rects="3714,1405,3860,1423 3714,1357,3860,1405",
+		style=filled,
+		width="2.0278"];
+	4200663 -> 4200598	 [color=green,
+		pos="e,3713.7,1390 3650.7,1390 3667.3,1390 3685.7,1390 3703.3,1390"];
+	4200617	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004018a9\l | <f1> 004018A9   mov     [di], eax\l004018AB   add     edi\
+, 0x4\l004018AE   add     dword [bp-0x2c], 0x1\l004018B2   movzx   edx, byte [si\
+]\l004018B5   cmp     dl, 0x20\l004018B8   jle     0x4018caL\l",
+		pos="4525,1409",
+		rects="4440,1434,4610,1452 4440,1366,4610,1434",
+		style=filled,
+		width="2.3611"];
+	4200663 -> 4200617	 [color=red,
+		pos="e,4439.9,1436.5 3624.3,1413.1 3662.3,1436.4 3726.4,1469 3787,1469 3787,1469 3787\
+,1469 4240,1469 4304.4,1469 4375.3,1454.2 4430.2,1439.2",
+		style=dashed];
+	4200565 -> 4200957	 [color=blue,
+		pos="e,6660.8,1213.1 6602.1,1224 6618.3,1221 6634.7,1217.9 6650.8,1214.9"];
+	4201013	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_00401a35\l | <f1> 00401A35   lea     esp, [bp-0xc]\l00401A38   pop    \
+ ebx\l00401A39   pop     esi\l00401A3A   pop     edi\l00401A3B   pop     ebp\l00\
+401A3C   ret     0x4\l",
+		pos="7071,1187",
+		rects="7004.5,1212,7137.5,1230 7004.5,1144,7137.5,1212",
+		style=filled,
+		width="1.8333"];
+	4200957 -> 4201013	 [color=blue,
+		pos="e,7004.3,1187 6943.2,1187 6960.7,1187 6978,1187 6994,1187"];
+	4198929	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_00401211\l | <f1> 00401211   mov     dword [esp+0x8], 0x4b\l00401219  \
+ mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l00401221\
+   mov     dword [esp], 0x4020e4   ; '(%s:%d) DbgPrint() failed!\\n'\l00401228  \
+ call    0x401a50L   ; jmp ntdll.dll!DbgPrint\l0040122D   jmp     0x401639L\l",
+		pos="8354,353",
+		rects="8178.5,373,8529.5,391 8178.5,315,8529.5,373",
+		style=filled,
+		width="4.8611"];
+	4199993	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401639\l | <f1> 00401639   mov     edi, 0xc000000d\l0040163E   jmp  \
+   near 0x40164cL\l",
+		pos="8731,363",
+		rects="8655,368,8807,386 8655,340,8807,368",
+		style=filled,
+		width="2.1111"];
+	4198929 -> 4199993	 [color=blue,
+		pos="e,8654.7,360.98 8529.5,357.66 8569.4,358.71 8610.1,359.79 8644.3,360.7"];
+	4200012	 [fillcolor=cornsilk,
+		height="1.3472",
+		label=" <f0> loc_0040164c\l | <f1> 0040164C   mov     [esp+0xc], edi\l00401650   mov   \
+  dword [esp+0x8], 0x128\l00401658   mov     dword [esp+0x4], 0x402084   ; 'base\
+/system/autochk/autochk.c'\l00401660   mov     dword [esp], 0x402220   ; '(%s:%d\
+) GetFileSystem() failed with status 0x%08lx\\n'\l00401667   call    0x401a50L  \
+ ; jmp ntdll.dll!DbgPrint\l0040166C   test    eax, eax\l0040166E   jz      dword\
+ 0x4013e5L\l",
+		pos="9739,572",
+		rects="9528.5,602,9949.5,620 9528.5,524,9949.5,602",
+		style=filled,
+		width="5.8333"];
+	4199993 -> 4200012	 [color=blue,
+		pos="e,9597,523.96 8807.1,372.73 8944.6,391.05 9243.1,434.29 9490,494 9521.7,501.67 9\
+555.3,511.2 9587.2,520.94"];
+	4199397	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_004013e5\l | <f1> 004013E5   mov     [esp+0x4], esi\l004013E9   mov   \
+  dword [esp], 0x402134   ; '  Unable to get file system of %S\\r\\n'\l004013F0 \
+  call    0x401000L   ; (1)\l004013F5   jmp     0x401626L\l",
+		pos="11352,620",
+		rects="11178,635,11526,653 11178,587,11526,635",
+		style=filled,
+		width="4.8056"];
+	4200012 -> 4199397	 [color=green,
+		pos="e,11178,605.59 9949.6,571.08 10175,570.93 10543,573.07 10860,586 10962,590.16 11\
+076,597.82 11168,604.82"];
+	4199369	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_004013c9\l | <f1> 004013C9   mov     dword [esp+0x8], 0x128\l004013D1 \
+  mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l004013D\
+9   mov     dword [esp], 0x4020e4   ; '(%s:%d) DbgPrint() failed!\\n'\l004013E0 \
+  call    0x401a50L   ; jmp ntdll.dll!DbgPrint\l",
+		pos="10684,620",
+		rects="10508,635,10860,653 10508,587,10860,635",
+		style=filled,
+		width="4.8889"];
+	4200012 -> 4199369	 [color=red,
+		pos="e,10508,612.3 9949.6,584.98 9955.8,585.33 9961.9,585.67 9968,586 10148,595.76 10\
+353,605.35 10497,611.84",
+		style=dashed];
+	4200691	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_004018f3\l | <f1> 004018F3   movzx   edx, word [ax]\l004018F6   add   \
+  eax, 0x2\l004018F9   test    dx, dx\l004018FC   jnz     0x4018f3L\l",
+		pos="4240,1192",
+		rects="4164.5,1207,4315.5,1225 4164.5,1159,4315.5,1207",
+		style=filled,
+		width="2.0833"];
+	4200708 -> 4200691	 [color=green,
+		pos="e,4164.2,1181.3 4041.6,1164.1 4076.2,1168.9 4117.9,1174.8 4154.2,1179.9"];
+	4200714	 [fillcolor=cornsilk,
+		height="2.7361",
+		label=" <f0> loc_0040190a\l | <f1> 0040190A   mov     [bp-0x1c], ecx\l0040190D   add   \
+  eax, 0x2\l00401910   sub     eax, ecx\l00401912   sar     eax, 0x1\l00401914  \
+ add     eax, eax\l00401916   mov     [bp-0x20], ax\l0040191A   mov     [bp-0x1e\
+], ax\l0040191E   mov     dword [esp+0x8], 0x1\l00401926   lea     eax, [bp-0x20\
+]\l00401929   mov     [esp+0x4], eax\l0040192D   lea     eax, [bp-0x28]\l0040193\
+0   mov     [esp], eax\l00401933   call    dword [0x4030e8]   ; ntdll.dll!RtlUni\
+codeStringToAnsiString\l00401939   sub     esp, 0xc\l0040193C   mov     esi, eax\
+\l0040193E   test    eax, eax\l00401940   jns     0x401984L\l",
+		pos="4240,1043",
+		rects="4080,1123,4400,1141 4080,945,4400,1123",
+		style=filled,
+		width="4.4444"];
+	4200708 -> 4200714	 [color=red,
+		pos="e,4079.8,1108.9 4026.3,1130.9 4039.7,1125.3 4054.7,1119.2 4070.4,1112.7"];
+	4200926 -> 4200957	 [color=black,
+		pos="e,6738.6,1148.8 6519.2,1036.7 6545.7,1047.8 6575.4,1060.9 6602,1074 6645.2,1095.\
+3 6692.2,1121.7 6729.7,1143.6"];
+	4198612	 [fillcolor=cornsilk,
+		height="2.875",
+		label=" <f0> loc_004010d4\l | <f1> 004010D4   push    ebp\l004010D5   mov     ebp, esp\\
+l004010D7   push    edi\l004010D8   push    esi\\
+l004010D9   push    ebx\l00401\
+0DA   sub     esp, 0x48c\l004010E0   mov     dword [esp+0x10], 0x0\l004010E8   m\
+ov     dword [esp+0xc], 0x24\l004010F0   lea     eax, [bp-0x34]\l004010F3   mov \
+    [esp+0x8], eax\l004010F7   mov     dword [esp+0x4], 0x17\l004010FF   mov    \
+ dword [esp], 0xffffffff\l00401106   call    dword [0x4030b8]   ; ntdll.dll!NtQu\
+eryInformationProcess\l0040110C   sub     esp, 0x14\l0040110F   mov     ebx, 0x0\
+\l00401114   lea     esi, [bp-0x134]\l0040111A   test    eax, eax\l0040111C   jn\
+s     0x401173L\l",
+		pos="6802,802",
+		rects="6644.5,887,6959.5,905 6644.5,699,6959.5,887",
+		style=filled,
+		width="4.3611"];
+	4200926 -> 4198612	 [color=violet,
+		label=1,
+		lp="6623,932",
+		pos="e,6660,905.06 6519.1,978.95 6545.8,967.92 6575.8,954.45 6602,940 6618.4,930.98 6\
+635,920.96 6651.5,910.54"];
+	4200921 -> 4200926	 [color=black,
+		pos="e,6370.9,997.55 6208.2,976.83 6258.6,983.25 6315.4,990.49 6360.8,996.27"];
+	4199446	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_00401416\l | <f1> 00401416   mov     dword [esp+0x4], 0x40216c   ; 'F'\
+\l0040141E   lea     eax, [bp-0x44c]\l00401424   mov     [esp], eax\l00401427   \
+call    0x401a60L   ; jmp ntdll.dll!wcscmp\l0040142C   test    eax, eax\l0040142\
+E   jz      0x40144aL\l",
+		pos="9739,406",
+		rects="9629,431,9849,449 9629,363,9849,431",
+		style=filled,
+		width="3.0556"];
+	4199498	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_0040144a\l | <f1> 0040144A   mov     dword [esp+0x4], 0x402180   ; 'u'\
+\l00401452   lea     eax, [bp-0x34c]\l00401458   mov     [esp], eax\l0040145B   \
+call    dword [0x4030e0]   ; ntdll.dll!RtlInitUnicodeString\l00401461   sub     \
+esp, 0x8\l",
+		pos="11019,401",
+		rects="10878,421,11160,439 10878,363,11160,421",
+		style=filled,
+		width="3.8889"];
+	4199446 -> 4199498	 [color=green,
+		pos="e,10878,401.55 9849.2,405.57 10079,404.67 10607,402.61 10868,401.59"];
+	4199472	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_00401430\l | <f1> 00401430   mov     dword [esp+0x4], 0x402174   ; 'F'\
+\l00401438   lea     eax, [bp-0x44c]\l0040143E   mov     [esp], eax\l00401441   \
+call    0x401a60L   ; jmp ntdll.dll!wcscmp\l00401446   test    eax, eax\l0040144\
+8   jnz     0x40149dL\l",
+		pos="10379,469",
+		rects="10268,494,10490,512 10268,426,10490,494",
+		style=filled,
+		width="3.0556"];
+	4199446 -> 4199472	 [color=red,
+		pos="e,10268,458.1 9849,416.83 9962.9,428.04 10140,445.51 10258,457.1"];
+	4199524	 [fillcolor=cornsilk,
+		height="1.7639",
+		label=" <f0> loc_00401464\l | <f1> 00401464   lea     eax, [bp-0x460]\l0040146A   mov  \
+   [esp+0xc], eax\l0040146E   lea     eax, [bp-0x34c]\l00401474   mov     [esp+0\
+x8], eax\l00401478   mov     dword [esp+0x4], 0x0\l00401480   mov     dword [esp\
+], 0x0\l00401487   call    0x401a68L   ; jmp ntdll.dll!LdrLoadDll\l0040148C   su\
+b     esp, 0x10\l0040148F   test    eax, eax\l00401491   js      0x40149dL\l",
+		pos="11659,377",
+		rects="11544,422,11774,440 11544,314,11774,422",
+		style=filled,
+		width="3.1944"];
+	4199498 -> 4199524	 [color=black,
+		pos="e,11544,381.32 11160,395.72 11272,391.53 11426,385.73 11534,381.7"];
+	4199472 -> 4199498	 [color=red,
+		pos="e,10878,415.76 10490,456.95 10496,456.29 10502,455.64 10508,455 10629,442.03 107\
+66,427.52 10868,416.82"];
+	4199581	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_0040149d\l | <f1> 0040149D   mov     dword [esp+0x8], 0x131\l004014A5 \
+  mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l004014A\
+D   mov     dword [esp], 0x402194   ; '(%s:%d) LoadProvider() failed\\n'\l004014\
+B4   call    0x401a50L   ; jmp ntdll.dll!DbgPrint\l004014B9   test    eax, eax\l\
+004014BB   jz      0x4014d9L\l",
+		pos="12172,468",
+		rects="11996,493,12348,511 11996,425,12348,493",
+		style=filled,
+		width="4.8611"];
+	4199472 -> 4199581	 [color=green,
+		pos="e,11996,468.81 10490,469 10617,469 10833,469 11019,469 11019,469 11019,469 11885\
+,469 11918,469 11952,468.93 11986,468.84"];
+	4199524 -> 4199581	 [color=green,
+		pos="e,11996,443.2 11774,404.25 11787,406.99 11800,409.64 11812,412 11868,422.82 1193\
+0,433.01 11986,441.66"];
+	4199571	 [fillcolor=cornsilk,
+		height="0.79167",
+		label=" <f0> loc_00401493\l | <f1> 00401493   mov     edi, [bp-0x460]\l00401499   test \
+   edi, edi\l0040149B   jnz     0x4014f4L\l",
+		pos="11885,375",
+		rects="11812,385,11958,403 11812,347,11958,385",
+		style=filled,
+		width="2.0278"];
+	4199524 -> 4199571	 [color=red,
+		pos="e,11812,375.65 11774,375.98 11783,375.9 11793,375.82 11801,375.74"];
+	4199613	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_004014bd\l | <f1> 004014BD   mov     dword [esp+0x8], 0x131\l004014C5 \
+  mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l004014C\
+D   mov     dword [esp], 0x4020e4   ; '(%s:%d) DbgPrint() failed!\\n'\l004014D4 \
+  call    0x401a50L   ; jmp ntdll.dll!DbgPrint\l",
+		pos="13028,555",
+		rects="12852,570,13204,588 12852,522,13204,570",
+		style=filled,
+		width="4.8889"];
+	4199581 -> 4199613	 [color=red,
+		pos="e,12852,537.11 12348,485.84 12492,500.48 12695,521.16 12842,536.09"];
+	4199641	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_004014d9\l | <f1> 004014D9   lea     eax, [bp-0x44c]\l004014DF   mov  \
+   [esp+0x4], eax\l004014E3   mov     dword [esp], 0x4021b4   ; '  Unable to ver\
+ify a %S volume\\r\\n'\l004014EA   call    0x401000L   ; (1)\l004014EF   jmp    \
+ 0x401626L\l",
+		pos="13761,559",
+		rects="13592,579,13930,597 13592,521,13930,579",
+		style=filled,
+		width="4.6944"];
+	4199581 -> 4199641	 [color=green,
+		pos="e,13592,544.61 12348,470.59 12481,473.09 12669,477.75 12834,486 12999,494.24 130\
+40,500.21 13204,513 13330,522.82 13473,534.59 13582,543.76"];
+	4199974	 [fillcolor=cornsilk,
+		height="0.79167",
+		label=" <f0> loc_00401626\l | <f1> 00401626   add     ebx, 0x1\l00401629   cmp     ebx,\
+ 0x1a\l0040162C   jnz     dword 0x401173L\l",
+		pos="14547,659",
+		rects="14471,669,14623,687 14471,631,14623,669",
+		style=filled,
+		width="2.1111"];
+	4198771	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_00401173\l | <f1> 00401173   mov     eax, 0x1\l00401178   mov     ecx,\
+ ebx\l0040117A   shl     eax, cl\l0040117C   test    [bp-0x34], eax\l0040117F   \
+jz      dword 0x401626L\l",
+		pos="7071,719",
+		rects="6998.5,739,7143.5,757 6998.5,681,7143.5,739",
+		style=filled,
+		width=2];
+	4199974 -> 4198771	 [color=green,
+		pos="e,7143.7,719.65 14471,678.68 14385,694.72 14241,714 14117,714 7278,714 7278,714 \
+7278,714 7237.2,714 7191.9,716.74 7154.2,719.02"];
+	4199986	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401632\l | <f1> 00401632   mov     eax, 0x0\l00401637   jmp     near\
+ 0x401679L\l",
+		pos="15024,660",
+		rects="14950,665,15098,683 14950,637,15098,665",
+		style=filled,
+		width="2.0556"];
+	4199974 -> 4199986	 [color=red,
+		pos="e,14949,659.84 14623,659.16 14709,659.34 14850,659.63 14939,659.82"];
+	4198771 -> 4199974	 [color=green,
+		pos="e,14471,665.56 7143.7,703.69 7183.4,699.28 7233.3,696 7278,696 7278,696 7278,696\
+ 14117,696 14237,696 14374,678.16 14461,666.87"];
+	4198789	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401185\l | <f1> 00401185   cmp     byte [ebp+ebx-0x30], 0x3\l0040118\
+A   jnz     dword 0x401626L\l",
+		pos="7278,765",
+		rects="7182.5,770,7373.5,788 7182.5,742,7373.5,770",
+		style=filled,
+		width="2.6389"];
+	4198771 -> 4198789	 [color=red,
+		pos="e,7182.2,743.72 7143.7,735.15 7152.9,737.21 7162.6,739.35 7172.2,741.49"];
+	4200057	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_00401679\l | <f1> 00401679   lea     esp, [bp-0xc]\l0040167C   pop    \
+ ebx\l0040167D   pop     esi\l0040167E   pop     edi\l0040167F   pop     ebp\l00\
+401680   ret     \l",
+		pos="15438,744",
+		rects="15372,769,15504,787 15372,701,15504,769",
+		style=filled,
+		width="1.8333"];
+	4199986 -> 4200057	 [color=blue,
+		pos="e,15371,724.94 15099,669.4 15140,674.99 15191,682.79 15236,692 15278,700.49 1532\
+4,712.14 15361,722.26"];
+	4198789 -> 4199974	 [color=green,
+		pos="e,14478,687.13 7373.5,765 7433.4,765 7512.2,765 7582,765 7582,765 7582,765 14117\
+,765 14242,765 14383,721.92 14468,690.68"];
+	4198800	 [fillcolor=cornsilk,
+		height="2.7361",
+		label=" <f0> loc_00401190\l | <f1> 00401190   lea     eax, [bx+0x41]\l00401193   mov   \
+  [esp+0x8], eax\l00401197   mov     dword [esp+0x4], 0x402100   ; '%'\l0040119F\
+   mov     [esp], esi\l004011A2   call    0x401a58L   ; jmp ntdll.dll!swprintf\l\
+004011A7   mov     word [bp-0x45c], 0x8\l004011B0   mov     word [bp-0x45a], 0x9\
+\l004011B9   mov     dword [bp-0x458], 0x40210a   ; 'ChkdskEx'\l004011C3   mov  \
+   dword [esp+0xc], 0x0\l004011CB   mov     dword [esp+0x8], 0x0\l004011D3   lea\
+     eax, [bp-0x454]\l004011D9   mov     [esp+0x4], eax\l004011DD   mov     [esp\
+], esi\l004011E0   call    dword [0x4030d0]   ; ntdll.dll!RtlDosPathNameToNtPath\
+Name_U\l004011E6   sub     esp, 0x10\l004011E9   test    al, al\l004011EB   jnz \
+    0x401232L\l",
+		pos="7582,480",
+		rects="7412,560,7752,578 7412,382,7752,560",
+		style=filled,
+		width="4.7222"];
+	4198789 -> 4198800	 [color=red,
+		pos="e,7477.2,578.22 7302.6,741.92 7338.9,707.92 7409,642.22 7469.9,585.14"];
+	4199613 -> 4199641	 [color=black,
+		pos="e,13592,558.08 13204,555.96 13318,556.58 13467,557.39 13581,558.02"];
+	4199641 -> 4198400	 [color=violet,
+		label=1,
+		lp="14547,549",
+		pos="e,15278,503.73 13930,551.94 14037,548.05 14179,544 14305,544 14305,544 14305,544\
+ 15024,544 15106,544 15194,526.4 15268,506.43"];
+	4199641 -> 4199974	 [color=blue,
+		pos="e,14471,649.33 13930,580.51 14093,601.28 14334,631.87 14461,648.05"];
+	4199397 -> 4198400	 [color=violet,
+		label=1,
+		lp="13028,625",
+		pos="e,15278,543.49 11526,620 11607,620 11705,620 11793,620 11793,620 11793,620 13761\
+,620 13925,620 15078,601.2 15236,558 15247,555.02 15258,551.38 15269,547.24"];
+	4199397 -> 4199974	 [color=blue,
+		pos="e,14471,658.72 11526,641.88 11607,650.33 11705,658 11793,658 11793,658 11793,658\
+ 14117,658 14236,658 14374,658.39 14461,658.68"];
+	4199369 -> 4199397	 [color=black,
+		pos="e,11178,620 10860,620 10955,620 11072,620 11168,620"];
+	4199178	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_0040130a\l | <f1> 0040130A   mov     eax, [bp-0x460]\l00401310   mov  \
+   [bp-0x464], eax\l00401316   cmp     eax, 0xff\l00401319   jz      dword 0x401\
+640L\l",
+		pos="8354,504",
+		rects="8279.5,519,8428.5,537 8279.5,471,8428.5,519",
+		style=filled,
+		width="2.0556"];
+	4200000	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401640\l | <f1> 00401640   mov     edi, 0xc000000d\l00401645   jmp  \
+   near 0x40164cL\l",
+		pos="8988,617",
+		rects="8912,622,9064,640 8912,594,9064,622",
+		style=filled,
+		width="2.1111"];
+	4199178 -> 4200000	 [color=green,
+		pos="e,8912,625.96 8403.8,537.03 8445.7,562.73 8508.1,596.4 8568,611 8681,638.52 8816\
+.1,634.09 8902,626.83"];
+	4199199	 [fillcolor=cornsilk,
+		height="2.7361",
+		label=" <f0> loc_0040131f\l | <f1> 0040131F   mov     dword [esp+0x10], 0x5\l00401327  \
+ mov     dword [esp+0xc], 0x218\l0040132F   lea     eax, [bp-0x34c]\l00401335   \
+mov     [esp+0x8], eax\l00401339   lea     eax, [bp-0x454]\l0040133F   mov     [\
+esp+0x4], eax\l00401343   mov     ecx, [bp-0x464]\l00401349   mov     [esp], ecx\
+\l0040134C   call    dword [0x4030bc]   ; ntdll.dll!NtQueryVolumeInformationFile\
+\l00401352   sub     esp, 0x14\l00401355   mov     edi, eax\l00401357   mov     \
+eax, [bp-0x464]\l0040135D   mov     [esp], eax\l00401360   call    dword [0x4030\
+ac]   ; ntdll.dll!NtClose\l00401366   sub     esp, 0x4\l00401369   test    edi, \
+edi\l0040136B   js      dword 0x40164cL\l",
+		pos="8731,504",
+		rects="8568.5,584,8893.5,602 8568.5,406,8893.5,584",
+		style=filled,
+		width="4.5"];
+	4199178 -> 4199199	 [color=red,
+		pos="e,8568.1,504 8428.9,504 8466.1,504 8512.6,504 8557.9,504"];
+	4200000 -> 4200012	 [color=blue,
+		pos="e,9528.2,584.63 9064.1,612.44 9169.7,606.11 9364.8,594.42 9518.1,585.23"];
+	4199199 -> 4200012	 [color=green,
+		pos="e,9528.2,570.68 8893.6,529.26 8952.8,537.53 9020.3,545.89 9082,551 9226.9,562.99\
+ 9390.3,568.24 9518,570.5"];
+	4199281	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_00401371\l | <f1> 00401371   mov     edi, [bp-0x344]\l00401377   lea  \
+   eax, [di+0x2]\l0040137A   cmp     eax, 0x100\\
+l0040137F   ja      dword 0x40\
+1647L\l",
+		pos="9155,509",
+		rects="9082,524,9228,542 9082,476,9228,524",
+		style=filled,
+		width="2.0278"];
+	4199199 -> 4199281	 [color=red,
+		pos="e,9081.8,508.14 8893.7,505.92 8954.5,506.64 9020.9,507.42 9071.6,508.02"];
+	4200007	 [fillcolor=cornsilk,
+		height="0.51389",
+		label=" <f0> loc_00401647\l | <f1> 00401647   mov     edi, 0xc0000023\l",
+		pos="9378,521",
+		rects="9302,521,9454,539 9302,503,9454,521",
+		style=filled,
+		width="2.1111"];
+	4199281 -> 4200007	 [color=green,
+		pos="e,9301.8,516.9 9228,512.93 9248.3,514.02 9270.6,515.22 9291.6,516.35"];
+	4199301	 [fillcolor=cornsilk,
+		height="2.3194",
+		label=" <f0> loc_00401385\l | <f1> 00401385   lea     eax, [bp-0x340]\l0040138B   mov  \
+   [esp+0x8], edi\l0040138F   mov     [esp+0x4], eax\l00401393   lea     ecx, [b\
+p-0x44c]\l00401399   mov     [esp], ecx\l0040139C   call    0x401a48L   ; jmp nt\
+dll.dll!memcpy\l004013A1   shr     edi, 0x1\l004013A3   mov     word [ebp+edi2-0\
+x44c], 0x0\l004013AD   mov     dword [esp+0x4], 0x40212a   ; 'N'\l004013B5   lea\
+     eax, [bp-0x44c]\l004013BB   mov     [esp], eax\l004013BE   call    0x401a60\
+L   ; jmp ntdll.dll!wcscmp\l004013C3   test    eax, eax\l004013C5   jz      0x40\
+13faL\l",
+		pos="9378,337",
+		rects="9266.5,402,9489.5,420 9266.5,254,9489.5,402",
+		style=filled,
+		width="3.0833"];
+	4199281 -> 4199301	 [color=red,
+		pos="e,9270.3,420.04 9198,475.84 9216.6,461.52 9239.3,444 9262.2,426.3"];
+	4200007 -> 4200012	 [color=black,
+		pos="e,9528.2,542.21 9454.1,531.75 9473.5,534.49 9495.3,537.57 9518,540.78"];
+	4199813	 [fillcolor=cornsilk,
+		height="4.5417",
+		label=" <f0> loc_00401585\l | <f1> 00401585   mov     dword [esp+0x4], 0x402216   ; '\\\
+\\'\l0040158D   lea     ecx, [bp-0x34c]\l00401593   mov     [esp], ecx\l00401596\
+   call    0x401a58L   ; jmp ntdll.dll!swprintf\l0040159B   mov     [esp+0x4], e\
+si\l0040159F   lea     eax, [bp-0x34c]\l004015A5   mov     [esp], eax\l004015A8 \
+  call    0x401a80L   ; jmp ntdll.dll!wcscat\l004015AD   lea     ecx, [bp-0x34c]\
+\l004015B3   mov     [esp], ecx\l004015B6   call    0x401a88L   ; jmp ntdll.dll!\
+wcslen\l004015BB   mov     word [ebp+eax2-0x34e], 0x0\l004015C5   lea     eax, [\
+bp-0x34c]\l004015CB   mov     [esp+0x4], eax\l004015CF   lea     ecx, [bp-0x454]\
+\l004015D5   mov     [esp], ecx\l004015D8   call    dword [0x4030e0]   ; ntdll.d\
+ll!RtlInitUnicodeString\l004015DE   sub     esp, 0x8\l004015E1   mov     dword [\
+esp+0x14], 0x401077   ; callback arg (1)\l004015E9   mov     dword [esp+0x10], 0\
+x0\l004015F1   mov     dword [esp+0xc], 0x1\l004015F9   mov     dword [esp+0x8],\
+ 0x1\l00401601   mov     dword [esp+0x4], 0x1\l00401609   lea     eax, [bp-0x454\
+]\l0040160F   mov     [esp], eax\l00401612   call    dword [bp-0x460]\l00401618 \
+  sub     esp, 0x18\l0040161B   mov     [esp], edi\l0040161E   call    0x401a78L\
+   ; jmp ntdll.dll!LdrUnloadDll\l00401623   sub     esp, 0x4\l",
+		pos="12610,277",
+		rects="12469,422,12751,440 12469,114,12751,422",
+		style=filled,
+		width="3.9167"];
+	4199813 -> 4199974	 [color=black,
+		pos="e,14471,632.75 12751,359.33 12783,375.12 12818,389.87 12852,400 13467,584 13661,\
+432.06 14286,579 14345,592.93 14411,613.03 14461,629.59"];
+	4198519	 [fillcolor=cornsilk,
+		height="1.3472",
+		label=" <f0> loc_00401077\l | <f1> 00401077   push    ebp\l00401078   mov     ebp, esp\\
+l0040107A   sub     esp, 0x8\l0040107D   mov     eax, [bp+0x8]\l00401080   mov  \
+   edx, [bp+0x10]\l00401083   cmp     eax, 0xb\l00401086   jz      0x4010ba\l",
+		pos="13398,265",
+		rects="13324,295,13472,313 13324,217,13472,295",
+		style=filled,
+		width="2.0278"];
+	4199813 -> 4198519	 [color=lightblue,
+		label=1,
+		lp="13028,279",
+		pos="e,13324,266.12 12751,274.85 12915,272.35 13180,268.32 13314,266.28"];
+	4198536	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401088\l | <f1> 00401088   cmp     eax, 0xe\l0040108B   jz      0x40\
+10a5L\l",
+		pos="14117,275",
+		rects="14058,280,14176,298 14058,252,14176,280",
+		style=filled,
+		width="1.6389"];
+	4198519 -> 4198536	 [color=red,
+		pos="e,14057,274.17 13472,266.02 13611,267.96 13911,272.13 14047,274.03"];
+	4198586	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004010ba\l | <f1> 004010BA   cmp     byte [dx], 0x1\l004010BD   jnz   \
+  0x4010cbL\l",
+		pos="14547,179",
+		rects="14476,184,14618,202 14476,156,14618,184",
+		style=filled,
+		width="1.9444"];
+	4198519 -> 4198586	 [color=green,
+		pos="e,14476,184.3 13472,259.49 13677,244.15 14252,201.05 14466,185.06"];
+	4198565	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_004010a5\l | <f1> 004010A5   mov     eax, [dx+0x4]\l004010A8   mov    \
+ [esp+0x4], eax\l004010AC   mov     dword [esp], 0x402017   ; '%s'\l004010B3   c\
+all    0x401000L   ; (1)\l004010B8   jmp     near 0x4010cbL\l",
+		pos="15024,390",
+		rects="14920,410,15128,428 14920,352,15128,410",
+		style=filled,
+		width="2.8889"];
+	4198536 -> 4198565	 [color=green,
+		pos="e,14920,378.81 14177,284.8 14218,291.44 14274,300.21 14324,307 14530,335.12 1477\
+1,362.47 14910,377.69"];
+	4198541	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_0040108d\l | <f1> 0040108D   test    eax, eax\l0040108F   jnz     0x40\
+10cbL\l",
+		pos="14547,275",
+		rects="14487,280,14607,298 14487,252,14607,280",
+		style=filled,
+		width="1.6667"];
+	4198536 -> 4198541	 [color=red,
+		pos="e,14487,275 14177,275 14255,275 14393,275 14477,275"];
+	4198591	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004010bf\l | <f1> 004010BF   mov     dword [esp], 0x40201c   ; 'Autoch\
+k was unable to complete successfully.\\r\\n\\r\\
+(...)\l004010C6   call    0x40\
+1000L   ; (1)\l",
+		pos="15024,179",
+		rects="14812,184,15236,202 14812,156,15236,184",
+		style=filled,
+		width="5.8611"];
+	4198586 -> 4198591	 [color=red,
+		pos="e,14812,179 14618,179 14667,179 14735,179 14802,179"];
+	4198603	 [fillcolor=cornsilk,
+		height="0.79167",
+		label=" <f0> loc_004010cb\l | <f1> 004010CB   mov     eax, 0x1\l004010D0   leave   \l00\
+4010D1   ret     0xc\l",
+		pos="15438,230",
+		rects="15378,240,15498,258 15378,202,15498,240",
+		style=filled,
+		width="1.6667"];
+	4198586 -> 4198603	 [color=green,
+		pos="e,15386,201.9 14618,164.65 14744,141.6 15014,103.1 15236,147 15285,156.72 15338,\
+178.59 15377,197.43"];
+	4199571 -> 4199581	 [color=red,
+		pos="e,12039,424.99 11958,398.71 11980,405.79 12005,413.8 12029,421.81"];
+	4199668	 [fillcolor=cornsilk,
+		height="1.7639",
+		label=" <f0> loc_004014f4\l | <f1> 004014F4   lea     eax, [bp-0x460]\l004014FA   mov  \
+   [esp+0xc], eax\l004014FE   mov     dword [esp+0x8], 0x0\l00401506   lea     e\
+ax, [bp-0x45c]\l0040150C   mov     [esp+0x4], eax\l00401510   mov     [esp], edi\
+\l00401513   call    0x401a70L   ; jmp ntdll.dll!LdrGetProcedureAddress\l0040151\
+8   sub     esp, 0x10\l0040151B   test    eax, eax\l0040151D   jns     0x401585L\
+\l",
+		pos="12172,277",
+		rects="12026,322,12318,340 12026,214,12318,322",
+		style=filled,
+		width="4.0556"];
+	4199571 -> 4199668	 [color=green,
+		pos="e,12025,327.03 11958,350.02 11976,343.92 11996,337.17 12016,330.3"];
+	4199711	 [fillcolor=cornsilk,
+		height="1.3472",
+		label=" <f0> loc_0040151f\l | <f1> 0040151F   mov     [esp+0xc], eax\l00401523   mov   \
+  dword [esp+0x8], 0x13d\l0040152B   mov     dword [esp+0x4], 0x402084   ; 'base\
+/system/autochk/autochk.c'\l00401533   mov     dword [esp], 0x4021d8   ; '(%s:%d\
+) LdrGetProcedureAddress() failed with status 0x(...)\l0040153A   call    0x401a\
+50L   ; jmp ntdll.dll!DbgPrint\l0040153F   test    eax, eax\l00401541   jz      \
+0x40155fL\l",
+		pos="12610,48",
+		rects="12386,78,12834,96 12386,0,12834,78",
+		style=filled,
+		width="6.1944"];
+	4199775	 [fillcolor=cornsilk,
+		height="1.4861",
+		label=" <f0> loc_0040155f\l | <f1> 0040155F   lea     eax, [bp-0x44c]\l00401565   mov  \
+   [esp+0x4], eax\l00401569   mov     dword [esp], 0x4021b4   ; '  Unable to ver\
+ify a %S volume\\r\\n'\l00401570   call    0x401000L   ; (1)\l00401575   mov    \
+ [esp], edi\l00401578   call    0x401a78L   ; jmp ntdll.dll!LdrUnloadDll\l004015\
+7D   sub     esp, 0x4\l00401580   jmp     0x401626L\l",
+		pos="14117,425",
+		rects="13948,460,14286,478 13948,372,14286,460",
+		style=filled,
+		width="4.6944"];
+	4199711 -> 4199775	 [color=green,
+		pos="e,13948,428.3 12826,96.22 12829,98.998 12831,101.92 12834,105 12870,147.72 12814\
+,314.35 12852,355 12925,432.42 13606,432.9 13938,428.44"];
+	4199747	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_00401543\l | <f1> 00401543   mov     dword [esp+0x8], 0x13d\l0040154B \
+  mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l0040155\
+3   mov     dword [esp], 0x4020e4   ; '(%s:%d) DbgPrint() failed!\\n'\l0040155A \
+  call    0x401a50L   ; jmp ntdll.dll!DbgPrint\l",
+		pos="13398,364",
+		rects="13222,379,13574,397 13222,331,13574,379",
+		style=filled,
+		width="4.8889"];
+	4199711 -> 4199747	 [color=red,
+		pos="e,13222,390.77 12826,96.314 12829,99.064 12831,101.96 12834,105 12861,135.99 128\
+24,258.53 12852,288 12943,382.32 13092,397.6 13212,391.35"];
+	4199775 -> 4198400	 [color=violet,
+		label=1,
+		lp="14791,443",
+		pos="e,15278,446.98 14286,428.2 14540,433 15015,441.99 15268,446.79"];
+	4199775 -> 4199974	 [color=blue,
+		pos="e,14471,642.08 14286,477.14 14293,482.52 14300,488.45 14306,495 14326,516.36 143\
+05,535.95 14324,558 14359,598.86 14414,624.03 14461,639.03"];
+	4199747 -> 4199775	 [color=black,
+		pos="e,13948,410.64 13574,378.96 13685,388.33 13827,400.38 13938,409.8"];
+	4200634	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004018ba\l | <f1> 004018BA   mov     [ax], dl\l004018BC   add     eax,\
+ 0x1\l004018BF   add     esi, 0x1\l004018C2   movzx   edx, byte [si]\l004018C5  \
+ cmp     dl, 0x20\l004018C8   jg      0x4018baL\l",
+		pos="4883,1418",
+		rects="4809.5,1443,4956.5,1461 4809.5,1375,4956.5,1443",
+		style=filled,
+		width="2.0278"];
+	4200634 -> 4200634	 [color=green,
+		dir=back,
+		pos="s,4836.6,1461 4842.9,1469.4 4850.4,1475.2 4863.8,1479 4883,1479 4910.3,1479 4925\
+.8,1471.4 4929.4,1461"];
+	4200650	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004018ca\l | <f1> 004018CA   mov     byte [ax], 0x0\l004018CD   add   \
+  eax, 0x1\l",
+		pos="5229,1347",
+		rects="5158.5,1352,5299.5,1370 5158.5,1324,5299.5,1352",
+		style=filled,
+		width="1.9444"];
+	4200634 -> 4200650	 [color=red,
+		pos="e,5158.3,1361.5 4956.8,1402.9 5013.1,1391.3 5090.5,1375.4 5148.4,1363.5"];
+	4200650 -> 4200656	 [color=black,
+		pos="e,3465.6,1299.6 5158.3,1334.7 5088.6,1323.6 4978.8,1309 4883,1309 4419,1309 4419\
+,1309 4419,1309 4178.9,1309 4119.1,1291 3879,1291 3590,1291 3590,1291 3590,1291 \
+3552.4,1291 3511.1,1294.4 3475.9,1298.4"];
+	4199668 -> 4199813	 [color=green,
+		pos="e,12469,277 12319,277 12364,277 12413,277 12459,277"];
+	4199668 -> 4199711	 [color=red,
+		pos="e,12405,96.069 12235,213.97 12275,177.28 12330,132.89 12386,105 12389,103.33 123\
+93,101.71 12396,100.14"];
+	4198591 -> 4198400	 [color=violet,
+		label=1,
+		lp="15257,267",
+		pos="e,15282,281.9 15125,202.05 15162,212.99 15202,228.3 15236,249 15249,256.97 15262\
+,265.92 15274,275.51"];
+	4198591 -> 4198603	 [color=black,
+		pos="e,15378,222.58 15211,202 15267,208.87 15324,215.99 15368,221.33"];
+	4198565 -> 4198400	 [color=violet,
+		label=1,
+		lp="15257,429",
+		pos="e,15278,426.83 15128,405.1 15171,411.24 15221,418.5 15268,425.37"];
+	4198565 -> 4198603	 [color=blue,
+		pos="e,15378,235.24 15128,383.79 15165,377.44 15205,365.42 15236,343 15265,321.79 152\
+49,294.85 15278,273 15304,253.54 15338,242.88 15368,237.04"];
+	4198541 -> 4198603	 [color=green,
+		pos="e,15378,230.48 14607,267.93 14661,261.9 14742,253.52 14812,249 15013,236.08 1525\
+2,231.9 15368,230.59"];
+	4198545	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_00401091\l | <f1> 00401091   mov     eax, [dx]\l00401093   mov     [es\
+p+0x4], eax\l00401097   mov     dword [esp], 0x402000   ; '%d percent completed.\
+\\r'\l0040109E   call    0x401000L   ; (1)\l004010A3   jmp     near 0x4010cbL\l",
+		pos="15024,296",
+		rects="14874,316,15174,334 14874,258,15174,316",
+		style=filled,
+		width="4.1389"];
+	4198541 -> 4198545	 [color=red,
+		pos="e,14874,289.41 14607,277.66 14672,280.49 14776,285.08 14864,288.97"];
+	4198545 -> 4198400	 [color=violet,
+		label=1,
+		lp="15257,358",
+		pos="e,15278,360.45 15174,323.89 15195,329.36 15216,335.71 15236,343 15247,347.02 152\
+58,351.51 15269,356.33"];
+	4198545 -> 4198603	 [color=blue,
+		pos="e,15378,245.29 15174,290.88 15202,288.31 15232,284.52 15260,279 15268,277.35 152\
+70,275.43 15278,273 15307,264.18 15340,255.26 15368,247.85"];
+	4200080	 [color=darkgreen,
+		fillcolor=aquamarine,
+		height="1.625",
+		label=" <f0> loc_00401690\l | <f1> 00401690   push    ebp\l00401691   mov     ebp, esp\\
+l00401693   push    edi\l00401694   push    esi\\
+l00401695   push    ebx\l00401\
+696   sub     esp, 0x34\l00401699   mov     ebx, [bp+0x8]\l0040169C   test    eb\
+x, ebx\l0040169E   jnz     0x4016c8\l",
+		pos="71,910",
+		rects="0,950,142,968 0,852,142,950",
+		style=filled,
+		width="1.9722"];
+	4200096	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004016a0\l | <f1> 004016A0   mov     dword [esp+0xc], 0x0\l004016A8   \
+mov     dword [esp+0x8], 0x4e\l004016B0   mov     dword [esp+0x4], 0x402254   ; \
+'C:/Users/firek_000/workspace/reactos/0.3.16/reactos/li(...)\l004016B8   mov    \
+ dword [esp], 0x4022a1   ; 'Peb'\l004016BF   call    dword [0x4030cc]   ; ntdll.\
+dll!RtlAssert\l004016C5   sub     esp, 0x10\l",
+		pos="413,863",
+		rects="180,888,646,906 180,820,646,888",
+		style=filled,
+		width="6.4722"];
+	4200080 -> 4200096	 [color=red,
+		pos="e,179.69,895.06 142.28,900.2 150.92,899.02 160.09,897.76 169.63,896.45"];
+	4200136	 [fillcolor=cornsilk,
+		height="1.3472",
+		label=" <f0> loc_004016c8\l | <f1> 004016C8   mov     eax, [bx+0x10]\l004016CB   mov   \
+  [esp], eax\l004016CE   call    dword [0x4030e4]   ; ntdll.dll!RtlNormalizeProc\
+essParams\l004016D4   sub     esp, 0x4\l004016D7   mov     ebx, eax\l004016D9   \
+test    eax, eax\l004016DB   jnz     0x401705L\l",
+		pos="843,898",
+		rects="684,928,1002,946 684,850,1002,928",
+		style=filled,
+		width="4.4167"];
+	4200080 -> 4200136	 [color=green,
+		pos="e,683.95,912.91 142.22,913.74 154.81,914.26 167.78,914.72 180,915 387.06,919.75 \
+439.08,923.91 646,915 655.07,914.61 664.36,914.12 673.74,913.55"];
+	4200096 -> 4200136	 [color=black,
+		pos="e,683.72,885.04 646.25,881.99 655.43,882.73 664.56,883.48 673.59,884.21"];
+	4200197	 [fillcolor=cornsilk,
+		height="1.9028",
+		label=" <f0> loc_00401705\l | <f1> 00401705   mov     eax, [fs:0x18]\l0040170B   mov   \
+  dword [esp+0x8], 0x800\l00401713   mov     dword [esp+0x4], 0x0\l0040171B   mo\
+v     eax, [ax+0x30]\l0040171E   mov     eax, [ax+0x18]\l00401721   mov     [esp\
+], eax\l00401724   call    dword [0x4030c4]   ; ntdll.dll!RtlAllocateHeap\l00401\
+72A   sub     esp, 0xc\l0040172D   mov     [bp-0x30], eax\l00401730   test    ea\
+x, eax\l00401732   jnz     0x40177eL\l",
+		pos="1675,904",
+		rects="1544,954,1806,972 1544,836,1806,954",
+		style=filled,
+		width="3.6389"];
+	4200136 -> 4200197	 [color=green,
+		pos="e,1544,904.7 1002.1,902.36 1014.9,902.62 1027.7,902.83 1040,903 1209.7,905.29 14\
+05,905.18 1533.6,904.74"];
+	4200157	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004016dd\l | <f1> 004016DD   mov     dword [esp+0xc], 0x0\l004016E5   \
+mov     dword [esp+0x8], 0x57\l004016ED   mov     dword [esp+0x4], 0x402254   ; \
+'C:/Users/firek_000/workspace/reactos/0.3.16/reactos/li(...)\l004016F5   mov    \
+ dword [esp], 0x4022a5   ; 'ProcessParameters'\l004016FC   call    dword [0x4030\
+cc]   ; ntdll.dll!RtlAssert\l00401702   sub     esp, 0x10\l",
+		pos="1273,851",
+		rects="1040,876,1506,894 1040,808,1506,876",
+		style=filled,
+		width="6.4722"];
+	4200136 -> 4200157	 [color=red,
+		pos="e,1039.8,876.49 1002.2,880.6 1011.2,879.61 1020.4,878.61 1029.7,877.59"];
+	4200244	 [fillcolor=cornsilk,
+		height="1.3472",
+		label=" <f0> loc_00401734\l | <f1> 00401734   mov     dword [esp+0x8], 0x5e\l0040173C  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l00401744   mo\
+v     dword [esp], 0x4022b7   ; '(%s:%d) ERR: no mem!'\l0040174B   call    0x401\
+a50L   ; jmp ntdll.dll!DbgPrint\l00401750   mov     esi, 0xc0000017\l00401755   \
+test    eax, eax\l00401757   jz      dword 0x4019fdL\l",
+		pos="6084,834",
+		rects="5927,864,6241,882 5927,786,6241,864",
+		style=filled,
+		width="4.3611"];
+	4200197 -> 4200244	 [color=red,
+		pos="e,5926.9,834 1806.2,853.97 1846,842.7 1890.3,834 1932,834 1932,834 1932,834 5795\
+,834 5834.4,834 5876.9,834 5916.8,834"];
+	4200318	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_0040177e\l | <f1> 0040177E   mov     eax, [bp-0x30]\l00401781   mov   \
+  dword [ax], 0x0\l00401787   cmp     dword [bx+0x44], 0x0\l0040178B   jz      0\
+x401797L\l",
+		pos="1932,1090",
+		rects="1844,1105,2020,1123 1844,1057,2020,1105",
+		style=filled,
+		width="2.4444"];
+	4200197 -> 4200318	 [color=green,
+		pos="e,1886.4,1057 1769.2,972.2 1805.9,998.76 1846.6,1028.2 1878.2,1051"];
+	4200157 -> 4200197	 [color=black,
+		pos="e,1544,886.72 1506.3,881.75 1515.6,882.98 1524.8,884.2 1533.8,885.39"];
+	4200609	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004018a1\l | <f1> 004018A1   test    dl, dl\l004018A3   jnz     0x4018\
+96L\l",
+		pos="3970,1380",
+		rects="3909,1385,4031,1403 3909,1357,4031,1385",
+		style=filled,
+		width="1.6944"];
+	4200598 -> 4200609	 [color=red,
+		pos="e,3908.8,1376.9 3860.1,1379.4 3872.8,1378.5 3886.1,1377.8 3898.7,1377.3"];
+	4200613	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004018a5\l | <f1> 004018A5   test    dl, dl\l004018A7   jz      0x4018\
+d0L\l",
+		pos="4240,1395",
+		rects="4182,1400,4298,1418 4182,1372,4298,1400",
+		style=filled,
+		width="1.6111"];
+	4200598 -> 4200613	 [color=green,
+		pos="e,4181.8,1403.1 3860.1,1406.6 3872.7,1408.8 3885.7,1410.8 3898,1412 3992.5,1421.\
+3 4102.3,1412.4 4171.5,1404.3"];
+	4200609 -> 4200598	 [color=green,
+		pos="e,3860.1,1392.6 3908.8,1389.8 3896.5,1390.7 3883.3,1391.5 3870.4,1392.2"];
+	4200609 -> 4200613	 [color=red,
+		pos="e,4181.8,1391.8 4031.3,1383.4 4073,1385.7 4128.4,1388.8 4171.6,1391.2"];
+	4200613 -> 4200656	 [color=green,
+		pos="e,3465.6,1320.4 4181.7,1372.2 4127.7,1353.1 4044.7,1329 3970,1329 3590,1329 3590\
+,1329 3590,1329 3552.4,1329 3511.1,1325.6 3475.9,1321.6"];
+	4200613 -> 4200617	 [color=red,
+		pos="e,4439.8,1404.8 4298,1397.8 4335.8,1399.7 4386.1,1402.2 4429.7,1404.3"];
+	4200617 -> 4200634	 [color=red,
+		pos="e,4809.3,1416.1 4610.3,1411.1 4667.5,1412.6 4742.4,1414.5 4799.2,1415.9"];
+	4200617 -> 4200650	 [color=green,
+		pos="e,5158.3,1342.6 4610.2,1375.9 4623.3,1371.9 4636.9,1368.4 4650,1366 4825.3,1333.\
+7 5035.4,1337 5148,1342.1"];
+	4199301 -> 4199446	 [color=red,
+		pos="e,9628.7,384.92 9489.8,358.36 9530.7,366.18 9577.2,375.07 9618.8,383.02",
+		style=dashed];
+	4199418	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004013fa\l | <f1> 004013FA   mov     dword [esp+0x4], 0x402158   ; 'u'\
+\l00401402   lea     eax, [bp-0x34c]\l00401408   mov     [esp], eax\l0040140B   \
+call    dword [0x4030e0]   ; ntdll.dll!RtlInitUnicodeString\l00401411   sub     \
+esp, 0x8\l00401414   jmp     near 0x401464L\l",
+		pos="10109,335",
+		rects="9968.5,360,10250,378 9968.5,292,10250,360",
+		style=filled,
+		width="3.8889"];
+	4199301 -> 4199418	 [color=green,
+		pos="e,9968.4,335.38 9489.8,336.69 9615.1,336.35 9818.7,335.79 9958.1,335.41"];
+	4200244 -> 4200957	 [color=green,
+		pos="e,6779.9,1148.8 6241.3,799.62 6350,784.52 6493.9,782.43 6602,846 6605.6,848.13 6\
+720.9,1046.8 6774.8,1139.9"];
+	4200285	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_0040175d\l | <f1> 0040175D   mov     dword [esp+0x8], 0x5e\l00401765  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l0040176D   mo\
+v     dword [esp], 0x4022cc   ; '(%s:%d) DbgPrint() failed!\\n'\l00401774   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l00401779   jmp     0x4019fdL\l",
+		pos="6445,893",
+		rects="6288.5,913,6601.5,931 6288.5,855,6601.5,913",
+		style=filled,
+		width="4.3333"];
+	4200244 -> 4200285	 [color=red,
+		pos="e,6288.3,867.39 6241,859.66 6253.4,861.69 6265.9,863.73 6278.4,865.77"];
+	4200343	 [fillcolor=cornsilk,
+		height="0.51389",
+		label=" <f0> loc_00401797\l | <f1> 00401797   lea     eax, [bx+0x38]\l",
+		pos="2337,1140",
+		rects="2266.5,1140,2407.5,1158 2266.5,1122,2407.5,1140",
+		style=filled,
+		width="1.9444"];
+	4200318 -> 4200343	 [color=green,
+		pos="e,2266.3,1141.3 2020.2,1118.8 2032.8,1122 2045.6,1124.9 2058,1127 2124.1,1138.1 \
+2200.1,1141 2256.1,1141.3"];
+	4200333	 [fillcolor=cornsilk,
+		height="0.79167",
+		label=" <f0> loc_0040178d\l | <f1> 0040178D   lea     eax, [bx+0x40]\l00401790   cmp   \
+  word [bx+0x40], 0x0\l00401795   jnz     0x40179aL\l",
+		pos="2143,1090",
+		rects="2058,1100,2228,1118 2058,1062,2228,1100",
+		style=filled,
+		width="2.3611"];
+	4200318 -> 4200333	 [color=red,
+		pos="e,2057.8,1090 2020.3,1090 2029.3,1090 2038.5,1090 2047.6,1090"];
+	4198612 -> 4198771	 [color=green,
+		pos="e,6998.4,741.4 6959.6,753.36 6969.6,750.29 6979.4,747.27 6988.8,744.37"];
+	4198686	 [fillcolor=cornsilk,
+		height="1.625",
+		label=" <f0> loc_0040111e\l | <f1> 0040111E   mov     [esp+0xc], eax\l00401122   mov   \
+  dword [esp+0x8], 0x176\l0040112A   mov     dword [esp+0x4], 0x402084   ; 'base\
+/system/autochk/autochk.c'\l00401132   mov     dword [esp], 0x4020a4   ; '(%s:%d\
+) NtQueryInformationProcess() failed with status(...)\l00401139   call    0x401a\
+50L   ; jmp ntdll.dll!DbgPrint\l0040113E   mov     edx, eax\l00401140   mov     \
+eax, 0x1\l00401145   test    edx, edx\l00401147   jz      dword 0x401679L\l",
+		pos="14547,815",
+		rects="14324,855,14770,873 14324,757,14770,855",
+		style=filled,
+		width="6.1667"];
+	4198612 -> 4198686	 [color=red,
+		pos="e,14324,815.71 6959.8,812.96 6996.3,814.73 7035,816 7071,816 7071,816 7071,816 1\
+4117,816 14181,816 14250,815.89 14314,815.74"];
+	4198686 -> 4200057	 [color=green,
+		pos="e,15371,765.16 14770,821.46 14905,822.28 15081,817.78 15236,796 15278,790.07 153\
+24,778.63 15362,767.99"];
+	4198733	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_0040114d\l | <f1> 0040114D   mov     dword [esp+0x8], 0x176\l00401155 \
+  mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l0040115\
+D   mov     dword [esp], 0x4020e4   ; '(%s:%d) DbgPrint() failed!\\n'\l00401164 \
+  call    0x401a50L   ; jmp ntdll.dll!DbgPrint\l00401169   mov     eax, 0x1\l004\
+0116E   jmp     0x401679L\l",
+		pos="15024,744",
+		rects="14848,769,15200,787 14848,701,15200,769",
+		style=filled,
+		width="4.8611"];
+	4198686 -> 4198733	 [color=red,
+		pos="e,14848,770.16 14770,781.84 14793,778.42 14816,774.98 14838,771.64"];
+	4198733 -> 4200057	 [color=blue,
+		pos="e,15371,744 15200,744 15256,744 15316,744 15361,744"];
+	4200691 -> 4200691	 [color=green,
+		dir=back,
+		pos="s,4206.7,1225.4 4211.3,1234.6 4216.5,1239.7 4226.1,1243 4240,1243 4261.2,1243 42\
+72.3,1235.3 4273.3,1225.4"];
+	4200702	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004018fe\l | <f1> 004018FE   o16 nop     \l00401900   jmp     near 0x4\
+01904L\l",
+		pos="4525,1239",
+		rects="4450.5,1244,4599.5,1262 4450.5,1216,4599.5,1244",
+		style=filled,
+		width="2.0556"];
+	4200691 -> 4200702	 [color=red,
+		pos="e,4450,1226.6 4315.6,1204.5 4353.9,1210.8 4400.6,1218.5 4440.1,1225"];
+	4200702 -> 4200708	 [color=blue,
+		pos="e,3987.2,1177.1 4450.5,1258.1 4359.7,1277.6 4203.2,1298.9 4080,1252 4044.9,1238.\
+6 4013.9,1208.4 3993.9,1185"];
+	4200836	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_00401984\l | <f1> 00401984   cmp     dword [bp-0x24], 0x0\l00401988   \
+jnz     0x4019b2L\l",
+		pos="4525,1107",
+		rects="4438.5,1112,4611.5,1130 4438.5,1084,4611.5,1112",
+		style=filled,
+		width="2.3889"];
+	4200714 -> 4200836	 [color=green,
+		pos="e,4438.5,1087.6 4400.4,1079 4410,1081.2 4419.4,1083.3 4428.6,1085.4"];
+	4200770	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_00401942\l | <f1> 00401942   mov     dword [esp+0x8], 0xb0\l0040194A  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l00401952   mo\
+v     dword [esp], 0x4022e8   ; '(%s:%d) ERR: no mem(guess)\\n'\l00401959   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l0040195E   test    eax, eax\l00401960 \
+  jz      dword 0x4019fdL\l",
+		pos="6084,1121",
+		rects="5919.5,1146,6248.5,1164 5919.5,1078,6248.5,1146",
+		style=filled,
+		width="4.5556"];
+	4200714 -> 4200770	 [color=red,
+		pos="e,5988.1,1077.9 4400.1,1037.7 4440.9,1036.7 4484.5,1036 4525,1036 4525,1036 4525\
+,1036 5795,1036 5857.5,1036 5924.7,1054.5 5978.5,1074.3"];
+	4200882	 [fillcolor=cornsilk,
+		height="0.79167",
+		label=" <f0> loc_004019b2\l | <f1> 004019B2   mov     eax, [bp-0x24]\l004019B5   mov   \
+  ecx, edi\l004019B7   jmp     near 0x4019c8L\l",
+		pos="5229,1107",
+		rects="5154.5,1117,5303.5,1135 5154.5,1079,5303.5,1117",
+		style=filled,
+		width="2.0556"];
+	4200836 -> 4200882	 [color=green,
+		pos="e,5180.3,1135 4568.5,1130.1 4591.9,1141.2 4621.8,1153.4 4650,1159 4853.1,1199.6 \
+4913.7,1203.3 5116,1159 5134.6,1154.9 5153.8,1147.5 5171,1139.5"];
+	4200842	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_0040198a\l | <f1> 0040198A   mov     dword [esp+0xc], 0x0\l00401992   \
+mov     dword [esp+0x8], 0xb4\l0040199A   mov     dword [esp+0x4], 0x402254   ; \
+'C:/Users/firek_000/workspace/reactos/0.3.16/reactos/li(...)\l004019A2   mov    \
+ dword [esp], 0x402304   ; 'AnsiEnvironment.Buffer'\l004019A9   call    dword [0\
+x4030cc]   ; ntdll.dll!RtlAssert\l004019AF   sub     esp, 0x10\l",
+		pos="4883,1107",
+		rects="4650.5,1132,5115.5,1150 4650.5,1064,5115.5,1132",
+		style=filled,
+		width="6.4444"];
+	4200836 -> 4200842	 [color=red,
+		pos="e,4650.3,1107 4611.7,1107 4620.7,1107 4630.2,1107 4640,1107"];
+	4200770 -> 4200957	 [color=green,
+		pos="e,6661,1189 6248.6,1161.7 6261.9,1164.1 6275.1,1166.3 6288,1168 6409.3,1184.1 65\
+48.1,1188.4 6650.8,1188.9"];
+	4200806	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_00401966\l | <f1> 00401966   mov     dword [esp+0x8], 0xb0\l0040196E  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l00401976   mo\
+v     dword [esp], 0x4022cc   ; '(%s:%d) DbgPrint() failed!\\n'\l0040197D   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l00401982   jmp     near 0x4019fdL\l",
+		pos="6445,1121",
+		rects="6288.5,1141,6601.5,1159 6288.5,1083,6601.5,1141",
+		style=filled,
+		width="4.3333"];
+	4200770 -> 4200806	 [color=red,
+		pos="e,6288.3,1121 6248.7,1121 6258.5,1121 6268.3,1121 6278.1,1121"];
+	4200346	 [fillcolor=cornsilk,
+		height="1.625",
+		label=" <f0> loc_0040179a\l | <f1> 0040179A   mov     dword [esp+0x8], 0x1\l004017A2   \
+mov     [esp+0x4], eax\l004017A6   lea     eax, [bp-0x18]\l004017A9   mov     [e\
+sp], eax\l004017AC   call    dword [0x4030e8]   ; ntdll.dll!RtlUnicodeStringToAn\
+siString\l004017B2   sub     esp, 0xc\l004017B5   mov     esi, eax\l004017B7   t\
+est    eax, eax\l004017B9   jns     0x401800L\l",
+		pos="2606,1140",
+		rects="2446,1180,2766,1198 2446,1082,2766,1180",
+		style=filled,
+		width="4.4444"];
+	4200343 -> 4200346	 [color=black,
+		pos="e,2446,1140 2407.7,1140 2416.6,1140 2426.1,1140 2435.8,1140"];
+	4200333 -> 4200343	 [color=red,
+		pos="e,2267.1,1122 2228.1,1111.9 2237.8,1114.4 2247.6,1117 2257.2,1119.4"];
+	4200333 -> 4200346	 [color=green,
+		pos="e,2445.9,1117.5 2228.1,1096.3 2280.2,1100.5 2348,1106.3 2408,1113 2417.1,1114 24\
+26.3,1115.1 2435.7,1116.2"];
+	4200285 -> 4200957	 [color=blue,
+		pos="e,6781.1,1148.8 6587.2,931.11 6592.3,933.87 6597.3,936.83 6602,940 6680.1,992.35\
+ 6742.8,1084.4 6776.1,1140.2"];
+	4200904	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004019c8\l | <f1> 004019C8   cmp     byte [ax], 0x0\l004019CB   jnz   \
+  0x4019b9L\l",
+		pos="5413,1095",
+		rects="5342.5,1100,5483.5,1118 5342.5,1072,5483.5,1100",
+		style=filled,
+		width="1.9444"];
+	4200882 -> 4200904	 [color=blue,
+		pos="e,5342.5,1099.6 5303.6,1102.1 5313,1101.5 5322.7,1100.9 5332.2,1100.3"];
+	4200842 -> 4200882	 [color=black,
+		pos="e,5154.3,1107 5115.7,1107 5125.6,1107 5135.1,1107 5144.2,1107"];
+	4200806 -> 4200957	 [color=blue,
+		pos="e,6661,1160.9 6601.6,1149.9 6618,1153 6634.6,1156 6650.9,1159.1"];
+	4199418 -> 4199524	 [color=blue,
+		pos="e,11544,370.78 10250,336.29 10451,338.43 10834,343.55 11160,354 11287,358.08 114\
+33,365.05 11534,370.25"];
+	4198962	 [fillcolor=cornsilk,
+		height="5.2361",
+		label=" <f0> loc_00401232\l | <f1> 00401232   mov     dword [bp-0x34c], 0x18\l0040123C \
+  mov     dword [bp-0x348], 0x0\l00401246   mov     dword [bp-0x340], 0x40\l0040\
+1250   lea     eax, [bp-0x454]\l00401256   mov     [bp-0x344], eax\l0040125C   m\
+ov     dword [bp-0x33c], 0x0\l00401266   mov     dword [bp-0x338], 0x0\l00401270\
+   mov     dword [esp+0x28], 0x0\l00401278   mov     dword [esp+0x24], 0x0\l0040\
+1280   mov     dword [esp+0x20], 0x0\l00401288   mov     dword [esp+0x1c], 0x1\l\
+00401290   mov     dword [esp+0x18], 0x3\l00401298   mov     dword [esp+0x14], 0\
+x0\l004012A0   mov     dword [esp+0x10], 0x0\l004012A8   lea     eax, [bp-0x44c]\
+\l004012AE   mov     [esp+0xc], eax\l004012B2   lea     eax, [bp-0x34c]\l004012B\
+8   mov     [esp+0x8], eax\l004012BC   mov     dword [esp+0x4], 0x120089\l004012\
+C4   lea     eax, [bp-0x460]\l004012CA   mov     [esp], eax\l004012CD   call    \
+dword [0x4030b0]   ; ntdll.dll!NtCreateFile\l004012D3   sub     esp, 0x2c\l00401\
+2D6   mov     edi, eax\l004012D8   mov     eax, [fs:0x18]\l004012DE   mov     ed\
+x, [bp-0x450]\l004012E4   mov     [esp+0x8], edx\l004012E8   mov     dword [esp+\
+0x4], 0x0\l004012F0   mov     eax, [ax+0x30]\l004012F3   mov     eax, [ax+0x18]\\
+l004012F6   mov     [esp], eax\l004012F9   call    dword [0x4030d4]   ; ntdll.dl\
+l!RtlFreeHeap\l004012FF   sub     esp, 0xc\l00401302   test    edi, edi\l0040130\
+4   js      dword 0x401639L\l",
+		pos="7965,480",
+		rects="7840,650,8090,668 7840,292,8090,650",
+		style=filled,
+		width="3.4722"];
+	4198962 -> 4199993	 [color=green,
+		pos="e,8654.8,377.8 8090.1,463.8 8204.7,448.6 8379,424.57 8530,400 8567.8,393.85 8609\
+.4,386.32 8644.9,379.65"];
+	4198962 -> 4199178	 [color=red,
+		pos="e,8279.5,499.4 8090.2,487.73 8148.7,491.34 8216.9,495.54 8269.2,498.77"];
+	4200415	 [fillcolor=cornsilk,
+		height="1.0694",
+		label=" <f0> loc_004017df\l | <f1> 004017DF   mov     dword [esp+0x8], 0x78\l004017E7  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l004017EF   mo\
+v     dword [esp], 0x4022cc   ; '(%s:%d) DbgPrint() failed!\\n'\l004017F6   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l004017FB   jmp     0x4019fdL\l",
+		pos="6445,1424",
+		rects="6288.5,1444,6601.5,1462 6288.5,1386,6601.5,1444",
+		style=filled,
+		width="4.3333"];
+	4200415 -> 4200957	 [color=blue,
+		pos="e,6775.4,1225.4 6599.5,1385.9 6608.7,1381.7 6617.6,1377.1 6626,1372 6685,1336.2 \
+6737.3,1275.6 6769.3,1233.5"];
+	4198800 -> 4198962	 [color=green,
+		pos="e,7839.8,480 7752.2,480 7778.1,480 7804.5,480 7829.6,480"];
+	4198893	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004011ed\l | <f1> 004011ED   mov     dword [esp+0x8], 0x4b\l004011F5  \
+ mov     dword [esp+0x4], 0x402084   ; 'base/system/autochk/autochk.c'\l004011FD\
+   mov     dword [esp], 0x402113   ; '(%s:%d) Invalid path!\\n'\l00401204   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l00401209   test    eax, eax\l0040120B \
+  jz      dword 0x401639L\l",
+		pos="7965,231",
+		rects="7790,256,8140,274 7790,188,8140,256",
+		style=filled,
+		width="4.8611"];
+	4198800 -> 4198893	 [color=red,
+		pos="e,7807,274.02 7667,381.98 7702.1,346.58 7745,308.98 7790,283 7792.6,281.51 7795.\
+2,280.07 7797.9,278.66"];
+	4200346 -> 4200448	 [color=green,
+		pos="e,2803.8,1140 2766.1,1140 2775.5,1140 2784.8,1140 2793.8,1140"];
+	4200379	 [fillcolor=cornsilk,
+		height="1.2083",
+		label=" <f0> loc_004017bb\l | <f1> 004017BB   mov     dword [esp+0x8], 0x78\l004017C3  \
+ mov     dword [esp+0x4], 0x402288   ; 'lib/sdk/nt/entry_point.c'\l004017CB   mo\
+v     dword [esp], 0x4022e8   ; '(%s:%d) ERR: no mem(guess)\\n'\l004017D2   call\
+    0x401a50L   ; jmp ntdll.dll!DbgPrint\l004017D7   test    eax, eax\l004017D9 \
+  jz      dword 0x4019fdL\l",
+		pos="6084,1427",
+		rects="5918.5,1452,6249.5,1470 5918.5,1384,6249.5,1452",
+		style=filled,
+		width="4.5833"];
+	4200346 -> 4200379	 [color=red,
+		pos="e,6019.6,1470.1 2618.4,1198 2646.1,1310 2724.1,1545 2892,1545 2892,1545 2892,154\
+5 5795,1545 5872.8,1545 5954.2,1507.9 6010.8,1475.3"];
+	4200909	 [fillcolor=cornsilk,
+		height="0.51389",
+		label=" <f0> loc_004019cd\l | <f1> 004019CD   mov     dword [cx], 0x0\l",
+		pos="5597,978",
+		rects="5522.5,978,5671.5,996 5522.5,960,5671.5,978",
+		style=filled,
+		width="2.0556"];
+	4200904 -> 4200909	 [color=red,
+		pos="e,5568.6,996.09 5449.4,1071.9 5481.3,1051.6 5527.7,1022.1 5559.9,1001.6"];
+	4200889	 [fillcolor=cornsilk,
+		height="0.65278",
+		label=" <f0> loc_004019b9\l | <f1> 004019B9   mov     [cx], eax\l004019BB   add     ecx\
+, 0x4\l",
+		pos="5597,1145",
+		rects="5537.5,1150,5656.5,1168 5537.5,1122,5656.5,1150",
+		style=filled,
+		width="1.6389"];
+	4200904 -> 4200889	 [color=green,
+		pos="e,5537.3,1128.8 5483.6,1114.2 5498,1118.1 5513.2,1122.2 5527.5,1126.1"];
+	4198893 -> 4198929	 [color=red,
+		pos="e,8239.5,314.91 8111.2,274.11 8120.9,277.09 8130.6,280.07 8140,283 8169.1,292.08\
+ 8200.3,302.11 8229.6,311.69"];
+	4198893 -> 4199993	 [color=green,
+		pos="e,8659.1,339.87 8140.1,247.65 8252.3,259.94 8400.5,279.19 8530,306 8569.6,314.2 \
+8612.9,326.07 8649,336.86"];
+	4200379 -> 4200957	 [color=green,
+		pos="e,6761.1,1225.3 6249.6,1385.1 6262.6,1382.2 6275.5,1379.5 6288,1377 6426.5,1349.\
+7 6471.2,1382.9 6602,1330 6658.9,1307 6715,1264.7 6753.2,1232.1"];
+	4200379 -> 4200415	 [color=red,
+		pos="e,6288.4,1425.3 6249.7,1425.6 6259.2,1425.5 6268.7,1425.5 6278.1,1425.4"];
+	4200909 -> 4200915	 [color=black,
+		pos="e,5709.9,968.31 5671.6,971.6 5680.8,970.81 5690.2,970 5699.7,969.19"];
+	4200894	 [fillcolor=cornsilk,
+		height="0.93056",
+		label=" <f0> loc_004019be\l | <f1> 004019BE   movzx   edx, byte [ax]\l004019C1   add   \
+  eax, 0x1\l004019C4   test    dl, dl\l004019C6   jnz     0x4019beL\l",
+		pos="5795,1102",
+		rects="5720.5,1117,5869.5,1135 5720.5,1069,5869.5,1117",
+		style=filled,
+		width="2.0556"];
+	4200889 -> 4200894	 [color=black,
+		pos="e,5720.4,1118.2 5656.7,1132 5673.6,1128.4 5692.3,1124.3 5710.4,1120.4"];
+	4200894 -> 4200904	 [color=red,
+		pos="e,5483.5,1096.3 5720.3,1100.6 5655.1,1099.4 5560.6,1097.7 5493.6,1096.5"];
+	4200894 -> 4200894	 [color=green,
+		dir=back,
+		pos="s,5775.5,1135.4 5778.5,1144.9 5781.5,1149.8 5787.1,1153 5795,1153 5807.4,1153 58\
+13.9,1145.3 5814.5,1135.4"];
+}
+

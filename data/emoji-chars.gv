@@ -1,5 +1,6 @@
 /* gml4gtk uses pango lib which support use of emoji chars defined at
  * https://unicode.org/emoji/charts/full-emoji-list.html
+https://www.w3schools.com/charsets/ref_emoji.asp
  * What is possible depends on font and what the pango lib can draw
  * https://pango.gnome.org/
  * https://docs.gtk.org/Pango/
@@ -15,10 +16,14 @@ digraph emoji
 7[label="⛳"];
 8[label=" ♓"];
 9[label="😄"];
+10[label="👽"];
+11[label="💿"];
 1->2;
 1->3;
 1->4;
 1->5;
+1->10;
+10->11;
 3->6;
 3->7;
 5->8;

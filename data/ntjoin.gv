@@ -1,0 +1,52 @@
+/*
+https://github.com/bcgsc/ntJoin
+Scaffolding draft assemblies using reference assemblies and minimizer graphs
+Description of the algorithm
+
+ntJoin takes a target assembly and one or more 'reference' assembly as input, and uses information from the reference(s) to scaffold the target assembly. The 'reference' assemblies can be true reference assembly builds, or a different draft genome assemblies.
+
+Instead of using costly alignments, ntJoin uses a more lightweight approach using minimizer graphs to yield a mapping between the input assemblies.
+
+Main steps in the algorithm:
+
+    Generate an ordered minimizer sketch for each contig of each input assembly
+    Filter the minimizers to only retain minimizers that are:
+        Unique within each assembly
+        Found in all assemblies (target + all references)
+    Build a minimizer graph
+        Nodes: minimizers
+        Edges: between minimizers that are adjacent in at least one of the assemblies. Edge weights are the sum of weights of the assemblies that support an edge.
+    Filter the graph based on the minimum edge weight (n)
+    For each node that is a branch node (degree > 2), filter the incident edges with an increasing edge threshold
+    Each linear path is converted to a list of oriented target assembly contig regions to scaffold together
+    Target assembly scaffolds are printed out
+
+*/
+graph G {
+"3714041376220621505" [label="3714041376220621505
+('test', 800)
+('1_f', 800)"]
+"10820188111283998344" [label="10820188111283998344
+('test', 1630)
+('1_f', 1630)"]
+"4671501941577321508" [label="4671501941577321508
+('test', 3156)
+('2_f', 1155)"]
+"16743415676028282381" [label="16743415676028282381
+('test', 3439)
+('2_f', 1438)"]
+"17184023496183651984" [label="17184023496183651984
+('test', 2656)
+('2_f', 655)"]
+"8162189927378643732" [label="8162189927378643732
+('test', 1575)
+('1_f', 1575)"]
+"3714041376220621505" -- "8162189927378643732" [weight=3.0 color=lightgrey]
+"10820188111283998344" -- "8162189927378643732" [weight=3.0 color=lightgrey]
+"10820188111283998344" -- "17184023496183651984" [weight=2.0 color=red]
+"4671501941577321508" -- "17184023496183651984" [weight=3.0 color=lightgrey]
+"4671501941577321508" -- "16743415676028282381" [weight=3.0 color=lightgrey]
+}
+
+
+

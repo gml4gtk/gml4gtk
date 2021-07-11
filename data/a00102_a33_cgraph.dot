@@ -1,0 +1,68 @@
+/* dot file as it is generated with doxygen software http://www.doxygen.org */
+
+/*
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+digraph G
+{
+  edge [fontname="Helvetica",fontsize=10,labelfontname="Helvetica",labelfontsize=10];
+  node [fontname="Helvetica",fontsize=10,shape=record];
+  rankdir=LR;
+  Node1 [label="PostScriptGraph",height=0.2,width=0.4,color="white", fillcolor="black", style="filled" fontcolor="white"];
+  Node1 -> Node2 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node2 [label="iterate",height=0.2,width=0.4,color="black",URL="$a00047.html#a6"];
+  Node2 -> Node3 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node3 [label="first_element",height=0.2,width=0.4,color="black",URL="$a00046.html#a1"];
+  Node1 -> Node4 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node4 [label="PostScriptDetermineBoundingRectangle",height=0.2,width=0.4,color="black",URL="$a00102.html#a23"];
+  Node4 -> Node2 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node4 -> Node5 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node5 [label="PSNodeBoundingRectangle",height=0.2,width=0.4,color="black",URL="$a00102.html#a22"];
+  Node1 -> Node6 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node6 [label="PostScriptEnd",height=0.2,width=0.4,color="black",URL="$a00102.html#a21"];
+  Node1 -> Node7 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node7 [label="PostScriptInitialize",height=0.2,width=0.4,color="black",URL="$a00102.html#a20"];
+  Node1 -> Node8 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node8 [label="PSEdge",height=0.2,width=0.4,color="black",URL="$a00102.html#a25"];
+  Node8 -> Node9 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node9 [label="PostScriptEdge",height=0.2,width=0.4,color="black",URL="$a00103.html#a1"];
+  Node9 -> Node16 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node16 [label="PostScriptArrow",height=0.2,width=0.4,color="black",URL="$a00102.html#a32"];
+  Node1 -> Node10 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node10 [label="PSEdgeCalcEndpoints",height=0.2,width=0.4,color="black",URL="$a00102.html#a27"];
+  Node10 -> Node11 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node11 [label="calculateEdgeEndpoints",height=0.2,width=0.4,color="black",URL="$a00052.html#a3"];
+  Node11 -> Node17 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node17 [label="get_boundary_point",height=0.2,width=0.4,color="red",URL="$a00051.html#a3"];
+  Node1 -> Node12 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node12 [label="PSEdgeCalcEndpointsPS",height=0.2,width=0.4,color="black",URL="$a00102.html#a26"];
+  Node12 -> Node13 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node13 [label="calculateEdgeEndpointsElliptical",height=0.2,width=0.4,color="black",URL="$a00052.html#a4"];
+  Node13 -> Node17 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node1 -> Node14 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node14 [label="PSNode",height=0.2,width=0.4,color="black",URL="$a00102.html#a24"];
+  Node14 -> Node15 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node15 [label="PostScriptNode",height=0.2,width=0.4,color="black",URL="$a00103.html#a2"];
+  Node15 -> Node18 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node18 [label="PostScriptEllipse",height=0.2,width=0.4,color="black",URL="$a00102.html#a28"];
+  Node15 -> Node19 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node19 [label="PostScriptRectangle",height=0.2,width=0.4,color="black",URL="$a00102.html#a30"];
+  Node15 -> Node20 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node20 [label="PostScriptRhomb",height=0.2,width=0.4,color="black",URL="$a00102.html#a29"];
+  Node15 -> Node21 [color="midnightblue",fontsize=10,style="solid",fontname="Helvetica"];
+  Node21 [label="PostScriptText",height=0.2,width=0.4,color="black",URL="$a00102.html#a31"];
+}
+
+/* End. */

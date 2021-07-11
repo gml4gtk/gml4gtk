@@ -1,0 +1,21 @@
+/* sides is a integer positive number of sides in a shape polygon */
+digraph "sides"
+{
+ /* default sides is 4 resulting in a box shape */
+ "a"[shape=polygon,label="sides=default"];
+ /* negative number, no warning, shape is ellips */
+ "b"[shape=polygon,sides="-1",label="sides=-1"];
+ /* zero number, no warning, shape is ellips */
+ "c"[shape=polygon,sides="0",label="sides=0"];
+ /* too low number, no warning, shape is ellips */
+ "d"[shape=polygon,sides="1",label="sides=1"];
+ /* too low number, no warning, shape is ellips */
+ "e"[shape=polygon,sides="2",label="sides=2"];
+ /* lowest number, shape is triangle */
+ "f"[shape=polygon,sides="3",label="sides=3"];
+ "g"[shape=polygon,sides="6",label="sides=6"];
+ /* floating point number when int expected */
+ "h"[shape=polygon,sides="8.6",label="sides=8.6"];
+ "i"[shape=polygon,sides="120",label="sides=120"];
+ "j"[shape=polygon,sides="360",label="sides=360"];
+}

@@ -1,0 +1,21 @@
+digraph SD_HD0 {
+ rankdir="TB";
+ overlap="false";
+ {
+  node [shape="circle",style="filled",fillcolor="black"];
+  start	[label=""];
+ }
+ {
+  node	[shape="rectangle",style="rounded,filled",fillcolor="lightgrey"];
+  n00	[label="New"];
+  n01	[label="Accepted"];
+  n02	[label="Completed"];
+  n03	[label="Approved"];
+ }
+ start -> n00 [label="Create"];
+ n00 -> n01 [label="Accept"];
+ n01 -> n02 [label="Complete"];
+ n02 -> n03 [label="Approve"];
+ n02 -> n00 [label="Renew"];
+ n03 -> n00 [label="Renew"];
+}

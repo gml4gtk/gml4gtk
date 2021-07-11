@@ -1,0 +1,44 @@
+digraph G{
+m1[shape=box, color=grey, style=filled]
+m2[shape=box, color=grey, style=filled]
+m3[shape=box, color=grey, style=filled]
+m4[shape=box, color=grey, style=filled]
+m5[shape=box, color=grey, style=filled]
+p1[shape=diamond,color=lightblue, style=filled]
+p2[shape=diamond, color=lightblue, style=filled]
+p3[shape=diamond, color=lightblue, style=filled]
+p4[shape=diamond, color=lightblue, style=filled]
+{rank=sink;x1;x2;x3;x4;}
+{rank=source;y1;}
+{rank=same;m3;p3;x11;x5;x6;x7;x8;}
+node[shape=circle]
+y1 -> x9
+y1 -> m5
+x10 -> m4
+x10 -> p4
+x9-> m3
+x9-> p3
+x6 ->m1
+x6 ->p1
+x5 ->m1
+x5 ->p1
+x8 -> m2
+x8 -> p2
+x7 -> m2
+x7 -> p2
+y1 -> x10
+y1 -> x12  
+x5 -> x1
+x5 -> x2
+x6 -> x1
+x6 -> x2
+x7 -> x3
+x7 -> x4
+x8 -> x3
+x8 -> x4
+x9 -> x6
+x9 -> x5
+x9 -> x11
+x10 -> x8
+x10 -> x7
+}

@@ -1,0 +1,19 @@
+// function callgraph generated with gcc scallgraph plugin running with gcc version 8.3.0
+digraph scallgraph {
+ "first_bubbling" -> "insert_node_bubble";
+ "give_horizontal_place" -> "new_bubble2";
+ "give_horizontal_place" -> "new_bubbles";
+ "give_horizontal_place" -> "sort_levellist";
+ "give_horizontal_place" -> "insert_node_bubble";
+ "graph_bubbling" -> "third_bubbling";
+ "graph_bubbling" -> "third_bubbling";
+ "graph_bubbling" -> "give_horizontal_place";
+ "graph_bubbling" -> "third_bubbling";
+ "graph_bubbling" -> "count_bnodes";
+ "graph_bubbling" -> "new_bubble2";
+ "graph_bubbling" -> "first_bubbling";
+ "graph_bubbling" -> "input_bubbling";
+ "insert_node_bubble" -> "bubbling_calloc";
+ "new_bubbles" -> "bubbling_free";
+ "sort_levellist" -> "count_bnodes";
+}

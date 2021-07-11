@@ -3303,9 +3303,9 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[23] =
     {   0,
-      122,  123,  124,  125,  127,  128,  129,  130,  132,  133,
-      134,  136,  137,  138,  139,  140,  141,  142,  143,  144,
-      146,  199
+      123,  124,  125,  126,  128,  129,  130,  131,  133,  134,
+      135,  137,  138,  139,  140,  141,  142,  143,  144,  145,
+      147,  200
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -3388,12 +3388,13 @@ char *vcglaststring = NULL;
 
 static gzFile vcgzin = (gzFile)0;
 
+/* gzfread cannot be used because of older zlib in the dll */
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do { \
-	if ( (result = gzfread( (char*)buf, sizeof(char), max_size, vcgzin)) == 0) { \
+	if ( (result = gzread(vcgzin, (char*)buf, (sizeof(char) * max_size) )) == 0) { \
 		int estatus = 0; \
 		const char *es = gzerror (vcgzin, &estatus); \
-		if (estatus == Z_STREAM_ERROR) { \
+		if (estatus == Z_BUF_ERROR) { \
 			YY_FATAL_ERROR( "gzfread() in vcg.l flex scanner failed"); \
 		} else { \
 			if (estatus) { \
@@ -3408,15 +3409,15 @@ static gzFile vcgzin = (gzFile)0;
  * void *yyrealloc (void *ptr, size_t n) { return (realloc(ptr,n)); }
  */
 
-#line 3412 "vcg.flex.c"
-#line 98 "vcg.l"
+#line 3413 "vcg.flex.c"
+#line 99 "vcg.l"
 	/* use own yyalloc
 	 * %option noyyalloc
 	 * %option noyyrealloc
 	 * %option noyyfree
 	 */
 #define YY_NO_INPUT 1
-#line 3420 "vcg.flex.c"
+#line 3421 "vcg.flex.c"
 
 #define INITIAL 0
 
@@ -3694,10 +3695,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 120 "vcg.l"
+#line 121 "vcg.l"
 
 
-#line 3701 "vcg.flex.c"
+#line 3702 "vcg.flex.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -3778,109 +3779,109 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 122 "vcg.l"
+#line 123 "vcg.l"
 { /* c-comment style */ /* lexer does update yylineno */ }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 123 "vcg.l"
+#line 124 "vcg.l"
 { /* start of c comment but no end of c comment */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 124 "vcg.l"
+#line 125 "vcg.l"
 { /* end of c comment but no start of c comment */ }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 125 "vcg.l"
+#line 126 "vcg.l"
 { /* c++ comment style */ /* lexer does update yylineno */ }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 127 "vcg.l"
+#line 128 "vcg.l"
 { /* skip form feed chars and spaces */ }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 128 "vcg.l"
+#line 129 "vcg.l"
 { /* skip tabs */ }
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 129 "vcg.l"
+#line 130 "vcg.l"
 { /* skip new line */ /* lexer does update yylineno */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 130 "vcg.l"
+#line 131 "vcg.l"
 { /* skip carriage return */ }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 132 "vcg.l"
+#line 133 "vcg.l"
 { return (VCG_COLON); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 133 "vcg.l"
+#line 134 "vcg.l"
 { return (VCG_BO); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 134 "vcg.l"
+#line 135 "vcg.l"
 { return (VCG_BC); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 136 "vcg.l"
+#line 137 "vcg.l"
 { return (VCG_GRAPH); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 137 "vcg.l"
+#line 138 "vcg.l"
 { return (VCG_EDGE); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 138 "vcg.l"
+#line 139 "vcg.l"
 { return (VCG_ELLIPSE); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 139 "vcg.l"
+#line 140 "vcg.l"
 { return (VCG_LABEL); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 140 "vcg.l"
+#line 141 "vcg.l"
 { return (VCG_NODE); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 141 "vcg.l"
+#line 142 "vcg.l"
 { return (VCG_SHAPE); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 142 "vcg.l"
+#line 143 "vcg.l"
 { return (VCG_SOURCENAME); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 143 "vcg.l"
+#line 144 "vcg.l"
 { return (VCG_TARGETNAME); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 144 "vcg.l"
+#line 145 "vcg.l"
 { return (VCG_TITLE); }
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 146 "vcg.l"
+#line 147 "vcg.l"
 {
 				  if (vcgleng == 2) {
 				    /* string is "" */
@@ -3936,15 +3937,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 199 "vcg.l"
+#line 200 "vcg.l"
 { return ((int)yytext[0]); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 201 "vcg.l"
+#line 202 "vcg.l"
 ECHO;
 	YY_BREAK
-#line 3948 "vcg.flex.c"
+#line 3949 "vcg.flex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -5074,7 +5075,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 201 "vcg.l"
+#line 202 "vcg.l"
 
 
 /* */

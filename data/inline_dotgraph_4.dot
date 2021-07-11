@@ -1,0 +1,18 @@
+ 
+digraph datalink {
+	node [shape=record];
+	subgraph cluster0 {
+		label = "Up";
+    	up [label="<1>|<2>|<3>|<4>|<5>"];
+		color = "white"
+}
+	subgraph cluster1{
+		label = "Down";
+		labelloc = b;
+    	down [label="<1>|<2>|<3>"];
+		color = "white"
+}
+    up:1 -> down:1;
+    up:3 -> down:2;
+    up:5 -> down:3;
+}

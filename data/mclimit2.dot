@@ -1,0 +1,139 @@
+/* 
+
+dot -osmc_processing.png -Tpng smc_processing.dot
+
+*/
+digraph smc_processing {
+  label="SMC processing";
+	rankdir=TB;
+	size="10,11";		
+	ranksep=0.25;
+	nodesep=0.18;
+
+	 graph [compound=true,
+		mclimit=4,		
+		remincross=true,
+		nodesep = 0.1,
+	size="12,12"
+	];
+
+
+/*
+node [shape=none];
+context;
+term; */
+
+/* data elements */
+node [shape=box];
+dcr_terms;
+cmd_terms;
+cmd_terms_nested;
+dcr_cmd_map;
+rr_relations 
+smc_graph_xml;
+smc_graph_dot;
+smc_graph_dot_svg;
+smc_graph_json;
+smc_dataset_xml;
+
+/* dcr_terms_skos_rdf; */
+mdrepo_structure;
+mdrepo_graph;
+mdrepo_graph_json;
+
+
+
+/* processing, code  */
+node [shape=ellipse];
+	ant;
+	
+	d3;
+	dot;
+	smc_init;	
+	graph_dot_xsl;
+	terms2graph_xsl;
+	graph_json_xsl;
+	smc2dataset_xsl;
+	dataset2table_xsl;
+	
+	subgraph cluster_mdrepo {
+		label="mdrepo";
+	
+	scan_profiles;
+	gen_mdrepo_struct;
+	gen_mdrepo_stats;
+	
+	}
+	
+/*	dcr_smc2skos_xsl;
+	smc_stats_xsl;	
+ 	openskos_upload; */
+	
+
+/* user "interfaces"  - human readable output */ 
+node [shape=box, peripheries=2];
+smc_stats_html;
+browser_html;
+mdrepo_stats_html;
+smc_stats_detail_html;
+/* openskos_smc;*/
+
+
+	subgraph order {
+	rank=same;
+	dot;
+		smc_stats_html;
+		mdrepo_stats_html;
+		smc_stats_detail_html;
+	}
+
+/* context -> list;
+term -> map; */
+
+
+ant -> smc_init -> cmd_terms_nested;
+smc_init -> dcr_cmd_map;
+smc_init -> dcr_terms;
+smc_init -> cmd_terms;
+smc_init -> rr_relations;
+cmd_terms_nested -> terms2graph_xsl -> smc_graph_xml [label=A];
+dcr_terms -> terms2graph_xsl;
+rr_relations -> terms2graph_xsl;
+
+smc_graph_xml -> graph_dot_xsl -> smc_graph_dot  -> dot -> smc_graph_dot_svg [label=C]; 
+
+smc_graph_xml -> graph_json_xsl -> smc_graph_json [label=A]; 
+smc_graph_dot_svg -> graph_json_xsl [label="doc"];
+
+d3 -> browser_html [dir=back, label=uses];
+smc_graph_json -> browser_html [dir=back, style=dashed, label=calls];
+mdrepo_graph_json -> browser_html [dir=back, style=dashed, label=calls];
+smc_stats_detail_html -> browser_html [dir=back, style=dashed, label=calls];
+
+
+gen_mdrepo_stats ->  mdrepo_stats_html;
+mdrepo_stats_html -> browser_html [dir=back, style=dashed, color=red, label="calls\nTODO!"];
+gen_mdrepo_struct -> mdrepo_structure;
+mdrepo_structure -> terms2graph_xsl -> mdrepo_graph -> graph_json_xsl -> mdrepo_graph_json [label=B];
+scan_profiles -> gen_mdrepo_struct;
+
+
+/* obsoleted 
+dcr_cmd_map -> smc_stats_xsl -> smc_stats_html; 
+cmd_terms -> smc_stats_xsl;
+*/
+dcr_cmd_map -> smc2dataset_xsl -> smc_dataset_xml -> dataset2table_xsl -> smc_stats_detail_html;
+cmd_terms -> smc2dataset_xsl;
+
+cmd_terms -> scan_profiles [label=match];
+scan_profiles -> smc_init[constraint=false, label="fill private\n => 2nd run"];
+
+
+dataset2table_xsl -> smc_stats_html;
+
+/* obsoleted
+dcr_terms -> dcr_smc2skos_xsl -> dcr_terms_skos_rdf -> openskos_upload -> openskos_smc;
+*/
+
+
+}

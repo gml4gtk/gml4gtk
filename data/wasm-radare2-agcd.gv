@@ -1,0 +1,22 @@
+/*
+generated using radare2 from a wasm binary
+radare2 -a wasm test.wasm
+>aaa
+>agcd
+*/
+digraph code {
+rankdir=LR;
+outputorder=edgesfirst;
+graph [bgcolor=azure fontname="Courier" splines="curved"];
+node [penwidth=4 fillcolor=white style=filled fontname="Courier New Bold" fontsize=14 shape=box];
+edge [arrowhead="normal" style=bold weight=2];
+  "0x000000c7" [label="entry0" URL="entry0/0x000000c7"];
+  "0x000000c7" -> "0x0000272f" [color="#61afef" URL="sym.realloc__GLIBC_2.0_plt/0x0000272f"];
+  "0x0000272f" [label="sym.realloc__GLIBC_2.0_plt" URL="sym.realloc__GLIBC_2.0_plt/0x0000272f"];
+  "0x000000c7" -> "0x000027bf" [color="#61afef" URL="sym.ttyname_r__GLIBC_2.0_plt/0x000027bf"];
+  "0x000027bf" [label="sym.ttyname_r__GLIBC_2.0_plt" URL="sym.ttyname_r__GLIBC_2.0_plt/0x000027bf"];
+  "0x000000c7" -> "0x00002807" [color="#61afef" URL="sym.memchr__GLIBC_2.0_plt/0x00002807"];
+  "0x00002807" [label="sym.memchr__GLIBC_2.0_plt" URL="sym.memchr__GLIBC_2.0_plt/0x00002807"];
+  "0x000000c7" -> "0x00002747" [color="#61afef" URL="sym.malloc__GLIBC_2.0_plt/0x00002747"];
+  "0x00002747" [label="sym.malloc__GLIBC_2.0_plt" URL="sym.malloc__GLIBC_2.0_plt/0x00002747"];
+}

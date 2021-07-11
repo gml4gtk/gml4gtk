@@ -1,0 +1,124 @@
+graph netgraph {
+	edge [ weight = 1.0 ];
+	node [ shape = record, fontsize = 12 ] {
+		"1" [ label = "{em0:|{ether|[1]:}}" ];
+		"2" [ label = "{igb0:|{ether|[2]:}}" ];
+		"4" [ label = "{\<unnamed\>:|{pppoe|[4]:}}" ];
+		"4b1" [ label = "{mpd23435-lso:|{socket|[4b1]:}}" ];
+		"4b2" [ label = "{mpd23435-cso:|{socket|[4b2]:}}" ];
+		"4b3" [ label = "{mpd23435-eso:|{socket|[4b3]:}}" ];
+		"4b4" [ label = "{ng0:|{iface|[4b4]:}}" ];
+		"4b5" [ label = "{mpd23435-B1:|{ppp|[4b5]:}}" ];
+		"4b6" [ label = "{mpd23435-L1-lt:|{tee|[4b6]:}}" ];
+		"4b7" [ label = "{\<unnamed\>:|{socket|[4b7]:}}" ];
+		"4b8" [ label = "{mpd23435-stats:|{socket|[4b8]:}}" ];
+		"4ba" [ label = "{mpd23435-nf:|{netflow|[4ba]:}}" ];
+		"4bb" [ label = "{mpd23435-nfso:|{ksocket|[4bb]:}}" ];
+		"4bc" [ label = "{mpd23435-B1-mss:|{tcpmss|[4bc]:}}" ];
+		"4bf" [ label = "{ngctl87528:|{socket|[4bf]:}}" ];
+	};
+	subgraph cluster_disconnected {
+		bgcolor = pink;
+		"1";
+		"4b2";
+		"4b3";
+		"4b7";
+		"4b8";
+		"4bf";
+	};
+	node [ shape = octagon, fontsize = 10 ] {
+		"2.orphans" [ label = "orphans" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"2" -- "2.orphans";
+	};
+	node [ shape = octagon, fontsize = 10 ] {
+		"4.mpd23435-0" [ label = "mpd23435-0" ];
+		"4.ethernet" [ label = "ethernet" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4" -- "4.mpd23435-0";
+		"4" -- "4.ethernet";
+	};
+	"4.ethernet" -- "2.orphans";
+	node [ shape = octagon, fontsize = 10 ] {
+		"4b1.b0" [ label = "b0" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4b1" -- "4b1.b0";
+	};
+	node [ shape = octagon, fontsize = 10 ] {
+		"4b4.inet" [ label = "inet" ];
+		"4b4.inet6" [ label = "inet6" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4b4" -- "4b4.inet";
+		"4b4" -- "4b4.inet6";
+	};
+	node [ shape = octagon, fontsize = 10 ] {
+		"4b5.inet" [ label = "inet" ];
+		"4b5.ipv6" [ label = "ipv6" ];
+		"4b5.link0" [ label = "link0" ];
+		"4b5.bypass" [ label = "bypass" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4b5" -- "4b5.inet";
+		"4b5" -- "4b5.ipv6";
+		"4b5" -- "4b5.link0";
+		"4b5" -- "4b5.bypass";
+	};
+	"4b5.bypass" -- "4b1.b0";
+	node [ shape = octagon, fontsize = 10 ] {
+		"4b6.right" [ label = "right" ];
+		"4b6.left" [ label = "left" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4b6" -- "4b6.right";
+		"4b6" -- "4b6.left";
+	};
+	"4b6.right" -- "4b5.link0";
+	"4b6.left" -- "4.mpd23435-0";
+	node [ shape = octagon, fontsize = 10 ] {
+		"4ba.out0" [ label = "out0" ];
+		"4ba.iface0" [ label = "iface0" ];
+		"4ba.out1" [ label = "out1" ];
+		"4ba.iface1" [ label = "iface1" ];
+		"4ba.export9" [ label = "export9" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4ba" -- "4ba.out0";
+		"4ba" -- "4ba.iface0";
+		"4ba" -- "4ba.out1";
+		"4ba" -- "4ba.iface1";
+		"4ba" -- "4ba.export9";
+	};
+	"4ba.iface0" -- "4b5.inet";
+	"4ba.out1" -- "4b4.inet6";
+	"4ba.iface1" -- "4b5.ipv6";
+	node [ shape = octagon, fontsize = 10 ] {
+		"4bb.inet/dgram/udp" [ label = "inet/dgram/udp" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4bb" -- "4bb.inet/dgram/udp";
+	};
+	"4bb.inet/dgram/udp" -- "4ba.export9";
+	node [ shape = octagon, fontsize = 10 ] {
+		"4bc.out" [ label = "out" ];
+		"4bc.in" [ label = "in" ];
+	};
+	{
+		edge [ weight = 2.0, style = bold ];
+		"4bc" -- "4bc.out";
+		"4bc" -- "4bc.in";
+	};
+	"4bc.out" -- "4b4.inet";
+	"4bc.in" -- "4ba.out0";
+}

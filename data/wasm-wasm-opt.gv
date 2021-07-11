@@ -1,0 +1,566 @@
+/* generated with binaryen tools
+wasm-opt --print-call-graph graph2svg.wasm
+*/
+digraph call {
+  rankdir = LR;
+  subgraph cluster_key {
+    node [shape=box, fontname=courier, fontsize=10];
+    edge [fontname=courier, fontsize=10];
+    label = "Key";
+    "Import" [style="filled", fillcolor="turquoise"];
+    "Export" [style="filled", fillcolor="gray"];
+    "Indirect Target" [style="filled, rounded", fillcolor="white"];
+    "A" -> "B" [style="filled, rounded", label = "Direct Call"];
+  }
+
+  node [shape=box, fontname=courier, fontsize=10];
+  "$__wasm_call_ctors" [style="filled", fillcolor="white"];
+  "$graph2svg" [style="filled", fillcolor="white"];
+  "$init_obuf" [style="filled", fillcolor="white"];
+  "$parse" [style="filled", fillcolor="white"];
+  "$setparseerror" [style="filled", fillcolor="white"];
+  "$setnodata" [style="filled", fillcolor="white"];
+  "$setsfgstatus" [style="filled", fillcolor="white"];
+  "$tosfg" [style="filled", fillcolor="white"];
+  "$fromsfg" [style="filled", fillcolor="white"];
+  "$nextline" [style="filled", fillcolor="white"];
+  "$str2obuf" [style="filled", fillcolor="white"];
+  "$getnodedataps" [style="filled", fillcolor="white"];
+  "$ohead" [style="filled", fillcolor="white"];
+  "$getedgedataps" [style="filled", fillcolor="white"];
+  "$otail" [style="filled", fillcolor="white"];
+  "$svgdata" [style="filled", fillcolor="white"];
+  "$realloc_obuf" [style="filled", fillcolor="white"];
+  "$strlen" [style="filled", fillcolor="white"];
+  "$strcpy" [style="filled", fillcolor="white"];
+  "$strcat" [style="filled", fillcolor="white"];
+  "$memset" [style="filled", fillcolor="white"];
+  "$memcpy" [style="filled", fillcolor="white"];
+  "$intoa" [style="filled", fillcolor="white"];
+  "$reverse" [style="filled", fillcolor="white"];
+  "$atoi" [style="filled", fillcolor="white"];
+  "$sfg_version" [style="filled", fillcolor="white"];
+  "$sfg_init" [style="filled", fillcolor="white"];
+  "$splay_tree_compare_ints" [style="filled", fillcolor="white"];
+  "$splay_tree_new" [style="filled", fillcolor="white"];
+  "$sfg_deinit" [style="filled", fillcolor="white"];
+  "$clear_stlist_all" [style="filled", fillcolor="white"];
+  "$clear_edgelist" [style="filled", fillcolor="white"];
+  "$clear_nodelist" [style="filled", fillcolor="white"];
+  "$splay_tree_delete" [style="filled", fillcolor="white"];
+  "$clear_stlist" [style="filled", fillcolor="white"];
+  "$splay_tree_delete_helper" [style="filled", fillcolor="white"];
+  "$sfg_addnode" [style="filled", fillcolor="white"];
+  "$uniqnode" [style="filled", fillcolor="white"];
+  "$uniqnode_add" [style="filled", fillcolor="white"];
+  "$splay_tree_lookup" [style="filled", fillcolor="white"];
+  "$splay_tree_insert" [style="filled", fillcolor="white"];
+  "$sfg_addedge" [style="filled", fillcolor="white"];
+  "$sfg_layout" [style="filled", fillcolor="white"];
+  "$prep" [style="filled", fillcolor="white"];
+  "$reorg" [style="filled", fillcolor="white"];
+  "$uncycle" [style="filled", fillcolor="white"];
+  "$ylevels" [style="filled", fillcolor="white"];
+  "$shorteredges" [style="filled", fillcolor="white"];
+  "$edgesdownwards" [style="filled", fillcolor="white"];
+  "$edgelen" [style="filled", fillcolor="white"];
+  "$doublespacey" [style="filled", fillcolor="white"];
+  "$edgelabels" [style="filled", fillcolor="white"];
+  "$splitedges" [style="filled", fillcolor="white"];
+  "$nodecounts" [style="filled", fillcolor="white"];
+  "$barycenter" [style="filled", fillcolor="white"];
+  "$improve_positions" [style="filled", fillcolor="white"];
+  "$finalxy" [style="filled", fillcolor="white"];
+  "$setminmax" [style="filled", fillcolor="white"];
+  "$make_stlist" [style="filled", fillcolor="white"];
+  "$decycle3" [style="filled", fillcolor="white"];
+  "$add_singlenode" [style="filled", fillcolor="white"];
+  "$set_level2" [style="filled", fillcolor="white"];
+  "$unrev" [style="filled", fillcolor="white"];
+  "$do_abs" [style="filled", fillcolor="white"];
+  "$add_new_dummynode" [style="filled", fillcolor="white"];
+  "$add_new_dummyedge" [style="filled", fillcolor="white"];
+  "$del_edge" [style="filled", fillcolor="white"];
+  "$bc_n" [style="filled", fillcolor="white"];
+  "$make_cnodelist" [style="filled", fillcolor="white"];
+  "$make_cnnodes_at_level" [style="filled", fillcolor="white"];
+  "$improve_positions2local" [style="filled", fillcolor="white"];
+  "$move0" [style="filled", fillcolor="white"];
+  "$cfinalxy" [style="filled", fillcolor="white"];
+  "$tunedummy" [style="filled", fillcolor="white"];
+  "$tunenodes" [style="filled", fillcolor="white"];
+  "$movefinal" [style="filled", fillcolor="white"];
+  "$clear_cnnodes_at_level" [style="filled", fillcolor="white"];
+  "$clear_cnodelist" [style="filled", fillcolor="white"];
+  "$sfg_crossings" [style="filled", fillcolor="white"];
+  "$sfg_initialcrossings" [style="filled", fillcolor="white"];
+  "$sfg_edgelabels" [style="filled", fillcolor="white"];
+  "$sfg_nodexpos" [style="filled", fillcolor="white"];
+  "$sfg_nodeypos" [style="filled", fillcolor="white"];
+  "$sfg_noderelxpos" [style="filled", fillcolor="white"];
+  "$sfg_noderelypos" [style="filled", fillcolor="white"];
+  "$sfg_nodely0" [style="filled", fillcolor="white"];
+  "$sfg_nodely1" [style="filled", fillcolor="white"];
+  "$sfg_nodexsize" [style="filled", fillcolor="white"];
+  "$sfg_nodeysize" [style="filled", fillcolor="white"];
+  "$sfg_xspacing" [style="filled", fillcolor="white"];
+  "$sfg_yspacing" [style="filled", fillcolor="white"];
+  "$sfg_maxx" [style="filled", fillcolor="white"];
+  "$sfg_maxy" [style="filled", fillcolor="white"];
+  "$sfg_nodemin" [style="filled", fillcolor="white"];
+  "$sfg_nodemax" [style="filled", fillcolor="white"];
+  "$sfg_edgemin" [style="filled", fillcolor="white"];
+  "$sfg_edgemax" [style="filled", fillcolor="white"];
+  "$sfg_nlevels" [style="filled", fillcolor="white"];
+  "$sfg_nnodes" [style="filled", fillcolor="white"];
+  "$sfg_nedges" [style="filled", fillcolor="white"];
+  "$sfg_nodetype" [style="filled", fillcolor="white"];
+  "$sfg_nodeselfedges" [style="filled", fillcolor="white"];
+  "$sfg_nodeindegree" [style="filled", fillcolor="white"];
+  "$sfg_nodeoutdegree" [style="filled", fillcolor="white"];
+  "$sfg_nodeenum" [style="filled", fillcolor="white"];
+  "$sfg_nodedata" [style="filled", fillcolor="white"];
+  "$sfg_setnodedata" [style="filled", fillcolor="white"];
+  "$sfg_node_foreach" [style="filled", fillcolor="white"];
+  "$sfg_edgefrom" [style="filled", fillcolor="white"];
+  "$findedge" [style="filled", fillcolor="white"];
+  "$sfg_edgeto" [style="filled", fillcolor="white"];
+  "$sfg_edgetype" [style="filled", fillcolor="white"];
+  "$sfg_edgerev" [style="filled", fillcolor="white"];
+  "$sfg_edge_foreach" [style="filled", fillcolor="white"];
+  "$splay" [style="filled", fillcolor="white"];
+  "$make_matrix" [style="filled", fillcolor="white"];
+  "$copy_a" [style="filled", fillcolor="white"];
+  "$number_of_crossings_a" [style="filled", fillcolor="white"];
+  "$phase1_down" [style="filled", fillcolor="white"];
+  "$phase1_up" [style="filled", fillcolor="white"];
+  "$equal_a" [style="filled", fillcolor="white"];
+  "$phase2_down" [style="filled", fillcolor="white"];
+  "$phase2_up" [style="filled", fillcolor="white"];
+  "$store_new_positions" [style="filled", fillcolor="white"];
+  "$mget_set" [style="filled", fillcolor="white"];
+  "$copy_m" [style="filled", fillcolor="white"];
+  "$number_of_crossings3" [style="filled", fillcolor="white"];
+  "$b_c" [style="filled", fillcolor="white"];
+  "$b_r" [style="filled", fillcolor="white"];
+  "$equal_m" [style="filled", fillcolor="white"];
+  "$column_barycenter" [style="filled", fillcolor="white"];
+  "$sorted" [style="filled", fillcolor="white"];
+  "$r_c" [style="filled", fillcolor="white"];
+  "$row_barycenter" [style="filled", fillcolor="white"];
+  "$r_r" [style="filled", fillcolor="white"];
+  "$su_find_node_with_number" [style="filled", fillcolor="white"];
+  "$setbit" [style="filled", fillcolor="white"];
+  "$clearbit" [style="filled", fillcolor="white"];
+  "$do_memmove" [style="filled", fillcolor="white"];
+  "$mget" [style="filled", fillcolor="white"];
+  "$testbit" [style="filled", fillcolor="white"];
+  "$exch_columns" [style="filled", fillcolor="white"];
+  "$exch_rows" [style="filled", fillcolor="white"];
+  "$reverse_c" [style="filled", fillcolor="white"];
+  "$reverse_r" [style="filled", fillcolor="white"];
+  "$make_node_list_down" [style="filled", fillcolor="white"];
+  "$do_down" [style="filled", fillcolor="white"];
+  "$make_node_list_up" [style="filled", fillcolor="white"];
+  "$do_up" [style="filled", fillcolor="white"];
+  "$make_cposnodes" [style="filled", fillcolor="white"];
+  "$clear_cposnodes" [style="filled", fillcolor="white"];
+  "$make_clevelnodes" [style="filled", fillcolor="white"];
+  "$clear_clevelnodes" [style="filled", fillcolor="white"];
+  "$is_dummy" [style="filled", fillcolor="white"];
+  "$upper_connectivity" [style="filled", fillcolor="white"];
+  "$sort" [style="filled", fillcolor="white"];
+  "$find_next" [style="filled", fillcolor="white"];
+  "$upper_barycenter" [style="filled", fillcolor="white"];
+  "$lower_connectivity" [style="filled", fillcolor="white"];
+  "$lower_barycenter" [style="filled", fillcolor="white"];
+  "$do_floor" [style="filled", fillcolor="white"];
+  "$abort" [style="filled", fillcolor="white"];
+  "$allocateMemory" [style="filled", fillcolor="white"];
+  "$ensureInitialised" [style="filled", fillcolor="white"];
+  "$getMoreMemory" [style="filled", fillcolor="white"];
+  "$freeMemory" [style="filled", fillcolor="white"];
+  "$sbrk" [style="filled", fillcolor="white"];
+  "$malloc" [style="filled", fillcolor="white"];
+  "$dlmalloc" [style="filled", fillcolor="white"];
+  "$try_init_allocator" [style="filled", fillcolor="white"];
+  "$tmalloc_small" [style="filled", fillcolor="white"];
+  "$tmalloc_large" [style="filled", fillcolor="white"];
+  "$sys_alloc" [style="filled", fillcolor="white"];
+  "$free" [style="filled", fillcolor="white"];
+  "$dlfree" [style="filled", fillcolor="white"];
+  "$release_unused_segments" [style="filled", fillcolor="white"];
+  "$calloc" [style="filled", fillcolor="white"];
+  "$dlcalloc" [style="filled", fillcolor="white"];
+  "$realloc" [style="filled", fillcolor="white"];
+  "$dlrealloc" [style="filled", fillcolor="white"];
+  "$try_realloc_chunk" [style="filled", fillcolor="white"];
+  "$init_mparams" [style="filled", fillcolor="white"];
+  "$init_bins" [style="filled", fillcolor="white"];
+  "$init_top" [style="filled", fillcolor="white"];
+  "$mmap_alloc" [style="filled", fillcolor="white"];
+  "$segment_holding" [style="filled", fillcolor="white"];
+  "$prepend_alloc" [style="filled", fillcolor="white"];
+  "$add_segment" [style="filled", fillcolor="white"];
+  "$mmap_resize" [style="filled", fillcolor="white"];
+  "$dispose_chunk" [style="filled", fillcolor="white"];
+  "$__wasm_call_ctors" [style="filled", fillcolor="gray"];
+  "$graph2svg" [style="filled", fillcolor="gray"];
+  "$strcpy" [style="filled", fillcolor="gray"];
+  "$strlen" [style="filled", fillcolor="gray"];
+  "$sfg_init" [style="filled", fillcolor="gray"];
+  "$sfg_layout" [style="filled", fillcolor="gray"];
+  "$sfg_maxx" [style="filled", fillcolor="gray"];
+  "$sfg_maxy" [style="filled", fillcolor="gray"];
+  "$sfg_deinit" [style="filled", fillcolor="gray"];
+  "$free" [style="filled", fillcolor="gray"];
+  "$calloc" [style="filled", fillcolor="gray"];
+  "$atoi" [style="filled", fillcolor="gray"];
+  "$memset" [style="filled", fillcolor="gray"];
+  "$intoa" [style="filled", fillcolor="gray"];
+  "$sfg_addnode" [style="filled", fillcolor="gray"];
+  "$sfg_addedge" [style="filled", fillcolor="gray"];
+  "$sfg_node_foreach" [style="filled", fillcolor="gray"];
+  "$sfg_edge_foreach" [style="filled", fillcolor="gray"];
+  "$svgdata" [style="filled", fillcolor="gray"];
+  "$memcpy" [style="filled", fillcolor="gray"];
+  "$strcat" [style="filled", fillcolor="gray"];
+  "$realloc" [style="filled", fillcolor="gray"];
+  "$sfg_nodetype" [style="filled", fillcolor="gray"];
+  "$sfg_nodexpos" [style="filled", fillcolor="gray"];
+  "$sfg_nodeypos" [style="filled", fillcolor="gray"];
+  "$sfg_nodexsize" [style="filled", fillcolor="gray"];
+  "$sfg_nodeysize" [style="filled", fillcolor="gray"];
+  "$sfg_noderelypos" [style="filled", fillcolor="gray"];
+  "$sfg_version" [style="filled", fillcolor="gray"];
+  "$sfg_crossings" [style="filled", fillcolor="gray"];
+  "$sfg_initialcrossings" [style="filled", fillcolor="gray"];
+  "$sfg_edgelabels" [style="filled", fillcolor="gray"];
+  "$sfg_noderelxpos" [style="filled", fillcolor="gray"];
+  "$sfg_nodely0" [style="filled", fillcolor="gray"];
+  "$sfg_nodely1" [style="filled", fillcolor="gray"];
+  "$sfg_xspacing" [style="filled", fillcolor="gray"];
+  "$sfg_yspacing" [style="filled", fillcolor="gray"];
+  "$sfg_nodemin" [style="filled", fillcolor="gray"];
+  "$sfg_nodemax" [style="filled", fillcolor="gray"];
+  "$sfg_edgemin" [style="filled", fillcolor="gray"];
+  "$sfg_edgemax" [style="filled", fillcolor="gray"];
+  "$sfg_nlevels" [style="filled", fillcolor="gray"];
+  "$sfg_nnodes" [style="filled", fillcolor="gray"];
+  "$sfg_nedges" [style="filled", fillcolor="gray"];
+  "$sfg_nodeselfedges" [style="filled", fillcolor="gray"];
+  "$sfg_nodeindegree" [style="filled", fillcolor="gray"];
+  "$sfg_nodeoutdegree" [style="filled", fillcolor="gray"];
+  "$sfg_nodeenum" [style="filled", fillcolor="gray"];
+  "$sfg_nodedata" [style="filled", fillcolor="gray"];
+  "$sfg_setnodedata" [style="filled", fillcolor="gray"];
+  "$sfg_edgefrom" [style="filled", fillcolor="gray"];
+  "$sfg_edgeto" [style="filled", fillcolor="gray"];
+  "$sfg_edgetype" [style="filled", fillcolor="gray"];
+  "$sfg_edgerev" [style="filled", fillcolor="gray"];
+  "$abort" [style="filled", fillcolor="gray"];
+  "$sbrk" [style="filled", fillcolor="gray"];
+  "$malloc" [style="filled", fillcolor="gray"];
+  "$graph2svg" -> "$strcpy"; // call
+  "$graph2svg" -> "$strlen"; // call
+  "$graph2svg" -> "$init_obuf"; // call
+  "$graph2svg" -> "$parse"; // call
+  "$graph2svg" -> "$setparseerror"; // call
+  "$graph2svg" -> "$setnodata"; // call
+  "$graph2svg" -> "$sfg_init"; // call
+  "$graph2svg" -> "$setsfgstatus"; // call
+  "$graph2svg" -> "$tosfg"; // call
+  "$graph2svg" -> "$sfg_layout"; // call
+  "$graph2svg" -> "$sfg_maxx"; // call
+  "$graph2svg" -> "$sfg_maxy"; // call
+  "$graph2svg" -> "$fromsfg"; // call
+  "$graph2svg" -> "$sfg_deinit"; // call
+  "$init_obuf" -> "$free"; // call
+  "$init_obuf" -> "$calloc"; // call
+  "$parse" -> "$nextline"; // call
+  "$parse" -> "$strlen"; // call
+  "$parse" -> "$atoi"; // call
+  "$parse" -> "$calloc"; // call
+  "$setparseerror" -> "$memset"; // call
+  "$setparseerror" -> "$str2obuf"; // call
+  "$setparseerror" -> "$intoa"; // call
+  "$setnodata" -> "$memset"; // call
+  "$setnodata" -> "$str2obuf"; // call
+  "$setsfgstatus" -> "$memset"; // call
+  "$setsfgstatus" -> "$str2obuf"; // call
+  "$setsfgstatus" -> "$intoa"; // call
+  "$tosfg" -> "$sfg_addnode"; // call
+  "$tosfg" -> "$sfg_addedge"; // call
+  "$fromsfg" -> "$memset"; // call
+  "$fromsfg" -> "$ohead"; // call
+  "$fromsfg" -> "$sfg_node_foreach"; // call
+  "$fromsfg" -> "$sfg_edge_foreach"; // call
+  "$fromsfg" -> "$otail"; // call
+  "$nextline" -> "$memset"; // call
+  "$str2obuf" -> "$strlen"; // call
+  "$str2obuf" -> "$realloc_obuf"; // call
+  "$str2obuf" -> "$strcpy"; // call
+  "$str2obuf" -> "$strcat"; // call
+  "$getnodedataps" -> "$str2obuf"; // call
+  "$getnodedataps" -> "$intoa"; // call
+  "$ohead" -> "$str2obuf"; // call
+  "$ohead" -> "$intoa"; // call
+  "$getedgedataps" -> "$sfg_nodetype"; // call
+  "$getedgedataps" -> "$sfg_nodexpos"; // call
+  "$getedgedataps" -> "$sfg_nodeypos"; // call
+  "$getedgedataps" -> "$sfg_nodexsize"; // call
+  "$getedgedataps" -> "$sfg_nodeysize"; // call
+  "$getedgedataps" -> "$sfg_noderelypos"; // call
+  "$getedgedataps" -> "$str2obuf"; // call
+  "$getedgedataps" -> "$intoa"; // call
+  "$otail" -> "$str2obuf"; // call
+  "$svgdata" -> "$strlen"; // call
+  "$svgdata" -> "$memcpy"; // call
+  "$realloc_obuf" -> "$realloc"; // call
+  "$strcat" -> "$strlen"; // call
+  "$intoa" -> "$reverse"; // call
+  "$reverse" -> "$strlen"; // call
+  "$sfg_init" -> "$calloc"; // call
+  "$sfg_init" -> "$splay_tree_new"; // call
+  "$splay_tree_new" -> "$calloc"; // call
+  "$sfg_deinit" -> "$free"; // call
+  "$sfg_deinit" -> "$clear_stlist_all"; // call
+  "$sfg_deinit" -> "$clear_edgelist"; // call
+  "$sfg_deinit" -> "$clear_nodelist"; // call
+  "$sfg_deinit" -> "$splay_tree_delete"; // call
+  "$clear_stlist_all" -> "$clear_stlist"; // call
+  "$clear_edgelist" -> "$free"; // call
+  "$clear_nodelist" -> "$free"; // call
+  "$splay_tree_delete" -> "$splay_tree_delete_helper"; // call
+  "$splay_tree_delete" -> "$free"; // call
+  "$clear_stlist" -> "$free"; // call
+  "$splay_tree_delete_helper" -> "$splay_tree_delete_helper"; // call
+  "$splay_tree_delete_helper" -> "$free"; // call
+  "$sfg_addnode" -> "$uniqnode"; // call
+  "$sfg_addnode" -> "$calloc"; // call
+  "$sfg_addnode" -> "$free"; // call
+  "$sfg_addnode" -> "$uniqnode_add"; // call
+  "$uniqnode" -> "$splay_tree_lookup"; // call
+  "$uniqnode_add" -> "$splay_tree_new"; // call
+  "$uniqnode_add" -> "$splay_tree_lookup"; // call
+  "$uniqnode_add" -> "$splay_tree_insert"; // call
+  "$splay_tree_lookup" -> "$splay"; // call
+  "$splay_tree_insert" -> "$splay_tree_lookup"; // call
+  "$splay_tree_insert" -> "$calloc"; // call
+  "$sfg_addedge" -> "$uniqnode"; // call
+  "$sfg_addedge" -> "$calloc"; // call
+  "$sfg_addedge" -> "$free"; // call
+  "$sfg_layout" -> "$prep"; // call
+  "$sfg_layout" -> "$reorg"; // call
+  "$sfg_layout" -> "$uncycle"; // call
+  "$sfg_layout" -> "$ylevels"; // call
+  "$sfg_layout" -> "$shorteredges"; // call
+  "$sfg_layout" -> "$edgesdownwards"; // call
+  "$sfg_layout" -> "$edgelen"; // call
+  "$sfg_layout" -> "$doublespacey"; // call
+  "$sfg_layout" -> "$edgelabels"; // call
+  "$sfg_layout" -> "$splitedges"; // call
+  "$sfg_layout" -> "$nodecounts"; // call
+  "$sfg_layout" -> "$barycenter"; // call
+  "$sfg_layout" -> "$improve_positions"; // call
+  "$sfg_layout" -> "$finalxy"; // call
+  "$sfg_layout" -> "$setminmax"; // call
+  "$reorg" -> "$calloc"; // call
+  "$reorg" -> "$free"; // call
+  "$uncycle" -> "$clear_stlist_all"; // call
+  "$uncycle" -> "$make_stlist"; // call
+  "$uncycle" -> "$decycle3"; // call
+  "$ylevels" -> "$add_singlenode"; // call
+  "$ylevels" -> "$set_level2"; // call
+  "$ylevels" -> "$calloc"; // call
+  "$shorteredges" -> "$unrev"; // call
+  "$shorteredges" -> "$do_abs"; // call
+  "$edgesdownwards" -> "$clear_stlist_all"; // call
+  "$edgesdownwards" -> "$make_stlist"; // call
+  "$edgelen" -> "$clear_stlist_all"; // call
+  "$edgelen" -> "$make_stlist"; // call
+  "$edgelabels" -> "$add_new_dummynode"; // call
+  "$edgelabels" -> "$uniqnode"; // call
+  "$edgelabels" -> "$add_new_dummyedge"; // call
+  "$edgelabels" -> "$del_edge"; // call
+  "$edgelabels" -> "$clear_stlist_all"; // call
+  "$edgelabels" -> "$make_stlist"; // call
+  "$splitedges" -> "$add_new_dummynode"; // call
+  "$splitedges" -> "$uniqnode"; // call
+  "$splitedges" -> "$add_new_dummyedge"; // call
+  "$splitedges" -> "$del_edge"; // call
+  "$nodecounts" -> "$clear_stlist_all"; // call
+  "$nodecounts" -> "$make_stlist"; // call
+  "$nodecounts" -> "$calloc"; // call
+  "$barycenter" -> "$calloc"; // call
+  "$barycenter" -> "$bc_n"; // call
+  "$improve_positions" -> "$make_cnodelist"; // call
+  "$improve_positions" -> "$make_cnnodes_at_level"; // call
+  "$improve_positions" -> "$improve_positions2local"; // call
+  "$improve_positions" -> "$move0"; // call
+  "$improve_positions" -> "$cfinalxy"; // call
+  "$improve_positions" -> "$tunedummy"; // call
+  "$improve_positions" -> "$tunenodes"; // call
+  "$improve_positions" -> "$movefinal"; // call
+  "$improve_positions" -> "$clear_cnnodes_at_level"; // call
+  "$improve_positions" -> "$clear_cnodelist"; // call
+  "$make_stlist" -> "$calloc"; // call
+  "$decycle3" -> "$decycle3"; // call
+  "$add_singlenode" -> "$calloc"; // call
+  "$set_level2" -> "$set_level2"; // call
+  "$unrev" -> "$clear_stlist_all"; // call
+  "$unrev" -> "$make_stlist"; // call
+  "$add_new_dummynode" -> "$uniqnode"; // call
+  "$add_new_dummynode" -> "$calloc"; // call
+  "$add_new_dummynode" -> "$uniqnode_add"; // call
+  "$add_new_dummynode" -> "$free"; // call
+  "$add_new_dummyedge" -> "$uniqnode"; // call
+  "$add_new_dummyedge" -> "$calloc"; // call
+  "$add_new_dummyedge" -> "$free"; // call
+  "$del_edge" -> "$free"; // call
+  "$bc_n" -> "$calloc"; // call
+  "$bc_n" -> "$make_matrix"; // call
+  "$bc_n" -> "$copy_a"; // call
+  "$bc_n" -> "$number_of_crossings_a"; // call
+  "$bc_n" -> "$phase1_down"; // call
+  "$bc_n" -> "$phase1_up"; // call
+  "$bc_n" -> "$equal_a"; // call
+  "$bc_n" -> "$phase2_down"; // call
+  "$bc_n" -> "$phase2_up"; // call
+  "$bc_n" -> "$store_new_positions"; // call
+  "$bc_n" -> "$free"; // call
+  "$make_cnodelist" -> "$calloc"; // call
+  "$make_cnnodes_at_level" -> "$calloc"; // call
+  "$improve_positions2local" -> "$calloc"; // call
+  "$improve_positions2local" -> "$make_node_list_down"; // call
+  "$improve_positions2local" -> "$do_down"; // call
+  "$improve_positions2local" -> "$free"; // call
+  "$improve_positions2local" -> "$make_node_list_up"; // call
+  "$improve_positions2local" -> "$do_up"; // call
+  "$cfinalxy" -> "$make_cposnodes"; // call
+  "$cfinalxy" -> "$clear_cposnodes"; // call
+  "$cfinalxy" -> "$make_clevelnodes"; // call
+  "$cfinalxy" -> "$calloc"; // call
+  "$cfinalxy" -> "$clear_clevelnodes"; // call
+  "$cfinalxy" -> "$free"; // call
+  "$clear_cnnodes_at_level" -> "$free"; // call
+  "$clear_cnodelist" -> "$free"; // call
+  "$sfg_nodexpos" -> "$uniqnode"; // call
+  "$sfg_nodeypos" -> "$uniqnode"; // call
+  "$sfg_noderelxpos" -> "$uniqnode"; // call
+  "$sfg_noderelypos" -> "$uniqnode"; // call
+  "$sfg_nodely0" -> "$uniqnode"; // call
+  "$sfg_nodely1" -> "$uniqnode"; // call
+  "$sfg_nodexsize" -> "$uniqnode"; // call
+  "$sfg_nodeysize" -> "$uniqnode"; // call
+  "$sfg_nodetype" -> "$uniqnode"; // call
+  "$sfg_nodeselfedges" -> "$uniqnode"; // call
+  "$sfg_nodeindegree" -> "$uniqnode"; // call
+  "$sfg_nodeoutdegree" -> "$uniqnode"; // call
+  "$sfg_nodeenum" -> "$uniqnode"; // call
+  "$sfg_nodedata" -> "$uniqnode"; // call
+  "$sfg_setnodedata" -> "$uniqnode"; // call
+  "$sfg_edgefrom" -> "$findedge"; // call
+  "$sfg_edgeto" -> "$findedge"; // call
+  "$sfg_edgetype" -> "$findedge"; // call
+  "$sfg_edgerev" -> "$findedge"; // call
+  "$make_matrix" -> "$mget_set"; // call
+  "$copy_a" -> "$copy_m"; // call
+  "$number_of_crossings_a" -> "$number_of_crossings3"; // call
+  "$phase1_down" -> "$b_c"; // call
+  "$phase1_up" -> "$b_r"; // call
+  "$equal_a" -> "$equal_m"; // call
+  "$phase2_down" -> "$column_barycenter"; // call
+  "$phase2_down" -> "$sorted"; // call
+  "$phase2_down" -> "$r_c"; // call
+  "$phase2_up" -> "$row_barycenter"; // call
+  "$phase2_up" -> "$sorted"; // call
+  "$phase2_up" -> "$r_r"; // call
+  "$store_new_positions" -> "$su_find_node_with_number"; // call
+  "$mget_set" -> "$setbit"; // call
+  "$mget_set" -> "$clearbit"; // call
+  "$copy_m" -> "$do_memmove"; // call
+  "$number_of_crossings3" -> "$mget"; // call
+  "$b_c" -> "$column_barycenter"; // call
+  "$b_c" -> "$exch_columns"; // call
+  "$b_c" -> "$exch_rows"; // call
+  "$b_r" -> "$row_barycenter"; // call
+  "$b_r" -> "$exch_rows"; // call
+  "$b_r" -> "$exch_columns"; // call
+  "$equal_m" -> "$mget"; // call
+  "$column_barycenter" -> "$mget"; // call
+  "$r_c" -> "$column_barycenter"; // call
+  "$r_c" -> "$reverse_c"; // call
+  "$r_c" -> "$reverse_r"; // call
+  "$row_barycenter" -> "$mget"; // call
+  "$r_r" -> "$row_barycenter"; // call
+  "$r_r" -> "$reverse_r"; // call
+  "$r_r" -> "$reverse_c"; // call
+  "$su_find_node_with_number" -> "$uniqnode"; // call
+  "$mget" -> "$testbit"; // call
+  "$exch_columns" -> "$mget"; // call
+  "$exch_columns" -> "$mget_set"; // call
+  "$exch_rows" -> "$mget"; // call
+  "$exch_rows" -> "$mget_set"; // call
+  "$reverse_c" -> "$exch_columns"; // call
+  "$reverse_r" -> "$exch_rows"; // call
+  "$make_node_list_down" -> "$is_dummy"; // call
+  "$make_node_list_down" -> "$upper_connectivity"; // call
+  "$make_node_list_down" -> "$sort"; // call
+  "$do_down" -> "$find_next"; // call
+  "$do_down" -> "$upper_barycenter"; // call
+  "$make_node_list_up" -> "$is_dummy"; // call
+  "$make_node_list_up" -> "$lower_connectivity"; // call
+  "$make_node_list_up" -> "$sort"; // call
+  "$do_up" -> "$find_next"; // call
+  "$do_up" -> "$lower_barycenter"; // call
+  "$make_cposnodes" -> "$calloc"; // call
+  "$clear_cposnodes" -> "$free"; // call
+  "$make_clevelnodes" -> "$calloc"; // call
+  "$clear_clevelnodes" -> "$free"; // call
+  "$upper_barycenter" -> "$upper_connectivity"; // call
+  "$upper_barycenter" -> "$do_floor"; // call
+  "$lower_barycenter" -> "$lower_connectivity"; // call
+  "$lower_barycenter" -> "$do_floor"; // call
+  "$allocateMemory" -> "$ensureInitialised"; // call
+  "$allocateMemory" -> "$getMoreMemory"; // call
+  "$allocateMemory" -> "$allocateMemory"; // call
+  "$getMoreMemory" -> "$freeMemory"; // call
+  "$freeMemory" -> "$ensureInitialised"; // call
+  "$sbrk" -> "$allocateMemory"; // call
+  "$malloc" -> "$dlmalloc"; // call
+  "$dlmalloc" -> "$try_init_allocator"; // call
+  "$dlmalloc" -> "$tmalloc_small"; // call
+  "$dlmalloc" -> "$tmalloc_large"; // call
+  "$dlmalloc" -> "$sys_alloc"; // call
+  "$try_init_allocator" -> "$sbrk"; // call
+  "$try_init_allocator" -> "$init_mparams"; // call
+  "$try_init_allocator" -> "$init_bins"; // call
+  "$try_init_allocator" -> "$init_top"; // call
+  "$sys_alloc" -> "$init_mparams"; // call
+  "$sys_alloc" -> "$mmap_alloc"; // call
+  "$sys_alloc" -> "$segment_holding"; // call
+  "$sys_alloc" -> "$sbrk"; // call
+  "$sys_alloc" -> "$init_bins"; // call
+  "$sys_alloc" -> "$init_top"; // call
+  "$sys_alloc" -> "$prepend_alloc"; // call
+  "$sys_alloc" -> "$add_segment"; // call
+  "$free" -> "$dlfree"; // call
+  "$dlfree" -> "$release_unused_segments"; // call
+  "$calloc" -> "$dlcalloc"; // call
+  "$dlcalloc" -> "$dlmalloc"; // call
+  "$dlcalloc" -> "$memset"; // call
+  "$realloc" -> "$dlrealloc"; // call
+  "$dlrealloc" -> "$dlmalloc"; // call
+  "$dlrealloc" -> "$try_realloc_chunk"; // call
+  "$dlrealloc" -> "$memcpy"; // call
+  "$dlrealloc" -> "$dlfree"; // call
+  "$try_realloc_chunk" -> "$mmap_resize"; // call
+  "$try_realloc_chunk" -> "$dispose_chunk"; // call
+  "$add_segment" -> "$segment_holding"; // call
+  "$add_segment" -> "$init_top"; // call
+  "$getnodedataps" [style="filled, rounded"];
+  "$getedgedataps" [style="filled, rounded"];
+  "$splay_tree_compare_ints" [style="filled, rounded"];
+}
+
