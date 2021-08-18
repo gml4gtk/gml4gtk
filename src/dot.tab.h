@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.3.2.  */
+/* A Bison parser, made by GNU Bison 3.7.4.  */
 
 /* Skeleton interface for Bison GLR parsers in C
 
-   Copyright (C) 2002-2015, 2018-2019 Free Software Foundation, Inc.
+   Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,46 +40,50 @@
 extern int yydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TOKEN_BRACEOPEN = 258,
-    TOKEN_BRACECLOSE = 259,
-    TOKEN_PLUS = 260,
-    TOKEN_COMMA = 261,
-    TOKEN_COLON = 262,
-    TOKEN_IS = 263,
-    TOKEN_SC = 264,
-    TOKEN_BRACKETOPEN = 265,
-    TOKEN_BRACKETCLOSE = 266,
-    TOKEN_UTF8BOM = 267,
-    TOKEN_STRICT = 268,
-    TOKEN_GRAPH = 269,
-    TOKEN_SUBGRAPH = 270,
-    TOKEN_DIGRAPH = 271,
-    TOKEN_NODE = 272,
-    TOKEN_EDGE = 273,
-    TOKEN_TEXT = 274,
-    TOKEN_NUM = 275,
-    TOKEN_QTEXT = 276,
-    TOKEN_HTEXT = 277,
-    TOKEN_EOP = 278
+    YYEMPTY = -2,
+    YYEOF = 0,                     /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    TOKEN_BRACEOPEN = 258,         /* "{"  */
+    TOKEN_BRACECLOSE = 259,        /* "}"  */
+    TOKEN_PLUS = 260,              /* "+"  */
+    TOKEN_COMMA = 261,             /* ","  */
+    TOKEN_COLON = 262,             /* ":"  */
+    TOKEN_IS = 263,                /* "="  */
+    TOKEN_SC = 264,                /* ";"  */
+    TOKEN_BRACKETOPEN = 265,       /* "["  */
+    TOKEN_BRACKETCLOSE = 266,      /* "]"  */
+    TOKEN_UTF8BOM = 267,           /* "utf8code"  */
+    TOKEN_STRICT = 268,            /* "strict"  */
+    TOKEN_GRAPH = 269,             /* "graph"  */
+    TOKEN_SUBGRAPH = 270,          /* "subgraph"  */
+    TOKEN_DIGRAPH = 271,           /* "digraph"  */
+    TOKEN_NODE = 272,              /* "node"  */
+    TOKEN_EDGE = 273,              /* "edge"  */
+    TOKEN_TEXT = 274,              /* "text"  */
+    TOKEN_NUM = 275,               /* "number"  */
+    TOKEN_QTEXT = 276,             /* "string"  */
+    TOKEN_HTEXT = 277,             /* "<html-string>"  */
+    TOKEN_EOP = 278                /* "-> or --"  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 77 "dot.y" /* glr.c:197  */
+#line 82 "dot.y"
  char *string; struct dpepoint *dp; 
 
-#line 81 "dot.tab.h" /* glr.c:197  */
-};
+#line 85 "dot.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

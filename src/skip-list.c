@@ -43,8 +43,11 @@ static inline void *skip_list_malloc(size_t n)
 
 static inline void *skip_list_free(void *ptr)
 {
+	void *ptr2 = NULL;
 	if (ptr) {
-		dp_free(ptr);
+		ptr2 = dp_free(ptr);
+		if (ptr2) {
+		}
 	}
 	return (NULL);
 }
@@ -83,7 +86,7 @@ skip_list skip_list_delete(skip_list sp)
 
 			q = (skip_list_node) skip_list_free(q);
 			/* q is never read */
-			if (q) {	/* fix */
+			if (q) {
 			}
 			q = next;
 		}
@@ -268,9 +271,8 @@ void skip_list_remove(skip_list sp, skip_list_key key)
 	}
 
 	q = (skip_list_node) skip_list_free(q);
-
 	/* q is never read */
-	if (q) {		/* fix */
+	if (q) {
 	}
 
 	return;
@@ -321,16 +323,22 @@ skip_list_node skip_list_lookup(skip_list sp, skip_list_key key)
 /* free() wrappers to free key/value */
 void skip_list_free_value(skip_list_value value)
 {
+	void *v2 = NULL;
 	if (value) {
-		(void)skip_list_free((void *)value);
+		v2 = skip_list_free((void *)value);
+		if (v2) {
+		}
 	}
 	return;
 }
 
 void skip_list_free_key(skip_list_key key)
 {
+	void *k = NULL;
 	if (key) {
-		(void)skip_list_free((void *)key);
+		k = skip_list_free((void *)key);
+		if (k) {
+		}
 	}
 	return;
 }

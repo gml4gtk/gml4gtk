@@ -28,4 +28,3 @@ extern int bgvparse(struct gml_graph *g, gzFile f, char *fname, char *argv0);
 #endif
 
 /* end */
-

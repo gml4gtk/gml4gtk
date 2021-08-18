@@ -74,11 +74,7 @@ struct dparrow *dp_getarrow(char *s)
 	struct dparrow *ret = NULL;
 	int t = 0;
 
-	ret = dp_calloc(1, sizeof(struct dparrow));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dparrow *)dp_calloc(1, sizeof(struct dparrow));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -132,11 +128,7 @@ struct dpdir *dp_getdir(char *s)
 {
 	struct dpdir *ret = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dpdir));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dpdir *)dp_calloc(1, sizeof(struct dpdir));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -424,11 +416,6 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 
 	nrec = (struct dppart *)dp_calloc(1, sizeof(struct dppart));
 
-	if (nrec == NULL) {
-		/* shouldnothappen */
-		return (nrec);
-	}
-
 	/* get number of fields now */
 	s = clb;
 	c = 0;
@@ -464,12 +451,11 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	/* tmp fix (nrec->ndpparts + 1) */
 	nrec->dir = dir;
 	nrec->ndpparts = (nf + 1);
-	nrec->parts = dp_calloc(1, ((nrec->ndpparts + 0) * sizeof(struct dppart *)));
-	maxpos = (nf + 1);
 
-	if (nrec->parts == NULL) {
-		return (NULL);
-	}
+	/* */
+	nrec->parts = (struct dppart **)dp_calloc(1, ((nrec->ndpparts + 0) * sizeof(struct dppart *)));
+
+	maxpos = (nf + 1);
 
 	if (yydebug || 0) {
 		printf("dot %s(): %d parts with direction %d\n", __func__, nrec->ndpparts, nrec->dir);
@@ -479,17 +465,9 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	/* tmp buffer for string and port */
 	rs1 = (char *)dp_calloc(1, clblen + 1);
 
-	if (rs1 == NULL) {
-		return (NULL);
-	}
-
 	lastfield = NULL;
 
 	prt = (char *)dp_calloc(1, clblen + 1);
-
-	if (prt == NULL) {
-		return (NULL);
-	}
 
 	pprt = prt;
 	lastport = NULL;
@@ -541,20 +519,16 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 		} else if ((*clb) == '}' || (*clb) == '|') {
 			fp = (struct dppart *)dp_calloc(1, sizeof(struct dppart));
 
-			if (fp == NULL) {
-				return (NULL);
-			}
-
 			/* check for "{aa|bb|}" */
 			if (*clb == '}') {
 				if (*(clb - 1) == '|') {
-					lastfield = dp_uniqstr(" ");
+					lastfield = dp_uniqstr((char *)" ");
 				}
 			}
 			/* for "|aa", "|", "aa||bb" */
 			if (*clb == '|') {
 				if (lastfield == NULL) {
-					lastfield = dp_uniqstr(" ");
+					lastfield = dp_uniqstr((char *)" ");
 				}
 			}
 			fp->lp = lastfield;
@@ -572,13 +546,15 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 					pos1++;
 				} else {
 					/* nothing if at "...}|..." */
-					dp_free(fp);
-					fp = NULL;
+					fp = (struct dppart *)dp_free((void *)fp);
+					if (fp) {
+					}
 				}
 				hassub = 0;
 			} else {
-				dp_free(fp);
-				fp = NULL;
+				fp = (struct dppart *)dp_free((void *)fp);
+				if (fp) {
+				}
 			}
 			lastfield = NULL;
 			lastport = NULL;
@@ -586,12 +562,14 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 				clb++;
 
 				if (rs1) {
-					dp_free(rs1);
-					rs1 = NULL;
+					rs1 = (char *)dp_free((void *)rs1);
+					if (rs1) {
+					}
 				}
 				if (prt) {
-					dp_free(prt);
-					prt = NULL;
+					prt = (char *)dp_free((void *)prt);
+					if (prt) {
+					}
 				}
 				return (nrec);
 			}
@@ -631,13 +609,9 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 	/* */
 	fp = (struct dppart *)dp_calloc(1, sizeof(struct dppart));
 
-	if (fp == NULL) {
-		return (NULL);
-	}
-
 	/* example "aa|bb|" or "aa|bb|<pos>" */
 	if ((*(clb - 1) == '|') || (*(clb - 1) == '>')) {
-		lastfield = dp_uniqstr(" ");
+		lastfield = dp_uniqstr((char *)" ");
 		fp->hd = 1;
 	}
 	fp->lp = lastfield;
@@ -657,23 +631,27 @@ static struct dppart *dp_2chkrec(struct dpnode *node, int dir)
 				    ("dot %s(): pos1=%d maxpos=%d fixme (2) id=\"%s\" lp=\"%s\"\n",
 				     __func__, pos1, maxpos, lastfield, lastport);
 			}
-			dp_free(fp);
-			fp = NULL;
+			fp = (struct dppart *)dp_free((void *)fp);
+			if (fp) {
+			}
 		} else {
 			nrec->parts[pos1] = fp;
 		}
 	} else {
-		dp_free(fp);
-		fp = NULL;
+		fp = (struct dppart *)dp_free((void *)fp);
+		if (fp) {
+		}
 	}
 
 	if (rs1) {
-		dp_free(rs1);
-		rs1 = NULL;
+		rs1 = (char *)dp_free((void *)rs1);
+		if (rs1) {
+		}
 	}
 	if (prt) {
-		dp_free(prt);
-		prt = NULL;
+		prt = (char *)dp_free((void *)prt);
+		if (prt) {
+		}
 	}
 
 	return (nrec);
@@ -882,11 +860,7 @@ struct dpnum *dp_getnum(char *s)
 	double n = 0.0;
 	char *ep = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dpnum));
-
-	if (ret == NULL) {
-		return (NULL);
-	}
+	ret = (struct dpnum *)dp_calloc(1, sizeof(struct dpnum));
 
 	if (s == NULL) {
 		/* parse error */
@@ -940,11 +914,7 @@ struct dpinum *dp_getinum(char *s)
 	long n = 0;
 	char *ep = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dpinum));
-
-	if (ret == NULL) {
-		return (NULL);
-	}
+	ret = (struct dpinum *)dp_calloc(1, sizeof(struct dpinum));
 
 	if (s == NULL) {
 		/* parse error */
@@ -1003,11 +973,7 @@ struct dpbool *dp_getbool(char *s)
 	char *p = NULL;
 	char *q = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dpbool));
-
-	if (ret == NULL) {
-		return (NULL);
-	}
+	ret = (struct dpbool *)dp_calloc(1, sizeof(struct dpbool));
 
 	if (s == NULL) {
 		/* parse error */
@@ -1022,13 +988,7 @@ struct dpbool *dp_getbool(char *s)
 		return (ret);
 	}
 
-	s2 = dp_calloc(1, (strlen(s) + 1));
-
-	if (s2 == NULL) {
-		ret->es = 1;
-		ret->pe = 1;
-		return (ret);
-	}
+	s2 = (char *)dp_calloc(1, (strlen(s) + 1));
 
 	/* skip leading spaces */
 	p = s;
@@ -1073,7 +1033,9 @@ struct dpbool *dp_getbool(char *s)
 		ret->pe = 1;
 	}
 
-	dp_free(s2);
+	s2 = (char *)dp_free((void *)s2);
+	if (s2) {
+	}
 
 	return (ret);
 }
@@ -1084,11 +1046,7 @@ struct dpcolor *dp_getcolor(int cs, int csnum, char *s)
 	struct dpcolor *ret = NULL;
 	int tmpi = 0;
 
-	ret = dp_calloc(1, sizeof(struct dpcolor));
-
-	if (ret == NULL) {
-		return (NULL);
-	}
+	ret = (struct dpcolor *)dp_calloc(1, sizeof(struct dpcolor));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1141,11 +1099,7 @@ struct dpstyle *dp_getstyle(char *s)
 	double n = 0.0;
 	char *ep = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dpstyle));
-
-	if (ret == NULL) {
-		return (NULL);
-	}
+	ret = (struct dpstyle *)dp_calloc(1, sizeof(struct dpstyle));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1162,18 +1116,12 @@ struct dpstyle *dp_getstyle(char *s)
 	}
 
 	/* copy string in tmp buffer */
-	buf = dp_calloc(1, (lens + 1));
-
-	if (buf == NULL) {
-		ret->pe = 1;
-		ret->es = 1;
-		return (ret);
-	}
+	buf = (char *)dp_calloc(1, (lens + 1));
 
 	strcpy(buf, s);
 
 	/* possible seperators in string */
-	sep = dp_uniqstr(",() ");
+	sep = dp_uniqstr((char *)",() ");
 
 	slwnext = 0;
 
@@ -1263,8 +1211,9 @@ struct dpstyle *dp_getstyle(char *s)
 		ret->pe = 1;
 	}
 
-	dp_free(buf);
-	buf = NULL;
+	buf = (char *)dp_free((void *)buf);
+	if (buf) {
+	}
 
 	return (ret);
 }
@@ -1280,11 +1229,7 @@ struct dppoint *dp_getpoint(char *s)
 	float x = 0.0;
 	float y = 0.0;
 
-	ret = dp_calloc(1, sizeof(struct dppoint));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dppoint *)dp_calloc(1, sizeof(struct dppoint));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1296,12 +1241,7 @@ struct dppoint *dp_getpoint(char *s)
 		return (ret);
 	}
 
-	str = dp_calloc(1, (strlen(s) + 1));
-
-	if (str == NULL) {
-		ret->pe = 1;
-		return (ret);
-	}
+	str = (char *)dp_calloc(1, (strlen(s) + 1));
 
 	strcpy(str, s);
 
@@ -1331,8 +1271,9 @@ struct dppoint *dp_getpoint(char *s)
 		ret->y = y;
 	}
 
-	dp_free(str);
-	str = NULL;
+	str = (char *)dp_free((void *)str);
+	if (str) {
+	}
 
 	return (ret);
 }
@@ -1346,15 +1287,8 @@ struct dprect *dp_getrect(char *s)
 	float x1 = 0;
 	float y1 = 0;
 	int n = 0;
-	ret = dp_calloc(1, sizeof(struct dprect));
-	if (ret == NULL) {
-		return (ret);
-	}
 
-	if (s == NULL) {
-		ret->pe = 1;
-		return (ret);
-	}
+	ret = (struct dprect *)dp_calloc(1, sizeof(struct dprect));
 
 	if (strlen(s) == 0) {
 		ret->pe = 1;
@@ -1414,15 +1348,8 @@ struct dpmargin *dp_getmargin(char *s)
 	float x = 0;
 	float y = 0;
 	int n = 0;
-	ret = dp_calloc(1, sizeof(struct dpmargin));
-	if (ret == NULL) {
-		return (ret);
-	}
 
-	if (s == NULL) {
-		ret->pe = 1;
-		return (ret);
-	}
+	ret = (struct dpmargin *)dp_calloc(1, sizeof(struct dpmargin));
 
 	if (strlen(s) == 0) {
 		ret->pe = 1;
@@ -1459,10 +1386,8 @@ struct dpmargin *dp_getmargin(char *s)
 struct dpoo *dp_getoo(char *s)
 {
 	struct dpoo *ret = NULL;
-	ret = dp_calloc(1, sizeof(struct dpoo));
-	if (ret == NULL) {
-		return (ret);
-	}
+
+	ret = (struct dpoo *)dp_calloc(1, sizeof(struct dpoo));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1492,11 +1417,7 @@ struct dprank *dp_getrank(char *s)
 {
 	struct dprank *ret = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dprank));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dprank *)dp_calloc(1, sizeof(struct dprank));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1534,11 +1455,7 @@ struct dprankdir *dp_getrankdir(char *s)
 {
 	struct dprankdir *ret = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dprankdir));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dprankdir *)dp_calloc(1, sizeof(struct dprankdir));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1573,11 +1490,7 @@ struct dpranksep *dp_getranksep(char *s)
 	float f = 0;
 	int n = 0;
 
-	ret = dp_calloc(1, sizeof(struct dpranksep));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dpranksep *)dp_calloc(1, sizeof(struct dpranksep));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1631,11 +1544,7 @@ struct dpratio *dp_getratio(char *s)
 	float f = 0;
 	int n = 0;
 
-	ret = dp_calloc(1, sizeof(struct dpratio));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dpratio *)dp_calloc(1, sizeof(struct dpratio));
 
 	if (s == NULL) {
 		ret->pe = 1;
@@ -1687,11 +1596,7 @@ struct dpsplines *dp_getsplines(char *s)
 {
 	struct dpsplines *ret = NULL;
 
-	ret = dp_calloc(1, sizeof(struct dpsplines));
-
-	if (ret == NULL) {
-		return (ret);
-	}
+	ret = (struct dpsplines *)dp_calloc(1, sizeof(struct dpsplines));
 
 	if (s == NULL) {
 		ret->pe = 1;

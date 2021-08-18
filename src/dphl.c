@@ -166,12 +166,7 @@ int htmlparse(struct dpnode *node)
 	 */
 
 	/* where to build the data structures */
-	hlinf = dp_calloc(1, sizeof(struct hlpart));
-
-	if (hlinf == NULL) {
-		/* shouldnothappen */
-		return (1);
-	}
+	hlinf = (struct hlpart *)dp_calloc(1, sizeof(struct hlpart));
 
 	/* unknown mode yet */
 	hlinf->mode = 0;	/* or (-1); */
@@ -241,10 +236,11 @@ static void dphl_clearhlinfo(void)
 		while (pil) {
 			pilnext = pil->next;
 			if (pil->items) {
-				dp_free(pil->items);
-				pil->items = NULL;
+				pil->items = (struct item *)dp_free(pil->items);
 			}
-			dp_free(pil);
+			pil = (struct ilist *)dp_free(pil);
+			if (pil) {
+			}
 			pil = pilnext;
 		}
 		hlinf->il = NULL;
@@ -259,9 +255,9 @@ static void dphl_clearhlinfo(void)
 	}
 
 	/* final free */
-	dp_free(hlinf);
-	hlinf = NULL;
-
+	hlinf = (struct hlpart *)dp_free(hlinf);
+	if (hlinf) {
+	}
 	return;
 }
 
@@ -271,7 +267,7 @@ static struct item *dphl_makeitem(char *str, char *alt, int opt, struct tabledat
 	struct item *item = NULL;
 	char *msg = NULL;
 
-	item = dp_calloc(1, sizeof(struct item));
+	item = (struct item *)dp_calloc(1, sizeof(struct item));
 
 	msg = str;
 
@@ -305,7 +301,7 @@ static struct item *dphl_makeitem(char *str, char *alt, int opt, struct tabledat
 		item->bitflags.table = 1;
 		/* this is the <table> in the <td> */
 		item->table = newtable;
-		msg = "<table> in <td>";
+		msg = (char *)"<table> in <td>";
 	}
 
 	/* check if str has html chars */
@@ -415,7 +411,7 @@ static void dphl_itemitems(char *str, char *alt, int opt)
 		return;
 	}
 
-	il = dp_calloc(1, sizeof(struct ilist));
+	il = (struct ilist *)dp_calloc(1, sizeof(struct ilist));
 
 	/* set linkage to data */
 	il->items = dphl_makeitem(str, alt, opt, NULL);
@@ -465,7 +461,7 @@ static void dphl_itemtables(char *str, char *alt, int opt)
 		return;
 	}
 
-	il = dp_calloc(1, sizeof(struct ilist));
+	il = (struct ilist *)dp_calloc(1, sizeof(struct ilist));
 
 	/* set linkage to data */
 	il->items = dphl_makeitem(str, alt, opt, NULL);
@@ -519,8 +515,8 @@ static int dplh_putc_utf8(unsigned long cp, char *buffer)
 
 /* html chars */
 static struct mi {
-	char *key;
-	char *data;
+	const char *key;
+	const char *data;
 } entdata[] = {
 	{ "&AElig;", "Æ" },
 	{ "&Aacute;", "Á" },
@@ -829,17 +825,11 @@ static char *dplh_htrans(char *str)
 	}
 	/* create buffers for modified string */
 	blen = strlen(str) + 1;
-	buf = dp_calloc(1, blen);
-	if (buf == NULL) {
-		/* shouldnothappen */
-		return (NULL);
-	}
-	ebuf = dp_calloc(1, blen);
-	if (ebuf == NULL) {
-		/* shouldnothappen */
-		dp_free(buf);
-		return (NULL);
-	}
+
+	buf = (char *)dp_calloc(1, blen);
+
+	ebuf = (char *)dp_calloc(1, blen);
+
 	/* scan str and replace or copy chars */
 	p = str;
 	q = buf;
@@ -938,7 +928,7 @@ static char *dplh_htrans(char *str)
 			} else {
 				/* textual entity as "&amp;" is in ebuf */
 				thekey.key = ebuf;
-				entity =
+				entity = (struct mi *)
 				    bsearch(&thekey, entdata, (sizeof(entdata) / sizeof(entdata[0])), sizeof(struct mi), entcmp);
 				if (entity == NULL) {
 					/* parse error */
@@ -975,10 +965,12 @@ static char *dplh_htrans(char *str)
 	} else {
 		ret = dp_uniqstr(buf);
 	}
-	dp_free(buf);
-	buf = NULL;
-	dp_free(ebuf);
-	ebuf = NULL;
+	buf = (char *)dp_free(buf);
+	if (buf) {
+	}
+	ebuf = (char *)dp_free(ebuf);
+	if (ebuf) {
+	}
 	return (ret);
 }
 
@@ -1173,9 +1165,9 @@ int dphl_chk_bgcolor(char *str, int mode)
 	es = c->es;
 	il = c->islist;
 	rgb = c->color;
-	dp_free(c);
-	c = NULL;
-
+	c = (struct dpcolor *)dp_free((void *)c);
+	if (c) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for bgAcolor in html string at line %d\n", __func__,
@@ -1239,8 +1231,9 @@ int dphl_chk_border(char *str, int mode)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for border in html string at line %d\n", __func__, str,
@@ -1312,8 +1305,9 @@ int dphl_chk_cellborder(char *str)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for cellborder in html string at line %d\n", __func__,
@@ -1373,8 +1367,9 @@ int dphl_chk_cellpadding(char *str, int mode)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for cellpadding in html string at line %d\n", __func__,
@@ -1449,8 +1444,9 @@ int dphl_chk_cellspacing(char *str, int mode)
 	dval = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpnum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for cellspacing in html string at line %d\n", __func__,
@@ -1527,8 +1523,9 @@ int dphl_chk_color(char *str, int mode)
 	es = c->es;
 	il = c->islist;
 	rgb = c->color;
-	dp_free(c);
-	c = NULL;
+	c = (struct dpcolor *)dp_free((void *)c);
+	if (c) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for color in html string at line %d\n", __func__, str,
@@ -1629,8 +1626,9 @@ int dphl_chk_colspan(char *str)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for colspan in html string at line %d\n", __func__, str,
@@ -1772,8 +1770,9 @@ int dphl_chk_gradientangle(char *str, int mode)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for gradientangle in html string at line %d\n",
@@ -1848,8 +1847,9 @@ int dphl_chk_height(char *str, int mode)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for height in html string at line %d\n", __func__, str,
@@ -2034,8 +2034,9 @@ int dphl_chk_pointsize(char *str)
 	dnum = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpnum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for point-size in html string\n", __func__, str);
@@ -2118,8 +2119,9 @@ int dphl_chk_rowspan(char *str)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for rowspan in html string at line %d\n", __func__, str,
@@ -2336,10 +2338,9 @@ int dphl_chk_style(char *str, int mode)
 	/* check style string */
 	if (strlen(str)) {
 		err = 0;
-		ptr = dp_calloc(1, strlen(str) + 1);
-		if (ptr == NULL) {
-			return (1);
-		}
+
+		ptr = (char *)dp_calloc(1, strlen(str) + 1);
+
 		strcat(ptr, str);
 		/* this does not detect strings like "  ,,,,," */
 		once = 0;
@@ -2367,8 +2368,9 @@ int dphl_chk_style(char *str, int mode)
 			}
 			res = strtok(NULL, " ,");
 		}
-		dp_free(ptr);
-		ptr = NULL;
+		ptr = (char *)dp_free((void *)ptr);
+		if (ptr) {
+		}
 		if (once == 0) {
 			/* strtok did not detect valid tokens as in a string like ",,   ,," */
 			err = 1;
@@ -2540,8 +2542,9 @@ int dphl_chk_width(char *str, int mode)
 	n = num->number;
 	pe = num->pe;
 	es = num->es;
-	dp_free(num);
-	num = NULL;
+	num = (struct dpinum *)dp_free((void *)num);
+	if (num) {
+	}
 	if (es) {
 		memset(dp_errmsg, 0, 256);
 		snprintf(dp_errmsg, (256 - 1), "html %s(): empty value `%s' for width in html string at line %d\n", __func__, str,
@@ -2600,15 +2603,12 @@ int dphl_chk_width(char *str, int mode)
 void dphl_rbr(void)
 {
 	if (curbr) {
-		dp_free(curbr);
-		curbr = NULL;
+		curbr = (struct brdata *)dp_free((void *)curbr);
+		if (curbr) {
+		}
 	}
 
-	curbr = dp_calloc(1, sizeof(struct brdata));
-
-	if (curbr == NULL) {
-		return;
-	}
+	curbr = (struct brdata *)dp_calloc(1, sizeof(struct brdata));
 
 	curbr->align = (-1);	/* ="center|left|right" */
 
@@ -2795,15 +2795,12 @@ void dphl_rhr(void)
 void dphl_rimg(void)
 {
 	if (curimg) {
-		dp_free(curimg);
-		curimg = NULL;
+		curimg = (struct imgdata *)dp_free((void *)curimg);
+		if (curimg) {
+		}
 	}
 
-	curimg = dp_calloc(1, sizeof(struct imgdata));
-
-	if (curimg == NULL) {
-		return;
-	}
+	curimg = (struct imgdata *)dp_calloc(1, sizeof(struct imgdata));
 
 	curimg->scale = (-1);	/* ="false|true|width|height|both" */
 	curimg->src = NULL;	/* ="imagename" */
@@ -2834,8 +2831,9 @@ void dphl_eimg(void)
 		}
 	}
 
-	dp_free(curimg);
-	curimg = NULL;
+	curimg = (struct imgdata *)dp_free((void *)curimg);
+	if (curimg) {
+	}
 
 	return;
 }
@@ -2913,21 +2911,10 @@ void dphl_rfont(void)
 	struct fontdata *curfont2 = NULL;
 	struct fontldata *curfontl = NULL;
 
-	curfontl = dp_calloc(1, sizeof(struct fontldata));
-
-	if (curfontl == NULL) {
-		/* shouldnothappen */
-		return;
-	}
+	curfontl = (struct fontldata *)dp_calloc(1, sizeof(struct fontldata));
 
 	/* fresh table data */
-	curfont2 = dp_calloc(1, sizeof(struct fontdata));
-
-	if (curfont2 == NULL) {
-		/* shouldnothappen */
-		dp_free(curfontl);
-		return;
-	}
+	curfont2 = (struct fontdata *)dp_calloc(1, sizeof(struct fontdata));
 
 	curfontl->fd = curfont2;
 
@@ -3068,7 +3055,7 @@ static void dphl_addtableitem(struct tabledata *newtable)
 		return;
 	}
 
-	il = dp_calloc(1, sizeof(struct ilist));
+	il = (struct ilist *)dp_calloc(1, sizeof(struct ilist));
 
 	/* set linkage to data */
 	il->items = dphl_makeitem( /* str */ NULL, /* alt */ NULL, /* opt */ 5, newtable);
@@ -3109,12 +3096,12 @@ void dphl_rtable(void)
 		}
 	}
 
-	curtablel = dp_calloc(1, sizeof(struct tableldata));
+	curtablel = (struct tableldata *)dp_calloc(1, sizeof(struct tableldata));
 
-	tli = dp_calloc(1, sizeof(struct tlist));
+	tli = (struct tlist *)dp_calloc(1, sizeof(struct tlist));
 
 	/* fresh table data */
-	curtable2 = dp_calloc(1, sizeof(struct tabledata));
+	curtable2 = (struct tabledata *)dp_calloc(1, sizeof(struct tabledata));
 
 	curtablel->tabdata = curtable2;
 
@@ -3294,10 +3281,10 @@ void dphl_rtd(void)
 		return;
 	}
 
-	curtdl = dp_calloc(1, sizeof(struct tdldata));
+	curtdl = (struct tdldata *)dp_calloc(1, sizeof(struct tdldata));
 
 	/* fresh table data */
-	curtd2 = dp_calloc(1, sizeof(struct tddata));
+	curtd2 = (struct tddata *)dp_calloc(1, sizeof(struct tddata));
 
 	/* push old curtd if any */
 	if (curtd) {
@@ -3443,9 +3430,9 @@ void dphl_rtr(void)
 		return;
 	}
 
-	trl = dp_calloc(1, sizeof(struct trlist));
+	trl = (struct trlist *)dp_calloc(1, sizeof(struct trlist));
 
-	tri = dp_calloc(1, sizeof(struct trdata));
+	tri = (struct trdata *)dp_calloc(1, sizeof(struct trdata));
 
 	trl->tritem = tri;
 
@@ -3543,14 +3530,16 @@ void dphl_freemem(void)
 
 	/* data for <br> */
 	if (curbr) {
-		dp_free(curbr);
-		curbr = NULL;
+		curbr = (struct brdata *)dp_free((void *)curbr);
+		if (curbr) {
+		}
 	}
 
 	/* data for <img> */
 	if (curimg) {
-		dp_free(curimg);
-		curimg = NULL;
+		curimg = (struct imgdata *)dp_free((void *)curimg);
+		if (curimg) {
+		}
 	}
 
 	/* <table> data */
@@ -3574,10 +3563,13 @@ void dphl_freemem(void)
 	while (fptr) {
 		fptrnext = fptr->next;
 		if (fptr->fd) {
-			dp_free(fptr->fd);
+			fptr->fd = (struct fontdata *)dp_free((void *)fptr->fd);
+			if (fptr->fd) {
+			}
 		}
-		fptr->fd = NULL;
-		dp_free(fptr);
+		fptr = (struct fontldata *)dp_free((void *)fptr);
+		if (fptr) {
+		}
 		fptr = fptrnext;
 	}
 

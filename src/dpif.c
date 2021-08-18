@@ -170,17 +170,25 @@ static char *dolabel(struct dpnode *node, char *str)
 				}
 			}
 			ret = uniqstr(res2);
-			dp_free(res2);
-			dp_free(res);
+			res2 = dp_free(res2);
+			if (res2) {
+			}
+			res = dp_free(res);
+			if (res) {
+			}
 		} else {
 			/* no node. then no node name. */
 			ret = uniqstr(res);
-			dp_free(res);
+			res = dp_free(res);
+			if (res) {
+			}
 		}
 	} else {
 		/* no \N chars replaced */
 		ret = uniqstr(res);
-		dp_free(res);
+		res = dp_free(res);
+		if (res) {
+		}
 	}
 
 	return (ret);
@@ -280,9 +288,7 @@ static void sp_addsg_r(struct dpgraph *sg)
 					     cursg->rootedon->graphname);
 				}
 				gl = dp_calloc(1, sizeof(struct gml_glist));
-				if (gl == NULL) {
-					return;
-				}
+
 				/* set current graph as subgraph */
 				gl->sg = cg;
 				/* link the list of subgraphs */
@@ -798,8 +804,9 @@ static struct gml_hl *hltcopy(struct dpnode *node)
 			}
 		} else {
 			/* shouldnothappen */
-			dp_free(tlnew);
-			tlnew = NULL;
+			tlnew = dp_free(tlnew);
+			if (tlnew) {
+			}
 		}
 		tl = tl->next;
 	}
@@ -1181,17 +1188,7 @@ int dotparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 	memset(parsermessage, 0, 256);
 	memset(dp_errmsg, 0, 256);
 
-	if (strcmp(argv0, "gml4gtkd") == 0) {
-		/* activate debug output */
-		dp_lex_init(f, 1);
-	} else {
-		dp_lex_init(f, 0);
-	}
-
-	/* turn on debug output */
-	if (0) {
-		dp_lex_init(f, 1);
-	}
+	dp_lex_init(f, yydebug);
 
 	/* run bison */
 	status = yyparse();

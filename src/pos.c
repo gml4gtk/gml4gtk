@@ -558,8 +558,9 @@ static void improve_positions1(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_down(g, i);
 				do_down(g, i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 
@@ -569,8 +570,9 @@ static void improve_positions1(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_up(g, i);
 				do_up(g, i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 
@@ -584,8 +586,9 @@ static void improve_positions1(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_up(g, i);
 				do_up(g, i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 	}
@@ -596,8 +599,9 @@ static void improve_positions1(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(g->nnodes_of_level[i], sizeof(struct node_data));
 				make_node_list_down(g, i);
 				do_down(g, i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 	}

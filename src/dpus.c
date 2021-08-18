@@ -68,7 +68,7 @@ char *dp_uniqstr(char *str)
 		return (NULL);
 	}
 	if (strlen(str) == 0) {
-		return ("");
+		return ((char *)"");
 	}
 	spn = splay_tree_lookup(uniqstr_splaytree, (splay_tree_key) str);
 	if (spn) {
@@ -77,10 +77,7 @@ char *dp_uniqstr(char *str)
 	if (uniqstr_splaytree == NULL) {
 		uniqstr_splaytree = splay_tree_new(splay_tree_compare_strings, splay_tree_free_key, NULL);
 	}
-	s = dp_calloc(1, (strlen(str) + 1));
-	if (s == NULL) {
-		return (NULL);
-	}
+	s = (char *)dp_calloc(1, (strlen(str) + 1));
 	strcpy(s, str);
 	splay_tree_insert(uniqstr_splaytree, (splay_tree_key) s, 0);
 	return (s);

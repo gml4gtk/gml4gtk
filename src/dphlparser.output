@@ -179,176 +179,209 @@ Grammar
 
 Terminals, with rules where they appear
 
-$end (0) 0
-error (256)
-"stringdata" <string> (258) 8 36
-"<html" (259) 2
-"</html" (260) 2
-"<b" (261) 34
-"</b" (262) 15 27
-"<br" (263) 10 12
-"</br" (264) 12
-"<font" (265) 31
-"</font" (266) 13 25
-"<hr" (267) 43 45
-"</hr" (268) 45
-"<i" (269) 32
-"</i" (270) 14 26
-"<img" (271) 58
-"</img" (272) 56
-"<o" (273) 33
-"</o" (274) 17 29
-"<s" (275) 23
-"</s" (276) 23
-"<sub" (277) 19
-"</sub" (278) 19
-"<sup" (279) 21
-"</sup" (280) 21
-"<table" (281) 39
-"</table" (282) 39
-"<td" (283) 59
-"</td" (284) 54 55 56 57
-"<tr" (285) 47
-"</tr" (286) 47
-"<u" (287) 35
-"</u" (288) 16 28
-"<vr" (289) 51 53
-"</vr" (290) 53
-"/>" (291) 10 43 51 55
-">" (292) 2 12 13 14 15 16 17 19 21 23 25 26 27 28 29 31 32 33 34 35
-    39 45 47 53 54 55 56 57
-"=" (293) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80
-    81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102
-    103 104 105 106 107 108 109 112 113 114 117 118 121 122 123 124
-"string" <string> (294) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76
-    77 78 79 80 81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99
-    100 101 102 103 104 105 106 107 108 109 112 113 114 117 118 121
-    122 123 124
-"text" <string> (295) 84 109 114 118 124
-"align" (296) 62 87 117
-"balign" (297) 88
-"bgcolor" (298) 63 89
-"border" (299) 64 90
-"cellborder" (300) 65
-"cellpadding" (301) 66 91
-"cellspacing" (302) 67 92
-"color" (303) 68 93 121
-"columns" (304) 69
-"colspan" (305) 94
-"face" (306) 122
-"fixedsize" (307) 70 95
-"gradientangle" (308) 71 96
-"height" (309) 72 97
-"href" (310) 73 98
-"id" (311) 74 99
-"port" (312) 75 100
-"point-size" (313) 123
-"rows" (314) 76
-"rowspan" (315) 101
-"scale" (316) 112
-"sides" (317) 77 102
-"src" (318) 113
-"style" (319) 78 103
-"target" (320) 79 104
-"title" (321) 80 105
-"tooltip" (322) 81 106
-"valign" (323) 82 107
-"width" (324) 83 108
+    $end (0) 0
+    error (256)
+    "stringdata" <string> (258) 8 36
+    "<html" (259) 2
+    "</html" (260) 2
+    "<b" (261) 34
+    "</b" (262) 15 27
+    "<br" (263) 10 12
+    "</br" (264) 12
+    "<font" (265) 31
+    "</font" (266) 13 25
+    "<hr" (267) 43 45
+    "</hr" (268) 45
+    "<i" (269) 32
+    "</i" (270) 14 26
+    "<img" (271) 58
+    "</img" (272) 56
+    "<o" (273) 33
+    "</o" (274) 17 29
+    "<s" (275) 23
+    "</s" (276) 23
+    "<sub" (277) 19
+    "</sub" (278) 19
+    "<sup" (279) 21
+    "</sup" (280) 21
+    "<table" (281) 39
+    "</table" (282) 39
+    "<td" (283) 59
+    "</td" (284) 54 55 56 57
+    "<tr" (285) 47
+    "</tr" (286) 47
+    "<u" (287) 35
+    "</u" (288) 16 28
+    "<vr" (289) 51 53
+    "</vr" (290) 53
+    "/>" (291) 10 43 51 55
+    ">" (292) 2 12 13 14 15 16 17 19 21 23 25 26 27 28 29 31 32 33 34 35 39 45 47 53 54 55 56 57
+    "=" (293) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 112 113 114 117 118 121 122 123 124
+    "string" <string> (294) 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 112 113 114 117 118 121 122 123 124
+    "text" <string> (295) 84 109 114 118 124
+    "align" (296) 62 87 117
+    "balign" (297) 88
+    "bgcolor" (298) 63 89
+    "border" (299) 64 90
+    "cellborder" (300) 65
+    "cellpadding" (301) 66 91
+    "cellspacing" (302) 67 92
+    "color" (303) 68 93 121
+    "columns" (304) 69
+    "colspan" (305) 94
+    "face" (306) 122
+    "fixedsize" (307) 70 95
+    "gradientangle" (308) 71 96
+    "height" (309) 72 97
+    "href" (310) 73 98
+    "id" (311) 74 99
+    "port" (312) 75 100
+    "point-size" (313) 123
+    "rows" (314) 76
+    "rowspan" (315) 101
+    "scale" (316) 112
+    "sides" (317) 77 102
+    "src" (318) 113
+    "style" (319) 78 103
+    "target" (320) 79 104
+    "title" (321) 80 105
+    "tooltip" (322) 81 106
+    "valign" (323) 82 107
+    "width" (324) 83 108
 
 
 Nonterminals, with rules where they appear
 
-$accept (70)
-    on left: 0
-begin (71)
-    on left: 1, on right: 0
-htmlparser (72)
-    on left: 2 3, on right: 1 54
-htmlparser2 (73)
-    on left: 4 5, on right: 2 3
-items (74)
-    on left: 6 7, on right: 4 6 13 14 15 16 17 19 21 23
-item (75)
-    on left: 8 10 12 13 14 15 16 17 19 21 23, on right: 6 7
-$@1 (76)
-    on left: 9, on right: 10
-$@2 (77)
-    on left: 11, on right: 12
-$@3 (78)
-    on left: 18, on right: 19
-$@4 (79)
-    on left: 20, on right: 21
-$@5 (80)
-    on left: 22, on right: 23
-fonttab2 (81)
-    on left: 24 25 26 27 28 29, on right: 5
-font (82)
-    on left: 31, on right: 13 25
-$@6 (83)
-    on left: 30, on right: 31
-italic (84)
-    on left: 32, on right: 14 26
-overline (85)
-    on left: 33, on right: 17 29
-bold (86)
-    on left: 34, on right: 15 27
-underline (87)
-    on left: 35, on right: 16 28
-tabe (88)
-    on left: 36 37, on right: 39
-tab (89)
-    on left: 39, on right: 24 25 26 27 28 29
-$@7 (90)
-    on left: 38, on right: 39
-rows (91)
-    on left: 40 41 43 45, on right: 39 41 43 45
-$@8 (92)
-    on left: 42, on right: 43
-$@9 (93)
-    on left: 44, on right: 45
-row (94)
-    on left: 47, on right: 40 41 43 45
-$@10 (95)
-    on left: 46, on right: 47
-cells (96)
-    on left: 48 49 51 53, on right: 47 49 51 53
-$@11 (97)
-    on left: 50, on right: 51
-$@12 (98)
-    on left: 52, on right: 53
-cell (99)
-    on left: 54 55 56 57, on right: 48 49 51 53
-cellimg (100)
-    on left: 58, on right: 55 56
-celltd (101)
-    on left: 59, on right: 54 55 56 57
-table_arg (102)
-    on left: 60 61, on right: 39 60
-table_1arg (103)
-    on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
-    80 81 82 83 84, on right: 60
-td_arg (104)
-    on left: 85 86, on right: 54 55 56 57 85
-td_1arg (105)
-    on left: 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103
-    104 105 106 107 108 109, on right: 85
-img_arg (106)
-    on left: 110 111, on right: 55 56 110
-img_1arg (107)
-    on left: 112 113 114, on right: 110
-br_arg (108)
-    on left: 115 116, on right: 10 115
-br_1arg (109)
-    on left: 117 118, on right: 115
-font_arg (110)
-    on left: 119 120, on right: 31 119
-font_1arg (111)
-    on left: 121 122 123 124, on right: 119
+    $accept (70)
+        on left: 0
+    begin (71)
+        on left: 1
+        on right: 0
+    htmlparser (72)
+        on left: 2 3
+        on right: 1 54
+    htmlparser2 (73)
+        on left: 4 5
+        on right: 2 3
+    items (74)
+        on left: 6 7
+        on right: 4 6 13 14 15 16 17 19 21 23
+    item (75)
+        on left: 8 10 12 13 14 15 16 17 19 21 23
+        on right: 6 7
+    $@1 (76)
+        on left: 9
+        on right: 10
+    $@2 (77)
+        on left: 11
+        on right: 12
+    $@3 (78)
+        on left: 18
+        on right: 19
+    $@4 (79)
+        on left: 20
+        on right: 21
+    $@5 (80)
+        on left: 22
+        on right: 23
+    fonttab2 (81)
+        on left: 24 25 26 27 28 29
+        on right: 5
+    font (82)
+        on left: 31
+        on right: 13 25
+    $@6 (83)
+        on left: 30
+        on right: 31
+    italic (84)
+        on left: 32
+        on right: 14 26
+    overline (85)
+        on left: 33
+        on right: 17 29
+    bold (86)
+        on left: 34
+        on right: 15 27
+    underline (87)
+        on left: 35
+        on right: 16 28
+    tabe (88)
+        on left: 36 37
+        on right: 39
+    tab (89)
+        on left: 39
+        on right: 24 25 26 27 28 29
+    $@7 (90)
+        on left: 38
+        on right: 39
+    rows (91)
+        on left: 40 41 43 45
+        on right: 39 41 43 45
+    $@8 (92)
+        on left: 42
+        on right: 43
+    $@9 (93)
+        on left: 44
+        on right: 45
+    row (94)
+        on left: 47
+        on right: 40 41 43 45
+    $@10 (95)
+        on left: 46
+        on right: 47
+    cells (96)
+        on left: 48 49 51 53
+        on right: 47 49 51 53
+    $@11 (97)
+        on left: 50
+        on right: 51
+    $@12 (98)
+        on left: 52
+        on right: 53
+    cell (99)
+        on left: 54 55 56 57
+        on right: 48 49 51 53
+    cellimg (100)
+        on left: 58
+        on right: 55 56
+    celltd (101)
+        on left: 59
+        on right: 54 55 56 57
+    table_arg (102)
+        on left: 60 61
+        on right: 39 60
+    table_1arg (103)
+        on left: 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84
+        on right: 60
+    td_arg (104)
+        on left: 85 86
+        on right: 54 55 56 57 85
+    td_1arg (105)
+        on left: 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109
+        on right: 85
+    img_arg (106)
+        on left: 110 111
+        on right: 55 56 110
+    img_1arg (107)
+        on left: 112 113 114
+        on right: 110
+    br_arg (108)
+        on left: 115 116
+        on right: 10 115
+    br_1arg (109)
+        on left: 117 118
+        on right: 115
+    font_arg (110)
+        on left: 119 120
+        on right: 31 119
+    font_1arg (111)
+        on left: 121 122 123 124
+        on right: 119
 
 
 State 0
 
-    0 $accept: . begin $end
+    0 $accept: • begin $end
 
     "stringdata"  shift, and go to state 1
     "<html"       shift, and go to state 2
@@ -381,8 +414,8 @@ State 0
 
 State 1
 
-    8 item: "stringdata" .
-   36 tabe: "stringdata" .
+    8 item: "stringdata" •
+   36 tabe: "stringdata" •
 
     "<table"  reduce using rule 36 (tabe)
     $default  reduce using rule 8 (item)
@@ -390,22 +423,22 @@ State 1
 
 State 2
 
-    2 htmlparser: "<html" . ">" htmlparser2 "</html" ">"
+    2 htmlparser: "<html" • ">" htmlparser2 "</html" ">"
 
     ">"  shift, and go to state 25
 
 
 State 3
 
-   34 bold: "<b" . ">"
+   34 bold: "<b" • ">"
 
     ">"  shift, and go to state 26
 
 
 State 4
 
-   10 item: "<br" . $@1 br_arg "/>"
-   12     | "<br" . ">" $@2 "</br" ">"
+   10 item: "<br" • $@1 br_arg "/>"
+   12     | "<br" • ">" $@2 "</br" ">"
 
     ">"  shift, and go to state 27
 
@@ -416,7 +449,7 @@ State 4
 
 State 5
 
-   31 font: "<font" . $@6 font_arg ">"
+   31 font: "<font" • $@6 font_arg ">"
 
     $default  reduce using rule 30 ($@6)
 
@@ -425,71 +458,71 @@ State 5
 
 State 6
 
-   32 italic: "<i" . ">"
+   32 italic: "<i" • ">"
 
     ">"  shift, and go to state 30
 
 
 State 7
 
-   33 overline: "<o" . ">"
+   33 overline: "<o" • ">"
 
     ">"  shift, and go to state 31
 
 
 State 8
 
-   23 item: "<s" . ">" $@5 items "</s" ">"
+   23 item: "<s" • ">" $@5 items "</s" ">"
 
     ">"  shift, and go to state 32
 
 
 State 9
 
-   19 item: "<sub" . ">" $@3 items "</sub" ">"
+   19 item: "<sub" • ">" $@3 items "</sub" ">"
 
     ">"  shift, and go to state 33
 
 
 State 10
 
-   21 item: "<sup" . ">" $@4 items "</sup" ">"
+   21 item: "<sup" • ">" $@4 items "</sup" ">"
 
     ">"  shift, and go to state 34
 
 
 State 11
 
-   35 underline: "<u" . ">"
+   35 underline: "<u" • ">"
 
     ">"  shift, and go to state 35
 
 
 State 12
 
-    0 $accept: begin . $end
+    0 $accept: begin • $end
 
     $end  shift, and go to state 36
 
 
 State 13
 
-    1 begin: htmlparser .
+    1 begin: htmlparser •
 
     $default  reduce using rule 1 (begin)
 
 
 State 14
 
-    3 htmlparser: htmlparser2 .
+    3 htmlparser: htmlparser2 •
 
     $default  reduce using rule 3 (htmlparser)
 
 
 State 15
 
-    4 htmlparser2: items .
-    6 items: items . item
+    4 htmlparser2: items •
+    6 items: items • item
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -514,22 +547,22 @@ State 15
 
 State 16
 
-    7 items: item .
+    7 items: item •
 
     $default  reduce using rule 7 (items)
 
 
 State 17
 
-    5 htmlparser2: fonttab2 .
+    5 htmlparser2: fonttab2 •
 
     $default  reduce using rule 5 (htmlparser2)
 
 
 State 18
 
-   13 item: font . items "</font" ">"
-   25 fonttab2: font . tab "</font" ">"
+   13 item: font • items "</font" ">"
+   25 fonttab2: font • tab "</font" ">"
 
     "stringdata"  shift, and go to state 1
     "<b"          shift, and go to state 3
@@ -557,8 +590,8 @@ State 18
 
 State 19
 
-   14 item: italic . items "</i" ">"
-   26 fonttab2: italic . tab "</i" ">"
+   14 item: italic • items "</i" ">"
+   26 fonttab2: italic • tab "</i" ">"
 
     "stringdata"  shift, and go to state 1
     "<b"          shift, and go to state 3
@@ -586,8 +619,8 @@ State 19
 
 State 20
 
-   17 item: overline . items "</o" ">"
-   29 fonttab2: overline . tab "</o" ">"
+   17 item: overline • items "</o" ">"
+   29 fonttab2: overline • tab "</o" ">"
 
     "stringdata"  shift, and go to state 1
     "<b"          shift, and go to state 3
@@ -615,8 +648,8 @@ State 20
 
 State 21
 
-   15 item: bold . items "</b" ">"
-   27 fonttab2: bold . tab "</b" ">"
+   15 item: bold • items "</b" ">"
+   27 fonttab2: bold • tab "</b" ">"
 
     "stringdata"  shift, and go to state 1
     "<b"          shift, and go to state 3
@@ -644,8 +677,8 @@ State 21
 
 State 22
 
-   16 item: underline . items "</u" ">"
-   28 fonttab2: underline . tab "</u" ">"
+   16 item: underline • items "</u" ">"
+   28 fonttab2: underline • tab "</u" ">"
 
     "stringdata"  shift, and go to state 1
     "<b"          shift, and go to state 3
@@ -673,21 +706,21 @@ State 22
 
 State 23
 
-   39 tab: tabe . "<table" $@7 table_arg ">" rows "</table" ">" tabe
+   39 tab: tabe • "<table" $@7 table_arg ">" rows "</table" ">" tabe
 
     "<table"  shift, and go to state 54
 
 
 State 24
 
-   24 fonttab2: tab .
+   24 fonttab2: tab •
 
     $default  reduce using rule 24 (fonttab2)
 
 
 State 25
 
-    2 htmlparser: "<html" ">" . htmlparser2 "</html" ">"
+    2 htmlparser: "<html" ">" • htmlparser2 "</html" ">"
 
     "stringdata"  shift, and go to state 1
     "<b"          shift, and go to state 3
@@ -717,14 +750,14 @@ State 25
 
 State 26
 
-   34 bold: "<b" ">" .
+   34 bold: "<b" ">" •
 
     $default  reduce using rule 34 (bold)
 
 
 State 27
 
-   12 item: "<br" ">" . $@2 "</br" ">"
+   12 item: "<br" ">" • $@2 "</br" ">"
 
     $default  reduce using rule 11 ($@2)
 
@@ -733,7 +766,7 @@ State 27
 
 State 28
 
-   10 item: "<br" $@1 . br_arg "/>"
+   10 item: "<br" $@1 • br_arg "/>"
 
     $default  reduce using rule 116 (br_arg)
 
@@ -742,7 +775,7 @@ State 28
 
 State 29
 
-   31 font: "<font" $@6 . font_arg ">"
+   31 font: "<font" $@6 • font_arg ">"
 
     $default  reduce using rule 120 (font_arg)
 
@@ -751,21 +784,21 @@ State 29
 
 State 30
 
-   32 italic: "<i" ">" .
+   32 italic: "<i" ">" •
 
     $default  reduce using rule 32 (italic)
 
 
 State 31
 
-   33 overline: "<o" ">" .
+   33 overline: "<o" ">" •
 
     $default  reduce using rule 33 (overline)
 
 
 State 32
 
-   23 item: "<s" ">" . $@5 items "</s" ">"
+   23 item: "<s" ">" • $@5 items "</s" ">"
 
     $default  reduce using rule 22 ($@5)
 
@@ -774,7 +807,7 @@ State 32
 
 State 33
 
-   19 item: "<sub" ">" . $@3 items "</sub" ">"
+   19 item: "<sub" ">" • $@3 items "</sub" ">"
 
     $default  reduce using rule 18 ($@3)
 
@@ -783,7 +816,7 @@ State 33
 
 State 34
 
-   21 item: "<sup" ">" . $@4 items "</sup" ">"
+   21 item: "<sup" ">" • $@4 items "</sup" ">"
 
     $default  reduce using rule 20 ($@4)
 
@@ -792,35 +825,35 @@ State 34
 
 State 35
 
-   35 underline: "<u" ">" .
+   35 underline: "<u" ">" •
 
     $default  reduce using rule 35 (underline)
 
 
 State 36
 
-    0 $accept: begin $end .
+    0 $accept: begin $end •
 
     $default  accept
 
 
 State 37
 
-    8 item: "stringdata" .
+    8 item: "stringdata" •
 
     $default  reduce using rule 8 (item)
 
 
 State 38
 
-    6 items: items item .
+    6 items: items item •
 
     $default  reduce using rule 6 (items)
 
 
 State 39
 
-   13 item: font . items "</font" ">"
+   13 item: font • items "</font" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -844,7 +877,7 @@ State 39
 
 State 40
 
-   14 item: italic . items "</i" ">"
+   14 item: italic • items "</i" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -868,7 +901,7 @@ State 40
 
 State 41
 
-   17 item: overline . items "</o" ">"
+   17 item: overline • items "</o" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -892,7 +925,7 @@ State 41
 
 State 42
 
-   15 item: bold . items "</b" ">"
+   15 item: bold • items "</b" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -916,7 +949,7 @@ State 42
 
 State 43
 
-   16 item: underline . items "</u" ">"
+   16 item: underline • items "</u" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -940,8 +973,8 @@ State 43
 
 State 44
 
-    6 items: items . item
-   13 item: font items . "</font" ">"
+    6 items: items • item
+   13 item: font items • "</font" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -965,15 +998,15 @@ State 44
 
 State 45
 
-   25 fonttab2: font tab . "</font" ">"
+   25 fonttab2: font tab • "</font" ">"
 
     "</font"  shift, and go to state 63
 
 
 State 46
 
-    6 items: items . item
-   14 item: italic items . "</i" ">"
+    6 items: items • item
+   14 item: italic items • "</i" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -997,15 +1030,15 @@ State 46
 
 State 47
 
-   26 fonttab2: italic tab . "</i" ">"
+   26 fonttab2: italic tab • "</i" ">"
 
     "</i"  shift, and go to state 65
 
 
 State 48
 
-    6 items: items . item
-   17 item: overline items . "</o" ">"
+    6 items: items • item
+   17 item: overline items • "</o" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1029,15 +1062,15 @@ State 48
 
 State 49
 
-   29 fonttab2: overline tab . "</o" ">"
+   29 fonttab2: overline tab • "</o" ">"
 
     "</o"  shift, and go to state 67
 
 
 State 50
 
-    6 items: items . item
-   15 item: bold items . "</b" ">"
+    6 items: items • item
+   15 item: bold items • "</b" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1061,15 +1094,15 @@ State 50
 
 State 51
 
-   27 fonttab2: bold tab . "</b" ">"
+   27 fonttab2: bold tab • "</b" ">"
 
     "</b"  shift, and go to state 69
 
 
 State 52
 
-    6 items: items . item
-   16 item: underline items . "</u" ">"
+    6 items: items • item
+   16 item: underline items • "</u" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1093,14 +1126,14 @@ State 52
 
 State 53
 
-   28 fonttab2: underline tab . "</u" ">"
+   28 fonttab2: underline tab • "</u" ">"
 
     "</u"  shift, and go to state 71
 
 
 State 54
 
-   39 tab: tabe "<table" . $@7 table_arg ">" rows "</table" ">" tabe
+   39 tab: tabe "<table" • $@7 table_arg ">" rows "</table" ">" tabe
 
     $default  reduce using rule 38 ($@7)
 
@@ -1109,22 +1142,22 @@ State 54
 
 State 55
 
-    2 htmlparser: "<html" ">" htmlparser2 . "</html" ">"
+    2 htmlparser: "<html" ">" htmlparser2 • "</html" ">"
 
     "</html"  shift, and go to state 73
 
 
 State 56
 
-   12 item: "<br" ">" $@2 . "</br" ">"
+   12 item: "<br" ">" $@2 • "</br" ">"
 
     "</br"  shift, and go to state 74
 
 
 State 57
 
-   10 item: "<br" $@1 br_arg . "/>"
-  115 br_arg: br_arg . br_1arg
+   10 item: "<br" $@1 br_arg • "/>"
+  115 br_arg: br_arg • br_1arg
 
     "/>"     shift, and go to state 75
     "text"   shift, and go to state 76
@@ -1135,8 +1168,8 @@ State 57
 
 State 58
 
-   31 font: "<font" $@6 font_arg . ">"
-  119 font_arg: font_arg . font_1arg
+   31 font: "<font" $@6 font_arg • ">"
+  119 font_arg: font_arg • font_1arg
 
     ">"           shift, and go to state 79
     "text"        shift, and go to state 80
@@ -1149,7 +1182,7 @@ State 58
 
 State 59
 
-   23 item: "<s" ">" $@5 . items "</s" ">"
+   23 item: "<s" ">" $@5 • items "</s" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1173,7 +1206,7 @@ State 59
 
 State 60
 
-   19 item: "<sub" ">" $@3 . items "</sub" ">"
+   19 item: "<sub" ">" $@3 • items "</sub" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1197,7 +1230,7 @@ State 60
 
 State 61
 
-   21 item: "<sup" ">" $@4 . items "</sup" ">"
+   21 item: "<sup" ">" $@4 • items "</sup" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1221,77 +1254,77 @@ State 61
 
 State 62
 
-   13 item: font items "</font" . ">"
+   13 item: font items "</font" • ">"
 
     ">"  shift, and go to state 88
 
 
 State 63
 
-   25 fonttab2: font tab "</font" . ">"
+   25 fonttab2: font tab "</font" • ">"
 
     ">"  shift, and go to state 89
 
 
 State 64
 
-   14 item: italic items "</i" . ">"
+   14 item: italic items "</i" • ">"
 
     ">"  shift, and go to state 90
 
 
 State 65
 
-   26 fonttab2: italic tab "</i" . ">"
+   26 fonttab2: italic tab "</i" • ">"
 
     ">"  shift, and go to state 91
 
 
 State 66
 
-   17 item: overline items "</o" . ">"
+   17 item: overline items "</o" • ">"
 
     ">"  shift, and go to state 92
 
 
 State 67
 
-   29 fonttab2: overline tab "</o" . ">"
+   29 fonttab2: overline tab "</o" • ">"
 
     ">"  shift, and go to state 93
 
 
 State 68
 
-   15 item: bold items "</b" . ">"
+   15 item: bold items "</b" • ">"
 
     ">"  shift, and go to state 94
 
 
 State 69
 
-   27 fonttab2: bold tab "</b" . ">"
+   27 fonttab2: bold tab "</b" • ">"
 
     ">"  shift, and go to state 95
 
 
 State 70
 
-   16 item: underline items "</u" . ">"
+   16 item: underline items "</u" • ">"
 
     ">"  shift, and go to state 96
 
 
 State 71
 
-   28 fonttab2: underline tab "</u" . ">"
+   28 fonttab2: underline tab "</u" • ">"
 
     ">"  shift, and go to state 97
 
 
 State 72
 
-   39 tab: tabe "<table" $@7 . table_arg ">" rows "</table" ">" tabe
+   39 tab: tabe "<table" $@7 • table_arg ">" rows "</table" ">" tabe
 
     $default  reduce using rule 61 (table_arg)
 
@@ -1300,92 +1333,92 @@ State 72
 
 State 73
 
-    2 htmlparser: "<html" ">" htmlparser2 "</html" . ">"
+    2 htmlparser: "<html" ">" htmlparser2 "</html" • ">"
 
     ">"  shift, and go to state 99
 
 
 State 74
 
-   12 item: "<br" ">" $@2 "</br" . ">"
+   12 item: "<br" ">" $@2 "</br" • ">"
 
     ">"  shift, and go to state 100
 
 
 State 75
 
-   10 item: "<br" $@1 br_arg "/>" .
+   10 item: "<br" $@1 br_arg "/>" •
 
     $default  reduce using rule 10 (item)
 
 
 State 76
 
-  118 br_1arg: "text" . "=" "string"
+  118 br_1arg: "text" • "=" "string"
 
     "="  shift, and go to state 101
 
 
 State 77
 
-  117 br_1arg: "align" . "=" "string"
+  117 br_1arg: "align" • "=" "string"
 
     "="  shift, and go to state 102
 
 
 State 78
 
-  115 br_arg: br_arg br_1arg .
+  115 br_arg: br_arg br_1arg •
 
     $default  reduce using rule 115 (br_arg)
 
 
 State 79
 
-   31 font: "<font" $@6 font_arg ">" .
+   31 font: "<font" $@6 font_arg ">" •
 
     $default  reduce using rule 31 (font)
 
 
 State 80
 
-  124 font_1arg: "text" . "=" "string"
+  124 font_1arg: "text" • "=" "string"
 
     "="  shift, and go to state 103
 
 
 State 81
 
-  121 font_1arg: "color" . "=" "string"
+  121 font_1arg: "color" • "=" "string"
 
     "="  shift, and go to state 104
 
 
 State 82
 
-  122 font_1arg: "face" . "=" "string"
+  122 font_1arg: "face" • "=" "string"
 
     "="  shift, and go to state 105
 
 
 State 83
 
-  123 font_1arg: "point-size" . "=" "string"
+  123 font_1arg: "point-size" • "=" "string"
 
     "="  shift, and go to state 106
 
 
 State 84
 
-  119 font_arg: font_arg font_1arg .
+  119 font_arg: font_arg font_1arg •
 
     $default  reduce using rule 119 (font_arg)
 
 
 State 85
 
-    6 items: items . item
-   23 item: "<s" ">" $@5 items . "</s" ">"
+    6 items: items • item
+   23 item: "<s" ">" $@5 items • "</s" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1409,8 +1442,8 @@ State 85
 
 State 86
 
-    6 items: items . item
-   19 item: "<sub" ">" $@3 items . "</sub" ">"
+    6 items: items • item
+   19 item: "<sub" ">" $@3 items • "</sub" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1434,8 +1467,8 @@ State 86
 
 State 87
 
-    6 items: items . item
-   21 item: "<sup" ">" $@4 items . "</sup" ">"
+    6 items: items • item
+   21 item: "<sup" ">" $@4 items • "</sup" ">"
 
     "stringdata"  shift, and go to state 37
     "<b"          shift, and go to state 3
@@ -1459,78 +1492,78 @@ State 87
 
 State 88
 
-   13 item: font items "</font" ">" .
+   13 item: font items "</font" ">" •
 
     $default  reduce using rule 13 (item)
 
 
 State 89
 
-   25 fonttab2: font tab "</font" ">" .
+   25 fonttab2: font tab "</font" ">" •
 
     $default  reduce using rule 25 (fonttab2)
 
 
 State 90
 
-   14 item: italic items "</i" ">" .
+   14 item: italic items "</i" ">" •
 
     $default  reduce using rule 14 (item)
 
 
 State 91
 
-   26 fonttab2: italic tab "</i" ">" .
+   26 fonttab2: italic tab "</i" ">" •
 
     $default  reduce using rule 26 (fonttab2)
 
 
 State 92
 
-   17 item: overline items "</o" ">" .
+   17 item: overline items "</o" ">" •
 
     $default  reduce using rule 17 (item)
 
 
 State 93
 
-   29 fonttab2: overline tab "</o" ">" .
+   29 fonttab2: overline tab "</o" ">" •
 
     $default  reduce using rule 29 (fonttab2)
 
 
 State 94
 
-   15 item: bold items "</b" ">" .
+   15 item: bold items "</b" ">" •
 
     $default  reduce using rule 15 (item)
 
 
 State 95
 
-   27 fonttab2: bold tab "</b" ">" .
+   27 fonttab2: bold tab "</b" ">" •
 
     $default  reduce using rule 27 (fonttab2)
 
 
 State 96
 
-   16 item: underline items "</u" ">" .
+   16 item: underline items "</u" ">" •
 
     $default  reduce using rule 16 (item)
 
 
 State 97
 
-   28 fonttab2: underline tab "</u" ">" .
+   28 fonttab2: underline tab "</u" ">" •
 
     $default  reduce using rule 28 (fonttab2)
 
 
 State 98
 
-   39 tab: tabe "<table" $@7 table_arg . ">" rows "</table" ">" tabe
-   60 table_arg: table_arg . table_1arg
+   39 tab: tabe "<table" $@7 table_arg • ">" rows "</table" ">" tabe
+   60 table_arg: table_arg • table_1arg
 
     ">"              shift, and go to state 110
     "text"           shift, and go to state 111
@@ -1562,84 +1595,84 @@ State 98
 
 State 99
 
-    2 htmlparser: "<html" ">" htmlparser2 "</html" ">" .
+    2 htmlparser: "<html" ">" htmlparser2 "</html" ">" •
 
     $default  reduce using rule 2 (htmlparser)
 
 
 State 100
 
-   12 item: "<br" ">" $@2 "</br" ">" .
+   12 item: "<br" ">" $@2 "</br" ">" •
 
     $default  reduce using rule 12 (item)
 
 
 State 101
 
-  118 br_1arg: "text" "=" . "string"
+  118 br_1arg: "text" "=" • "string"
 
     "string"  shift, and go to state 135
 
 
 State 102
 
-  117 br_1arg: "align" "=" . "string"
+  117 br_1arg: "align" "=" • "string"
 
     "string"  shift, and go to state 136
 
 
 State 103
 
-  124 font_1arg: "text" "=" . "string"
+  124 font_1arg: "text" "=" • "string"
 
     "string"  shift, and go to state 137
 
 
 State 104
 
-  121 font_1arg: "color" "=" . "string"
+  121 font_1arg: "color" "=" • "string"
 
     "string"  shift, and go to state 138
 
 
 State 105
 
-  122 font_1arg: "face" "=" . "string"
+  122 font_1arg: "face" "=" • "string"
 
     "string"  shift, and go to state 139
 
 
 State 106
 
-  123 font_1arg: "point-size" "=" . "string"
+  123 font_1arg: "point-size" "=" • "string"
 
     "string"  shift, and go to state 140
 
 
 State 107
 
-   23 item: "<s" ">" $@5 items "</s" . ">"
+   23 item: "<s" ">" $@5 items "</s" • ">"
 
     ">"  shift, and go to state 141
 
 
 State 108
 
-   19 item: "<sub" ">" $@3 items "</sub" . ">"
+   19 item: "<sub" ">" $@3 items "</sub" • ">"
 
     ">"  shift, and go to state 142
 
 
 State 109
 
-   21 item: "<sup" ">" $@4 items "</sup" . ">"
+   21 item: "<sup" ">" $@4 items "</sup" • ">"
 
     ">"  shift, and go to state 143
 
 
 State 110
 
-   39 tab: tabe "<table" $@7 table_arg ">" . rows "</table" ">" tabe
+   39 tab: tabe "<table" $@7 table_arg ">" • rows "</table" ">" tabe
 
     "<tr"  shift, and go to state 144
 
@@ -1649,248 +1682,248 @@ State 110
 
 State 111
 
-   84 table_1arg: "text" . "=" "string"
+   84 table_1arg: "text" • "=" "string"
 
     "="  shift, and go to state 147
 
 
 State 112
 
-   62 table_1arg: "align" . "=" "string"
+   62 table_1arg: "align" • "=" "string"
 
     "="  shift, and go to state 148
 
 
 State 113
 
-   63 table_1arg: "bgcolor" . "=" "string"
+   63 table_1arg: "bgcolor" • "=" "string"
 
     "="  shift, and go to state 149
 
 
 State 114
 
-   64 table_1arg: "border" . "=" "string"
+   64 table_1arg: "border" • "=" "string"
 
     "="  shift, and go to state 150
 
 
 State 115
 
-   65 table_1arg: "cellborder" . "=" "string"
+   65 table_1arg: "cellborder" • "=" "string"
 
     "="  shift, and go to state 151
 
 
 State 116
 
-   66 table_1arg: "cellpadding" . "=" "string"
+   66 table_1arg: "cellpadding" • "=" "string"
 
     "="  shift, and go to state 152
 
 
 State 117
 
-   67 table_1arg: "cellspacing" . "=" "string"
+   67 table_1arg: "cellspacing" • "=" "string"
 
     "="  shift, and go to state 153
 
 
 State 118
 
-   68 table_1arg: "color" . "=" "string"
+   68 table_1arg: "color" • "=" "string"
 
     "="  shift, and go to state 154
 
 
 State 119
 
-   69 table_1arg: "columns" . "=" "string"
+   69 table_1arg: "columns" • "=" "string"
 
     "="  shift, and go to state 155
 
 
 State 120
 
-   70 table_1arg: "fixedsize" . "=" "string"
+   70 table_1arg: "fixedsize" • "=" "string"
 
     "="  shift, and go to state 156
 
 
 State 121
 
-   71 table_1arg: "gradientangle" . "=" "string"
+   71 table_1arg: "gradientangle" • "=" "string"
 
     "="  shift, and go to state 157
 
 
 State 122
 
-   72 table_1arg: "height" . "=" "string"
+   72 table_1arg: "height" • "=" "string"
 
     "="  shift, and go to state 158
 
 
 State 123
 
-   73 table_1arg: "href" . "=" "string"
+   73 table_1arg: "href" • "=" "string"
 
     "="  shift, and go to state 159
 
 
 State 124
 
-   74 table_1arg: "id" . "=" "string"
+   74 table_1arg: "id" • "=" "string"
 
     "="  shift, and go to state 160
 
 
 State 125
 
-   75 table_1arg: "port" . "=" "string"
+   75 table_1arg: "port" • "=" "string"
 
     "="  shift, and go to state 161
 
 
 State 126
 
-   76 table_1arg: "rows" . "=" "string"
+   76 table_1arg: "rows" • "=" "string"
 
     "="  shift, and go to state 162
 
 
 State 127
 
-   77 table_1arg: "sides" . "=" "string"
+   77 table_1arg: "sides" • "=" "string"
 
     "="  shift, and go to state 163
 
 
 State 128
 
-   78 table_1arg: "style" . "=" "string"
+   78 table_1arg: "style" • "=" "string"
 
     "="  shift, and go to state 164
 
 
 State 129
 
-   79 table_1arg: "target" . "=" "string"
+   79 table_1arg: "target" • "=" "string"
 
     "="  shift, and go to state 165
 
 
 State 130
 
-   80 table_1arg: "title" . "=" "string"
+   80 table_1arg: "title" • "=" "string"
 
     "="  shift, and go to state 166
 
 
 State 131
 
-   81 table_1arg: "tooltip" . "=" "string"
+   81 table_1arg: "tooltip" • "=" "string"
 
     "="  shift, and go to state 167
 
 
 State 132
 
-   82 table_1arg: "valign" . "=" "string"
+   82 table_1arg: "valign" • "=" "string"
 
     "="  shift, and go to state 168
 
 
 State 133
 
-   83 table_1arg: "width" . "=" "string"
+   83 table_1arg: "width" • "=" "string"
 
     "="  shift, and go to state 169
 
 
 State 134
 
-   60 table_arg: table_arg table_1arg .
+   60 table_arg: table_arg table_1arg •
 
     $default  reduce using rule 60 (table_arg)
 
 
 State 135
 
-  118 br_1arg: "text" "=" "string" .
+  118 br_1arg: "text" "=" "string" •
 
     $default  reduce using rule 118 (br_1arg)
 
 
 State 136
 
-  117 br_1arg: "align" "=" "string" .
+  117 br_1arg: "align" "=" "string" •
 
     $default  reduce using rule 117 (br_1arg)
 
 
 State 137
 
-  124 font_1arg: "text" "=" "string" .
+  124 font_1arg: "text" "=" "string" •
 
     $default  reduce using rule 124 (font_1arg)
 
 
 State 138
 
-  121 font_1arg: "color" "=" "string" .
+  121 font_1arg: "color" "=" "string" •
 
     $default  reduce using rule 121 (font_1arg)
 
 
 State 139
 
-  122 font_1arg: "face" "=" "string" .
+  122 font_1arg: "face" "=" "string" •
 
     $default  reduce using rule 122 (font_1arg)
 
 
 State 140
 
-  123 font_1arg: "point-size" "=" "string" .
+  123 font_1arg: "point-size" "=" "string" •
 
     $default  reduce using rule 123 (font_1arg)
 
 
 State 141
 
-   23 item: "<s" ">" $@5 items "</s" ">" .
+   23 item: "<s" ">" $@5 items "</s" ">" •
 
     $default  reduce using rule 23 (item)
 
 
 State 142
 
-   19 item: "<sub" ">" $@3 items "</sub" ">" .
+   19 item: "<sub" ">" $@3 items "</sub" ">" •
 
     $default  reduce using rule 19 (item)
 
 
 State 143
 
-   21 item: "<sup" ">" $@4 items "</sup" ">" .
+   21 item: "<sup" ">" $@4 items "</sup" ">" •
 
     $default  reduce using rule 21 (item)
 
 
 State 144
 
-   47 row: "<tr" . ">" $@10 cells "</tr" ">"
+   47 row: "<tr" • ">" $@10 cells "</tr" ">"
 
     ">"  shift, and go to state 170
 
 
 State 145
 
-   39 tab: tabe "<table" $@7 table_arg ">" rows . "</table" ">" tabe
-   41 rows: rows . row
-   43     | rows . "<hr" "/>" $@8 row
-   45     | rows . "<hr" ">" "</hr" ">" $@9 row
+   39 tab: tabe "<table" $@7 table_arg ">" rows • "</table" ">" tabe
+   41 rows: rows • row
+   43     | rows • "<hr" "/>" $@8 row
+   45     | rows • "<hr" ">" "</hr" ">" $@9 row
 
     "<hr"      shift, and go to state 171
     "</table"  shift, and go to state 172
@@ -1901,175 +1934,175 @@ State 145
 
 State 146
 
-   40 rows: row .
+   40 rows: row •
 
     $default  reduce using rule 40 (rows)
 
 
 State 147
 
-   84 table_1arg: "text" "=" . "string"
+   84 table_1arg: "text" "=" • "string"
 
     "string"  shift, and go to state 174
 
 
 State 148
 
-   62 table_1arg: "align" "=" . "string"
+   62 table_1arg: "align" "=" • "string"
 
     "string"  shift, and go to state 175
 
 
 State 149
 
-   63 table_1arg: "bgcolor" "=" . "string"
+   63 table_1arg: "bgcolor" "=" • "string"
 
     "string"  shift, and go to state 176
 
 
 State 150
 
-   64 table_1arg: "border" "=" . "string"
+   64 table_1arg: "border" "=" • "string"
 
     "string"  shift, and go to state 177
 
 
 State 151
 
-   65 table_1arg: "cellborder" "=" . "string"
+   65 table_1arg: "cellborder" "=" • "string"
 
     "string"  shift, and go to state 178
 
 
 State 152
 
-   66 table_1arg: "cellpadding" "=" . "string"
+   66 table_1arg: "cellpadding" "=" • "string"
 
     "string"  shift, and go to state 179
 
 
 State 153
 
-   67 table_1arg: "cellspacing" "=" . "string"
+   67 table_1arg: "cellspacing" "=" • "string"
 
     "string"  shift, and go to state 180
 
 
 State 154
 
-   68 table_1arg: "color" "=" . "string"
+   68 table_1arg: "color" "=" • "string"
 
     "string"  shift, and go to state 181
 
 
 State 155
 
-   69 table_1arg: "columns" "=" . "string"
+   69 table_1arg: "columns" "=" • "string"
 
     "string"  shift, and go to state 182
 
 
 State 156
 
-   70 table_1arg: "fixedsize" "=" . "string"
+   70 table_1arg: "fixedsize" "=" • "string"
 
     "string"  shift, and go to state 183
 
 
 State 157
 
-   71 table_1arg: "gradientangle" "=" . "string"
+   71 table_1arg: "gradientangle" "=" • "string"
 
     "string"  shift, and go to state 184
 
 
 State 158
 
-   72 table_1arg: "height" "=" . "string"
+   72 table_1arg: "height" "=" • "string"
 
     "string"  shift, and go to state 185
 
 
 State 159
 
-   73 table_1arg: "href" "=" . "string"
+   73 table_1arg: "href" "=" • "string"
 
     "string"  shift, and go to state 186
 
 
 State 160
 
-   74 table_1arg: "id" "=" . "string"
+   74 table_1arg: "id" "=" • "string"
 
     "string"  shift, and go to state 187
 
 
 State 161
 
-   75 table_1arg: "port" "=" . "string"
+   75 table_1arg: "port" "=" • "string"
 
     "string"  shift, and go to state 188
 
 
 State 162
 
-   76 table_1arg: "rows" "=" . "string"
+   76 table_1arg: "rows" "=" • "string"
 
     "string"  shift, and go to state 189
 
 
 State 163
 
-   77 table_1arg: "sides" "=" . "string"
+   77 table_1arg: "sides" "=" • "string"
 
     "string"  shift, and go to state 190
 
 
 State 164
 
-   78 table_1arg: "style" "=" . "string"
+   78 table_1arg: "style" "=" • "string"
 
     "string"  shift, and go to state 191
 
 
 State 165
 
-   79 table_1arg: "target" "=" . "string"
+   79 table_1arg: "target" "=" • "string"
 
     "string"  shift, and go to state 192
 
 
 State 166
 
-   80 table_1arg: "title" "=" . "string"
+   80 table_1arg: "title" "=" • "string"
 
     "string"  shift, and go to state 193
 
 
 State 167
 
-   81 table_1arg: "tooltip" "=" . "string"
+   81 table_1arg: "tooltip" "=" • "string"
 
     "string"  shift, and go to state 194
 
 
 State 168
 
-   82 table_1arg: "valign" "=" . "string"
+   82 table_1arg: "valign" "=" • "string"
 
     "string"  shift, and go to state 195
 
 
 State 169
 
-   83 table_1arg: "width" "=" . "string"
+   83 table_1arg: "width" "=" • "string"
 
     "string"  shift, and go to state 196
 
 
 State 170
 
-   47 row: "<tr" ">" . $@10 cells "</tr" ">"
+   47 row: "<tr" ">" • $@10 cells "</tr" ">"
 
     $default  reduce using rule 46 ($@10)
 
@@ -2078,8 +2111,8 @@ State 170
 
 State 171
 
-   43 rows: rows "<hr" . "/>" $@8 row
-   45     | rows "<hr" . ">" "</hr" ">" $@9 row
+   43 rows: rows "<hr" • "/>" $@8 row
+   45     | rows "<hr" • ">" "</hr" ">" $@9 row
 
     "/>"  shift, and go to state 198
     ">"   shift, and go to state 199
@@ -2087,182 +2120,182 @@ State 171
 
 State 172
 
-   39 tab: tabe "<table" $@7 table_arg ">" rows "</table" . ">" tabe
+   39 tab: tabe "<table" $@7 table_arg ">" rows "</table" • ">" tabe
 
     ">"  shift, and go to state 200
 
 
 State 173
 
-   41 rows: rows row .
+   41 rows: rows row •
 
     $default  reduce using rule 41 (rows)
 
 
 State 174
 
-   84 table_1arg: "text" "=" "string" .
+   84 table_1arg: "text" "=" "string" •
 
     $default  reduce using rule 84 (table_1arg)
 
 
 State 175
 
-   62 table_1arg: "align" "=" "string" .
+   62 table_1arg: "align" "=" "string" •
 
     $default  reduce using rule 62 (table_1arg)
 
 
 State 176
 
-   63 table_1arg: "bgcolor" "=" "string" .
+   63 table_1arg: "bgcolor" "=" "string" •
 
     $default  reduce using rule 63 (table_1arg)
 
 
 State 177
 
-   64 table_1arg: "border" "=" "string" .
+   64 table_1arg: "border" "=" "string" •
 
     $default  reduce using rule 64 (table_1arg)
 
 
 State 178
 
-   65 table_1arg: "cellborder" "=" "string" .
+   65 table_1arg: "cellborder" "=" "string" •
 
     $default  reduce using rule 65 (table_1arg)
 
 
 State 179
 
-   66 table_1arg: "cellpadding" "=" "string" .
+   66 table_1arg: "cellpadding" "=" "string" •
 
     $default  reduce using rule 66 (table_1arg)
 
 
 State 180
 
-   67 table_1arg: "cellspacing" "=" "string" .
+   67 table_1arg: "cellspacing" "=" "string" •
 
     $default  reduce using rule 67 (table_1arg)
 
 
 State 181
 
-   68 table_1arg: "color" "=" "string" .
+   68 table_1arg: "color" "=" "string" •
 
     $default  reduce using rule 68 (table_1arg)
 
 
 State 182
 
-   69 table_1arg: "columns" "=" "string" .
+   69 table_1arg: "columns" "=" "string" •
 
     $default  reduce using rule 69 (table_1arg)
 
 
 State 183
 
-   70 table_1arg: "fixedsize" "=" "string" .
+   70 table_1arg: "fixedsize" "=" "string" •
 
     $default  reduce using rule 70 (table_1arg)
 
 
 State 184
 
-   71 table_1arg: "gradientangle" "=" "string" .
+   71 table_1arg: "gradientangle" "=" "string" •
 
     $default  reduce using rule 71 (table_1arg)
 
 
 State 185
 
-   72 table_1arg: "height" "=" "string" .
+   72 table_1arg: "height" "=" "string" •
 
     $default  reduce using rule 72 (table_1arg)
 
 
 State 186
 
-   73 table_1arg: "href" "=" "string" .
+   73 table_1arg: "href" "=" "string" •
 
     $default  reduce using rule 73 (table_1arg)
 
 
 State 187
 
-   74 table_1arg: "id" "=" "string" .
+   74 table_1arg: "id" "=" "string" •
 
     $default  reduce using rule 74 (table_1arg)
 
 
 State 188
 
-   75 table_1arg: "port" "=" "string" .
+   75 table_1arg: "port" "=" "string" •
 
     $default  reduce using rule 75 (table_1arg)
 
 
 State 189
 
-   76 table_1arg: "rows" "=" "string" .
+   76 table_1arg: "rows" "=" "string" •
 
     $default  reduce using rule 76 (table_1arg)
 
 
 State 190
 
-   77 table_1arg: "sides" "=" "string" .
+   77 table_1arg: "sides" "=" "string" •
 
     $default  reduce using rule 77 (table_1arg)
 
 
 State 191
 
-   78 table_1arg: "style" "=" "string" .
+   78 table_1arg: "style" "=" "string" •
 
     $default  reduce using rule 78 (table_1arg)
 
 
 State 192
 
-   79 table_1arg: "target" "=" "string" .
+   79 table_1arg: "target" "=" "string" •
 
     $default  reduce using rule 79 (table_1arg)
 
 
 State 193
 
-   80 table_1arg: "title" "=" "string" .
+   80 table_1arg: "title" "=" "string" •
 
     $default  reduce using rule 80 (table_1arg)
 
 
 State 194
 
-   81 table_1arg: "tooltip" "=" "string" .
+   81 table_1arg: "tooltip" "=" "string" •
 
     $default  reduce using rule 81 (table_1arg)
 
 
 State 195
 
-   82 table_1arg: "valign" "=" "string" .
+   82 table_1arg: "valign" "=" "string" •
 
     $default  reduce using rule 82 (table_1arg)
 
 
 State 196
 
-   83 table_1arg: "width" "=" "string" .
+   83 table_1arg: "width" "=" "string" •
 
     $default  reduce using rule 83 (table_1arg)
 
 
 State 197
 
-   47 row: "<tr" ">" $@10 . cells "</tr" ">"
+   47 row: "<tr" ">" $@10 • cells "</tr" ">"
 
     "<td"  shift, and go to state 201
 
@@ -2273,7 +2306,7 @@ State 197
 
 State 198
 
-   43 rows: rows "<hr" "/>" . $@8 row
+   43 rows: rows "<hr" "/>" • $@8 row
 
     $default  reduce using rule 42 ($@8)
 
@@ -2282,14 +2315,14 @@ State 198
 
 State 199
 
-   45 rows: rows "<hr" ">" . "</hr" ">" $@9 row
+   45 rows: rows "<hr" ">" • "</hr" ">" $@9 row
 
     "</hr"  shift, and go to state 206
 
 
 State 200
 
-   39 tab: tabe "<table" $@7 table_arg ">" rows "</table" ">" . tabe
+   39 tab: tabe "<table" $@7 table_arg ">" rows "</table" ">" • tabe
 
     "stringdata"  shift, and go to state 207
 
@@ -2300,17 +2333,17 @@ State 200
 
 State 201
 
-   59 celltd: "<td" .
+   59 celltd: "<td" •
 
     $default  reduce using rule 59 (celltd)
 
 
 State 202
 
-   47 row: "<tr" ">" $@10 cells . "</tr" ">"
-   49 cells: cells . cell
-   51      | cells . "<vr" "/>" $@11 cell
-   53      | cells . "<vr" ">" "</vr" ">" $@12 cell
+   47 row: "<tr" ">" $@10 cells • "</tr" ">"
+   49 cells: cells • cell
+   51      | cells • "<vr" "/>" $@11 cell
+   53      | cells • "<vr" ">" "</vr" ">" $@12 cell
 
     "<td"   shift, and go to state 201
     "</tr"  shift, and go to state 209
@@ -2322,17 +2355,17 @@ State 202
 
 State 203
 
-   48 cells: cell .
+   48 cells: cell •
 
     $default  reduce using rule 48 (cells)
 
 
 State 204
 
-   54 cell: celltd . td_arg ">" htmlparser "</td" ">"
-   55     | celltd . td_arg ">" cellimg img_arg "/>" "</td" ">"
-   56     | celltd . td_arg ">" cellimg img_arg ">" "</img" ">" "</td" ">"
-   57     | celltd . td_arg ">" "</td" ">"
+   54 cell: celltd • td_arg ">" htmlparser "</td" ">"
+   55     | celltd • td_arg ">" cellimg img_arg "/>" "</td" ">"
+   56     | celltd • td_arg ">" cellimg img_arg ">" "</img" ">" "</td" ">"
+   57     | celltd • td_arg ">" "</td" ">"
 
     $default  reduce using rule 86 (td_arg)
 
@@ -2341,7 +2374,7 @@ State 204
 
 State 205
 
-   43 rows: rows "<hr" "/>" $@8 . row
+   43 rows: rows "<hr" "/>" $@8 • row
 
     "<tr"  shift, and go to state 144
 
@@ -2350,36 +2383,36 @@ State 205
 
 State 206
 
-   45 rows: rows "<hr" ">" "</hr" . ">" $@9 row
+   45 rows: rows "<hr" ">" "</hr" • ">" $@9 row
 
     ">"  shift, and go to state 214
 
 
 State 207
 
-   36 tabe: "stringdata" .
+   36 tabe: "stringdata" •
 
     $default  reduce using rule 36 (tabe)
 
 
 State 208
 
-   39 tab: tabe "<table" $@7 table_arg ">" rows "</table" ">" tabe .
+   39 tab: tabe "<table" $@7 table_arg ">" rows "</table" ">" tabe •
 
     $default  reduce using rule 39 (tab)
 
 
 State 209
 
-   47 row: "<tr" ">" $@10 cells "</tr" . ">"
+   47 row: "<tr" ">" $@10 cells "</tr" • ">"
 
     ">"  shift, and go to state 215
 
 
 State 210
 
-   51 cells: cells "<vr" . "/>" $@11 cell
-   53      | cells "<vr" . ">" "</vr" ">" $@12 cell
+   51 cells: cells "<vr" • "/>" $@11 cell
+   53      | cells "<vr" • ">" "</vr" ">" $@12 cell
 
     "/>"  shift, and go to state 216
     ">"   shift, and go to state 217
@@ -2387,18 +2420,18 @@ State 210
 
 State 211
 
-   49 cells: cells cell .
+   49 cells: cells cell •
 
     $default  reduce using rule 49 (cells)
 
 
 State 212
 
-   54 cell: celltd td_arg . ">" htmlparser "</td" ">"
-   55     | celltd td_arg . ">" cellimg img_arg "/>" "</td" ">"
-   56     | celltd td_arg . ">" cellimg img_arg ">" "</img" ">" "</td" ">"
-   57     | celltd td_arg . ">" "</td" ">"
-   85 td_arg: td_arg . td_1arg
+   54 cell: celltd td_arg • ">" htmlparser "</td" ">"
+   55     | celltd td_arg • ">" cellimg img_arg "/>" "</td" ">"
+   56     | celltd td_arg • ">" cellimg img_arg ">" "</img" ">" "</td" ">"
+   57     | celltd td_arg • ">" "</td" ">"
+   85 td_arg: td_arg • td_1arg
 
     ">"              shift, and go to state 218
     "text"           shift, and go to state 219
@@ -2430,14 +2463,14 @@ State 212
 
 State 213
 
-   43 rows: rows "<hr" "/>" $@8 row .
+   43 rows: rows "<hr" "/>" $@8 row •
 
     $default  reduce using rule 43 (rows)
 
 
 State 214
 
-   45 rows: rows "<hr" ">" "</hr" ">" . $@9 row
+   45 rows: rows "<hr" ">" "</hr" ">" • $@9 row
 
     $default  reduce using rule 44 ($@9)
 
@@ -2446,14 +2479,14 @@ State 214
 
 State 215
 
-   47 row: "<tr" ">" $@10 cells "</tr" ">" .
+   47 row: "<tr" ">" $@10 cells "</tr" ">" •
 
     $default  reduce using rule 47 (row)
 
 
 State 216
 
-   51 cells: cells "<vr" "/>" . $@11 cell
+   51 cells: cells "<vr" "/>" • $@11 cell
 
     $default  reduce using rule 50 ($@11)
 
@@ -2462,17 +2495,17 @@ State 216
 
 State 217
 
-   53 cells: cells "<vr" ">" . "</vr" ">" $@12 cell
+   53 cells: cells "<vr" ">" • "</vr" ">" $@12 cell
 
     "</vr"  shift, and go to state 245
 
 
 State 218
 
-   54 cell: celltd td_arg ">" . htmlparser "</td" ">"
-   55     | celltd td_arg ">" . cellimg img_arg "/>" "</td" ">"
-   56     | celltd td_arg ">" . cellimg img_arg ">" "</img" ">" "</td" ">"
-   57     | celltd td_arg ">" . "</td" ">"
+   54 cell: celltd td_arg ">" • htmlparser "</td" ">"
+   55     | celltd td_arg ">" • cellimg img_arg "/>" "</td" ">"
+   56     | celltd td_arg ">" • cellimg img_arg ">" "</img" ">" "</td" ">"
+   57     | celltd td_arg ">" • "</td" ">"
 
     "stringdata"  shift, and go to state 1
     "<html"       shift, and go to state 2
@@ -2507,175 +2540,175 @@ State 218
 
 State 219
 
-  109 td_1arg: "text" . "=" "string"
+  109 td_1arg: "text" • "=" "string"
 
     "="  shift, and go to state 250
 
 
 State 220
 
-   87 td_1arg: "align" . "=" "string"
+   87 td_1arg: "align" • "=" "string"
 
     "="  shift, and go to state 251
 
 
 State 221
 
-   88 td_1arg: "balign" . "=" "string"
+   88 td_1arg: "balign" • "=" "string"
 
     "="  shift, and go to state 252
 
 
 State 222
 
-   89 td_1arg: "bgcolor" . "=" "string"
+   89 td_1arg: "bgcolor" • "=" "string"
 
     "="  shift, and go to state 253
 
 
 State 223
 
-   90 td_1arg: "border" . "=" "string"
+   90 td_1arg: "border" • "=" "string"
 
     "="  shift, and go to state 254
 
 
 State 224
 
-   91 td_1arg: "cellpadding" . "=" "string"
+   91 td_1arg: "cellpadding" • "=" "string"
 
     "="  shift, and go to state 255
 
 
 State 225
 
-   92 td_1arg: "cellspacing" . "=" "string"
+   92 td_1arg: "cellspacing" • "=" "string"
 
     "="  shift, and go to state 256
 
 
 State 226
 
-   93 td_1arg: "color" . "=" "string"
+   93 td_1arg: "color" • "=" "string"
 
     "="  shift, and go to state 257
 
 
 State 227
 
-   94 td_1arg: "colspan" . "=" "string"
+   94 td_1arg: "colspan" • "=" "string"
 
     "="  shift, and go to state 258
 
 
 State 228
 
-   95 td_1arg: "fixedsize" . "=" "string"
+   95 td_1arg: "fixedsize" • "=" "string"
 
     "="  shift, and go to state 259
 
 
 State 229
 
-   96 td_1arg: "gradientangle" . "=" "string"
+   96 td_1arg: "gradientangle" • "=" "string"
 
     "="  shift, and go to state 260
 
 
 State 230
 
-   97 td_1arg: "height" . "=" "string"
+   97 td_1arg: "height" • "=" "string"
 
     "="  shift, and go to state 261
 
 
 State 231
 
-   98 td_1arg: "href" . "=" "string"
+   98 td_1arg: "href" • "=" "string"
 
     "="  shift, and go to state 262
 
 
 State 232
 
-   99 td_1arg: "id" . "=" "string"
+   99 td_1arg: "id" • "=" "string"
 
     "="  shift, and go to state 263
 
 
 State 233
 
-  100 td_1arg: "port" . "=" "string"
+  100 td_1arg: "port" • "=" "string"
 
     "="  shift, and go to state 264
 
 
 State 234
 
-  101 td_1arg: "rowspan" . "=" "string"
+  101 td_1arg: "rowspan" • "=" "string"
 
     "="  shift, and go to state 265
 
 
 State 235
 
-  102 td_1arg: "sides" . "=" "string"
+  102 td_1arg: "sides" • "=" "string"
 
     "="  shift, and go to state 266
 
 
 State 236
 
-  103 td_1arg: "style" . "=" "string"
+  103 td_1arg: "style" • "=" "string"
 
     "="  shift, and go to state 267
 
 
 State 237
 
-  104 td_1arg: "target" . "=" "string"
+  104 td_1arg: "target" • "=" "string"
 
     "="  shift, and go to state 268
 
 
 State 238
 
-  105 td_1arg: "title" . "=" "string"
+  105 td_1arg: "title" • "=" "string"
 
     "="  shift, and go to state 269
 
 
 State 239
 
-  106 td_1arg: "tooltip" . "=" "string"
+  106 td_1arg: "tooltip" • "=" "string"
 
     "="  shift, and go to state 270
 
 
 State 240
 
-  107 td_1arg: "valign" . "=" "string"
+  107 td_1arg: "valign" • "=" "string"
 
     "="  shift, and go to state 271
 
 
 State 241
 
-  108 td_1arg: "width" . "=" "string"
+  108 td_1arg: "width" • "=" "string"
 
     "="  shift, and go to state 272
 
 
 State 242
 
-   85 td_arg: td_arg td_1arg .
+   85 td_arg: td_arg td_1arg •
 
     $default  reduce using rule 85 (td_arg)
 
 
 State 243
 
-   45 rows: rows "<hr" ">" "</hr" ">" $@9 . row
+   45 rows: rows "<hr" ">" "</hr" ">" $@9 • row
 
     "<tr"  shift, and go to state 144
 
@@ -2684,7 +2717,7 @@ State 243
 
 State 244
 
-   51 cells: cells "<vr" "/>" $@11 . cell
+   51 cells: cells "<vr" "/>" $@11 • cell
 
     "<td"  shift, and go to state 201
 
@@ -2694,36 +2727,36 @@ State 244
 
 State 245
 
-   53 cells: cells "<vr" ">" "</vr" . ">" $@12 cell
+   53 cells: cells "<vr" ">" "</vr" • ">" $@12 cell
 
     ">"  shift, and go to state 275
 
 
 State 246
 
-   58 cellimg: "<img" .
+   58 cellimg: "<img" •
 
     $default  reduce using rule 58 (cellimg)
 
 
 State 247
 
-   57 cell: celltd td_arg ">" "</td" . ">"
+   57 cell: celltd td_arg ">" "</td" • ">"
 
     ">"  shift, and go to state 276
 
 
 State 248
 
-   54 cell: celltd td_arg ">" htmlparser . "</td" ">"
+   54 cell: celltd td_arg ">" htmlparser • "</td" ">"
 
     "</td"  shift, and go to state 277
 
 
 State 249
 
-   55 cell: celltd td_arg ">" cellimg . img_arg "/>" "</td" ">"
-   56     | celltd td_arg ">" cellimg . img_arg ">" "</img" ">" "</td" ">"
+   55 cell: celltd td_arg ">" cellimg • img_arg "/>" "</td" ">"
+   56     | celltd td_arg ">" cellimg • img_arg ">" "</img" ">" "</td" ">"
 
     $default  reduce using rule 111 (img_arg)
 
@@ -2732,182 +2765,182 @@ State 249
 
 State 250
 
-  109 td_1arg: "text" "=" . "string"
+  109 td_1arg: "text" "=" • "string"
 
     "string"  shift, and go to state 279
 
 
 State 251
 
-   87 td_1arg: "align" "=" . "string"
+   87 td_1arg: "align" "=" • "string"
 
     "string"  shift, and go to state 280
 
 
 State 252
 
-   88 td_1arg: "balign" "=" . "string"
+   88 td_1arg: "balign" "=" • "string"
 
     "string"  shift, and go to state 281
 
 
 State 253
 
-   89 td_1arg: "bgcolor" "=" . "string"
+   89 td_1arg: "bgcolor" "=" • "string"
 
     "string"  shift, and go to state 282
 
 
 State 254
 
-   90 td_1arg: "border" "=" . "string"
+   90 td_1arg: "border" "=" • "string"
 
     "string"  shift, and go to state 283
 
 
 State 255
 
-   91 td_1arg: "cellpadding" "=" . "string"
+   91 td_1arg: "cellpadding" "=" • "string"
 
     "string"  shift, and go to state 284
 
 
 State 256
 
-   92 td_1arg: "cellspacing" "=" . "string"
+   92 td_1arg: "cellspacing" "=" • "string"
 
     "string"  shift, and go to state 285
 
 
 State 257
 
-   93 td_1arg: "color" "=" . "string"
+   93 td_1arg: "color" "=" • "string"
 
     "string"  shift, and go to state 286
 
 
 State 258
 
-   94 td_1arg: "colspan" "=" . "string"
+   94 td_1arg: "colspan" "=" • "string"
 
     "string"  shift, and go to state 287
 
 
 State 259
 
-   95 td_1arg: "fixedsize" "=" . "string"
+   95 td_1arg: "fixedsize" "=" • "string"
 
     "string"  shift, and go to state 288
 
 
 State 260
 
-   96 td_1arg: "gradientangle" "=" . "string"
+   96 td_1arg: "gradientangle" "=" • "string"
 
     "string"  shift, and go to state 289
 
 
 State 261
 
-   97 td_1arg: "height" "=" . "string"
+   97 td_1arg: "height" "=" • "string"
 
     "string"  shift, and go to state 290
 
 
 State 262
 
-   98 td_1arg: "href" "=" . "string"
+   98 td_1arg: "href" "=" • "string"
 
     "string"  shift, and go to state 291
 
 
 State 263
 
-   99 td_1arg: "id" "=" . "string"
+   99 td_1arg: "id" "=" • "string"
 
     "string"  shift, and go to state 292
 
 
 State 264
 
-  100 td_1arg: "port" "=" . "string"
+  100 td_1arg: "port" "=" • "string"
 
     "string"  shift, and go to state 293
 
 
 State 265
 
-  101 td_1arg: "rowspan" "=" . "string"
+  101 td_1arg: "rowspan" "=" • "string"
 
     "string"  shift, and go to state 294
 
 
 State 266
 
-  102 td_1arg: "sides" "=" . "string"
+  102 td_1arg: "sides" "=" • "string"
 
     "string"  shift, and go to state 295
 
 
 State 267
 
-  103 td_1arg: "style" "=" . "string"
+  103 td_1arg: "style" "=" • "string"
 
     "string"  shift, and go to state 296
 
 
 State 268
 
-  104 td_1arg: "target" "=" . "string"
+  104 td_1arg: "target" "=" • "string"
 
     "string"  shift, and go to state 297
 
 
 State 269
 
-  105 td_1arg: "title" "=" . "string"
+  105 td_1arg: "title" "=" • "string"
 
     "string"  shift, and go to state 298
 
 
 State 270
 
-  106 td_1arg: "tooltip" "=" . "string"
+  106 td_1arg: "tooltip" "=" • "string"
 
     "string"  shift, and go to state 299
 
 
 State 271
 
-  107 td_1arg: "valign" "=" . "string"
+  107 td_1arg: "valign" "=" • "string"
 
     "string"  shift, and go to state 300
 
 
 State 272
 
-  108 td_1arg: "width" "=" . "string"
+  108 td_1arg: "width" "=" • "string"
 
     "string"  shift, and go to state 301
 
 
 State 273
 
-   45 rows: rows "<hr" ">" "</hr" ">" $@9 row .
+   45 rows: rows "<hr" ">" "</hr" ">" $@9 row •
 
     $default  reduce using rule 45 (rows)
 
 
 State 274
 
-   51 cells: cells "<vr" "/>" $@11 cell .
+   51 cells: cells "<vr" "/>" $@11 cell •
 
     $default  reduce using rule 51 (cells)
 
 
 State 275
 
-   53 cells: cells "<vr" ">" "</vr" ">" . $@12 cell
+   53 cells: cells "<vr" ">" "</vr" ">" • $@12 cell
 
     $default  reduce using rule 52 ($@12)
 
@@ -2916,23 +2949,23 @@ State 275
 
 State 276
 
-   57 cell: celltd td_arg ">" "</td" ">" .
+   57 cell: celltd td_arg ">" "</td" ">" •
 
     $default  reduce using rule 57 (cell)
 
 
 State 277
 
-   54 cell: celltd td_arg ">" htmlparser "</td" . ">"
+   54 cell: celltd td_arg ">" htmlparser "</td" • ">"
 
     ">"  shift, and go to state 303
 
 
 State 278
 
-   55 cell: celltd td_arg ">" cellimg img_arg . "/>" "</td" ">"
-   56     | celltd td_arg ">" cellimg img_arg . ">" "</img" ">" "</td" ">"
-  110 img_arg: img_arg . img_1arg
+   55 cell: celltd td_arg ">" cellimg img_arg • "/>" "</td" ">"
+   56     | celltd td_arg ">" cellimg img_arg • ">" "</img" ">" "</td" ">"
+  110 img_arg: img_arg • img_1arg
 
     "/>"     shift, and go to state 304
     ">"      shift, and go to state 305
@@ -2945,168 +2978,168 @@ State 278
 
 State 279
 
-  109 td_1arg: "text" "=" "string" .
+  109 td_1arg: "text" "=" "string" •
 
     $default  reduce using rule 109 (td_1arg)
 
 
 State 280
 
-   87 td_1arg: "align" "=" "string" .
+   87 td_1arg: "align" "=" "string" •
 
     $default  reduce using rule 87 (td_1arg)
 
 
 State 281
 
-   88 td_1arg: "balign" "=" "string" .
+   88 td_1arg: "balign" "=" "string" •
 
     $default  reduce using rule 88 (td_1arg)
 
 
 State 282
 
-   89 td_1arg: "bgcolor" "=" "string" .
+   89 td_1arg: "bgcolor" "=" "string" •
 
     $default  reduce using rule 89 (td_1arg)
 
 
 State 283
 
-   90 td_1arg: "border" "=" "string" .
+   90 td_1arg: "border" "=" "string" •
 
     $default  reduce using rule 90 (td_1arg)
 
 
 State 284
 
-   91 td_1arg: "cellpadding" "=" "string" .
+   91 td_1arg: "cellpadding" "=" "string" •
 
     $default  reduce using rule 91 (td_1arg)
 
 
 State 285
 
-   92 td_1arg: "cellspacing" "=" "string" .
+   92 td_1arg: "cellspacing" "=" "string" •
 
     $default  reduce using rule 92 (td_1arg)
 
 
 State 286
 
-   93 td_1arg: "color" "=" "string" .
+   93 td_1arg: "color" "=" "string" •
 
     $default  reduce using rule 93 (td_1arg)
 
 
 State 287
 
-   94 td_1arg: "colspan" "=" "string" .
+   94 td_1arg: "colspan" "=" "string" •
 
     $default  reduce using rule 94 (td_1arg)
 
 
 State 288
 
-   95 td_1arg: "fixedsize" "=" "string" .
+   95 td_1arg: "fixedsize" "=" "string" •
 
     $default  reduce using rule 95 (td_1arg)
 
 
 State 289
 
-   96 td_1arg: "gradientangle" "=" "string" .
+   96 td_1arg: "gradientangle" "=" "string" •
 
     $default  reduce using rule 96 (td_1arg)
 
 
 State 290
 
-   97 td_1arg: "height" "=" "string" .
+   97 td_1arg: "height" "=" "string" •
 
     $default  reduce using rule 97 (td_1arg)
 
 
 State 291
 
-   98 td_1arg: "href" "=" "string" .
+   98 td_1arg: "href" "=" "string" •
 
     $default  reduce using rule 98 (td_1arg)
 
 
 State 292
 
-   99 td_1arg: "id" "=" "string" .
+   99 td_1arg: "id" "=" "string" •
 
     $default  reduce using rule 99 (td_1arg)
 
 
 State 293
 
-  100 td_1arg: "port" "=" "string" .
+  100 td_1arg: "port" "=" "string" •
 
     $default  reduce using rule 100 (td_1arg)
 
 
 State 294
 
-  101 td_1arg: "rowspan" "=" "string" .
+  101 td_1arg: "rowspan" "=" "string" •
 
     $default  reduce using rule 101 (td_1arg)
 
 
 State 295
 
-  102 td_1arg: "sides" "=" "string" .
+  102 td_1arg: "sides" "=" "string" •
 
     $default  reduce using rule 102 (td_1arg)
 
 
 State 296
 
-  103 td_1arg: "style" "=" "string" .
+  103 td_1arg: "style" "=" "string" •
 
     $default  reduce using rule 103 (td_1arg)
 
 
 State 297
 
-  104 td_1arg: "target" "=" "string" .
+  104 td_1arg: "target" "=" "string" •
 
     $default  reduce using rule 104 (td_1arg)
 
 
 State 298
 
-  105 td_1arg: "title" "=" "string" .
+  105 td_1arg: "title" "=" "string" •
 
     $default  reduce using rule 105 (td_1arg)
 
 
 State 299
 
-  106 td_1arg: "tooltip" "=" "string" .
+  106 td_1arg: "tooltip" "=" "string" •
 
     $default  reduce using rule 106 (td_1arg)
 
 
 State 300
 
-  107 td_1arg: "valign" "=" "string" .
+  107 td_1arg: "valign" "=" "string" •
 
     $default  reduce using rule 107 (td_1arg)
 
 
 State 301
 
-  108 td_1arg: "width" "=" "string" .
+  108 td_1arg: "width" "=" "string" •
 
     $default  reduce using rule 108 (td_1arg)
 
 
 State 302
 
-   53 cells: cells "<vr" ">" "</vr" ">" $@12 . cell
+   53 cells: cells "<vr" ">" "</vr" ">" $@12 • cell
 
     "<td"  shift, and go to state 201
 
@@ -3116,139 +3149,139 @@ State 302
 
 State 303
 
-   54 cell: celltd td_arg ">" htmlparser "</td" ">" .
+   54 cell: celltd td_arg ">" htmlparser "</td" ">" •
 
     $default  reduce using rule 54 (cell)
 
 
 State 304
 
-   55 cell: celltd td_arg ">" cellimg img_arg "/>" . "</td" ">"
+   55 cell: celltd td_arg ">" cellimg img_arg "/>" • "</td" ">"
 
     "</td"  shift, and go to state 311
 
 
 State 305
 
-   56 cell: celltd td_arg ">" cellimg img_arg ">" . "</img" ">" "</td" ">"
+   56 cell: celltd td_arg ">" cellimg img_arg ">" • "</img" ">" "</td" ">"
 
     "</img"  shift, and go to state 312
 
 
 State 306
 
-  114 img_1arg: "text" . "=" "string"
+  114 img_1arg: "text" • "=" "string"
 
     "="  shift, and go to state 313
 
 
 State 307
 
-  112 img_1arg: "scale" . "=" "string"
+  112 img_1arg: "scale" • "=" "string"
 
     "="  shift, and go to state 314
 
 
 State 308
 
-  113 img_1arg: "src" . "=" "string"
+  113 img_1arg: "src" • "=" "string"
 
     "="  shift, and go to state 315
 
 
 State 309
 
-  110 img_arg: img_arg img_1arg .
+  110 img_arg: img_arg img_1arg •
 
     $default  reduce using rule 110 (img_arg)
 
 
 State 310
 
-   53 cells: cells "<vr" ">" "</vr" ">" $@12 cell .
+   53 cells: cells "<vr" ">" "</vr" ">" $@12 cell •
 
     $default  reduce using rule 53 (cells)
 
 
 State 311
 
-   55 cell: celltd td_arg ">" cellimg img_arg "/>" "</td" . ">"
+   55 cell: celltd td_arg ">" cellimg img_arg "/>" "</td" • ">"
 
     ">"  shift, and go to state 316
 
 
 State 312
 
-   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" . ">" "</td" ">"
+   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" • ">" "</td" ">"
 
     ">"  shift, and go to state 317
 
 
 State 313
 
-  114 img_1arg: "text" "=" . "string"
+  114 img_1arg: "text" "=" • "string"
 
     "string"  shift, and go to state 318
 
 
 State 314
 
-  112 img_1arg: "scale" "=" . "string"
+  112 img_1arg: "scale" "=" • "string"
 
     "string"  shift, and go to state 319
 
 
 State 315
 
-  113 img_1arg: "src" "=" . "string"
+  113 img_1arg: "src" "=" • "string"
 
     "string"  shift, and go to state 320
 
 
 State 316
 
-   55 cell: celltd td_arg ">" cellimg img_arg "/>" "</td" ">" .
+   55 cell: celltd td_arg ">" cellimg img_arg "/>" "</td" ">" •
 
     $default  reduce using rule 55 (cell)
 
 
 State 317
 
-   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" ">" . "</td" ">"
+   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" ">" • "</td" ">"
 
     "</td"  shift, and go to state 321
 
 
 State 318
 
-  114 img_1arg: "text" "=" "string" .
+  114 img_1arg: "text" "=" "string" •
 
     $default  reduce using rule 114 (img_1arg)
 
 
 State 319
 
-  112 img_1arg: "scale" "=" "string" .
+  112 img_1arg: "scale" "=" "string" •
 
     $default  reduce using rule 112 (img_1arg)
 
 
 State 320
 
-  113 img_1arg: "src" "=" "string" .
+  113 img_1arg: "src" "=" "string" •
 
     $default  reduce using rule 113 (img_1arg)
 
 
 State 321
 
-   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" ">" "</td" . ">"
+   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" ">" "</td" • ">"
 
     ">"  shift, and go to state 322
 
 
 State 322
 
-   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" ">" "</td" ">" .
+   56 cell: celltd td_arg ">" cellimg img_arg ">" "</img" ">" "</td" ">" •
 
     $default  reduce using rule 56 (cell)

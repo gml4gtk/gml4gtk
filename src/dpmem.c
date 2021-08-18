@@ -49,6 +49,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* switch mem lib */
+#undef CLIB
+
+#ifdef CLIB
+/* use the c lib */
+#else
+/* use gtk lib */
+#include <gtk/gtk.h>
+#endif
+
 #include "splay-tree.h"
 #include "main.h"
 #include "dp.h"
@@ -60,8 +70,26 @@ static void memcheck_free(void *ptr);
 static void *memcheck_calloc(size_t nmemb, size_t size);
 static void *memcheck_realloc(void *ptr, size_t size);
 
-/* */
-void dp_free(void *ptr)
+/* wrapper for free()
+ * This always returns (void *)0
+ * This is used to set pointers to zero automatically
+ * p = dp_free (p);
+ * This can prevent hidden bugs
+ * This may help checking software as valgrind and more
+ * This can be extended to clear free'ed memory before free() to make it even more safe
+ * But here only calloc() is used then random dat is no problem
+ * clang scan-build will generate there warnings
+ * warning: Value stored to 'fptr' is never read
+ * fptr = dp_free(fptr);
+ *   ^~~~~~~~~~~~~~
+ * This is true and can be ignored
+ * then (void)dp_free(p) cn be used
+ * or adding: (void)p;
+ * or adding: if(p){}
+ * or adding: compiler specific pragma
+ * or adding: compiler specific attribute
+ */
+void *dp_free(void *ptr)
 {
 	char *p = NULL;
 	if (ptr) {
@@ -73,7 +101,7 @@ void dp_free(void *ptr)
 			*p = 1;
 		}
 	}
-	return;
+	return ((void *)0);
 }
 
 /* */
@@ -781,19 +809,31 @@ void dp_memreport(void)
 static void memcheck_free(void *ptr)
 {
 	if (ptr) {
+#ifdef CLIB
 		free(ptr);
+#else
+		g_free(ptr);
+#endif
 	}
 	return;
 }
 
 static void *memcheck_calloc(size_t nmemb, size_t size)
 {
+#ifdef CLIB
 	return (calloc(1, (nmemb * size)));
+#else
+	return (g_malloc0((nmemb * size)));
+#endif
 }
 
 static void *memcheck_realloc(void *ptr, size_t size)
 {
+#ifdef CLIB
 	return (realloc(ptr, size));
+#else
+	return (g_realloc(ptr, size));
+#endif
 }
 
 void dp_meminit(void)

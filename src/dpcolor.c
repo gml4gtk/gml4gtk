@@ -8864,7 +8864,7 @@ static void colordata(int rev)
 static void coloradd(const char *name, int code, int rev)
 {
 	char buf[64];
-	char *s = NULL;
+	const char *s = NULL;
 	int i = 0;
 	int j = 0;
 

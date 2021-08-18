@@ -491,22 +491,11 @@ static void pos3init(struct gml_graph *g)
 
 	dl = dp_calloc(1, ((g->maxlevel + 1) * sizeof(struct node_data *)));
 
-	if (dl == NULL) {
-		return;
-	}
-
 	for (i = 0; i <= g->maxlevel; i++) {
 		dl[i] = dp_calloc(1, ((g->nnodes_of_level[i] + 1) * sizeof(struct node_data)));
-		if (dl[i] == NULL) {
-			return;
-		}
 	}
 
 	cix = dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
-
-	if (cix == NULL) {
-		return;
-	}
 
 	/* for_all_nodes(g,n) */
 	gnl = g->nodelist;
@@ -529,10 +518,6 @@ static void pos3init(struct gml_graph *g)
 
 	/* calc max y-size at every level */
 	szy = dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
-
-	if (szy == NULL) {
-		return;
-	}
 
 	/* y offset */
 	yoff = 0;
@@ -575,24 +560,27 @@ static void pos3clear(struct gml_graph *g)
 		for (i = 0; i <= g->maxlevel; i++) {
 			pnl = dl[i];
 			if (pnl) {
-				dp_free(pnl);
-				dl[i] = NULL;
+				dl[i] = dp_free(pnl);
+				if (dl[i]) {
+				}
 			}
 		}
-		dp_free(dl);
+		dl = dp_free(dl);
+		if (dl) {
+		}
 	}
 
 	if (cix) {
-		dp_free(cix);
+		cix = dp_free(cix);
+		if (cix) {
+		}
 	}
-
-	cix = NULL;
 
 	if (szy) {
-		dp_free(szy);
+		szy = dp_free(szy);
+		if (szy) {
+		}
 	}
-
-	szy = NULL;
 
 	dl = NULL;
 	nl = NULL;

@@ -22,6 +22,18 @@
 #ifndef DPCOLOR_H
 #define DPCOLOR_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+# define __BEGIN_DECLS extern "C" {
+# define __END_DECLS }
+#else
+# define __BEGIN_DECLS /* empty */
+# define __END_DECLS /* empty */
+#endif
+
+__BEGIN_DECLS
+
 /* dot colorschemes */
 #define COLOR_NS_ACCENT3 1	/* accent3 color scheme */
 #define COLOR_NS_ACCENT4 2	/* accent4 color scheme */
@@ -314,6 +326,7 @@ extern int dp_colornscode (int code, int scheme);
 /* */
 extern int dp_findcolor (int scheme, char *str);
 
+__END_DECLS
 
 #endif
 

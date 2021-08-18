@@ -317,9 +317,6 @@ static int equals(struct suginode *a, int t)
 	double baryx = 0.0;
 	double baryy = 0.0;
 	temp = dp_calloc(1, sizeof(struct suginode));
-	if (temp == NULL) {
-		return (0);
-	}
 	/* scan all nodes at this level */
 	for (i = 0; i < (t - 1); i++) {
 		if (down) {
@@ -341,8 +338,9 @@ static int equals(struct suginode *a, int t)
 			res++;
 		}
 	}
-	dp_free(temp);
-	temp = NULL;
+	temp = dp_free(temp);
+	if (temp) {
+	}
 	/* return 0 if no changes made, <>0 if changed */
 	return (res);
 }
@@ -424,11 +422,6 @@ static void mediansort(struct gml_graph *g, struct suginode *a, struct suginode 
 	/* buffer for test result */
 	dummy = dp_calloc(1, (t * sizeof(struct suginode)));
 
-	if (dummy == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	/* calc node median of every node at level a */
 	for (i = 0; i < t; i++) {
 		/* get i'th node in array a and search in array b */
@@ -474,8 +467,9 @@ static void mediansort(struct gml_graph *g, struct suginode *a, struct suginode 
 	g->numce[a[0].level] = la;
 
 	if (la == 0) {
-		dp_free(dummy);
-		dummy = NULL;
+		dummy = dp_free(dummy);
+		if (dummy) {
+		}
 		return;
 	}
 
@@ -488,8 +482,9 @@ static void mediansort(struct gml_graph *g, struct suginode *a, struct suginode 
 		/* save this crossing count */
 		g->numce[a[0].level] = ld;
 		if (ld == 0) {
-			dp_free(dummy);
-			dummy = NULL;
+			dummy = dp_free(dummy);
+			if (dummy) {
+			}
 			return;
 		}
 	}
@@ -536,8 +531,9 @@ static void mediansort(struct gml_graph *g, struct suginode *a, struct suginode 
 		}
 	}
 
-	dp_free(dummy);
-	dummy = NULL;
+	dummy = dp_free(dummy);
+	if (dummy) {
+	}
 
 	return;
 }
@@ -551,21 +547,9 @@ static void cp_make_levelnodes(struct gml_graph *g)
 
 	glevelnodes = dp_calloc(1, (gnlevels * sizeof(struct gml_nlist *)));
 
-	if (glevelnodes == NULL) {
-		return;
-	}
-
 	glevelnodesend = dp_calloc(1, (gnlevels * sizeof(struct gml_nlist *)));
 
-	if (glevelnodesend == NULL) {
-		return;
-	}
-
 	nglevelnodes = dp_calloc(1, (gnlevels * sizeof(int)));
-
-	if (nglevelnodes == NULL) {
-		return;
-	}
 
 	lnll = g->nodelist;
 
@@ -574,10 +558,6 @@ static void cp_make_levelnodes(struct gml_graph *g)
 		i = lnll->node->rely;
 
 		newl = dp_calloc(1, sizeof(struct gml_nlist));
-
-		if (newl == NULL) {
-			return;
-		}
 
 		newl->node = lnll->node;
 
@@ -626,8 +606,9 @@ static void clr_levelnodes(struct gml_graph *g)
 		lnll = glevelnodes[i];
 		while (lnll) {
 			nlnext = lnll->next;
-			dp_free(lnll);
-			lnll = NULL;
+			lnll = dp_free(lnll);
+			if (lnll) {
+			}
 			lnll = nlnext;
 		}
 
@@ -635,11 +616,13 @@ static void clr_levelnodes(struct gml_graph *g)
 		glevelnodesend[i] = NULL;
 	}
 
-	dp_free(glevelnodes);
-	glevelnodes = NULL;
+	glevelnodes = dp_free(glevelnodes);
+	if (glevelnodes) {
+	}
 
-	dp_free(glevelnodesend);
-	glevelnodesend = NULL;
+	glevelnodesend = dp_free(glevelnodesend);
+	if (glevelnodesend) {
+	}
 
 	return;
 }
@@ -648,8 +631,9 @@ static void clr_levelnodes(struct gml_graph *g)
 static void clr_nglevelnodes(void)
 {
 
-	dp_free(nglevelnodes);
-	nglevelnodes = NULL;
+	nglevelnodes = dp_free(nglevelnodes);
+	if (nglevelnodes) {
+	}
 
 	return;
 }
@@ -665,10 +649,6 @@ static void cp_data(struct gml_graph *g)
 
 	sugidata = dp_calloc(1, (gnlevels * sizeof(struct suginode *)));
 
-	if (sugidata == NULL) {
-		return;
-	}
-
 	/* create nodes on level */
 	cp_make_levelnodes(g);
 
@@ -679,10 +659,6 @@ static void cp_data(struct gml_graph *g)
 		}
 
 		sugidata[i] = dp_calloc(1, (nglevelnodes[i] * sizeof(struct suginode)));
-
-		if (sugidata[i] == NULL) {
-			return;
-		}
 
 		sugidata[i][0].level = i;
 
@@ -700,60 +676,88 @@ static void cp_data(struct gml_graph *g)
 				       lnll->node->indegree, lnll->node->outdegree);
 			}
 			/* set incoming edges if any */
-			if (lnll->node->indegree) {
-				sugidata[i][count].indegree = lnll->node->indegree;
-				sugidata[i][count].incoming = dp_calloc(1, (lnll->node->indegree * sizeof(int)));
-				if (sugidata[i][count].incoming == NULL) {
-					return;
-				}
+			sugidata[i][count].indegree = 0;
+			sugidata[i][count].incoming = NULL;
+
+			if (lnll->node->indegree > 0) {
+				/* count numnber of edges without hor. edges */
 				k = 0;
 				el = lnll->node->incoming_e;
 				while (el) {
 					/* skip the hor. edges */
 					if (el->edge->hedge == 0) {
-						/* set number of to node */
-						sugidata[i][count].incoming[k] = el->edge->from_node->nr;
-						if (el->edge->to_node->nr != lnll->node->nr) {
-							printf("%s(): fixme(1)\n", __func__);
-						}
 						k++;
 					}
 					el = el->next;
 				}
-				/* indegree without hor. edges */
-				sugidata[i][count].indegree = k;
-			} else {
-				sugidata[i][count].indegree = 0;
-				sugidata[i][count].incoming = NULL;
-			}
-			/* set outgoing edges if any */
-			if (lnll->node->outdegree) {
-				sugidata[i][count].outdegree = lnll->node->outdegree;
-				sugidata[i][count].outgoing = dp_calloc(1, (lnll->node->outdegree * sizeof(int)));
-				if (sugidata[i][count].outgoing == NULL) {
-					return;
+				sugidata[i][count].indegree = k;	/* old lnll->node->indegree; */
+				if (k > 0) {
+					sugidata[i][count].incoming =
+					    dp_calloc(1, ( /* old: lnll->node->indegree */ k * sizeof(int)));
+
+					/* */
+					k = 0;
+					el = lnll->node->incoming_e;
+					while (el) {
+						/* skip the hor. edges */
+						if (el->edge->hedge == 0) {
+							/* set number of to node */
+							sugidata[i][count].incoming[k] = el->edge->from_node->nr;
+							if (el->edge->to_node->nr != lnll->node->nr) {
+								printf("%s(): fixme(1)\n", __func__);
+							}
+							k++;
+						}
+						el = el->next;
+					}
 				}
+			}
+
+			sugidata[i][count].outdegree = 0;
+			sugidata[i][count].outgoing = NULL;
+
+			/* set outgoing edges if any */
+			if (lnll->node->outdegree > 0) {
+				/* count numnber of edges without hor. edges */
 				k = 0;
 				el = lnll->node->outgoing_e;
 				while (el) {
 					/* skip hor. edges */
 					if (el->edge->hedge == 0) {
-						/* set number of from node */
-						sugidata[i][count].outgoing[k] = el->edge->to_node->nr;
-						if (el->edge->from_node->nr != lnll->node->nr) {
-							printf("%s(): fixme(2)\n", __func__);
-						}
 						k++;
 					}
 					el = el->next;
 				}
-				/* outdegree without hor. edges */
-				sugidata[i][count].outdegree = k;
-			} else {
-				sugidata[i][count].outdegree = 0;
-				sugidata[i][count].outgoing = NULL;
+
+				/* set */
+				if (k > 0) {
+					sugidata[i][count].outdegree = k;	/* old: lnll->node->outdegree; */
+					sugidata[i][count].outgoing =
+					    dp_calloc(1, ( /* old: lnll->node->outdegree */ k * sizeof(int)));
+
+					/* */
+					k = 0;
+					el = lnll->node->outgoing_e;
+					while (el) {
+						/* skip hor. edges */
+						if (el->edge->hedge == 0) {
+							/* set number of from node */
+							sugidata[i][count].outgoing[k] = el->edge->to_node->nr;
+							if (el->edge->from_node->nr != lnll->node->nr) {
+								printf("%s(): fixme(2)\n", __func__);
+							}
+							k++;
+						}
+						el = el->next;
+					}
+				}
 			}
+
+			/*
+			 * to next x position
+			 */
 			count++;
+			/* to next node */
 			lnll = lnll->next;
 		}
 
@@ -784,22 +788,39 @@ static void clr_data(struct gml_graph *g)
 	/* copy new node positions */
 	for (i = 0; i < gnlevels; i++) {
 		/* scan nodes at level [i] */
-		for (j = 0; j < nglevelnodes[i]; j++) {
-			if (sugidata[i][j].outdegree) {
-				dp_free(sugidata[i][j].outgoing);
-				sugidata[i][j].outgoing = NULL;
+		if (sugidata[i]) {
+			for (j = 0; j < nglevelnodes[i]; j++) {
+				/* extra integrity check */
+				if (sugidata[i][j].outgoing) {
+					if (sugidata[i][j].outdegree == 0) {
+						printf("%s(): sugidata[i][j].outgoing at zero outdegree\n", __func__);
+					}
+				}
+				if (sugidata[i][j].outdegree || sugidata[i][j].outgoing) {
+					sugidata[i][j].outgoing = dp_free(sugidata[i][j].outgoing);
+					if (sugidata[i][j].outgoing) {
+					}
+				}
+				if (sugidata[i][j].incoming != NULL) {
+					if (sugidata[i][j].indegree == 0) {
+						printf("%s(): sugidata[i][j].incoming with zero indegree\n", __func__);
+					}
+				}
+				if (sugidata[i][j].indegree || sugidata[i][j].incoming) {
+					sugidata[i][j].incoming = dp_free(sugidata[i][j].incoming);
+					if (sugidata[i][j].incoming) {
+					}
+				}
+				if (sugidata[i]) {
+				}
 			}
-			if (sugidata[i][j].indegree) {
-				dp_free(sugidata[i][j].incoming);
-				sugidata[i][j].incoming = NULL;
-			}
+			sugidata[i] = dp_free(sugidata[i]);
 		}
-		dp_free(sugidata[i]);
-		sugidata[i] = NULL;
 	}
 
-	dp_free(sugidata);
-	sugidata = NULL;
+	sugidata = dp_free(sugidata);
+	if (sugidata) {
+	}
 
 	/* clear number of nodes at level */
 	clr_nglevelnodes();
@@ -963,12 +984,12 @@ void reduce_crossings4(struct gml_graph *g, int it1v, int it2v)
 	int tsum = 0;
 
 	/* number of crossing edges at level */
-	if (g->numce == NULL) {
-		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
-		if (g->numce == NULL) {
-			return;
+	if (g->numce) {
+		g->numce = dp_free(g->numce);
+		if (g->numce) {
 		}
 	}
+	g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	if (g->maxlevel == 0) {
 		/* if graph has only 1 or more nodes */

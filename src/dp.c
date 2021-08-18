@@ -19,6 +19,30 @@
  * License-Filename: LICENSE
  */
 
+/*
+
+To improve this C there are guides for mission-critical software
+and similar guides collected at
+
+https://github.com/abougouffa/awesome-coding-standards
+
+This are few rules from nasa at
+
+https://en.wikipedia.org/wiki/The_Power_of_10:_Rules_for_Developing_Safety-Critical_Code
+
+Avoid complex flow constructs, such as goto and recursion.
+All loops must have fixed bounds. This prevents runaway code.
+Avoid heap memory allocation.
+Restrict functions to a single printed page.
+Use a minimum of two runtime assertions per function.
+Restrict the scope of data to the smallest possible.
+Check the return value of all non-void functions, or cast to void to indicate the return value is useless.
+Use the preprocessor sparingly.
+Limit pointer use to a single dereference, and do not use function pointers.
+Compile with all possible warnings active; all warnings should then be addressed before release of the software.
+
+*/
+
 #include "config.h"
 
 #include <stdio.h>
@@ -186,12 +210,7 @@ void dp_sg(char *etype, char *gname)
 	dpgraphs = splay_tree_new(splay_tree_compare_ints, NULL, NULL);
 
 	/* fresh root graph */
-	dp_groot = dp_calloc(1, sizeof(struct dpgraph));
-
-	if (dp_groot == NULL) {
-		/* shouldnothappen */
-		return;
-	}
+	dp_groot = (struct dpgraph *)dp_calloc(1, sizeof(struct dpgraph));
 
 	/* root graph has uniq number 0 */
 	dp_groot->nr = dp_sgnr;
@@ -203,7 +222,7 @@ void dp_sg(char *etype, char *gname)
 
 	if (gname == NULL) {
 		/* no graphname, make it "" */
-		dp_groot->graphname = "";
+		dp_groot->graphname = dp_uniqstr((char *)"");
 	} else {
 		dp_groot->graphname = gname;
 	}
@@ -220,28 +239,15 @@ void dp_sg(char *etype, char *gname)
 	dp_groot->eattr = splay_tree_new(splay_tree_compare_strings, NULL, NULL);
 
 	/* node with default settings */
-	dp_groot->defnode = dp_calloc(1, sizeof(struct dpnode));
-
-	if (dp_groot->defnode == NULL) {
-		/* shouldnothappen */
-		dp_free(dp_groot);
-		return;
-	}
+	dp_groot->defnode = (struct dpnode *)dp_calloc(1, sizeof(struct dpnode));
 
 	/* set factory defaults */
 	dp_nodefdef(dp_groot->defnode);
-	dp_groot->defnode->name = dp_uniqstr("default");
-	dp_groot->defnode->label = dp_uniqstr("default");
+	dp_groot->defnode->name = dp_uniqstr((char *)"default");
+	dp_groot->defnode->label = dp_uniqstr((char *)"default");
 
 	/* edge with default settings */
-	dp_groot->defedge = dp_calloc(1, sizeof(struct dpedge));
-
-	if (dp_groot->defedge == NULL) {
-		/* shouldnothappen */
-		dp_free(dp_groot->defnode);
-		dp_free(dp_groot);
-		return;
-	}
+	dp_groot->defedge = (struct dpedge *)dp_calloc(1, sizeof(struct dpedge));
 
 	/* set factory defaults */
 	dp_edgefdef(dp_groot->defedge);
@@ -301,28 +307,17 @@ void dp_nsubg(struct dpgraph *sg, char *gname, int type)
 	sg->eattr = splay_tree_new(splay_tree_compare_strings, NULL, NULL);
 
 	/* node with default settings */
-	sg->defnode = dp_calloc(1, sizeof(struct dpnode));
+	sg->defnode = (struct dpnode *)dp_calloc(1, sizeof(struct dpnode));
 
-	if (sg->defnode == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
-	sg->defnode->name = dp_uniqstr("default");
-	sg->defnode->label = dp_uniqstr("default");
+	sg->defnode->name = dp_uniqstr((char *)"default");
+	sg->defnode->label = dp_uniqstr((char *)"default");
 
 	/* set factory defaults */
 	dp_nodefdef(sg->defnode);
 	dp_nodegdef(dp_curgraph->defnode, sg->defnode);
 
 	/* edge with default settings */
-	sg->defedge = dp_calloc(1, sizeof(struct dpedge));
-
-	if (sg->defedge == NULL) {
-		/* shouldnothappen */
-		dp_free(sg->defnode);
-		return;
-	}
+	sg->defedge = (struct dpedge *)dp_calloc(1, sizeof(struct dpedge));
 
 	/* set factory defaults */
 	dp_edgefdef(sg->defedge);
@@ -394,9 +389,15 @@ void dp_atype_edgedef(void)
 /* set attribute with last arg set to 1 if r is a <html-label>, otherwise r="a-string" */
 void dp_aset(char *l, char *r, int ishtml)
 {
-	char *dval = "";
+	char *dval = NULL;
 	splay_tree_node spn = NULL;
 	int htmllabel = 0;
+
+	/* safety */
+	if (l == NULL) {
+		printf("%s(): dot shouldnothappen l is nil\n", __func__);
+		return;
+	}
 
 	if (yydebug || 0) {
 		printf("%s(): attribute \"%s\" has arg \"%s\" ishtml=%d\n", __func__, l, r, ishtml);
@@ -412,7 +413,12 @@ void dp_aset(char *l, char *r, int ishtml)
 			return;
 		}
 	}
-	dval = r;
+
+	if (r) {
+		dval = r;
+	} else {
+		dval = dp_uniqstr((char *)"");
+	}
 
 	switch (dp_cclass) {
 		/* example : "aa"[color=red] */
@@ -529,11 +535,6 @@ static void dp_nodelink(struct dpnode *node, int mode)
 		/* add node to global nodelist */
 		nl = (struct dpnlink *)dp_calloc(1, sizeof(struct dpnlink));
 
-		if (nl == NULL) {
-			/* shouldnothappen */
-			return;
-		}
-
 		nl->n = node;
 
 		if (dp_anodes == NULL) {
@@ -547,11 +548,6 @@ static void dp_nodelink(struct dpnode *node, int mode)
 
 	/* add node to current subgraph */
 	nl = (struct dpnlink *)dp_calloc(1, sizeof(struct dpnlink));
-
-	if (nl == NULL) {
-		/* shouldnothappen */
-		return;
-	}
 
 	nl->n = node;
 
@@ -622,8 +618,9 @@ static void dp_clrep_r(struct dpgraph *gr)
 
 	while (el) {
 		elnext = el->next;
-		dp_free(el);
-		el = NULL;
+		el = (struct dpeplink *)dp_free(el);
+		if (el) {
+		}
 		el = elnext;
 	}
 
@@ -648,11 +645,11 @@ void dp_clrep(void)
 	while (el) {
 		elnext = el->next;
 		if (el->ep) {
-			dp_free(el->ep);
-			el->ep = NULL;
+			el->ep = (struct dpepoint *)dp_free((void *)el->ep);
 		}
-		dp_free(el);
-		el = NULL;
+		el = (struct dpeplink *)dp_free((void *)el);
+		if (el) {
+		}
 		el = elnext;
 	}
 
@@ -684,10 +681,9 @@ static void dp_clrnodes_r(struct dpgraph *gr)
 
 	while (nl) {
 		nlnext = nl->next;
+		nl = (struct dpnlink *)dp_free((void *)nl);
 		if (nl) {
-			dp_free(nl);
 		}
-		nl = NULL;
 		nl = nlnext;
 	}
 
@@ -701,6 +697,7 @@ static void dp_clrnodes_r(struct dpgraph *gr)
 static void dp_clrnodesli(struct dppart *info)
 {
 	int i = 0;
+	struct dppart *info2 = NULL;
 
 	if (info == NULL) {
 		return;
@@ -709,16 +706,16 @@ static void dp_clrnodesli(struct dppart *info)
 	for (i = 0; i < info->ndpparts; i++) {
 		if (info->parts[i]) {
 			dp_clrnodesli(info->parts[i]);
-			info->parts[i] = NULL;
 		}
 	}
 
 	if (info->parts) {
-		dp_free(info->parts);
-		info->parts = NULL;
+		info->parts = (struct dppart **)dp_free((void *)info->parts);
 	}
 
-	dp_free(info);
+	info2 = dp_free(info);
+	if (info2) {
+	}
 
 	return;
 }
@@ -739,10 +736,11 @@ static void dp_freememil(struct tdldata *td)
 		while (ilptr) {
 			ilptrnext = ilptr->next;
 			if (ilptr->items) {
-				dp_free(ilptr->items);
-				ilptr->items = NULL;
+				ilptr->items = (struct item *)dp_free((void *)ilptr->items);
 			}
-			dp_free(ilptr);
+			ilptr = (struct ilist *)dp_free((void *)ilptr);
+			if (ilptr) {
+			}
 			ilptr = ilptrnext;
 		}
 		td->tdd->il = NULL;
@@ -773,16 +771,19 @@ static void dp_freememtr(struct trlist *tr)
 		/* free il data in <td> */
 		if (tdlptr->tdd) {
 			dp_freememil(tdlptr);
-			dp_free(tdlptr->tdd);
+			tdlptr->tdd = (struct tddata *)dp_free((void *)tdlptr->tdd);
 		}
-		dp_free(tdlptr);
+		tdlptr = (struct tdldata *)dp_free((void *)tdlptr);
+		if (tdlptr) {
+		}
 		tdlptr = tdlptrnext;
 	}
 	tr->tritem->td = NULL;
 	tr->tritem->tdend = NULL;
 
-	dp_free(tr->tritem);
-	tr->tritem = NULL;
+	tr->tritem = (struct trdata *)dp_free((void *)tr->tritem);
+	if (tr->tritem) {
+	}
 
 	return;
 }
@@ -812,10 +813,11 @@ static void dp_freememt_r(struct tlist *tl)
 				tlptrnext = tlptr->next;
 				dp_freememt_r(tlptr);
 				if (tlptr->titem) {
-					dp_free(tlptr->titem);
-					tlptr->titem = NULL;
+					tlptr->titem = (struct tableldata *)dp_free((void *)tlptr->titem);
 				}
-				dp_free(tlptr);
+				tlptr = (struct tlist *)dp_free((void *)tlptr);
+				if (tlptr) {
+				}
 				tlptr = tlptrnext;
 			}
 			tl->titem->tabdata->tl = NULL;
@@ -828,24 +830,23 @@ static void dp_freememt_r(struct tlist *tl)
 				trptrnext = trptr->next;
 				dp_freememtr(trptr);
 				if (trptr->tritem) {
-					dp_free(trptr->tritem);
-					trptr->tritem = NULL;
+					trptr->tritem = (struct trdata *)dp_free((void *)trptr->tritem);
 				}
-				dp_free(trptr);
+				trptr = (struct trlist *)dp_free((void *)trptr);
+				if (trptr) {
+				}
 				trptr = trptrnext;
 			}
 			tl->titem->tabdata->tr = NULL;
 			tl->titem->tabdata->trend = NULL;
 		}
 		if (tl->titem->tabdata) {
-			dp_free(tl->titem->tabdata);
-			tl->titem->tabdata = NULL;
+			tl->titem->tabdata = (struct tabledata *)dp_free((void *)tl->titem->tabdata);
 		}
 	}
 
 	if (tl->titem) {
-		dp_free(tl->titem);
-		tl->titem = NULL;
+		tl->titem = (struct tableldata *)dp_free((void *)tl->titem);
 	}
 
 	return;
@@ -856,7 +857,6 @@ static void dp_clearhlinfonode(struct dpnode *node)
 {
 	struct tlist *tlptr = NULL;	/* list of table items */
 	struct tlist *tlptrnext = NULL;	/* list of table items */
-
 	struct ilist *pil = NULL;
 	struct ilist *pilnext = NULL;
 	if (node == NULL) {	/* shoudlothappen */
@@ -872,10 +872,11 @@ static void dp_clearhlinfonode(struct dpnode *node)
 		while (pil) {
 			pilnext = pil->next;
 			if (pil->items) {
-				dp_free(pil->items);
-				pil->items = NULL;
+				pil->items = (struct item *)dp_free((void *)pil->items);
 			}
-			dp_free(pil);
+			pil = (struct ilist *)dp_free((void *)pil);
+			if (pil) {
+			}
 			pil = pilnext;
 		}
 		node->hlinfo->il = NULL;
@@ -890,20 +891,17 @@ static void dp_clearhlinfonode(struct dpnode *node)
 			tlptrnext = tlptr->next;
 			dp_freememt_r(tlptr);
 			if (tlptr->titem) {
-				dp_free(tlptr->titem);
-				tlptr->titem = NULL;
+				tlptr->titem = (struct tableldata *)dp_free((void *)tlptr->titem);
 			}
-			dp_free(tlptr);
+			tlptr = (struct tlist *)dp_free((void *)tlptr);
+			if (tlptr) {
+			}
 			tlptr = tlptrnext;
 		}
 		/* ready */
 		node->hlinfo->tl = NULL;
 		node->hlinfo->tlend = NULL;
 	}
-
-	/* final free */
-	dp_free(node->hlinfo);
-	node->hlinfo = NULL;
 
 	return;
 }
@@ -919,15 +917,21 @@ static void dp_clrnodes(void)
 
 	while (nl) {
 		nlnext = nl->next;
-		dp_clrnodesli(nl->n->labelinfo);
-		nl->n->labelinfo = NULL;
-		dp_clearhlinfonode(nl->n);
-		if (nl->n) {
-			dp_free(nl->n);
-			nl->n = NULL;
+		if (nl->n->labelinfo) {
+			dp_clrnodesli(nl->n->labelinfo);
 		}
-		dp_free(nl);
-		nl = NULL;
+		if (nl->n->hlinfo) {
+			dp_clearhlinfonode(nl->n);
+			nl->n->hlinfo = dp_free(nl->n->hlinfo);
+			if (nl->n->hlinfo) {
+			}
+		}
+		if (nl->n) {
+			nl->n = (struct dpnode *)dp_free((void *)nl->n);
+		}
+		nl = (struct dpnlink *)dp_free((void *)nl);
+		if (nl) {
+		}
 		nl = nlnext;
 	}
 
@@ -959,20 +963,17 @@ static void dp_clrgraph_r(struct dpgraph *gr)
 	while (gl) {
 		glnext = gl->next;
 		if (gl->sg->defnode) {
-			dp_free(gl->sg->defnode);
-			gl->sg->defnode = NULL;
+			gl->sg->defnode = (struct dpnode *)dp_free((void *)gl->sg->defnode);
 		}
 		if (gl->sg->defedge) {
-			dp_free(gl->sg->defedge);
-			gl->sg->defedge = NULL;
+			gl->sg->defedge = (struct dpedge *)dp_free((void *)gl->sg->defedge);
 		}
 		gl->sg->gattr = splay_tree_delete(gl->sg->gattr);
 		gl->sg->nattr = splay_tree_delete(gl->sg->nattr);
 		gl->sg->eattr = splay_tree_delete(gl->sg->eattr);
+		gl = (struct dpglink *)dp_free((void *)gl);
 		if (gl) {
-			dp_free(gl);
 		}
-		gl = NULL;
 		gl = glnext;
 	}
 
@@ -995,11 +996,11 @@ static void dp_clrgraphs(void)
 		while (dpl) {
 			dplnext = dpl->next;
 			if (dpl->sg) {
-				dp_free(dpl->sg);
+				dpl->sg = (struct dpgraph *)dp_free((void *)dpl->sg);
 			}
-			dpl->sg = NULL;
-			dp_free(dpl);
-			dpl = NULL;
+			dpl = (struct dpglink *)dp_free((void *)dpl);
+			if (dpl) {
+			}
 			dpl = dplnext;
 		}
 
@@ -1034,8 +1035,9 @@ static void dp_clredges_r(struct dpgraph *gr)
 	while (el) {
 		elnext = el->next;
 		/* edge ->e is free()'ed in dp_clredges() */
-		dp_free(el);
-		el = NULL;
+		el = (struct dpelink *)dp_free((void *)el);
+		if (el) {
+		}
 		el = elnext;
 	}
 
@@ -1058,11 +1060,11 @@ static void dp_clredges(void)
 	while (el) {
 		elnext = el->next;
 		if (el->e) {
-			dp_free(el->e);
-			el->e = NULL;
+			el->e = (struct dpedge *)dp_free((void *)el->e);
 		}
-		dp_free(el);
-		el = NULL;
+		el = (struct dpelink *)dp_free((void *)el);
+		if (el) {
+		}
 		el = elnext;
 	}
 
@@ -1083,11 +1085,11 @@ void dp_clrheade(void)
 	while (el) {
 		elnext = el->next;
 		if (el->ep) {
-			dp_free(el->ep);
-			el->ep = NULL;
+			el->ep = (struct dpepoint *)dp_free((void *)el->ep);
 		}
-		dp_free(el);
-		el = NULL;
+		el = (struct dpeplink *)dp_free((void *)el);
+		if (el) {
+		}
 		el = elnext;
 	}
 
@@ -1108,11 +1110,11 @@ static void dp_clrtmpe(void)
 	while (te) {
 		tenext = te->next;
 		if (te->e) {
-			dp_free(te->e);
-			te->e = NULL;
+			te->e = (struct dptmpe *)dp_free((void *)te->e);
 		}
-		dp_free(te);
-		te = NULL;
+		te = (struct dptelink *)dp_free((void *)te);
+		if (te) {
+		}
 		te = tenext;
 	}
 
@@ -1130,11 +1132,6 @@ static void dp_graphlink(struct dpgraph *sg)
 	/* add node to global nodelist */
 	ng = (struct dpglink *)dp_calloc(1, sizeof(struct dpglink));
 
-	if (ng == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	ng->sg = sg;
 
 	/* all subgraphs in one list */
@@ -1148,11 +1145,6 @@ static void dp_graphlink(struct dpgraph *sg)
 
 	/* add node to current subgraph */
 	ng = (struct dpglink *)dp_calloc(1, sizeof(struct dpglink));
-
-	if (ng == NULL) {
-		/* shouldnothappen */
-		return;
-	}
 
 	ng->sg = sg;
 
@@ -1304,11 +1296,6 @@ struct dpepoint *dp_mknid(char *name, char *port, char *compass)
 
 	nid = (struct dpepoint *)dp_calloc(1, sizeof(struct dpepoint));
 
-	if (nid == NULL) {
-		/* shouldnothappen */
-		return (NULL);
-	}
-
 	nid->n = n;
 	nid->port = port2;	/* port or compass point */
 	nid->compass = compass2;
@@ -1401,11 +1388,6 @@ void dp_newe(void)
 
 	dp_curedge = (struct dpedge *)dp_calloc(1, sizeof(struct dpedge));
 
-	if (dp_curedge == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	dp_curedge->yylineno = yylineno;
 
 	dp_edgegdef(dp_curgraph->defedge, dp_curedge);
@@ -1470,11 +1452,6 @@ static void dp_mkedges(void)
 	while (tl) {
 		newedge = (struct dpedge *)dp_calloc(1, sizeof(struct dpedge));
 
-		if (newedge == NULL) {
-			/* shouldnothappen */
-			return;
-		}
-
 		dp_edgenum++;
 		newedge->nr = dp_edgenum;
 		newedge->rootedon = dp_curgraph;
@@ -1491,11 +1468,6 @@ static void dp_mkedges(void)
 
 		nel = (struct dpelink *)dp_calloc(1, sizeof(struct dpelink));
 
-		if (nel == NULL) {
-			/* shouldnothappen */
-			return;
-		}
-
 		nel->e = newedge;
 
 		if (dp_aedges == NULL) {
@@ -1507,11 +1479,6 @@ static void dp_mkedges(void)
 		}
 
 		nel = (struct dpelink *)dp_calloc(1, sizeof(struct dpelink));
-
-		if (nel == NULL) {
-			/* shouldnothappen */
-			return;
-		}
 
 		nel->e = newedge;
 
@@ -1564,11 +1531,6 @@ static void dp_addte(struct dpnode *fn, char *fport, char *fcompass, struct dpno
 
 	te = (struct dptmpe *)dp_calloc(1, sizeof(struct dptmpe));
 
-	if (te == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	te->fn = fn;
 	te->fport = fport;
 	te->fcompass = fcompass;
@@ -1577,12 +1539,6 @@ static void dp_addte(struct dpnode *fn, char *fport, char *fcompass, struct dpno
 	te->tcompass = tcompass;
 
 	tl = (struct dptelink *)dp_calloc(1, sizeof(struct dptelink));
-
-	if (tl == NULL) {
-		/* shouldnothappen */
-		dp_free(te);
-		return;
-	}
 
 	tl->e = te;
 
@@ -1828,8 +1784,9 @@ void dp_ende(void)
 		if (yydebug || 0) {	/* print all edges */
 			dp_prtae();
 		}
-		dp_free(dp_curedge);
-		dp_curedge = NULL;
+		dp_curedge = (struct dpedge *)dp_free((void *)dp_curedge);
+		if (dp_curedge) {
+		}
 		dp_clrheade();
 		dp_clrtmpe();
 		dp_enest = 0;
@@ -1859,11 +1816,6 @@ void dp_namedsubg(char *sgname, int type)
 
 	nsg = (struct dpgraph *)dp_calloc(1, sizeof(struct dpgraph));
 
-	if (nsg == NULL) {
-		/* shouldnothappen */
-		return;
-	}
-
 	/* uniq graph number */
 	nsg->nr = dp_sgnr;
 
@@ -1887,7 +1839,7 @@ struct dpepoint *dp_endss(void)
 	struct dpepoint *newe = NULL;
 	struct dpgraph *g = NULL;
 
-	newe = dp_calloc(1, sizeof(struct dpepoint));
+	newe = (struct dpepoint *)dp_calloc(1, sizeof(struct dpepoint));
 
 	newe->type = 1;		/* type 1: this is a subgraph edge point */
 	newe->root = dp_curgraph;
@@ -1918,23 +1870,29 @@ char *dp_ccat(char *a, char *b)
 	char *tmpp = NULL;
 	char *res = NULL;
 
+	/* add safety */
+	if (a == NULL) {
+		return (dp_uniqstr((char *)""));
+	}
+
+	/* add safety */
+	if (b == NULL) {
+		return (dp_uniqstr((char *)""));
+	}
+
 	lena = strlen(a);
 	lenb = strlen(b);
 
-	tmpp = dp_calloc(1, (lena + lenb + 1));
-
-	if (tmpp == NULL) {
-		/* shouldnothappen */
-		return (NULL);
-	}
+	tmpp = (char *)dp_calloc(1, (lena + lenb + 1));
 
 	strcpy(tmpp, a);
 	strcat(tmpp, b);
 
 	res = dp_uniqstr(tmpp);
 
-	dp_free(tmpp);
-
+	tmpp = (char *)dp_free((void *)tmpp);
+	if (tmpp) {
+	}
 	return (res);
 }
 
@@ -1957,9 +1915,15 @@ void dp_clearall(void)
 		dp_groot->gattr = splay_tree_delete(dp_groot->gattr);
 		dp_groot->nattr = splay_tree_delete(dp_groot->nattr);
 		dp_groot->eattr = splay_tree_delete(dp_groot->eattr);
-		dp_free(dp_groot->defnode);
-		dp_free(dp_groot->defedge);
-		dp_free(dp_groot);
+		if (dp_groot->defnode) {
+			dp_groot->defnode = (struct dpnode *)dp_free((void *)dp_groot->defnode);
+		}
+		if (dp_groot->defedge) {
+			dp_groot->defedge = (struct dpedge *)dp_free((void *)dp_groot->defedge);
+		}
+		dp_groot = (struct dpgraph *)dp_free((void *)dp_groot);
+		if (dp_groot) {
+		}
 	}
 
 	dpgraphs = splay_tree_delete(dpgraphs);

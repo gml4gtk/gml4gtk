@@ -100,6 +100,15 @@ static int is_dummy(struct gml_node *node)
 	}
 }
 
+static int is_elabel(struct gml_node *node)
+{
+	if (node->elabel) {
+		return (1);
+	} else {
+		return (0);
+	}
+}
+
 /* how many connection edges from previous level */
 static int upper_connectivity(struct gml_node *node)
 {
@@ -282,7 +291,8 @@ static void make_node_list_up(int l)
 		if (n->absy == l) {
 			nl[i].node = n;
 			nl[i].done = 0;	/* FALSE */
-			if (is_dummy(n) == 1) {	/* */
+			/* give edge label nodes hight prio too */
+			if ((is_dummy(n) == 1) || (is_elabel(n) == 1)) {	/* */
 				/* higer value then the highest node in this level */
 				/*old nl[i].priority = (cnnodes_of_level[l + 1] + 1000 */
 				nl[i].priority = (100000 - n->relx);
@@ -314,7 +324,8 @@ static void make_node_list_down(int l)
 		if (n->absy == l) {
 			nl[i].node = n;
 			nl[i].done = 0;	/* FALSE */
-			if (is_dummy(n) == 1) {	/* */
+			/* give edge labels lso high prio */
+			if ((is_dummy(n) == 1) || (is_elabel(n) == 1)) {	/* */
 				/* give dummy node uniq high number */
 				/*old  nl[i].priority = (cnnodes_of_level[l - 1] + 1000 */
 				nl[i].priority = (100000 - n->relx);
@@ -595,8 +606,9 @@ static void improve_positions2local(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_down(i);
 				do_down(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 
@@ -606,8 +618,9 @@ static void improve_positions2local(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_up(i);
 				do_up(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 
@@ -621,8 +634,9 @@ static void improve_positions2local(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_up(i);
 				do_up(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 	}
@@ -633,8 +647,9 @@ static void improve_positions2local(struct gml_graph *g)
 				nl = (struct node_data *)dp_calloc(1, cnnodes_of_level[i] * sizeof(struct node_data));
 				make_node_list_down(i);
 				do_down(i);
-				dp_free(nl);
-				nl = NULL;
+				nl = dp_free(nl);
+				if (nl) {
+				}
 			}
 		}
 	}
@@ -665,11 +680,10 @@ static void clear_cnnodes_at_level(void)
 
 	/* number of nodes at level */
 	if (cnnodes_of_level) {
-		dp_free(cnnodes_of_level);
+		cnnodes_of_level = dp_free(cnnodes_of_level);
+		if (cnnodes_of_level) {
+		}
 	}
-
-	/* number of nodes at level */
-	cnnodes_of_level = NULL;
 
 	return;
 }
@@ -722,7 +736,9 @@ static void clear_cnodelist(void)
 
 	while (gnl) {
 		gnlnext = gnl->next;
-		(void)dp_free(gnl);
+		gnl = dp_free(gnl);
+		if (gnl) {
+		}
 		gnl = gnlnext;
 	}
 
@@ -796,16 +812,8 @@ static void make_cposnodes(void)
 	/* x width at position */
 	cwpos = (int *)dp_calloc(1, (cwidestnnodes + 1) * sizeof(int));
 
-	if (cwpos == NULL) {
-		return;
-	}
-
 	/* lists with nodes up to down at position */
 	cposnodes = (struct gml_nlist **)dp_calloc(1, (cwidestnnodes + 1) * sizeof(struct gml_nlist *));
-
-	if (cposnodes == NULL) {
-		return;
-	}
 
 	/* create for every postion the list of nodes at that position */
 	lnl = cnodelist;
@@ -818,10 +826,6 @@ static void make_cposnodes(void)
 		}
 
 		newl = (struct gml_nlist *)dp_calloc(1, sizeof(struct gml_nlist));
-
-		if (newl == NULL) {
-			return;
-		}
 
 		newl->node = lnl->node;
 
@@ -865,8 +869,9 @@ static void clear_cposnodes(void)
 
 	/* width of positions */
 	if (cwpos) {
-		dp_free(cwpos);
-		cwpos = NULL;
+		cwpos = dp_free(cwpos);
+		if (cwpos) {
+		}
 	}
 
 	for (i = 0; i < (cwidestnnodes + 1); i++) {
@@ -875,15 +880,18 @@ static void clear_cposnodes(void)
 
 		while (lnl) {
 			nlnext = lnl->next;
-			dp_free(lnl);
+			lnl = dp_free(lnl);
+			if (lnl) {
+			}
 			lnl = nlnext;
 		}
 
 		cposnodes[i] = NULL;
 	}
 
-	dp_free(cposnodes);
-	cposnodes = NULL;
+	cposnodes = dp_free(cposnodes);
+	if (cposnodes) {
+	}
 
 	return;
 }
@@ -896,17 +904,9 @@ static void make_clevelnodes(struct gml_graph *g)
 	int i = 0;
 	int lmaxh = 0;
 
-	chpos = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
+	chpos = (int *)dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
 
-	if (chpos == NULL) {
-		return;
-	}
-
-	clevelnodes = dp_calloc(1, (g->maxlevel + 1) * sizeof(struct gml_nlist *));
-
-	if (clevelnodes == NULL) {
-		return;
-	}
+	clevelnodes = (struct gml_nlist **)dp_calloc(1, ((g->maxlevel + 1) * sizeof(struct gml_nlist *)));
 
 	lnl = cnodelist;
 
@@ -918,10 +918,6 @@ static void make_clevelnodes(struct gml_graph *g)
 		}
 
 		newl = dp_calloc(1, sizeof(struct gml_nlist));
-
-		if (newl == NULL) {
-			return;
-		}
 
 		newl->node = lnl->node;
 
@@ -964,29 +960,37 @@ static void clear_clevelnodes(struct gml_graph *g)
 {
 	int i = 0;
 	struct gml_nlist *lnl = NULL;
+	struct gml_nlist *lnl2 = NULL;
 	struct gml_nlist *nlnext = NULL;
 
 	/* width of positions */
 	if (chpos) {
-		dp_free(chpos);
-		chpos = NULL;
+		chpos = dp_free(chpos);
+		if (chpos) {
+		}
 	}
 
-	for (i = 0; i < (g->maxlevel + 1); i++) {
-		/* lists per pos. */
-		lnl = clevelnodes[i];
+	if (clevelnodes) {
 
-		while (lnl) {
-			nlnext = lnl->next;
-			dp_free(lnl);
-			lnl = nlnext;
+		for (i = 0; i < (g->maxlevel + 1); i++) {
+			/* lists per pos. */
+			lnl = clevelnodes[i];
+
+			while (lnl) {
+				nlnext = lnl->next;
+				lnl2 = dp_free(lnl);
+				if (lnl2) {
+				}
+				lnl = nlnext;
+			}
+
+			clevelnodes[i] = NULL;	/* */
 		}
 
-		clevelnodes[i] = NULL;
+		clevelnodes = dp_free(clevelnodes);
+		if (clevelnodes) {
+		}
 	}
-
-	dp_free(clevelnodes);
-	clevelnodes = NULL;
 
 	return;
 }
@@ -1181,19 +1185,25 @@ static void tunedummy(struct gml_graph *g)
 	while (gnl) {
 		if (gnl->node->dummy) {
 			x1 = gnl->node->finx;
-			x2 = gnl->node->incoming_e->edge->from_node->finx + gnl->node->incoming_e->edge->from_node->bbx / 2;
-			x3 = gnl->node->outgoing_e->edge->to_node->finx + gnl->node->outgoing_e->edge->to_node->bbx / 2;
-			if ((x1 == x2) && (x1 == x3)) {
-				/* no move */
+			if (gnl->node->incoming_e && gnl->node->outgoing_e) {
+				x2 = gnl->node->incoming_e->edge->from_node->finx + gnl->node->incoming_e->edge->from_node->bbx / 2;
+				x3 = gnl->node->outgoing_e->edge->to_node->finx + gnl->node->outgoing_e->edge->to_node->bbx / 2;
+				if ((x1 == x2) && (x1 == x3)) {
+					/* no move */
+				} else {
+					if ((x2 < x1) && (x3 < x1)) {
+						/* to left */
+						gnl->node->finx = gnl->node->lx0;
+					}
+					if ((x2 > x1) && (x3 > x1)) {
+						/* to right */
+						gnl->node->finx = gnl->node->lx1;
+					}
+				}
 			} else {
-				if ((x2 < x1) && (x3 < x1)) {
-					/* to left */
-					gnl->node->finx = gnl->node->lx0;
-				}
-				if ((x2 > x1) && (x3 > x1)) {
-					/* to right */
-					gnl->node->finx = gnl->node->lx1;
-				}
+				/* shouldnothappen */
+				printf("%s(): dummy node with in_e %p and out_e %p\n", __func__, (void *)gnl->node->incoming_e,
+				       (void *)gnl->node->outgoing_e);
 			}
 		}
 		gnl = gnl->next;

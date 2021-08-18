@@ -570,8 +570,9 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 			if (egr->foundecolor) {
 				ecolor = egr->ecolor;
 			}
-			dp_free(egr);
-			egr = NULL;
+			egr = dp_free(egr);
+			if (egr) {
+			}
 		}
 
 		pairs = pairs->next;
@@ -950,8 +951,9 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 				nbcolor = ngr->nbcolor;
 			}
 
-			dp_free(ngr);
-			ngr = NULL;
+			ngr = dp_free(ngr);
+			if (ngr) {
+			}
 		}
 
 		/* see if a return from labelgraphics */
@@ -962,8 +964,9 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 			if (nlgr->foundtext) {
 				nodelabel = nlgr->text;
 			}
-			dp_free(nlgr);
-			nlgr = NULL;
+			nlgr = dp_free(nlgr);
+			if (nlgr) {
+			}
 		}
 
 		pairs = pairs->next;
@@ -1111,8 +1114,11 @@ int gmlparse(struct gml_graph *g, gzFile f, char *fname)
 	GT_parse_list(g, data);
 
 	GML_free_list(data, 0);
-
-	dp_free(status);
+	if (status) {
+		status = dp_free(status);
+		if (status) {
+		}
+	}
 
 	if (strlen(parsermessage)) {
 		/* parse error status */

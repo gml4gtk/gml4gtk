@@ -37,6 +37,18 @@
 #ifndef DPMISC_H
 #define DPMISC_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+# define __BEGIN_DECLS extern "C" {
+# define __END_DECLS }
+#else
+# define __BEGIN_DECLS /* empty */
+# define __END_DECLS /* empty */
+#endif
+
+__BEGIN_DECLS
+
 /* return 0 if str is a number string */
 extern int dp_chknum (char *str);
 
@@ -102,6 +114,8 @@ extern struct dpratio *dp_getratio (char *s);
 
 /* splines */
 extern struct dpsplines *dp_getsplines (char *s);
+
+__END_DECLS
 
 #endif
 

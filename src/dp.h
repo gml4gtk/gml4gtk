@@ -25,13 +25,23 @@
 #ifndef DP_H
 #define DP_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+#define __BEGIN_DECLS extern "C" {
+#define __END_DECLS }
+#else
+#define __BEGIN_DECLS		/* empty */
+#define __END_DECLS		/* empty */
+#endif
+
+__BEGIN_DECLS
 /* types of subgraphs */
 #define DP_SG_ROOT 0		/* root graph type */
 #define DP_SG_CO 1		/* compound subgraph {} */
 #define DP_SG_NM 2		/* named subgrph */
 #define DP_SG_CL 3		/* cluster subgraph */
 #define DP_SG_NN 4		/* no name subgraph */
-
 /* spline modes */
 #define DP_SPLINE_NONE 1
 #define DP_SPLINE_LINE 2
@@ -40,19 +50,16 @@
 #define DP_SPLINE_ORTHO 5
 #define DP_SPLINE_SPLINE 6
 #define DP_SPLINE_COMP 7
-
 /* ratio modes */
 #define DP_RATIO_FILL 1
 #define DP_RATIO_COM 2
 #define DP_RATIO_EXP 3
 #define DP_RATIO_AUTO 4
-
 /* graph rankdir */
 #define DP_RANKDIR_TB 1
 #define DP_RANKDIR_LR 2
 #define DP_RANKDIR_BT 3
 #define DP_RANKDIR_RL 4
-
 /* graph rank added rank=none */
 #define DP_RANK_SAME 1
 #define DP_RANK_MIN 2
@@ -60,18 +67,15 @@
 #define DP_RANK_MAX 4
 #define DP_RANK_SINK 5
 #define DP_RANK_NONE 6
-
 /* graph output order modes, 0 means undefined */
 #define DP_OO_BF 1		/* breadthfirst */
 #define DP_OO_NF 2		/* nodesfirst */
 #define DP_OO_EF 3		/* edgesfirst */
-
 /* edge arrow directions */
 #define DP_DIR_NONE 1
 #define DP_DIR_BOTH 2
 #define DP_DIR_BACK 3
 #define DP_DIR_FORWARD 4
-
 /* edge arrow basic types */
 #define DP_EA_BOX 1		/* "box" */
 #define DP_EA_CROW 2		/* "crow" */
@@ -85,12 +89,10 @@
 #define DP_EA_TEE 10		/* "tee" */
 #define DP_EA_VEE 11		/* "vee" */
 #define DP_EA_UNKNOWN 0;
-
 /* labelloc, t,b,c, default c for node, b for graph */
 #define DP_LLT 1		/* top */
 #define DP_LLB 2		/* bottom */
 #define DP_LLC 3		/* center */
-
 /* states during parse */
 #define DP_TGRAPH 1
 #define DP_TNODE 2
@@ -99,7 +101,6 @@
 #define DP_TNODEDEF 5
 #define DP_TEDGEDEF 6
 #define DP_SGRAPH 7
-
 /* node shapes */
 #define DPSHAPE_ASSEMBLY 1	/* "assembly" */
 #define DPSHAPE_BOX 2		/* "box" */
@@ -162,37 +163,31 @@
 #define DPSHAPE_UTR 59		/* "utr" */
 #define DPSHAPE_RECORD 60	/* "record" special shape */
 #define DPSHAPE_MRECORD 61	/* "record" special shape */
-
 /* values for align html setting */
 #define DP_ALIGNC 1		/* center */
 #define DP_ALIGNL 2		/* left */
 #define DP_ALIGNR 3		/* right */
 #define DP_ALIGNT 4		/* text */
-
 /* values for valign html setting */
 #define DP_VALIGNM 1		/* middle */
 #define DP_VALIGNB 2		/* bottom */
 #define DP_VALIGNT 3		/* top */
-
 /* values for html img scale */
 #define DP_IMGF 1		/* "false" */
 #define DP_IMGT 2		/* "true" */
 #define DP_IMGW 3		/* "width" */
 #define DP_IMGH 4		/* "height" */
 #define DP_IMGB 5		/* "both" */
-
 /* numbers for <tags> in html strings */
 #define T_TD 1			/* <td> */
 #define T_TABLE 2		/* <table> */
 #define T_FONT 3		/* <font> */
 #define T_IMG 4			/* <img> */
 #define T_BR 5			/* <br> */
-
 /* true/false for fixedsize in html strings */
 #define DP_TRUE 1		/* true */
 #define DP_FALSE 0		/* false */
-
-struct dpgraph;
+    struct dpgraph;
 struct dpnode;
 struct dpepoint;
 struct dpnlink;
@@ -1314,6 +1309,6 @@ extern void dp_clearall(void);
 extern void dp_clrheade(void);
 extern void dp_nsubg(struct dpgraph *sg, char *gname, int type);
 
+__END_DECLS
 #endif
-
 /* end */

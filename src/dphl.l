@@ -260,11 +260,11 @@ comment		{open}"!--"([^-]|"-"[^-])*"--"{close}
 {STR}			{
 			/* "string" as in var="value" */
 			if (strlen (yytext) == 2) {
-			hlylval.string = dp_uniqstr ("");
+			hlylval.string = dp_uniqstr ((char * )"");
 			return (HL_QSTR);
 			}
 			/* create copy buffer */
-			tmp = dp_calloc (1, (yyleng+1));
+			tmp = (char *) dp_calloc (1, (yyleng+1));
 			/* wipe last double quote */
 			yytext[yyleng-1] = 0;
 			/* copy past first char */
@@ -306,8 +306,7 @@ comment		{open}"!--"([^-]|"-"[^-])*"--"{close}
 			  }
 			}
 			hlylval.string = dp_uniqstr (tmp);
-			dp_free (tmp);
-			tmp = NULL;
+			tmp = (char *) dp_free ((void *) tmp);
 			pt = NULL;
 			q = NULL;
 			return (HL_QSTR);
@@ -316,11 +315,11 @@ comment		{open}"!--"([^-]|"-"[^-])*"--"{close}
 {STRA}			{
 			/* 'string' as in var='value' */
 			if (strlen (yytext) == 2) {
-			hlylval.string = dp_uniqstr ("");
+			hlylval.string = dp_uniqstr ((char * )"");
 			return (HL_QSTR);
 			}
 			/* create copy buffer */
-			tmp = dp_calloc (1, (yyleng+1));
+			tmp = (char *) dp_calloc (1, (yyleng+1));
 			/* wipe last quote */
 			yytext[yyleng-1] = 0;
 			/* copy past first char */
@@ -362,8 +361,7 @@ comment		{open}"!--"([^-]|"-"[^-])*"--"{close}
 			  }
 			}
 			hlylval.string = dp_uniqstr (tmp);
-			dp_free (tmp);
-			tmp = NULL;
+			tmp = (char *) dp_free ((void *) tmp);
 			pt = NULL;
 			q = NULL;
 			return (HL_QSTR);
@@ -567,7 +565,7 @@ void html_lex_init (int dbg, char *str, int line)
   /* extra space for \0\0 */
   buflen = strlen (str) + 2;
 
-  ibuf = dp_calloc (1, buflen);
+  ibuf = (char *) dp_calloc (1, buflen);
 
   if (ibuf == NULL) { return; }
 
@@ -639,20 +637,17 @@ void html_lex_deinit (void)
 
   /* data buffer */
   if (dbuf) {
-    dp_free (dbuf);
-    dbuf = (char *)0;
+    dbuf = (char *) dp_free ((void *) dbuf);
   }
 
   /* tag buffer */
   if (tbuf) {
-    dp_free (tbuf);
-    tbuf = (char *)0;
+    tbuf = (char *) dp_free ((void *) tbuf);
   }
 
   /* input buffer */
   if( ibuf) {
-    dp_free (ibuf);
-    ibuf = (char *)0;
+    ibuf = (char *) dp_free ((void *) ibuf);
   }
 
   /* pointer in ibuf */

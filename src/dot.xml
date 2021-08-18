@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<bison-xml-report version="3.3.2" bug-report="bug-bison@gnu.org" url="http://www.gnu.org/software/bison/">
+<bison-xml-report version="3.7.4" bug-report="bug-bison@gnu.org" url="https://www.gnu.org/software/bison/">
 
   <filename>dot.y</filename>
 
@@ -510,67 +510,67 @@
       </rule>
     </rules>
     <terminals>
-      <terminal symbol-number="0" token-number="0" name="$end" usefulness="useful"/>
-      <terminal symbol-number="1" token-number="256" name="error" usefulness="useful"/>
-      <terminal symbol-number="3" token-number="258" name="&quot;{&quot;" usefulness="useful" prec="2" assoc="left"/>
-      <terminal symbol-number="4" token-number="259" name="&quot;}&quot;" usefulness="useful"/>
-      <terminal symbol-number="5" token-number="260" name="&quot;+&quot;" usefulness="useful"/>
-      <terminal symbol-number="6" token-number="261" name="&quot;,&quot;" usefulness="useful"/>
-      <terminal symbol-number="7" token-number="262" name="&quot;:&quot;" usefulness="useful"/>
-      <terminal symbol-number="8" token-number="263" name="&quot;=&quot;" usefulness="useful"/>
-      <terminal symbol-number="9" token-number="264" name="&quot;;&quot;" usefulness="useful"/>
-      <terminal symbol-number="10" token-number="265" name="&quot;[&quot;" usefulness="useful"/>
-      <terminal symbol-number="11" token-number="266" name="&quot;]&quot;" usefulness="useful"/>
-      <terminal symbol-number="12" token-number="267" name="&quot;utf8code&quot;" usefulness="useful"/>
-      <terminal symbol-number="13" token-number="268" name="&quot;strict&quot;" usefulness="useful"/>
-      <terminal symbol-number="14" token-number="269" name="&quot;graph&quot;" usefulness="useful"/>
-      <terminal symbol-number="15" token-number="270" name="&quot;subgraph&quot;" usefulness="useful" prec="1" assoc="left"/>
-      <terminal symbol-number="16" token-number="271" name="&quot;digraph&quot;" usefulness="useful"/>
-      <terminal symbol-number="17" token-number="272" name="&quot;node&quot;" usefulness="useful"/>
-      <terminal symbol-number="18" token-number="273" name="&quot;edge&quot;" usefulness="useful"/>
-      <terminal symbol-number="19" token-number="274" name="&quot;text&quot;" usefulness="useful"/>
-      <terminal symbol-number="20" token-number="275" name="&quot;number&quot;" usefulness="useful"/>
-      <terminal symbol-number="21" token-number="276" name="&quot;string&quot;" usefulness="useful"/>
-      <terminal symbol-number="22" token-number="277" name="&quot;&lt;html-string&gt;&quot;" usefulness="useful"/>
-      <terminal symbol-number="23" token-number="278" name="&quot;-&gt; or --&quot;" usefulness="useful"/>
+      <terminal symbol-number="0" token-number="0" name="$end" type="" usefulness="useful"/>
+      <terminal symbol-number="1" token-number="256" name="error" type="" usefulness="useful"/>
+      <terminal symbol-number="3" token-number="258" name="&quot;{&quot;" type="" usefulness="useful" prec="2" assoc="left"/>
+      <terminal symbol-number="4" token-number="259" name="&quot;}&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="5" token-number="260" name="&quot;+&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="6" token-number="261" name="&quot;,&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="7" token-number="262" name="&quot;:&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="8" token-number="263" name="&quot;=&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="9" token-number="264" name="&quot;;&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="10" token-number="265" name="&quot;[&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="11" token-number="266" name="&quot;]&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="12" token-number="267" name="&quot;utf8code&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="13" token-number="268" name="&quot;strict&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="14" token-number="269" name="&quot;graph&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="15" token-number="270" name="&quot;subgraph&quot;" type="" usefulness="useful" prec="1" assoc="left"/>
+      <terminal symbol-number="16" token-number="271" name="&quot;digraph&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="17" token-number="272" name="&quot;node&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="18" token-number="273" name="&quot;edge&quot;" type="" usefulness="useful"/>
+      <terminal symbol-number="19" token-number="274" name="&quot;text&quot;" type="string" usefulness="useful"/>
+      <terminal symbol-number="20" token-number="275" name="&quot;number&quot;" type="string" usefulness="useful"/>
+      <terminal symbol-number="21" token-number="276" name="&quot;string&quot;" type="string" usefulness="useful"/>
+      <terminal symbol-number="22" token-number="277" name="&quot;&lt;html-string&gt;&quot;" type="string" usefulness="useful"/>
+      <terminal symbol-number="23" token-number="278" name="&quot;-&gt; or --&quot;" type="string" usefulness="useful"/>
     </terminals>
     <nonterminals>
-      <nonterminal symbol-number="24" name="$accept" usefulness="useful"/>
-      <nonterminal symbol-number="25" name="startdot" usefulness="useful"/>
-      <nonterminal symbol-number="26" name="$@1" usefulness="useful"/>
-      <nonterminal symbol-number="27" name="utf" usefulness="useful"/>
-      <nonterminal symbol-number="28" name="thetype" usefulness="useful"/>
-      <nonterminal symbol-number="29" name="thename" usefulness="useful"/>
-      <nonterminal symbol-number="30" name="ctext" usefulness="useful"/>
-      <nonterminal symbol-number="31" name="text" usefulness="useful"/>
-      <nonterminal symbol-number="32" name="htext" usefulness="useful"/>
-      <nonterminal symbol-number="33" name="statements" usefulness="useful"/>
-      <nonterminal symbol-number="34" name="statement" usefulness="useful"/>
-      <nonterminal symbol-number="35" name="statement2" usefulness="useful"/>
-      <nonterminal symbol-number="36" name="$@2" usefulness="useful"/>
-      <nonterminal symbol-number="37" name="nstatement" usefulness="useful"/>
-      <nonterminal symbol-number="38" name="$@3" usefulness="useful"/>
-      <nonterminal symbol-number="39" name="nidid" usefulness="useful"/>
-      <nonterminal symbol-number="40" name="nid" usefulness="useful"/>
-      <nonterminal symbol-number="41" name="sattr" usefulness="useful"/>
-      <nonterminal symbol-number="42" name="sattr2" usefulness="useful"/>
-      <nonterminal symbol-number="43" name="iattr" usefulness="useful"/>
-      <nonterminal symbol-number="44" name="tattr" usefulness="useful"/>
-      <nonterminal symbol-number="45" name="oattrib" usefulness="useful"/>
-      <nonterminal symbol-number="46" name="estatement" usefulness="useful"/>
-      <nonterminal symbol-number="47" name="$@4" usefulness="useful"/>
-      <nonterminal symbol-number="48" name="$@5" usefulness="useful"/>
-      <nonterminal symbol-number="49" name="$@6" usefulness="useful"/>
-      <nonterminal symbol-number="50" name="$@7" usefulness="useful"/>
-      <nonterminal symbol-number="51" name="erhs" usefulness="useful"/>
-      <nonterminal symbol-number="52" name="$@8" usefulness="useful"/>
-      <nonterminal symbol-number="53" name="$@9" usefulness="useful"/>
-      <nonterminal symbol-number="54" name="astatement" usefulness="useful"/>
-      <nonterminal symbol-number="55" name="atype" usefulness="useful"/>
-      <nonterminal symbol-number="56" name="aset" usefulness="useful"/>
-      <nonterminal symbol-number="57" name="sstatement" usefulness="useful"/>
-      <nonterminal symbol-number="58" name="$@10" usefulness="useful"/>
-      <nonterminal symbol-number="59" name="shead" usefulness="useful"/>
+      <nonterminal symbol-number="24" name="$accept" type="" usefulness="useful"/>
+      <nonterminal symbol-number="25" name="startdot" type="" usefulness="useful"/>
+      <nonterminal symbol-number="26" name="$@1" type="" usefulness="useful"/>
+      <nonterminal symbol-number="27" name="utf" type="" usefulness="useful"/>
+      <nonterminal symbol-number="28" name="thetype" type="string" usefulness="useful"/>
+      <nonterminal symbol-number="29" name="thename" type="string" usefulness="useful"/>
+      <nonterminal symbol-number="30" name="ctext" type="string" usefulness="useful"/>
+      <nonterminal symbol-number="31" name="text" type="string" usefulness="useful"/>
+      <nonterminal symbol-number="32" name="htext" type="string" usefulness="useful"/>
+      <nonterminal symbol-number="33" name="statements" type="" usefulness="useful"/>
+      <nonterminal symbol-number="34" name="statement" type="" usefulness="useful"/>
+      <nonterminal symbol-number="35" name="statement2" type="" usefulness="useful"/>
+      <nonterminal symbol-number="36" name="$@2" type="" usefulness="useful"/>
+      <nonterminal symbol-number="37" name="nstatement" type="" usefulness="useful"/>
+      <nonterminal symbol-number="38" name="$@3" type="" usefulness="useful"/>
+      <nonterminal symbol-number="39" name="nidid" type="string" usefulness="useful"/>
+      <nonterminal symbol-number="40" name="nid" type="dp" usefulness="useful"/>
+      <nonterminal symbol-number="41" name="sattr" type="" usefulness="useful"/>
+      <nonterminal symbol-number="42" name="sattr2" type="" usefulness="useful"/>
+      <nonterminal symbol-number="43" name="iattr" type="" usefulness="useful"/>
+      <nonterminal symbol-number="44" name="tattr" type="" usefulness="useful"/>
+      <nonterminal symbol-number="45" name="oattrib" type="" usefulness="useful"/>
+      <nonterminal symbol-number="46" name="estatement" type="" usefulness="useful"/>
+      <nonterminal symbol-number="47" name="$@4" type="" usefulness="useful"/>
+      <nonterminal symbol-number="48" name="$@5" type="" usefulness="useful"/>
+      <nonterminal symbol-number="49" name="$@6" type="" usefulness="useful"/>
+      <nonterminal symbol-number="50" name="$@7" type="" usefulness="useful"/>
+      <nonterminal symbol-number="51" name="erhs" type="" usefulness="useful"/>
+      <nonterminal symbol-number="52" name="$@8" type="" usefulness="useful"/>
+      <nonterminal symbol-number="53" name="$@9" type="" usefulness="useful"/>
+      <nonterminal symbol-number="54" name="astatement" type="" usefulness="useful"/>
+      <nonterminal symbol-number="55" name="atype" type="" usefulness="useful"/>
+      <nonterminal symbol-number="56" name="aset" type="" usefulness="useful"/>
+      <nonterminal symbol-number="57" name="sstatement" type="dp" usefulness="useful"/>
+      <nonterminal symbol-number="58" name="$@10" type="" usefulness="useful"/>
+      <nonterminal symbol-number="59" name="shead" type="" usefulness="useful"/>
     </nonterminals>
   </grammar>
 
@@ -578,16 +578,16 @@
 
     <state number="0">
       <itemset>
-        <item rule-number="0" point="0"/>
-        <item rule-number="2" point="0"/>
-        <item rule-number="3" point="0"/>
-        <item rule-number="4" point="0">
+        <item rule-number="0" dot="0"/>
+        <item rule-number="2" dot="0"/>
+        <item rule-number="3" dot="0"/>
+        <item rule-number="4" dot="0">
           <lookaheads>
             <symbol>$end</symbol>
           </lookaheads>
         </item>
-        <item rule-number="5" point="0"/>
-        <item rule-number="6" point="0">
+        <item rule-number="5" dot="0"/>
+        <item rule-number="6" dot="0">
           <lookaheads>
             <symbol>&quot;strict&quot;</symbol>
             <symbol>&quot;graph&quot;</symbol>
@@ -615,7 +615,7 @@
 
     <state number="1">
       <itemset>
-        <item rule-number="3" point="1"/>
+        <item rule-number="3" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -629,7 +629,7 @@
 
     <state number="2">
       <itemset>
-        <item rule-number="5" point="1"/>
+        <item rule-number="5" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -643,7 +643,7 @@
 
     <state number="3">
       <itemset>
-        <item rule-number="0" point="1"/>
+        <item rule-number="0" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -657,11 +657,11 @@
 
     <state number="4">
       <itemset>
-        <item rule-number="2" point="1"/>
-        <item rule-number="7" point="0"/>
-        <item rule-number="8" point="0"/>
-        <item rule-number="9" point="0"/>
-        <item rule-number="10" point="0"/>
+        <item rule-number="2" dot="1"/>
+        <item rule-number="7" dot="0"/>
+        <item rule-number="8" dot="0"/>
+        <item rule-number="9" dot="0"/>
+        <item rule-number="10" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -678,7 +678,7 @@
 
     <state number="5">
       <itemset>
-        <item rule-number="0" point="2"/>
+        <item rule-number="0" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -692,8 +692,8 @@
 
     <state number="6">
       <itemset>
-        <item rule-number="7" point="1"/>
-        <item rule-number="9" point="1"/>
+        <item rule-number="7" dot="1"/>
+        <item rule-number="9" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -708,7 +708,7 @@
 
     <state number="7">
       <itemset>
-        <item rule-number="8" point="1"/>
+        <item rule-number="8" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -722,7 +722,7 @@
 
     <state number="8">
       <itemset>
-        <item rule-number="10" point="1"/>
+        <item rule-number="10" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -736,18 +736,18 @@
 
     <state number="9">
       <itemset>
-        <item rule-number="2" point="2"/>
-        <item rule-number="11" point="0"/>
-        <item rule-number="12" point="0">
+        <item rule-number="2" dot="2"/>
+        <item rule-number="11" dot="0"/>
+        <item rule-number="12" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -768,7 +768,7 @@
 
     <state number="10">
       <itemset>
-        <item rule-number="7" point="2"/>
+        <item rule-number="7" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -782,7 +782,7 @@
 
     <state number="11">
       <itemset>
-        <item rule-number="9" point="2"/>
+        <item rule-number="9" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -796,7 +796,7 @@
 
     <state number="12">
       <itemset>
-        <item rule-number="15" point="1"/>
+        <item rule-number="15" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -810,7 +810,7 @@
 
     <state number="13">
       <itemset>
-        <item rule-number="16" point="1"/>
+        <item rule-number="16" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -824,7 +824,7 @@
 
     <state number="14">
       <itemset>
-        <item rule-number="13" point="1"/>
+        <item rule-number="13" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -838,8 +838,8 @@
 
     <state number="15">
       <itemset>
-        <item rule-number="1" point="0"/>
-        <item rule-number="2" point="3"/>
+        <item rule-number="1" dot="0"/>
+        <item rule-number="2" dot="3"/>
       </itemset>
       <actions>
         <transitions>
@@ -855,8 +855,8 @@
 
     <state number="16">
       <itemset>
-        <item rule-number="14" point="1"/>
-        <item rule-number="17" point="1">
+        <item rule-number="14" dot="1"/>
+        <item rule-number="17" dot="1">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -891,7 +891,7 @@
 
     <state number="17">
       <itemset>
-        <item rule-number="11" point="1"/>
+        <item rule-number="11" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -905,7 +905,7 @@
 
     <state number="18">
       <itemset>
-        <item rule-number="2" point="4"/>
+        <item rule-number="2" dot="4"/>
       </itemset>
       <actions>
         <transitions>
@@ -919,7 +919,7 @@
 
     <state number="19">
       <itemset>
-        <item rule-number="14" point="2"/>
+        <item rule-number="14" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -933,41 +933,41 @@
 
     <state number="20">
       <itemset>
-        <item rule-number="2" point="5"/>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="19" point="0"/>
-        <item rule-number="20" point="0"/>
-        <item rule-number="21" point="0"/>
-        <item rule-number="22" point="0"/>
-        <item rule-number="23" point="0"/>
-        <item rule-number="24" point="0"/>
-        <item rule-number="25" point="0"/>
-        <item rule-number="26" point="0"/>
-        <item rule-number="28" point="0"/>
-        <item rule-number="30" point="0"/>
-        <item rule-number="31" point="0"/>
-        <item rule-number="32" point="0"/>
-        <item rule-number="33" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="50" point="0"/>
-        <item rule-number="53" point="0"/>
-        <item rule-number="60" point="0"/>
-        <item rule-number="61" point="0"/>
-        <item rule-number="62" point="0"/>
-        <item rule-number="63" point="0"/>
-        <item rule-number="64" point="0"/>
-        <item rule-number="65" point="0"/>
-        <item rule-number="66" point="0"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="2" dot="5"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="19" dot="0"/>
+        <item rule-number="20" dot="0"/>
+        <item rule-number="21" dot="0"/>
+        <item rule-number="22" dot="0"/>
+        <item rule-number="23" dot="0"/>
+        <item rule-number="24" dot="0"/>
+        <item rule-number="25" dot="0"/>
+        <item rule-number="26" dot="0"/>
+        <item rule-number="28" dot="0"/>
+        <item rule-number="30" dot="0"/>
+        <item rule-number="31" dot="0"/>
+        <item rule-number="32" dot="0"/>
+        <item rule-number="33" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="50" dot="0"/>
+        <item rule-number="53" dot="0"/>
+        <item rule-number="60" dot="0"/>
+        <item rule-number="61" dot="0"/>
+        <item rule-number="62" dot="0"/>
+        <item rule-number="63" dot="0"/>
+        <item rule-number="64" dot="0"/>
+        <item rule-number="65" dot="0"/>
+        <item rule-number="66" dot="0"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1002,7 +1002,7 @@
 
     <state number="21">
       <itemset>
-        <item rule-number="14" point="3"/>
+        <item rule-number="14" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1016,8 +1016,8 @@
 
     <state number="22">
       <itemset>
-        <item rule-number="68" point="0"/>
-        <item rule-number="69" point="1"/>
+        <item rule-number="68" dot="0"/>
+        <item rule-number="69" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1033,7 +1033,7 @@
 
     <state number="23">
       <itemset>
-        <item rule-number="62" point="1"/>
+        <item rule-number="62" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1047,13 +1047,13 @@
 
     <state number="24">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="70" point="1"/>
-        <item rule-number="71" point="1">
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="70" dot="1"/>
+        <item rule-number="71" dot="1">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
           </lookaheads>
@@ -1077,7 +1077,7 @@
 
     <state number="25">
       <itemset>
-        <item rule-number="63" point="1"/>
+        <item rule-number="63" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1091,7 +1091,7 @@
 
     <state number="26">
       <itemset>
-        <item rule-number="64" point="1"/>
+        <item rule-number="64" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1105,7 +1105,7 @@
 
     <state number="27">
       <itemset>
-        <item rule-number="31" point="1">
+        <item rule-number="31" dot="1">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -1121,17 +1121,17 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="32" point="1"/>
-        <item rule-number="33" point="1"/>
-        <item rule-number="34" point="1">
+        <item rule-number="32" dot="1"/>
+        <item rule-number="33" dot="1"/>
+        <item rule-number="34" dot="1">
           <lookaheads>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="35" point="1"/>
-        <item rule-number="36" point="1"/>
-        <item rule-number="65" point="1"/>
-        <item rule-number="66" point="1"/>
+        <item rule-number="35" dot="1"/>
+        <item rule-number="36" dot="1"/>
+        <item rule-number="65" dot="1"/>
+        <item rule-number="66" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1149,40 +1149,40 @@
 
     <state number="28">
       <itemset>
-        <item rule-number="2" point="6"/>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="19" point="1"/>
-        <item rule-number="21" point="0"/>
-        <item rule-number="22" point="0"/>
-        <item rule-number="23" point="0"/>
-        <item rule-number="24" point="0"/>
-        <item rule-number="25" point="0"/>
-        <item rule-number="26" point="0"/>
-        <item rule-number="28" point="0"/>
-        <item rule-number="30" point="0"/>
-        <item rule-number="31" point="0"/>
-        <item rule-number="32" point="0"/>
-        <item rule-number="33" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="50" point="0"/>
-        <item rule-number="53" point="0"/>
-        <item rule-number="60" point="0"/>
-        <item rule-number="61" point="0"/>
-        <item rule-number="62" point="0"/>
-        <item rule-number="63" point="0"/>
-        <item rule-number="64" point="0"/>
-        <item rule-number="65" point="0"/>
-        <item rule-number="66" point="0"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="2" dot="6"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="19" dot="1"/>
+        <item rule-number="21" dot="0"/>
+        <item rule-number="22" dot="0"/>
+        <item rule-number="23" dot="0"/>
+        <item rule-number="24" dot="0"/>
+        <item rule-number="25" dot="0"/>
+        <item rule-number="26" dot="0"/>
+        <item rule-number="28" dot="0"/>
+        <item rule-number="30" dot="0"/>
+        <item rule-number="31" dot="0"/>
+        <item rule-number="32" dot="0"/>
+        <item rule-number="33" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="50" dot="0"/>
+        <item rule-number="53" dot="0"/>
+        <item rule-number="60" dot="0"/>
+        <item rule-number="61" dot="0"/>
+        <item rule-number="62" dot="0"/>
+        <item rule-number="63" dot="0"/>
+        <item rule-number="64" dot="0"/>
+        <item rule-number="65" dot="0"/>
+        <item rule-number="66" dot="0"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1217,7 +1217,7 @@
 
     <state number="29">
       <itemset>
-        <item rule-number="20" point="1"/>
+        <item rule-number="20" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1231,7 +1231,7 @@
 
     <state number="30">
       <itemset>
-        <item rule-number="21" point="1">
+        <item rule-number="21" dot="1">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -1244,8 +1244,8 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="22" point="1"/>
-        <item rule-number="23" point="1"/>
+        <item rule-number="22" dot="1"/>
+        <item rule-number="23" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1262,7 +1262,7 @@
 
     <state number="31">
       <itemset>
-        <item rule-number="24" point="1"/>
+        <item rule-number="24" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1276,8 +1276,8 @@
 
     <state number="32">
       <itemset>
-        <item rule-number="29" point="0"/>
-        <item rule-number="30" point="1"/>
+        <item rule-number="29" dot="0"/>
+        <item rule-number="30" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1293,8 +1293,8 @@
 
     <state number="33">
       <itemset>
-        <item rule-number="48" point="0"/>
-        <item rule-number="50" point="1"/>
+        <item rule-number="48" dot="0"/>
+        <item rule-number="50" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1310,7 +1310,7 @@
 
     <state number="34">
       <itemset>
-        <item rule-number="25" point="1"/>
+        <item rule-number="25" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1324,7 +1324,7 @@
 
     <state number="35">
       <itemset>
-        <item rule-number="26" point="1"/>
+        <item rule-number="26" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1338,8 +1338,8 @@
 
     <state number="36">
       <itemset>
-        <item rule-number="45" point="0"/>
-        <item rule-number="60" point="1"/>
+        <item rule-number="45" dot="0"/>
+        <item rule-number="60" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1354,7 +1354,7 @@
 
     <state number="37">
       <itemset>
-        <item rule-number="61" point="1"/>
+        <item rule-number="61" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1368,7 +1368,7 @@
 
     <state number="38">
       <itemset>
-        <item rule-number="27" point="0">
+        <item rule-number="27" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -1384,13 +1384,13 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="28" point="1"/>
-        <item rule-number="51" point="0">
+        <item rule-number="28" dot="1"/>
+        <item rule-number="51" dot="0">
           <lookaheads>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="53" point="1"/>
+        <item rule-number="53" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1408,7 +1408,7 @@
 
     <state number="39">
       <itemset>
-        <item rule-number="67" point="1"/>
+        <item rule-number="67" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1422,41 +1422,41 @@
 
     <state number="40">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="19" point="0"/>
-        <item rule-number="20" point="0"/>
-        <item rule-number="21" point="0"/>
-        <item rule-number="22" point="0"/>
-        <item rule-number="23" point="0"/>
-        <item rule-number="24" point="0"/>
-        <item rule-number="25" point="0"/>
-        <item rule-number="26" point="0"/>
-        <item rule-number="28" point="0"/>
-        <item rule-number="30" point="0"/>
-        <item rule-number="31" point="0"/>
-        <item rule-number="32" point="0"/>
-        <item rule-number="33" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="50" point="0"/>
-        <item rule-number="53" point="0"/>
-        <item rule-number="60" point="0"/>
-        <item rule-number="61" point="0"/>
-        <item rule-number="62" point="0"/>
-        <item rule-number="63" point="0"/>
-        <item rule-number="64" point="0"/>
-        <item rule-number="65" point="0"/>
-        <item rule-number="66" point="0"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="69" point="2"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="19" dot="0"/>
+        <item rule-number="20" dot="0"/>
+        <item rule-number="21" dot="0"/>
+        <item rule-number="22" dot="0"/>
+        <item rule-number="23" dot="0"/>
+        <item rule-number="24" dot="0"/>
+        <item rule-number="25" dot="0"/>
+        <item rule-number="26" dot="0"/>
+        <item rule-number="28" dot="0"/>
+        <item rule-number="30" dot="0"/>
+        <item rule-number="31" dot="0"/>
+        <item rule-number="32" dot="0"/>
+        <item rule-number="33" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="50" dot="0"/>
+        <item rule-number="53" dot="0"/>
+        <item rule-number="60" dot="0"/>
+        <item rule-number="61" dot="0"/>
+        <item rule-number="62" dot="0"/>
+        <item rule-number="63" dot="0"/>
+        <item rule-number="64" dot="0"/>
+        <item rule-number="65" dot="0"/>
+        <item rule-number="66" dot="0"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="69" dot="2"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1491,7 +1491,7 @@
 
     <state number="41">
       <itemset>
-        <item rule-number="70" point="2"/>
+        <item rule-number="70" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1505,15 +1505,15 @@
 
     <state number="42">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="32" point="2"/>
-        <item rule-number="33" point="2"/>
-        <item rule-number="35" point="2"/>
-        <item rule-number="36" point="2"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="32" dot="2"/>
+        <item rule-number="33" dot="2"/>
+        <item rule-number="35" dot="2"/>
+        <item rule-number="36" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -1531,14 +1531,14 @@
 
     <state number="43">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="18" point="0"/>
-        <item rule-number="65" point="2"/>
-        <item rule-number="66" point="2"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="18" dot="0"/>
+        <item rule-number="65" dot="2"/>
+        <item rule-number="66" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -1558,7 +1558,7 @@
 
     <state number="44">
       <itemset>
-        <item rule-number="2" point="7"/>
+        <item rule-number="2" dot="7"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1572,7 +1572,7 @@
 
     <state number="45">
       <itemset>
-        <item rule-number="19" point="2"/>
+        <item rule-number="19" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1586,7 +1586,7 @@
 
     <state number="46">
       <itemset>
-        <item rule-number="23" point="2"/>
+        <item rule-number="23" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1600,7 +1600,7 @@
 
     <state number="47">
       <itemset>
-        <item rule-number="22" point="2"/>
+        <item rule-number="22" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1614,10 +1614,10 @@
 
     <state number="48">
       <itemset>
-        <item rule-number="30" point="2"/>
-        <item rule-number="45" point="0"/>
-        <item rule-number="46" point="0"/>
-        <item rule-number="47" point="0">
+        <item rule-number="30" dot="2"/>
+        <item rule-number="45" dot="0"/>
+        <item rule-number="46" dot="0"/>
+        <item rule-number="47" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -1649,11 +1649,11 @@
 
     <state number="49">
       <itemset>
-        <item rule-number="50" point="2"/>
-        <item rule-number="54" point="0"/>
-        <item rule-number="56" point="0"/>
-        <item rule-number="57" point="0"/>
-        <item rule-number="59" point="0"/>
+        <item rule-number="50" dot="2"/>
+        <item rule-number="54" dot="0"/>
+        <item rule-number="56" dot="0"/>
+        <item rule-number="57" dot="0"/>
+        <item rule-number="59" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1668,19 +1668,19 @@
 
     <state number="50">
       <itemset>
-        <item rule-number="37" point="0"/>
-        <item rule-number="38" point="0"/>
-        <item rule-number="39" point="0"/>
-        <item rule-number="40" point="0"/>
-        <item rule-number="41" point="0"/>
-        <item rule-number="42" point="0"/>
-        <item rule-number="43" point="0"/>
-        <item rule-number="44" point="0">
+        <item rule-number="37" dot="0"/>
+        <item rule-number="38" dot="0"/>
+        <item rule-number="39" dot="0"/>
+        <item rule-number="40" dot="0"/>
+        <item rule-number="41" dot="0"/>
+        <item rule-number="42" dot="0"/>
+        <item rule-number="43" dot="0"/>
+        <item rule-number="44" dot="0">
           <lookaheads>
             <symbol>&quot;]&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="45" point="1"/>
+        <item rule-number="45" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -1699,7 +1699,7 @@
 
     <state number="51">
       <itemset>
-        <item rule-number="60" point="2"/>
+        <item rule-number="60" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1713,10 +1713,10 @@
 
     <state number="52">
       <itemset>
-        <item rule-number="28" point="2"/>
-        <item rule-number="45" point="0"/>
-        <item rule-number="46" point="0"/>
-        <item rule-number="47" point="0">
+        <item rule-number="28" dot="2"/>
+        <item rule-number="45" dot="0"/>
+        <item rule-number="46" dot="0"/>
+        <item rule-number="47" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -1748,11 +1748,11 @@
 
     <state number="53">
       <itemset>
-        <item rule-number="53" point="2"/>
-        <item rule-number="54" point="0"/>
-        <item rule-number="56" point="0"/>
-        <item rule-number="57" point="0"/>
-        <item rule-number="59" point="0"/>
+        <item rule-number="53" dot="2"/>
+        <item rule-number="54" dot="0"/>
+        <item rule-number="56" dot="0"/>
+        <item rule-number="57" dot="0"/>
+        <item rule-number="59" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1767,41 +1767,41 @@
 
     <state number="54">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="19" point="0"/>
-        <item rule-number="20" point="0"/>
-        <item rule-number="21" point="0"/>
-        <item rule-number="22" point="0"/>
-        <item rule-number="23" point="0"/>
-        <item rule-number="24" point="0"/>
-        <item rule-number="25" point="0"/>
-        <item rule-number="26" point="0"/>
-        <item rule-number="28" point="0"/>
-        <item rule-number="30" point="0"/>
-        <item rule-number="31" point="0"/>
-        <item rule-number="32" point="0"/>
-        <item rule-number="33" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="50" point="0"/>
-        <item rule-number="53" point="0"/>
-        <item rule-number="60" point="0"/>
-        <item rule-number="61" point="0"/>
-        <item rule-number="62" point="0"/>
-        <item rule-number="63" point="0"/>
-        <item rule-number="64" point="0"/>
-        <item rule-number="65" point="0"/>
-        <item rule-number="66" point="0"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="67" point="2"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="19" dot="0"/>
+        <item rule-number="20" dot="0"/>
+        <item rule-number="21" dot="0"/>
+        <item rule-number="22" dot="0"/>
+        <item rule-number="23" dot="0"/>
+        <item rule-number="24" dot="0"/>
+        <item rule-number="25" dot="0"/>
+        <item rule-number="26" dot="0"/>
+        <item rule-number="28" dot="0"/>
+        <item rule-number="30" dot="0"/>
+        <item rule-number="31" dot="0"/>
+        <item rule-number="32" dot="0"/>
+        <item rule-number="33" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="50" dot="0"/>
+        <item rule-number="53" dot="0"/>
+        <item rule-number="60" dot="0"/>
+        <item rule-number="61" dot="0"/>
+        <item rule-number="62" dot="0"/>
+        <item rule-number="63" dot="0"/>
+        <item rule-number="64" dot="0"/>
+        <item rule-number="65" dot="0"/>
+        <item rule-number="66" dot="0"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="67" dot="2"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1836,40 +1836,40 @@
 
     <state number="55">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="19" point="1"/>
-        <item rule-number="21" point="0"/>
-        <item rule-number="22" point="0"/>
-        <item rule-number="23" point="0"/>
-        <item rule-number="24" point="0"/>
-        <item rule-number="25" point="0"/>
-        <item rule-number="26" point="0"/>
-        <item rule-number="28" point="0"/>
-        <item rule-number="30" point="0"/>
-        <item rule-number="31" point="0"/>
-        <item rule-number="32" point="0"/>
-        <item rule-number="33" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="50" point="0"/>
-        <item rule-number="53" point="0"/>
-        <item rule-number="60" point="0"/>
-        <item rule-number="61" point="0"/>
-        <item rule-number="62" point="0"/>
-        <item rule-number="63" point="0"/>
-        <item rule-number="64" point="0"/>
-        <item rule-number="65" point="0"/>
-        <item rule-number="66" point="0"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="69" point="3"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="19" dot="1"/>
+        <item rule-number="21" dot="0"/>
+        <item rule-number="22" dot="0"/>
+        <item rule-number="23" dot="0"/>
+        <item rule-number="24" dot="0"/>
+        <item rule-number="25" dot="0"/>
+        <item rule-number="26" dot="0"/>
+        <item rule-number="28" dot="0"/>
+        <item rule-number="30" dot="0"/>
+        <item rule-number="31" dot="0"/>
+        <item rule-number="32" dot="0"/>
+        <item rule-number="33" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="50" dot="0"/>
+        <item rule-number="53" dot="0"/>
+        <item rule-number="60" dot="0"/>
+        <item rule-number="61" dot="0"/>
+        <item rule-number="62" dot="0"/>
+        <item rule-number="63" dot="0"/>
+        <item rule-number="64" dot="0"/>
+        <item rule-number="65" dot="0"/>
+        <item rule-number="66" dot="0"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="69" dot="3"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -1904,7 +1904,7 @@
 
     <state number="56">
       <itemset>
-        <item rule-number="32" point="3">
+        <item rule-number="32" dot="3">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -1920,13 +1920,13 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="33" point="3"/>
-        <item rule-number="35" point="3">
+        <item rule-number="33" dot="3"/>
+        <item rule-number="35" dot="3">
           <lookaheads>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="36" point="3"/>
+        <item rule-number="36" dot="3"/>
       </itemset>
       <actions>
         <transitions>
@@ -1943,7 +1943,7 @@
 
     <state number="57">
       <itemset>
-        <item rule-number="18" point="1"/>
+        <item rule-number="18" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1957,7 +1957,7 @@
 
     <state number="58">
       <itemset>
-        <item rule-number="65" point="3"/>
+        <item rule-number="65" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1971,7 +1971,7 @@
 
     <state number="59">
       <itemset>
-        <item rule-number="66" point="3"/>
+        <item rule-number="66" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -1985,10 +1985,10 @@
 
     <state number="60">
       <itemset>
-        <item rule-number="45" point="0"/>
-        <item rule-number="46" point="0"/>
-        <item rule-number="46" point="1"/>
-        <item rule-number="47" point="0">
+        <item rule-number="45" dot="0"/>
+        <item rule-number="46" dot="0"/>
+        <item rule-number="46" dot="1"/>
+        <item rule-number="47" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2020,7 +2020,7 @@
 
     <state number="61">
       <itemset>
-        <item rule-number="30" point="3"/>
+        <item rule-number="30" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2034,22 +2034,22 @@
 
     <state number="62">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="54" point="1"/>
-        <item rule-number="56" point="1"/>
-        <item rule-number="57" point="1"/>
-        <item rule-number="59" point="1"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="54" dot="1"/>
+        <item rule-number="56" dot="1"/>
+        <item rule-number="57" dot="1"/>
+        <item rule-number="59" dot="1"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -2072,8 +2072,8 @@
 
     <state number="63">
       <itemset>
-        <item rule-number="49" point="0"/>
-        <item rule-number="50" point="3"/>
+        <item rule-number="49" dot="0"/>
+        <item rule-number="50" dot="3"/>
       </itemset>
       <actions>
         <transitions>
@@ -2089,9 +2089,9 @@
 
     <state number="64">
       <itemset>
-        <item rule-number="37" point="1"/>
-        <item rule-number="38" point="1"/>
-        <item rule-number="40" point="1">
+        <item rule-number="37" dot="1"/>
+        <item rule-number="38" dot="1"/>
+        <item rule-number="40" dot="1">
           <lookaheads>
             <symbol>&quot;,&quot;</symbol>
             <symbol>&quot;;&quot;</symbol>
@@ -2114,7 +2114,7 @@
 
     <state number="65">
       <itemset>
-        <item rule-number="39" point="1"/>
+        <item rule-number="39" dot="1"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2128,17 +2128,17 @@
 
     <state number="66">
       <itemset>
-        <item rule-number="37" point="0"/>
-        <item rule-number="38" point="0"/>
-        <item rule-number="39" point="0"/>
-        <item rule-number="40" point="0"/>
-        <item rule-number="41" point="0"/>
-        <item rule-number="41" point="1"/>
-        <item rule-number="42" point="0"/>
-        <item rule-number="42" point="1"/>
-        <item rule-number="43" point="0"/>
-        <item rule-number="43" point="1"/>
-        <item rule-number="44" point="0">
+        <item rule-number="37" dot="0"/>
+        <item rule-number="38" dot="0"/>
+        <item rule-number="39" dot="0"/>
+        <item rule-number="40" dot="0"/>
+        <item rule-number="41" dot="0"/>
+        <item rule-number="41" dot="1"/>
+        <item rule-number="42" dot="0"/>
+        <item rule-number="42" dot="1"/>
+        <item rule-number="43" dot="0"/>
+        <item rule-number="43" dot="1"/>
+        <item rule-number="44" dot="0">
           <lookaheads>
             <symbol>&quot;]&quot;</symbol>
           </lookaheads>
@@ -2163,7 +2163,7 @@
 
     <state number="67">
       <itemset>
-        <item rule-number="45" point="2"/>
+        <item rule-number="45" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -2177,7 +2177,7 @@
 
     <state number="68">
       <itemset>
-        <item rule-number="28" point="3"/>
+        <item rule-number="28" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2191,8 +2191,8 @@
 
     <state number="69">
       <itemset>
-        <item rule-number="52" point="0"/>
-        <item rule-number="53" point="3"/>
+        <item rule-number="52" dot="0"/>
+        <item rule-number="53" dot="3"/>
       </itemset>
       <actions>
         <transitions>
@@ -2208,40 +2208,40 @@
 
     <state number="70">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="19" point="1"/>
-        <item rule-number="21" point="0"/>
-        <item rule-number="22" point="0"/>
-        <item rule-number="23" point="0"/>
-        <item rule-number="24" point="0"/>
-        <item rule-number="25" point="0"/>
-        <item rule-number="26" point="0"/>
-        <item rule-number="28" point="0"/>
-        <item rule-number="30" point="0"/>
-        <item rule-number="31" point="0"/>
-        <item rule-number="32" point="0"/>
-        <item rule-number="33" point="0"/>
-        <item rule-number="34" point="0"/>
-        <item rule-number="35" point="0"/>
-        <item rule-number="36" point="0"/>
-        <item rule-number="50" point="0"/>
-        <item rule-number="53" point="0"/>
-        <item rule-number="60" point="0"/>
-        <item rule-number="61" point="0"/>
-        <item rule-number="62" point="0"/>
-        <item rule-number="63" point="0"/>
-        <item rule-number="64" point="0"/>
-        <item rule-number="65" point="0"/>
-        <item rule-number="66" point="0"/>
-        <item rule-number="67" point="0"/>
-        <item rule-number="67" point="3"/>
-        <item rule-number="69" point="0"/>
-        <item rule-number="70" point="0"/>
-        <item rule-number="71" point="0"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="19" dot="1"/>
+        <item rule-number="21" dot="0"/>
+        <item rule-number="22" dot="0"/>
+        <item rule-number="23" dot="0"/>
+        <item rule-number="24" dot="0"/>
+        <item rule-number="25" dot="0"/>
+        <item rule-number="26" dot="0"/>
+        <item rule-number="28" dot="0"/>
+        <item rule-number="30" dot="0"/>
+        <item rule-number="31" dot="0"/>
+        <item rule-number="32" dot="0"/>
+        <item rule-number="33" dot="0"/>
+        <item rule-number="34" dot="0"/>
+        <item rule-number="35" dot="0"/>
+        <item rule-number="36" dot="0"/>
+        <item rule-number="50" dot="0"/>
+        <item rule-number="53" dot="0"/>
+        <item rule-number="60" dot="0"/>
+        <item rule-number="61" dot="0"/>
+        <item rule-number="62" dot="0"/>
+        <item rule-number="63" dot="0"/>
+        <item rule-number="64" dot="0"/>
+        <item rule-number="65" dot="0"/>
+        <item rule-number="66" dot="0"/>
+        <item rule-number="67" dot="0"/>
+        <item rule-number="67" dot="3"/>
+        <item rule-number="69" dot="0"/>
+        <item rule-number="70" dot="0"/>
+        <item rule-number="71" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -2276,7 +2276,7 @@
 
     <state number="71">
       <itemset>
-        <item rule-number="69" point="4"/>
+        <item rule-number="69" dot="4"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2290,13 +2290,13 @@
 
     <state number="72">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="33" point="4"/>
-        <item rule-number="36" point="4"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="33" dot="4"/>
+        <item rule-number="36" dot="4"/>
       </itemset>
       <actions>
         <transitions>
@@ -2314,7 +2314,7 @@
 
     <state number="73">
       <itemset>
-        <item rule-number="46" point="2"/>
+        <item rule-number="46" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2328,7 +2328,7 @@
 
     <state number="74">
       <itemset>
-        <item rule-number="34" point="1">
+        <item rule-number="34" dot="1">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2345,8 +2345,8 @@
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="35" point="1"/>
-        <item rule-number="36" point="1"/>
+        <item rule-number="35" dot="1"/>
+        <item rule-number="36" dot="1"/>
       </itemset>
       <actions>
         <transitions>
@@ -2362,7 +2362,7 @@
 
     <state number="75">
       <itemset>
-        <item rule-number="54" point="2">
+        <item rule-number="54" dot="2">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2378,12 +2378,12 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="55" point="0">
+        <item rule-number="55" dot="0">
           <lookaheads>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="56" point="2"/>
+        <item rule-number="56" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -2400,7 +2400,7 @@
 
     <state number="76">
       <itemset>
-        <item rule-number="57" point="2">
+        <item rule-number="57" dot="2">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2416,12 +2416,12 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="58" point="0">
+        <item rule-number="58" dot="0">
           <lookaheads>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="59" point="2"/>
+        <item rule-number="59" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -2438,9 +2438,9 @@
 
     <state number="77">
       <itemset>
-        <item rule-number="45" point="0"/>
-        <item rule-number="46" point="0"/>
-        <item rule-number="47" point="0">
+        <item rule-number="45" dot="0"/>
+        <item rule-number="46" dot="0"/>
+        <item rule-number="47" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2455,7 +2455,7 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="50" point="4"/>
+        <item rule-number="50" dot="4"/>
       </itemset>
       <actions>
         <transitions>
@@ -2473,14 +2473,14 @@
 
     <state number="78">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="18" point="0"/>
-        <item rule-number="37" point="2"/>
-        <item rule-number="38" point="2"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="18" dot="0"/>
+        <item rule-number="37" dot="2"/>
+        <item rule-number="38" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -2500,15 +2500,15 @@
 
     <state number="79">
       <itemset>
-        <item rule-number="37" point="0"/>
-        <item rule-number="38" point="0"/>
-        <item rule-number="39" point="0"/>
-        <item rule-number="40" point="0"/>
-        <item rule-number="41" point="0"/>
-        <item rule-number="42" point="0"/>
-        <item rule-number="42" point="2"/>
-        <item rule-number="43" point="0"/>
-        <item rule-number="44" point="0">
+        <item rule-number="37" dot="0"/>
+        <item rule-number="38" dot="0"/>
+        <item rule-number="39" dot="0"/>
+        <item rule-number="40" dot="0"/>
+        <item rule-number="41" dot="0"/>
+        <item rule-number="42" dot="0"/>
+        <item rule-number="42" dot="2"/>
+        <item rule-number="43" dot="0"/>
+        <item rule-number="44" dot="0">
           <lookaheads>
             <symbol>&quot;]&quot;</symbol>
           </lookaheads>
@@ -2531,15 +2531,15 @@
 
     <state number="80">
       <itemset>
-        <item rule-number="37" point="0"/>
-        <item rule-number="38" point="0"/>
-        <item rule-number="39" point="0"/>
-        <item rule-number="40" point="0"/>
-        <item rule-number="41" point="0"/>
-        <item rule-number="42" point="0"/>
-        <item rule-number="43" point="0"/>
-        <item rule-number="43" point="2"/>
-        <item rule-number="44" point="0">
+        <item rule-number="37" dot="0"/>
+        <item rule-number="38" dot="0"/>
+        <item rule-number="39" dot="0"/>
+        <item rule-number="40" dot="0"/>
+        <item rule-number="41" dot="0"/>
+        <item rule-number="42" dot="0"/>
+        <item rule-number="43" dot="0"/>
+        <item rule-number="43" dot="2"/>
+        <item rule-number="44" dot="0">
           <lookaheads>
             <symbol>&quot;]&quot;</symbol>
           </lookaheads>
@@ -2562,7 +2562,7 @@
 
     <state number="81">
       <itemset>
-        <item rule-number="41" point="2"/>
+        <item rule-number="41" dot="2"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2576,7 +2576,7 @@
 
     <state number="82">
       <itemset>
-        <item rule-number="45" point="3"/>
+        <item rule-number="45" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2590,9 +2590,9 @@
 
     <state number="83">
       <itemset>
-        <item rule-number="45" point="0"/>
-        <item rule-number="46" point="0"/>
-        <item rule-number="47" point="0">
+        <item rule-number="45" dot="0"/>
+        <item rule-number="46" dot="0"/>
+        <item rule-number="47" dot="0">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2607,7 +2607,7 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="53" point="4"/>
+        <item rule-number="53" dot="4"/>
       </itemset>
       <actions>
         <transitions>
@@ -2625,7 +2625,7 @@
 
     <state number="84">
       <itemset>
-        <item rule-number="67" point="4"/>
+        <item rule-number="67" dot="4"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2639,7 +2639,7 @@
 
     <state number="85">
       <itemset>
-        <item rule-number="33" point="5">
+        <item rule-number="33" dot="5">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2655,7 +2655,7 @@
             <symbol>&quot;string&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="36" point="5">
+        <item rule-number="36" dot="5">
           <lookaheads>
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
@@ -2674,13 +2674,13 @@
 
     <state number="86">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="35" point="2"/>
-        <item rule-number="36" point="2"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="35" dot="2"/>
+        <item rule-number="36" dot="2"/>
       </itemset>
       <actions>
         <transitions>
@@ -2698,11 +2698,11 @@
 
     <state number="87">
       <itemset>
-        <item rule-number="54" point="0"/>
-        <item rule-number="56" point="0"/>
-        <item rule-number="56" point="3"/>
-        <item rule-number="57" point="0"/>
-        <item rule-number="59" point="0"/>
+        <item rule-number="54" dot="0"/>
+        <item rule-number="56" dot="0"/>
+        <item rule-number="56" dot="3"/>
+        <item rule-number="57" dot="0"/>
+        <item rule-number="59" dot="0"/>
       </itemset>
       <actions>
         <transitions>
@@ -2717,11 +2717,11 @@
 
     <state number="88">
       <itemset>
-        <item rule-number="54" point="0"/>
-        <item rule-number="56" point="0"/>
-        <item rule-number="57" point="0"/>
-        <item rule-number="59" point="0"/>
-        <item rule-number="59" point="3"/>
+        <item rule-number="54" dot="0"/>
+        <item rule-number="56" dot="0"/>
+        <item rule-number="57" dot="0"/>
+        <item rule-number="59" dot="0"/>
+        <item rule-number="59" dot="3"/>
       </itemset>
       <actions>
         <transitions>
@@ -2736,7 +2736,7 @@
 
     <state number="89">
       <itemset>
-        <item rule-number="50" point="5"/>
+        <item rule-number="50" dot="5"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2750,7 +2750,7 @@
 
     <state number="90">
       <itemset>
-        <item rule-number="37" point="3"/>
+        <item rule-number="37" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2764,7 +2764,7 @@
 
     <state number="91">
       <itemset>
-        <item rule-number="38" point="3"/>
+        <item rule-number="38" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2778,7 +2778,7 @@
 
     <state number="92">
       <itemset>
-        <item rule-number="42" point="3"/>
+        <item rule-number="42" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2792,7 +2792,7 @@
 
     <state number="93">
       <itemset>
-        <item rule-number="43" point="3"/>
+        <item rule-number="43" dot="3"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2806,7 +2806,7 @@
 
     <state number="94">
       <itemset>
-        <item rule-number="53" point="5"/>
+        <item rule-number="53" dot="5"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2820,7 +2820,7 @@
 
     <state number="95">
       <itemset>
-        <item rule-number="35" point="3">
+        <item rule-number="35" dot="3">
           <lookaheads>
             <symbol>&quot;{&quot;</symbol>
             <symbol>&quot;}&quot;</symbol>
@@ -2837,7 +2837,7 @@
             <symbol>&quot;-&gt; or --&quot;</symbol>
           </lookaheads>
         </item>
-        <item rule-number="36" point="3"/>
+        <item rule-number="36" dot="3"/>
       </itemset>
       <actions>
         <transitions>
@@ -2853,7 +2853,7 @@
 
     <state number="96">
       <itemset>
-        <item rule-number="56" point="4"/>
+        <item rule-number="56" dot="4"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2867,7 +2867,7 @@
 
     <state number="97">
       <itemset>
-        <item rule-number="59" point="4"/>
+        <item rule-number="59" dot="4"/>
       </itemset>
       <actions>
         <transitions/>
@@ -2881,12 +2881,12 @@
 
     <state number="98">
       <itemset>
-        <item rule-number="13" point="0"/>
-        <item rule-number="14" point="0"/>
-        <item rule-number="15" point="0"/>
-        <item rule-number="16" point="0"/>
-        <item rule-number="17" point="0"/>
-        <item rule-number="36" point="4"/>
+        <item rule-number="13" dot="0"/>
+        <item rule-number="14" dot="0"/>
+        <item rule-number="15" dot="0"/>
+        <item rule-number="16" dot="0"/>
+        <item rule-number="17" dot="0"/>
+        <item rule-number="36" dot="4"/>
       </itemset>
       <actions>
         <transitions>
@@ -2904,7 +2904,7 @@
 
     <state number="99">
       <itemset>
-        <item rule-number="36" point="5"/>
+        <item rule-number="36" dot="5"/>
       </itemset>
       <actions>
         <transitions/>

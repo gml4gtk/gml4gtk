@@ -155,7 +155,7 @@ extern void make_stlist(struct gml_graph *g);
 extern void del_edge(struct gml_graph *g, struct gml_elist *edgeel);
 
 /* splits edgelabel edges into node->label->node */
-extern void edgelabels(struct gml_graph *g);
+extern void edgelabels(struct gml_graph *g, int mode);
 
 /* break cycles in the graph */
 extern void uncycle(struct gml_graph *g);
@@ -174,6 +174,9 @@ extern void shorteredges(struct gml_graph *g);
 
 /* doublespace the vertical levels */
 extern void doublespacey(struct gml_graph *g);
+
+/* doublespace the vertical levels */
+extern void doublespaceafter(struct gml_graph *g);
 
 /* split longer edges */
 extern void splitedges(struct gml_graph *g);

@@ -113,7 +113,7 @@ void dp_do_eattr(char *l, char *r)
 			if (arrownum->pe) {
 				if (arrownum->es) {
 					res->ahnum = DP_EA_NORMAL;
-					res->ahstring = dp_uniqstr("normal");
+					res->ahstring = dp_uniqstr((char *)"normal");
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
@@ -124,8 +124,9 @@ void dp_do_eattr(char *l, char *r)
 				res->ahstring = arrownum->name;
 			}
 			res->bitflags0.ahset = 1;
-			dp_free(arrownum);
-			arrownum = NULL;
+			arrownum = (struct dparrow *)dp_free((void *)arrownum);
+			if (arrownum) {
+			}
 		} else if (strcmp(l, "arrowsize") == 0) {
 			num = dp_getnum(r);
 			if (num->pe) {
@@ -149,15 +150,16 @@ void dp_do_eattr(char *l, char *r)
 					res->bitflags0.asizeset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "arrowtail") == 0) {
 			/* todo fully parse the arrow combinations */
 			arrownum = dp_getarrow(r);
 			if (arrownum->pe) {
 				if (arrownum->es) {
 					res->atnum = DP_EA_NORMAL;
-					res->atstring = dp_uniqstr("normal");
+					res->atstring = dp_uniqstr((char *)"normal");
 				} else {
 					memset(dp_errmsg, 0, 256);
 					snprintf(dp_errmsg, (256 - 1),
@@ -168,8 +170,9 @@ void dp_do_eattr(char *l, char *r)
 				res->atstring = arrownum->name;
 			}
 			res->bitflags0.atset = 1;
-			dp_free(arrownum);
-			arrownum = NULL;
+			arrownum = (struct dparrow *)dp_free((void *)arrownum);
+			if (arrownum) {
+			}
 		} else {
 		}
 		break;
@@ -198,8 +201,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.ecolorset = 1;
 			}
-			dp_free(colornum);
-			colornum = NULL;
+			colornum = (struct dpcolor *)dp_free((void *)colornum);
+			if (colornum) {
+			}
 		} else if (strcmp(l, "colorscheme") == 0) {
 			tmpi = dp_colorschemecode(r);
 			if (tmpi == (-1)) {
@@ -243,8 +247,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.constrset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else {
 		}
 		break;
@@ -271,8 +276,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.decorset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "dir") == 0) {
 			dirnum = dp_getdir(r);
 			if (dirnum->pe) {
@@ -289,8 +295,9 @@ void dp_do_eattr(char *l, char *r)
 				res->dir = dirnum->type;
 				res->bitflags0.dirset = 1;
 			}
-			dp_free(dirnum);
-			dirnum = NULL;
+			dirnum = (struct dpdir *)dp_free((void *)dirnum);
+			if (dirnum) {
+			}
 		} else {
 		}
 		break;
@@ -361,8 +368,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.focolorset = 1;
 			}
-			dp_free(colornum);
-			colornum = NULL;
+			colornum = (struct dpcolor *)dp_free((void *)colornum);
+			if (colornum) {
+			}
 		} else if (strcmp(l, "fontname") == 0) {
 			if (r) {
 				if (strlen(r)) {
@@ -398,8 +406,9 @@ void dp_do_eattr(char *l, char *r)
 						 res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else {
 		}
 		break;
@@ -432,8 +441,9 @@ void dp_do_eattr(char *l, char *r)
 						res->hlpy = pointnum->y;
 						res->hlpflag = pointnum->flag;
 					}
-					dp_free(pointnum);
-					pointnum = NULL;
+					pointnum = (struct dppoint *)dp_free((void *)pointnum);
+					if (pointnum) {
+					}
 				} else {
 					res->hlpx = 0;
 					res->hlpy = 0;
@@ -463,8 +473,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags0.hcset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "headhref") == 0) {
 			/* same as headURL */
 			/* svg, map */
@@ -490,7 +501,7 @@ void dp_do_eattr(char *l, char *r)
 			if (r) {
 				if (strlen(r) == 0) {
 					/* default is center 'c' */
-					res->hport = "c";
+					res->hport = (char *)"c";
 					res->bitflags0.hportset = 1;
 				} else {
 					tmpi = dp_iscompass(r);
@@ -601,8 +612,9 @@ void dp_do_eattr(char *l, char *r)
 						 __func__, r, res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "labeldistance") == 0) {
 			/*  */
 			num = dp_getnum(r);
@@ -629,8 +641,9 @@ void dp_do_eattr(char *l, char *r)
 						 __func__, r, res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "labelfloat") == 0) {
 			boolnum = dp_getbool(r);
 			if (boolnum->pe) {
@@ -652,8 +665,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags1.lfloatset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "labelfontcolor") == 0) {
 			colornum = dp_getcolor(res->bitflags0.csnumset, res->csnum, r);
 			if (colornum->pe) {
@@ -677,8 +691,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags1.lfocolorset = 1;
 			}
-			dp_free(colornum);
-			colornum = NULL;
+			colornum = (struct dpcolor *)dp_free((void *)colornum);
+			if (colornum) {
+			}
 		} else if (strcmp(l, "labelfontname") == 0) {
 			if (r) {
 				if (strlen(r)) {
@@ -714,8 +729,9 @@ void dp_do_eattr(char *l, char *r)
 						 __func__, r, res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "labelhref") == 0) {
 			/* url same as labelURL */
 			if (r) {
@@ -782,8 +798,9 @@ void dp_do_eattr(char *l, char *r)
 						 "dot %s(): len number `%s' at line %d is negative\n", __func__, r, res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "lhead") == 0) {
 			if (r) {
 				if (strlen(r)) {
@@ -809,8 +826,9 @@ void dp_do_eattr(char *l, char *r)
 						res->lpy = pointnum->y;
 						res->lpflag = pointnum->flag;
 					}
-					dp_free(pointnum);
-					pointnum = NULL;
+					pointnum = (struct dppoint *)dp_free((void *)pointnum);
+					if (pointnum) {
+					}
 				} else {
 					res->lp = NULL;
 				}
@@ -854,8 +872,9 @@ void dp_do_eattr(char *l, char *r)
 					res->bitflags1.minlenset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else {
 			/* something else */
 		}
@@ -883,8 +902,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags1.nojustset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else {
 		}
 		break;
@@ -913,8 +933,9 @@ void dp_do_eattr(char *l, char *r)
 					res->bitflags0.penwidthset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "pos") == 0) {
 			/* example:[pos="e,1110,867.67 1110,904.33 1110,896.26 1110,886.65 1110,877.71"];
 			 * todo parse this pos string
@@ -1106,8 +1127,9 @@ void dp_do_eattr(char *l, char *r)
 					}
 				}
 			}
-			dp_free(stylenum);
-			stylenum = NULL;
+			stylenum = (struct dpstyle *)dp_free((void *)stylenum);
+			if (stylenum) {
+			}
 		} else {
 		}
 		break;
@@ -1141,8 +1163,9 @@ void dp_do_eattr(char *l, char *r)
 						res->tlpy = pointnum->y;
 						res->tlpflag = pointnum->flag;
 					}
-					dp_free(pointnum);
-					pointnum = NULL;
+					pointnum = (struct dppoint *)dp_free((void *)pointnum);
+					if (pointnum) {
+					}
 				} else {
 					res->hlp = NULL;
 				}
@@ -1169,8 +1192,9 @@ void dp_do_eattr(char *l, char *r)
 				}
 				res->bitflags2.tailcset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "tailhref") == 0) {
 			/* same as headURL */
 			/* svg, map */
@@ -1196,7 +1220,7 @@ void dp_do_eattr(char *l, char *r)
 			if (r) {
 				if (strlen(r) == 0) {
 					/* default is center 'c' */
-					res->tlport = "c";
+					res->tlport = (char *)"c";
 					res->bitflags2.tportset = 1;
 				} else {
 					tmpi = dp_iscompass(r);
@@ -1276,8 +1300,9 @@ void dp_do_eattr(char *l, char *r)
 					res->bitflags2.weightset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else {
 			/* something else */
 		}
@@ -1310,8 +1335,9 @@ void dp_do_eattr(char *l, char *r)
 						res->xlpy = pointnum->y;
 						res->xlpflag = pointnum->flag;
 					}
-					dp_free(pointnum);
-					pointnum = NULL;
+					pointnum = (struct dppoint *)dp_free((void *)pointnum);
+					if (pointnum) {
+					}
 				} else {
 					res->xlp = NULL;
 				}
@@ -1337,7 +1363,7 @@ void dp_edgefdef(struct dpedge *e)
 
 	/* arrowhead is normal as default */
 	e->ahnum = DP_EA_NORMAL;
-	e->ahstring = dp_uniqstr("normal");
+	e->ahstring = dp_uniqstr((char *)"normal");
 	e->bitflags0.ahset = 1;
 
 	/* arrowsize mult factor is 1 */
@@ -1346,7 +1372,7 @@ void dp_edgefdef(struct dpedge *e)
 
 	/* arrowtail is normal as default */
 	e->atnum = DP_EA_NORMAL;
-	e->atstring = dp_uniqstr("normal");
+	e->atstring = dp_uniqstr((char *)"normal");
 	e->bitflags0.atset = 1;
 
 	/* colorscheme is 0 undefined */
@@ -1386,7 +1412,7 @@ void dp_edgefdef(struct dpedge *e)
 	/* headlabel is (char *)0 */
 
 	/* headport is default center, 'c' */
-	e->hport = "c";
+	e->hport = (char *)"c";
 	e->bitflags0.hportset = 1;
 
 	/* headtarget is (char *)0 */
@@ -1456,7 +1482,7 @@ void dp_edgefdef(struct dpedge *e)
 	/* tail label is (char *)0 */
 
 	/* tailport is default center, 'c' */
-	e->tlport = "c";
+	e->tlport = (char *)"c";
 	e->bitflags2.tportset = 1;
 
 	/* tailtarget is (char *)0 */

@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.3.2.  */
+/* A Bison parser, made by GNU Bison 3.7.4.  */
 
-/* Skeleton interface for Bison GLR parsers in C
+/* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 2002-2015, 2018-2019 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,10 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
+
 #ifndef YY_HLY_DPHLPARSER_H_INCLUDED
 # define YY_HLY_DPHLPARSER_H_INCLUDED
 /* Debug traces.  */
@@ -48,92 +53,96 @@
 extern int hlydebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef HLYTOKENTYPE
 # define HLYTOKENTYPE
   enum hlytokentype
   {
-    HL_DATA = 258,
-    HL_HTML = 259,
-    HL_C_HTML = 260,
-    HL_B = 261,
-    HL_C_B = 262,
-    HL_BR = 263,
-    HL_C_BR = 264,
-    HL_FONT = 265,
-    HL_C_FONT = 266,
-    HL_HR = 267,
-    HL_C_HR = 268,
-    HL_I = 269,
-    HL_C_I = 270,
-    HL_IMG = 271,
-    HL_C_IMG = 272,
-    HL_O = 273,
-    HL_C_O = 274,
-    HL_S = 275,
-    HL_C_S = 276,
-    HL_SUB = 277,
-    HL_C_SUB = 278,
-    HL_SUP = 279,
-    HL_C_SUP = 280,
-    HL_TABLE = 281,
-    HL_C_TABLE = 282,
-    HL_TD = 283,
-    HL_C_TD = 284,
-    HL_TR = 285,
-    HL_C_TR = 286,
-    HL_U = 287,
-    HL_C_U = 288,
-    HL_VR = 289,
-    HL_C_VR = 290,
-    HL_SC = 291,
-    HL_C = 292,
-    HL_IS = 293,
-    HL_QSTR = 294,
-    HL_STR = 295,
-    HL_ALIGN = 296,
-    HL_BALIGN = 297,
-    HL_BGCOLOR = 298,
-    HL_BORDER = 299,
-    HL_CELLBORDER = 300,
-    HL_CELLPADDING = 301,
-    HL_CELLSPACING = 302,
-    HL_COLOR = 303,
-    HL_COLUMNS = 304,
-    HL_COLSPAN = 305,
-    HL_FACE = 306,
-    HL_FIXEDSIZE = 307,
-    HL_GRADIENTANGLE = 308,
-    HL_HEIGHT = 309,
-    HL_HREF = 310,
-    HL_ID = 311,
-    HL_PORT = 312,
-    HL_POINTSIZE = 313,
-    HL_ROWS = 314,
-    HL_ROWSPAN = 315,
-    HL_SCALE = 316,
-    HL_SIDES = 317,
-    HL_SRC = 318,
-    HL_STYLE = 319,
-    HL_TARGET = 320,
-    HL_TITLE = 321,
-    HL_TOOLTIP = 322,
-    HL_VALIGN = 323,
-    HL_WIDTH = 324
+    HLYEMPTY = -2,
+    HLYEOF = 0,                    /* "end of file"  */
+    HLYerror = 256,                /* error  */
+    HLYUNDEF = 257,                /* "invalid token"  */
+    HL_DATA = 258,                 /* "stringdata"  */
+    HL_HTML = 259,                 /* "<html"  */
+    HL_C_HTML = 260,               /* "</html"  */
+    HL_B = 261,                    /* "<b"  */
+    HL_C_B = 262,                  /* "</b"  */
+    HL_BR = 263,                   /* "<br"  */
+    HL_C_BR = 264,                 /* "</br"  */
+    HL_FONT = 265,                 /* "<font"  */
+    HL_C_FONT = 266,               /* "</font"  */
+    HL_HR = 267,                   /* "<hr"  */
+    HL_C_HR = 268,                 /* "</hr"  */
+    HL_I = 269,                    /* "<i"  */
+    HL_C_I = 270,                  /* "</i"  */
+    HL_IMG = 271,                  /* "<img"  */
+    HL_C_IMG = 272,                /* "</img"  */
+    HL_O = 273,                    /* "<o"  */
+    HL_C_O = 274,                  /* "</o"  */
+    HL_S = 275,                    /* "<s"  */
+    HL_C_S = 276,                  /* "</s"  */
+    HL_SUB = 277,                  /* "<sub"  */
+    HL_C_SUB = 278,                /* "</sub"  */
+    HL_SUP = 279,                  /* "<sup"  */
+    HL_C_SUP = 280,                /* "</sup"  */
+    HL_TABLE = 281,                /* "<table"  */
+    HL_C_TABLE = 282,              /* "</table"  */
+    HL_TD = 283,                   /* "<td"  */
+    HL_C_TD = 284,                 /* "</td"  */
+    HL_TR = 285,                   /* "<tr"  */
+    HL_C_TR = 286,                 /* "</tr"  */
+    HL_U = 287,                    /* "<u"  */
+    HL_C_U = 288,                  /* "</u"  */
+    HL_VR = 289,                   /* "<vr"  */
+    HL_C_VR = 290,                 /* "</vr"  */
+    HL_SC = 291,                   /* "/>"  */
+    HL_C = 292,                    /* ">"  */
+    HL_IS = 293,                   /* "="  */
+    HL_QSTR = 294,                 /* "string"  */
+    HL_STR = 295,                  /* "text"  */
+    HL_ALIGN = 296,                /* "align"  */
+    HL_BALIGN = 297,               /* "balign"  */
+    HL_BGCOLOR = 298,              /* "bgcolor"  */
+    HL_BORDER = 299,               /* "border"  */
+    HL_CELLBORDER = 300,           /* "cellborder"  */
+    HL_CELLPADDING = 301,          /* "cellpadding"  */
+    HL_CELLSPACING = 302,          /* "cellspacing"  */
+    HL_COLOR = 303,                /* "color"  */
+    HL_COLUMNS = 304,              /* "columns"  */
+    HL_COLSPAN = 305,              /* "colspan"  */
+    HL_FACE = 306,                 /* "face"  */
+    HL_FIXEDSIZE = 307,            /* "fixedsize"  */
+    HL_GRADIENTANGLE = 308,        /* "gradientangle"  */
+    HL_HEIGHT = 309,               /* "height"  */
+    HL_HREF = 310,                 /* "href"  */
+    HL_ID = 311,                   /* "id"  */
+    HL_PORT = 312,                 /* "port"  */
+    HL_POINTSIZE = 313,            /* "point-size"  */
+    HL_ROWS = 314,                 /* "rows"  */
+    HL_ROWSPAN = 315,              /* "rowspan"  */
+    HL_SCALE = 316,                /* "scale"  */
+    HL_SIDES = 317,                /* "sides"  */
+    HL_SRC = 318,                  /* "src"  */
+    HL_STYLE = 319,                /* "style"  */
+    HL_TARGET = 320,               /* "target"  */
+    HL_TITLE = 321,                /* "title"  */
+    HL_TOOLTIP = 322,              /* "tooltip"  */
+    HL_VALIGN = 323,               /* "valign"  */
+    HL_WIDTH = 324                 /* "width"  */
   };
+  typedef enum hlytokentype hlytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined HLYSTYPE && ! defined HLYSTYPE_IS_DECLARED
-
 union HLYSTYPE
 {
-#line 183 "dphl.y" /* glr.c:197  */
+#line 186 "dphl.y"
  char *string; 
 
-#line 135 "dphlparser.h" /* glr.c:197  */
-};
+#line 144 "dphlparser.h"
 
+};
 typedef union HLYSTYPE HLYSTYPE;
 # define HLYSTYPE_IS_TRIVIAL 1
 # define HLYSTYPE_IS_DECLARED 1

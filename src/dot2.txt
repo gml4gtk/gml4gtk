@@ -1,0 +1,1600 @@
+Grammar
+
+    0 $accept: startdot $end
+
+    1 $@1: %empty
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+    3         | error
+    4         | %empty
+
+    5 utf: "utf8code"
+    6    | %empty
+
+    7 thetype: "strict" "graph"
+    8        | "graph"
+    9        | "strict" "digraph"
+   10        | "digraph"
+
+   11 thename: text
+   12        | %empty
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+
+   18 htext: "<html-string>"
+
+   19 statements: statements statement
+   20           | statement
+
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+
+   27 $@2: %empty
+
+   28 statement2: sstatement $@2 oattrib
+
+   29 $@3: %empty
+
+   30 nstatement: nidid $@3 oattrib
+
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+
+   39 sattr2: sattr
+   40       | "text"
+
+   41 iattr: sattr2 iattr
+   42      | sattr2 "," iattr
+   43      | sattr2 ";" iattr
+   44      | %empty
+
+   45 tattr: "[" iattr "]"
+
+   46 oattrib: tattr oattrib
+   47        | %empty
+
+   48 $@4: %empty
+
+   49 $@5: %empty
+
+   50 estatement: nid $@4 erhs $@5 oattrib
+
+   51 $@6: %empty
+
+   52 $@7: %empty
+
+   53 estatement: sstatement $@6 erhs $@7 oattrib
+
+   54 erhs: "-> or --" nid
+
+   55 $@8: %empty
+
+   56 erhs: "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
+
+   58 $@9: %empty
+
+   59 erhs: "-> or --" sstatement $@9 erhs
+
+   60 astatement: atype tattr
+   61           | aset
+
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+
+   65 aset: text "=" text
+   66     | text "=" htext
+
+   67 sstatement: shead "{" statements "}"
+
+   68 $@10: %empty
+
+   69 sstatement: "{" $@10 statements "}"
+
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256) 3
+"{" (258) 2 67 69
+"}" (259) 2 67 69
+"+" (260) 14
+"," (261) 23 42
+":" (262) 32 33 35 36
+"=" (263) 37 38 65 66
+";" (264) 22 43
+"[" (265) 45
+"]" (266) 45
+"utf8code" (267) 5
+"strict" (268) 7 9
+"graph" (269) 7 8 62
+"subgraph" (270) 70 71
+"digraph" (271) 9 10
+"node" (272) 63
+"edge" (273) 64
+"text" (274) 15 37 38 40
+"number" (275) 16
+"string" (276) 13 14
+"<html-string>" (277) 18
+"-> or --" (278) 54 56 57 59
+
+
+Nonterminals, with rules where they appear
+
+$accept (24)
+    on left: 0
+startdot (25)
+    on left: 2 3 4, on right: 0
+$@1 (26)
+    on left: 1, on right: 2
+utf (27)
+    on left: 5 6, on right: 2
+thetype (28)
+    on left: 7 8 9 10, on right: 2
+thename (29)
+    on left: 11 12, on right: 2
+ctext (30)
+    on left: 13 14, on right: 14 17
+text (31)
+    on left: 15 16 17, on right: 11 31 32 33 34 35 36 37 65 66 70
+htext (32)
+    on left: 18, on right: 38 66
+statements (33)
+    on left: 19 20, on right: 2 19 67 69
+statement (34)
+    on left: 21 22 23, on right: 19 20
+statement2 (35)
+    on left: 24 25 26 28, on right: 21 22 23
+$@2 (36)
+    on left: 27, on right: 28
+nstatement (37)
+    on left: 30, on right: 24
+$@3 (38)
+    on left: 29, on right: 30
+nidid (39)
+    on left: 31 32 33, on right: 30
+nid (40)
+    on left: 34 35 36, on right: 50 54 56
+sattr (41)
+    on left: 37 38, on right: 39
+sattr2 (42)
+    on left: 39 40, on right: 41 42 43
+iattr (43)
+    on left: 41 42 43 44, on right: 41 42 43 45
+tattr (44)
+    on left: 45, on right: 46 60
+oattrib (45)
+    on left: 46 47, on right: 28 30 46 50 53
+estatement (46)
+    on left: 50 53, on right: 25
+$@4 (47)
+    on left: 48, on right: 50
+$@5 (48)
+    on left: 49, on right: 50
+$@6 (49)
+    on left: 51, on right: 53
+$@7 (50)
+    on left: 52, on right: 53
+erhs (51)
+    on left: 54 56 57 59, on right: 50 53 56 59
+$@8 (52)
+    on left: 55, on right: 56
+$@9 (53)
+    on left: 58, on right: 59
+astatement (54)
+    on left: 60 61, on right: 26
+atype (55)
+    on left: 62 63 64, on right: 60
+aset (56)
+    on left: 65 66, on right: 61
+sstatement (57)
+    on left: 67 69, on right: 28 53 57 59
+$@10 (58)
+    on left: 68, on right: 69
+shead (59)
+    on left: 70 71, on right: 67
+
+
+State 0
+
+    0 $accept: startdot $end
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+    3         | error
+    4         | %empty  [$end]
+    5 utf: "utf8code"
+    6    | %empty  ["strict", "graph", "digraph"]
+
+    error       shift, and go to state 1
+    "utf8code"  shift, and go to state 2
+
+    $end       reduce using rule 4 (startdot)
+    "strict"   reduce using rule 6 (utf)
+    "graph"    reduce using rule 6 (utf)
+    "digraph"  reduce using rule 6 (utf)
+
+    startdot  go to state 3
+    utf       go to state 4
+
+
+State 1
+
+    3 startdot: error
+
+    $default  reduce using rule 3 (startdot)
+
+
+State 2
+
+    5 utf: "utf8code"
+
+    $default  reduce using rule 5 (utf)
+
+
+State 3
+
+    0 $accept: startdot $end
+
+    $end  shift, and go to state 5
+
+
+State 4
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+    7 thetype: "strict" "graph"
+    8        | "graph"
+    9        | "strict" "digraph"
+   10        | "digraph"
+
+    "strict"   shift, and go to state 6
+    "graph"    shift, and go to state 7
+    "digraph"  shift, and go to state 8
+
+    thetype  go to state 9
+
+
+State 5
+
+    0 $accept: startdot $end
+
+    $default  accept
+
+
+State 6
+
+    7 thetype: "strict" "graph"
+    9        | "strict" "digraph"
+
+    "graph"    shift, and go to state 10
+    "digraph"  shift, and go to state 11
+
+
+State 7
+
+    8 thetype: "graph"
+
+    $default  reduce using rule 8 (thetype)
+
+
+State 8
+
+   10 thetype: "digraph"
+
+    $default  reduce using rule 10 (thetype)
+
+
+State 9
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+   11 thename: text
+   12        | %empty  ["{"]
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
+
+    $default  reduce using rule 12 (thename)
+
+    thename  go to state 15
+    ctext    go to state 16
+    text     go to state 17
+
+
+State 10
+
+    7 thetype: "strict" "graph"
+
+    $default  reduce using rule 7 (thetype)
+
+
+State 11
+
+    9 thetype: "strict" "digraph"
+
+    $default  reduce using rule 9 (thetype)
+
+
+State 12
+
+   15 text: "text"
+
+    $default  reduce using rule 15 (text)
+
+
+State 13
+
+   16 text: "number"
+
+    $default  reduce using rule 16 (text)
+
+
+State 14
+
+   13 ctext: "string"
+
+    $default  reduce using rule 13 (ctext)
+
+
+State 15
+
+    1 $@1: %empty
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 18
+
+
+State 16
+
+   14 ctext: ctext "+" "string"
+   17 text: ctext  ["{", "}", ",", ":", "=", ";", "[", "]", "graph", "subgraph", "node", "edge", "text", "number", "string", "-> or --"]
+
+    "+"  shift, and go to state 19
+
+    $default  reduce using rule 17 (text)
+
+
+State 17
+
+   11 thename: text
+
+    $default  reduce using rule 11 (thename)
+
+
+State 18
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+
+    "{"  shift, and go to state 20
+
+
+State 19
+
+   14 ctext: ctext "+" "string"
+
+    "string"  shift, and go to state 21
+
+
+State 20
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   19 statements: statements statement
+   20           | statement
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+   28           | sstatement $@2 oattrib
+   30 nstatement: nidid $@3 oattrib
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   50 estatement: nid $@4 erhs $@5 oattrib
+   53           | sstatement $@6 erhs $@7 oattrib
+   60 astatement: atype tattr
+   61           | aset
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+   65 aset: text "=" text
+   66     | text "=" htext
+   67 sstatement: shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statements  go to state 28
+    statement   go to state 29
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
+
+
+State 21
+
+   14 ctext: ctext "+" "string"
+
+    $default  reduce using rule 14 (ctext)
+
+
+State 22
+
+   68 $@10: %empty
+   69 sstatement: "{" $@10 statements "}"
+
+    $default  reduce using rule 68 ($@10)
+
+    $@10  go to state 40
+
+
+State 23
+
+   62 atype: "graph"
+
+    $default  reduce using rule 62 (atype)
+
+
+State 24
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   70 shead: "subgraph" text
+   71      | "subgraph"  ["{"]
+
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
+
+    $default  reduce using rule 71 (shead)
+
+    ctext  go to state 16
+    text   go to state 41
+
+
+State 25
+
+   63 atype: "node"
+
+    $default  reduce using rule 63 (atype)
+
+
+State 26
+
+   64 atype: "edge"
+
+    $default  reduce using rule 64 (atype)
+
+
+State 27
+
+   31 nidid: text  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text  ["-> or --"]
+   35    | text ":" text
+   36    | text ":" text ":" text
+   65 aset: text "=" text
+   66     | text "=" htext
+
+    ":"  shift, and go to state 42
+    "="  shift, and go to state 43
+
+    "-> or --"  reduce using rule 34 (nid)
+    $default    reduce using rule 31 (nidid)
+
+
+State 28
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   19 statements: statements statement
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+   28           | sstatement $@2 oattrib
+   30 nstatement: nidid $@3 oattrib
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   50 estatement: nid $@4 erhs $@5 oattrib
+   53           | sstatement $@6 erhs $@7 oattrib
+   60 astatement: atype tattr
+   61           | aset
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+   65 aset: text "=" text
+   66     | text "=" htext
+   67 sstatement: shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "}"         shift, and go to state 44
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statement   go to state 45
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
+
+
+State 29
+
+   20 statements: statement
+
+    $default  reduce using rule 20 (statements)
+
+
+State 30
+
+   21 statement: statement2  ["{", "}", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   22          | statement2 ";"
+   23          | statement2 ","
+
+    ","  shift, and go to state 46
+    ";"  shift, and go to state 47
+
+    $default  reduce using rule 21 (statement)
+
+
+State 31
+
+   24 statement2: nstatement
+
+    $default  reduce using rule 24 (statement2)
+
+
+State 32
+
+   29 $@3: %empty
+   30 nstatement: nidid $@3 oattrib
+
+    $default  reduce using rule 29 ($@3)
+
+    $@3  go to state 48
+
+
+State 33
+
+   48 $@4: %empty
+   50 estatement: nid $@4 erhs $@5 oattrib
+
+    $default  reduce using rule 48 ($@4)
+
+    $@4  go to state 49
+
+
+State 34
+
+   25 statement2: estatement
+
+    $default  reduce using rule 25 (statement2)
+
+
+State 35
+
+   26 statement2: astatement
+
+    $default  reduce using rule 26 (statement2)
+
+
+State 36
+
+   45 tattr: "[" iattr "]"
+   60 astatement: atype tattr
+
+    "["  shift, and go to state 50
+
+    tattr  go to state 51
+
+
+State 37
+
+   61 astatement: aset
+
+    $default  reduce using rule 61 (astatement)
+
+
+State 38
+
+   27 $@2: %empty  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   28 statement2: sstatement $@2 oattrib
+   51 $@6: %empty  ["-> or --"]
+   53 estatement: sstatement $@6 erhs $@7 oattrib
+
+    "-> or --"  reduce using rule 51 ($@6)
+    $default    reduce using rule 27 ($@2)
+
+    $@2  go to state 52
+    $@6  go to state 53
+
+
+State 39
+
+   67 sstatement: shead "{" statements "}"
+
+    "{"  shift, and go to state 54
+
+
+State 40
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   19 statements: statements statement
+   20           | statement
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+   28           | sstatement $@2 oattrib
+   30 nstatement: nidid $@3 oattrib
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   50 estatement: nid $@4 erhs $@5 oattrib
+   53           | sstatement $@6 erhs $@7 oattrib
+   60 astatement: atype tattr
+   61           | aset
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+   65 aset: text "=" text
+   66     | text "=" htext
+   67 sstatement: shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statements  go to state 55
+    statement   go to state 29
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
+
+
+State 41
+
+   70 shead: "subgraph" text
+
+    $default  reduce using rule 70 (shead)
+
+
+State 42
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   32 nidid: text ":" text
+   33      | text ":" text ":" text
+   35 nid: text ":" text
+   36    | text ":" text ":" text
+
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 56
+
+
+State 43
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   18 htext: "<html-string>"
+   65 aset: text "=" text
+   66     | text "=" htext
+
+    "text"           shift, and go to state 12
+    "number"         shift, and go to state 13
+    "string"         shift, and go to state 14
+    "<html-string>"  shift, and go to state 57
+
+    ctext  go to state 16
+    text   go to state 58
+    htext  go to state 59
+
+
+State 44
+
+    2 startdot: utf thetype thename $@1 "{" statements "}"
+
+    $default  reduce using rule 2 (startdot)
+
+
+State 45
+
+   19 statements: statements statement
+
+    $default  reduce using rule 19 (statements)
+
+
+State 46
+
+   23 statement: statement2 ","
+
+    $default  reduce using rule 23 (statement)
+
+
+State 47
+
+   22 statement: statement2 ";"
+
+    $default  reduce using rule 22 (statement)
+
+
+State 48
+
+   30 nstatement: nidid $@3 oattrib
+   45 tattr: "[" iattr "]"
+   46 oattrib: tattr oattrib
+   47        | %empty  ["{", "}", ",", ";", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 61
+
+
+State 49
+
+   50 estatement: nid $@4 erhs $@5 oattrib
+   54 erhs: "-> or --" nid
+   56     | "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
+   59     | "-> or --" sstatement $@9 erhs
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 63
+
+
+State 50
+
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+   39 sattr2: sattr
+   40       | "text"
+   41 iattr: sattr2 iattr
+   42      | sattr2 "," iattr
+   43      | sattr2 ";" iattr
+   44      | %empty  ["]"]
+   45 tattr: "[" iattr "]"
+
+    "text"  shift, and go to state 64
+
+    $default  reduce using rule 44 (iattr)
+
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 67
+
+
+State 51
+
+   60 astatement: atype tattr
+
+    $default  reduce using rule 60 (astatement)
+
+
+State 52
+
+   28 statement2: sstatement $@2 oattrib
+   45 tattr: "[" iattr "]"
+   46 oattrib: tattr oattrib
+   47        | %empty  ["{", "}", ",", ";", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 68
+
+
+State 53
+
+   53 estatement: sstatement $@6 erhs $@7 oattrib
+   54 erhs: "-> or --" nid
+   56     | "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
+   59     | "-> or --" sstatement $@9 erhs
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 69
+
+
+State 54
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   19 statements: statements statement
+   20           | statement
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+   28           | sstatement $@2 oattrib
+   30 nstatement: nidid $@3 oattrib
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   50 estatement: nid $@4 erhs $@5 oattrib
+   53           | sstatement $@6 erhs $@7 oattrib
+   60 astatement: atype tattr
+   61           | aset
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+   65 aset: text "=" text
+   66     | text "=" htext
+   67 sstatement: shead "{" statements "}"
+   67           | shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statements  go to state 70
+    statement   go to state 29
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
+
+
+State 55
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   19 statements: statements statement
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+   28           | sstatement $@2 oattrib
+   30 nstatement: nidid $@3 oattrib
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   50 estatement: nid $@4 erhs $@5 oattrib
+   53           | sstatement $@6 erhs $@7 oattrib
+   60 astatement: atype tattr
+   61           | aset
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+   65 aset: text "=" text
+   66     | text "=" htext
+   67 sstatement: shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "}"         shift, and go to state 71
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statement   go to state 45
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
+
+
+State 56
+
+   32 nidid: text ":" text  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   33      | text ":" text ":" text
+   35 nid: text ":" text  ["-> or --"]
+   36    | text ":" text ":" text
+
+    ":"  shift, and go to state 72
+
+    "-> or --"  reduce using rule 35 (nid)
+    $default    reduce using rule 32 (nidid)
+
+
+State 57
+
+   18 htext: "<html-string>"
+
+    $default  reduce using rule 18 (htext)
+
+
+State 58
+
+   65 aset: text "=" text
+
+    $default  reduce using rule 65 (aset)
+
+
+State 59
+
+   66 aset: text "=" htext
+
+    $default  reduce using rule 66 (aset)
+
+
+State 60
+
+   45 tattr: "[" iattr "]"
+   46 oattrib: tattr oattrib
+   46        | tattr oattrib
+   47        | %empty  ["{", "}", ",", ";", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 73
+
+
+State 61
+
+   30 nstatement: nidid $@3 oattrib
+
+    $default  reduce using rule 30 (nstatement)
+
+
+State 62
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   54 erhs: "-> or --" nid
+   56     | "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
+   59     | "-> or --" sstatement $@9 erhs
+   67 sstatement: shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "subgraph"  shift, and go to state 24
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 74
+    nid         go to state 75
+    sstatement  go to state 76
+    shead       go to state 39
+
+
+State 63
+
+   49 $@5: %empty
+   50 estatement: nid $@4 erhs $@5 oattrib
+
+    $default  reduce using rule 49 ($@5)
+
+    $@5  go to state 77
+
+
+State 64
+
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+   40 sattr2: "text"  [",", ";", "]", "text"]
+
+    "="  shift, and go to state 78
+
+    $default  reduce using rule 40 (sattr2)
+
+
+State 65
+
+   39 sattr2: sattr
+
+    $default  reduce using rule 39 (sattr2)
+
+
+State 66
+
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+   39 sattr2: sattr
+   40       | "text"
+   41 iattr: sattr2 iattr
+   41      | sattr2 iattr
+   42      | sattr2 "," iattr
+   42      | sattr2 "," iattr
+   43      | sattr2 ";" iattr
+   43      | sattr2 ";" iattr
+   44      | %empty  ["]"]
+
+    ","     shift, and go to state 79
+    ";"     shift, and go to state 80
+    "text"  shift, and go to state 64
+
+    $default  reduce using rule 44 (iattr)
+
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 81
+
+
+State 67
+
+   45 tattr: "[" iattr "]"
+
+    "]"  shift, and go to state 82
+
+
+State 68
+
+   28 statement2: sstatement $@2 oattrib
+
+    $default  reduce using rule 28 (statement2)
+
+
+State 69
+
+   52 $@7: %empty
+   53 estatement: sstatement $@6 erhs $@7 oattrib
+
+    $default  reduce using rule 52 ($@7)
+
+    $@7  go to state 83
+
+
+State 70
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   19 statements: statements statement
+   21 statement: statement2
+   22          | statement2 ";"
+   23          | statement2 ","
+   24 statement2: nstatement
+   25           | estatement
+   26           | astatement
+   28           | sstatement $@2 oattrib
+   30 nstatement: nidid $@3 oattrib
+   31 nidid: text
+   32      | text ":" text
+   33      | text ":" text ":" text
+   34 nid: text
+   35    | text ":" text
+   36    | text ":" text ":" text
+   50 estatement: nid $@4 erhs $@5 oattrib
+   53           | sstatement $@6 erhs $@7 oattrib
+   60 astatement: atype tattr
+   61           | aset
+   62 atype: "graph"
+   63      | "node"
+   64      | "edge"
+   65 aset: text "=" text
+   66     | text "=" htext
+   67 sstatement: shead "{" statements "}"
+   67           | shead "{" statements "}"
+   69           | "{" $@10 statements "}"
+   70 shead: "subgraph" text
+   71      | "subgraph"
+
+    "{"         shift, and go to state 22
+    "}"         shift, and go to state 84
+    "graph"     shift, and go to state 23
+    "subgraph"  shift, and go to state 24
+    "node"      shift, and go to state 25
+    "edge"      shift, and go to state 26
+    "text"      shift, and go to state 12
+    "number"    shift, and go to state 13
+    "string"    shift, and go to state 14
+
+    ctext       go to state 16
+    text        go to state 27
+    statement   go to state 45
+    statement2  go to state 30
+    nstatement  go to state 31
+    nidid       go to state 32
+    nid         go to state 33
+    estatement  go to state 34
+    astatement  go to state 35
+    atype       go to state 36
+    aset        go to state 37
+    sstatement  go to state 38
+    shead       go to state 39
+
+
+State 71
+
+   69 sstatement: "{" $@10 statements "}"
+
+    $default  reduce using rule 69 (sstatement)
+
+
+State 72
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   33 nidid: text ":" text ":" text
+   36 nid: text ":" text ":" text
+
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 85
+
+
+State 73
+
+   46 oattrib: tattr oattrib
+
+    $default  reduce using rule 46 (oattrib)
+
+
+State 74
+
+   34 nid: text  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string", "-> or --"]
+   35    | text ":" text
+   36    | text ":" text ":" text
+
+    ":"  shift, and go to state 86
+
+    $default  reduce using rule 34 (nid)
+
+
+State 75
+
+   54 erhs: "-> or --" nid  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   55 $@8: %empty  ["-> or --"]
+   56 erhs: "-> or --" nid $@8 erhs
+
+    "-> or --"  reduce using rule 55 ($@8)
+    $default    reduce using rule 54 (erhs)
+
+    $@8  go to state 87
+
+
+State 76
+
+   57 erhs: "-> or --" sstatement  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   58 $@9: %empty  ["-> or --"]
+   59 erhs: "-> or --" sstatement $@9 erhs
+
+    "-> or --"  reduce using rule 58 ($@9)
+    $default    reduce using rule 57 (erhs)
+
+    $@9  go to state 88
+
+
+State 77
+
+   45 tattr: "[" iattr "]"
+   46 oattrib: tattr oattrib
+   47        | %empty  ["{", "}", ",", ";", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   50 estatement: nid $@4 erhs $@5 oattrib
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 89
+
+
+State 78
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   18 htext: "<html-string>"
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+
+    "text"           shift, and go to state 12
+    "number"         shift, and go to state 13
+    "string"         shift, and go to state 14
+    "<html-string>"  shift, and go to state 57
+
+    ctext  go to state 16
+    text   go to state 90
+    htext  go to state 91
+
+
+State 79
+
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+   39 sattr2: sattr
+   40       | "text"
+   41 iattr: sattr2 iattr
+   42      | sattr2 "," iattr
+   42      | sattr2 "," iattr
+   43      | sattr2 ";" iattr
+   44      | %empty  ["]"]
+
+    "text"  shift, and go to state 64
+
+    $default  reduce using rule 44 (iattr)
+
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 92
+
+
+State 80
+
+   37 sattr: "text" "=" text
+   38      | "text" "=" htext
+   39 sattr2: sattr
+   40       | "text"
+   41 iattr: sattr2 iattr
+   42      | sattr2 "," iattr
+   43      | sattr2 ";" iattr
+   43      | sattr2 ";" iattr
+   44      | %empty  ["]"]
+
+    "text"  shift, and go to state 64
+
+    $default  reduce using rule 44 (iattr)
+
+    sattr   go to state 65
+    sattr2  go to state 66
+    iattr   go to state 93
+
+
+State 81
+
+   41 iattr: sattr2 iattr
+
+    $default  reduce using rule 41 (iattr)
+
+
+State 82
+
+   45 tattr: "[" iattr "]"
+
+    $default  reduce using rule 45 (tattr)
+
+
+State 83
+
+   45 tattr: "[" iattr "]"
+   46 oattrib: tattr oattrib
+   47        | %empty  ["{", "}", ",", ";", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   53 estatement: sstatement $@6 erhs $@7 oattrib
+
+    "["  shift, and go to state 50
+
+    $default  reduce using rule 47 (oattrib)
+
+    tattr    go to state 60
+    oattrib  go to state 94
+
+
+State 84
+
+   67 sstatement: shead "{" statements "}"
+
+    $default  reduce using rule 67 (sstatement)
+
+
+State 85
+
+   33 nidid: text ":" text ":" text  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string"]
+   36 nid: text ":" text ":" text  ["-> or --"]
+
+    "-> or --"  reduce using rule 36 (nid)
+    $default    reduce using rule 33 (nidid)
+
+
+State 86
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   35 nid: text ":" text
+   36    | text ":" text ":" text
+
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 95
+
+
+State 87
+
+   54 erhs: "-> or --" nid
+   56     | "-> or --" nid $@8 erhs
+   56     | "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
+   59     | "-> or --" sstatement $@9 erhs
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 96
+
+
+State 88
+
+   54 erhs: "-> or --" nid
+   56     | "-> or --" nid $@8 erhs
+   57     | "-> or --" sstatement
+   59     | "-> or --" sstatement $@9 erhs
+   59     | "-> or --" sstatement $@9 erhs
+
+    "-> or --"  shift, and go to state 62
+
+    erhs  go to state 97
+
+
+State 89
+
+   50 estatement: nid $@4 erhs $@5 oattrib
+
+    $default  reduce using rule 50 (estatement)
+
+
+State 90
+
+   37 sattr: "text" "=" text
+
+    $default  reduce using rule 37 (sattr)
+
+
+State 91
+
+   38 sattr: "text" "=" htext
+
+    $default  reduce using rule 38 (sattr)
+
+
+State 92
+
+   42 iattr: sattr2 "," iattr
+
+    $default  reduce using rule 42 (iattr)
+
+
+State 93
+
+   43 iattr: sattr2 ";" iattr
+
+    $default  reduce using rule 43 (iattr)
+
+
+State 94
+
+   53 estatement: sstatement $@6 erhs $@7 oattrib
+
+    $default  reduce using rule 53 (estatement)
+
+
+State 95
+
+   35 nid: text ":" text  ["{", "}", ",", ";", "[", "graph", "subgraph", "node", "edge", "text", "number", "string", "-> or --"]
+   36    | text ":" text ":" text
+
+    ":"  shift, and go to state 98
+
+    $default  reduce using rule 35 (nid)
+
+
+State 96
+
+   56 erhs: "-> or --" nid $@8 erhs
+
+    $default  reduce using rule 56 (erhs)
+
+
+State 97
+
+   59 erhs: "-> or --" sstatement $@9 erhs
+
+    $default  reduce using rule 59 (erhs)
+
+
+State 98
+
+   13 ctext: "string"
+   14      | ctext "+" "string"
+   15 text: "text"
+   16     | "number"
+   17     | ctext
+   36 nid: text ":" text ":" text
+
+    "text"    shift, and go to state 12
+    "number"  shift, and go to state 13
+    "string"  shift, and go to state 14
+
+    ctext  go to state 16
+    text   go to state 99
+
+
+State 99
+
+   36 nid: text ":" text ":" text
+
+    $default  reduce using rule 36 (nid)

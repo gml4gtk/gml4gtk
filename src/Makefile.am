@@ -67,7 +67,8 @@ gml4gtk_SOURCES = \
 	dpmem.c \
 	json.c \
 	jgf.c \
-	bgv.c
+	bgv.c \
+	bgvparser.c
 
 
 #
@@ -82,6 +83,10 @@ gml4gtk$(EXEEXT): $(gml4gtk_SOURCES)
 	rm -f ./gml4gtk
 	$(CC) $(gml4gtk_CFLAGS) $(gml4gtk_SOURCES) -I. -I.. $(gml4gtk_tolink) -lm -o gml4gtk
 	$(CC) --version
+
+# how to re-generate the parsercode
+parsers:
+	echo "run and see the mklp.sh shell script"
 
 # make callgraph based on assembly output.
 # uses edges.sh script
@@ -100,6 +105,12 @@ callgraph:
 	echo "*/" >>gml4gtk-callgraph.gv
 	cat gml4gtk-out.gv  >>gml4gtk-callgraph.gv
 	rm -v -f gml4gtk-out.gv
+
+# make callgraph using llvm clang ir bytecode ll file
+llvmcallgraph:
+	make clean
+	clang -c -I. -I.. -S -O0 -emit-llvm  $(GTK_CFLAGS) $(gml4gtk_SOURCES)
+	python overcg.py -i splay-tree.ll -o splay-tree.ll.callgraph.gv
 
 # using calltree program
 # calls to cairo, pango, gtk are not included this way
@@ -186,13 +197,65 @@ gml4gtk_exedlla = \
 	../w64/lib/libxml2.dll.a \
 	../w64/lib/libz.dll.a
 
+gml4gtk_exedlla2 = \
+	-llibgobject-2.0.dll.a \
+	-llibgtk-3.dll.a \
+	-llibatk-1.0.dll.a \
+	-llibcairo.dll.a \
+	-llibcairo-gobject.dll.a \
+	-llibcairo-script-interpreter.dll.a \
+	-llibcroco-0.6.dll.a \
+	-llibffi.dll.a \
+	-llibfontconfig.dll.a \
+	-llibfreetype.dll.a \
+	-llibgailutil-3.dll.a \
+	-llibgdk-3.dll.a \
+	-llibgdk_pixbuf-2.0.dll.a \
+	-llibgio-2.0.dll.a \
+	-llibglib-2.0.dll.a \
+	-llibgmodule-2.0.dll.a \
+	-llibgthread-2.0.dll.a \
+	-llibjasper.dll.a \
+	-llibjpeg.dll.a \
+	-lliblzma.dll.a \
+	-llibpango-1.0.dll.a \
+	-llibpangocairo-1.0.dll.a \
+	-llibpangoft2-1.0.dll.a \
+	-llibpangowin32-1.0.dll.a \
+	-llibpixman-1.dll.a \
+	-llibpng15.dll.a \
+	-llibpng.dll.a \
+	-llibrsvg-2.dll.a \
+	-llibtiff.dll.a \
+	-llibtiffxx.dll.a \
+	-llibxml2.dll.a \
+	-llibz.dll.a
+
 
 # cross compiling windows 64bit exe on linux
+# static linking should be theoretically possible
+# but any usable docs are missing
 gml4gtkexe: main.c
 	x86_64-w64-mingw32-windres gml4gtk.rc demo-gml4gtk.o
 	x86_64-w64-mingw32-gcc -c $(gml4gtk_exeCFLAGS)  -I. -I.. $(gml4gtk_exeincludes) $(gml4gtk_SOURCES)
-	x86_64-w64-mingw32-gcc *.o -Wl,-Bstatic $(gml4gtk_exedlla) -o gml4gtk.exe
+	x86_64-w64-mingw32-gcc -v *.o -Wl,-Bstatic $(gml4gtk_exedlla) -Wl,-Bdynamic -o gml4gtk.exe
+# this does not worl
+#	x86_64-w64-mingw32-gcc -v -L. *.o -Wl,-Bstatic -l $(gml4gtk_exedlla) -Wl,-Bdynamic -o gml4gtk.exe
+# this does not work
+#	x86_64-w64-mingw32-gcc *.o -L../w64/lib/ $(gml4gtk_exedlla2) -o gml4gtk64.exe
+# 32 bits compiling does not work on debian or fedora
+#	x86_64-w64-mingw32-windres --target=pe-i386 gml4gtk.rc demo-gml4gtk.o
+#	i686-w64-mingw32-gcc -m32 -c $(gml4gtk_exeCFLAGS)  -I. -I.. $(gml4gtk_exeincludes) $(gml4gtk_SOURCES)
+#	cp 0gtk.bin 0gtk.a
+#	i686-w64-mingw32-gcc -v -Wl,-bpe-i386 -m32 *.o 0gtk.a -o 0big.o
+#	result: the gtk binary compiled code cannot be used because it is compiled with gcc compiler older then version 10
 
+# this generate a 32bit windos exe which still needs dll's
+# but installed the fedora mingw static gtk-2
+# this does not work yet
+pe:
+	i686-w64-mingw32-windres gml4gtk.rc demo-gml4gtk.o
+	i686-w64-mingw32-gcc -I. -I.. $(gml4gtk_SOURCES) `i686-w64-mingw32-pkg-config --cflags gtk+-win32-2.0` `i686-w64-mingw32-pkg-config --libs gtk+-win32-2.0` -lz -o 0o.exe
 
 #
 clean-generic:
@@ -216,6 +279,7 @@ clean-generic:
 	rm -v -f ./dsmake.warnings
 	rm -v -f ./dsmake.errors
 	rm -v -f *.dot
+	rm -v -f *.ll
 	rm -v -f *.*r.*
 	rm -v -f *.*t.*
 	rm -v -f *.bc

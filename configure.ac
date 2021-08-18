@@ -68,6 +68,9 @@ AC_LANG(C)
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_MAKE_SET
+PKG_PROG_PKG_CONFIG
+
+AM_SILENT_RULES([no])
 
 # -DFORTIFY_SOURCE=2 does add glibc extra checks, see RedHat documentation
 # Need c11 mode because of %llu in printf() and (long long int) datatype and unnamed unions
@@ -85,6 +88,7 @@ AC_PROG_MAKE_SET
 # asm output: -fverbose-asm -save-temps=obj
 # -fplugin=$HOME/scallgraph_plugin.so.0.0.0
 CFLAGS="$CFLAGS -g -std=c99 "
+AC_MSG_RESULT($CFLAGS)
 
 # Gcc compiler options
 # the option -frecord-gcc-switches puts the compiler options
@@ -235,12 +239,13 @@ AC_SUBST(HAVE_FINITE)
 AC_SUBST(HAVE_ISFINITE)
 
 
+
 # default to gtk+-2.0 setting to 1
 GTK_HAVE_API_VERSION_0=0
 GTK_HAVE_API_VERSION_1=0
 GTK_HAVE_API_VERSION_2=0
-GTK_HAVE_API_VERSION_3=1
-GTK_HAVE_API_VERSION_4=0
+GTK_HAVE_API_VERSION_3=0
+GTK_HAVE_API_VERSION_4=1
 
 AC_ARG_ENABLE(gtk2,
 [  --enable-gtk2           Use GTK 2.0 in preference to GTK 3.0 [[default=no]]],
@@ -253,23 +258,27 @@ fi])
 
 AC_MSG_CHECKING([which gtk+ version to compile against])
 
-# set [with_gtk=0.0] to default for gtk-0
-# set [with_gtk=1.0] to default for gtk-1
-# set [with_gtk=2.0] to default for gtk-2
-# set [with_gtk=3.0] to default for gtk-3
-# set [with_gtk=4.0] to default for gtk-4
+# pkg-config uses gtk4 as name but
+# uses gtk+-3.0 for gtk3 etc.
+# this name change is set with GTK_WITH_VERSION
+# set [with_gtk=0] to default for gtk-0
+# set [with_gtk=1] to default for gtk-1
+# set [with_gtk=2] to default for gtk-2
+# set [with_gtk=3] to default for gtk-3
+# set [with_gtk=4] to default for gtk-4
 
 AC_ARG_WITH([gtk],
-  [AS_HELP_STRING([--with-gtk=0.0|1.0|2.0|3.0|4.0],[which gtk+ version to compile against (default: 3.0)])],
+  [AS_HELP_STRING([--with-gtk=0|1|2|3|4],[which gtk+ version to compile against (default: 3)])],
   [case "$with_gtk" in
-     0.0|1.0|2.0|3.0|4.0) ;;
-     *) AC_MSG_ERROR([invalid gtk version specified]) ;;
+     0|1|2|3|4) ;;
+     *) AC_MSG_ERROR([unknown gtk version $with_gtk specified use 0,1,2,3 or 4]) ;;
    esac],
-  [with_gtk=3.0])
+  [with_gtk=3])
 AC_MSG_RESULT([$with_gtk])
 
 case "$with_gtk" in
-  0.0) GTK_API_VERSION=0.0
+  0) GTK_API_VERSION=0.0
+       GTK_WITH_VERSION=gtk+-0.0
        GTK_REQUIRED=0.0.0
        GTK_HAVE_API_VERSION_0=1
        GTK_HAVE_API_VERSION_1=0
@@ -277,7 +286,8 @@ case "$with_gtk" in
        GTK_HAVE_API_VERSION_3=0
        GTK_HAVE_API_VERSION_4=0
        ;;
-  1.0) GTK_API_VERSION=1.0
+  1) GTK_API_VERSION=1.0
+       GTK_WITH_VERSION=gtk+-1.0
        GTK_REQUIRED=1.0.0
        GTK_HAVE_API_VERSION_0=0
        GTK_HAVE_API_VERSION_1=1
@@ -285,7 +295,8 @@ case "$with_gtk" in
        GTK_HAVE_API_VERSION_3=0
        GTK_HAVE_API_VERSION_4=0
        ;;
-  2.0) GTK_API_VERSION=2.0
+  2) GTK_API_VERSION=2.0
+       GTK_WITH_VERSION=gtk+-2.0
        GTK_REQUIRED=2.0.0
        GTK_HAVE_API_VERSION_0=0
        GTK_HAVE_API_VERSION_1=0
@@ -293,7 +304,8 @@ case "$with_gtk" in
        GTK_HAVE_API_VERSION_3=0
        GTK_HAVE_API_VERSION_4=0
        ;;
-  3.0) GTK_API_VERSION=3.0
+  3) GTK_API_VERSION=3.0
+       GTK_WITH_VERSION=gtk+-3.0
        GTK_REQUIRED=2.91.0
        GTK_HAVE_API_VERSION_0=0
        GTK_HAVE_API_VERSION_1=0
@@ -301,7 +313,8 @@ case "$with_gtk" in
        GTK_HAVE_API_VERSION_3=1
        GTK_HAVE_API_VERSION_4=0
        ;;
-  4.0) GTK_API_VERSION=4.0
+  4) GTK_API_VERSION=4.0
+       GTK_WITH_VERSION=gtk4
        GTK_REQUIRED=3.91.0
        GTK_HAVE_API_VERSION_0=0
        GTK_HAVE_API_VERSION_1=0
@@ -312,16 +325,17 @@ case "$with_gtk" in
 esac
 
 #
+AC_SUBST([GTK_WITH_VERSION])
 AC_SUBST([GTK_API_VERSION])
 AC_SUBST([GTK_REQUIRED])
 
 
 #
-AM_CONDITIONAL([HAVE_GTK_0],[test "$with_gtk" = "0.0"])
-AM_CONDITIONAL([HAVE_GTK_1],[test "$with_gtk" = "1.0"])
-AM_CONDITIONAL([HAVE_GTK_2],[test "$with_gtk" = "2.0"])
-AM_CONDITIONAL([HAVE_GTK_3],[test "$with_gtk" = "3.0"])
-AM_CONDITIONAL([HAVE_GTK_4],[test "$with_gtk" = "4.0"])
+AM_CONDITIONAL([HAVE_GTK_0],[test "$with_gtk" = "0"])
+AM_CONDITIONAL([HAVE_GTK_1],[test "$with_gtk" = "1"])
+AM_CONDITIONAL([HAVE_GTK_2],[test "$with_gtk" = "2"])
+AM_CONDITIONAL([HAVE_GTK_3],[test "$with_gtk" = "3"])
+AM_CONDITIONAL([HAVE_GTK_4],[test "$with_gtk" = "4"])
 
 #
 AC_DEFINE_UNQUOTED([GTK_HAVE_API_VERSION_0], [$GTK_HAVE_API_VERSION_0], [gtk version 0])
@@ -350,28 +364,6 @@ Please install glib-2.0 >= 2.14.0 and then reconfigure mooigraph.
 glib-2.0 is available from http://www.gtk.org/
 "
    exit 1
-fi
-
-# Initial check for GTK availability
-if test "$prefer_gtk2" = "yes" ; then
-    PKG_CHECK_MODULES(GTK2, gtk+-2.0 >= 2.14.0,
-      GTK_CFLAGS=$GTK2_CFLAGS
-      GTK_LIBS=$GTK2_LIBS
-      CFLAGS="$CFLAGS $GTK_CFLAGS"
-      LIBS="$LIBS $GTK_LIBS"
-      gtk_version="2.0",
-      echo "GTK 2 >= 2.14.0 not found"
-    )
-elif test "$prefer_gtk2" = "no" ; then
-    PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.0.1,
-      GTK_CFLAGS=$GTK3_CFLAGS
-      GTK_LIBS=$GTK3_LIBS
-      CFLAGS="$CFLAGS $GTK_CFLAGS"
-      LIBS="$LIBS $GTK_LIBS"
-      gtk_version="3.0"
-      fake_gtkspinner="no",
-      echo "GTK 3 >= 3.0.1 not found"
-    )
 fi
 
 dnl GTK 2.0 fallback in case preference not given
@@ -420,7 +412,7 @@ AC_SUBST(CONFIG_UNAME)
 AC_DEFINE_UNQUOTED(COMPILE_UNAME, ["$CONFIG_UNAME"], [System where this is compiled.])
 
 #
-PKG_CHECK_MODULES(GTK, gtk+-$GTK_API_VERSION >= $GTK_REQUIRED)
+PKG_CHECK_MODULES([GTK],[$GTK_WITH_VERSION >= $GTK_REQUIRED])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
@@ -457,11 +449,11 @@ The following settings will be used:
 
 Use "make" to compile $PACKAGE_NAME $VERSION.
 
-use ./configure --with-gtk=0.0 for gtk-0
-use ./configure --with-gtk=1.0 for gtk-1
-use ./configure --with-gtk=2.0 for gtk-2
-use ./configure --with-gtk=3.0 for gtk-3
-use ./configure --with-gtk=4.0 for gtk-4
+use ./configure --with-gtk=0 for gtk-0
+use ./configure --with-gtk=1 for gtk-1
+use ./configure --with-gtk=2 for gtk-2
+use ./configure --with-gtk=3 for gtk-3
+use ./configure --with-gtk=4 for gtk-4
 use ./configure --enable-gcc-warnings to enable gcc warnings and checks
 
 EOF
@@ -484,3 +476,4 @@ Configuration:
   Config COMPILE_DATE	"$CONFIG_DATE"
   Config COMPILE_UNAME	"$CONFIG_UNAME"
 ])
+

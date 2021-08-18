@@ -2,7 +2,7 @@
 rm ./O1
 rm ./O2
 rm ./O3
-valgrind -v --leak-check=full ./gml4gtk 1>O1 2>O2
+valgrind -v --tool=memcheck --leak-check=full --suppressions=valgrind-suppressions --suppressions=gtk.supp --suppressions=gtk64.supp --suppressions=glib.supp ./gml4gtk 1>O1 2>O2
 # the -A options shows the next 3 lines
 # in the backtrace where the calloc came from
 grep dp_calloc -A 3 O2 >O3

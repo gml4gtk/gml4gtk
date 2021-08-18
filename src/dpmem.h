@@ -37,8 +37,19 @@
 #ifndef DPMEM_H
 #define DPMEM_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+#define __BEGIN_DECLS extern "C" {
+#define __END_DECLS }
+#else
+#define __BEGIN_DECLS		/* empty */
+#define __END_DECLS		/* empty */
+#endif
+
+__BEGIN_DECLS
 /* */
-extern void dp_free(void *ptr);
+extern void *dp_free(void *ptr);
 
 /* */
 extern void *dp_malloc(size_t n);
@@ -55,6 +66,6 @@ extern void dp_memreport(void);
 /* */
 extern void dp_meminit(void);
 
+__END_DECLS
 #endif
-
 /* end */

@@ -802,7 +802,7 @@ int yy_flex_debug = 1;
 static const flex_int16_t yy_rule_linenum[15] =
     {   0,
       128,  130,  131,  132,  133,  135,  193,  243,  249,  255,
-      261,  317,  373,  519
+      261,  316,  371,  517
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -1192,7 +1192,7 @@ YY_DECL
 		 */
 		yy_bp = yy_cp;
 
-/* %% [9.0] code to set up and find next match goes here */
+/* %% [9.0] code to set up and find next match goes here - scan-build says array subscript is undefined at the generated code yy_nxt[yy_current_state][ YY_SC_TO_UI(*yy_cp) ]) */
 		yy_current_state = (yy_start);
 yy_match:
 		do
@@ -1438,11 +1438,11 @@ YY_RULE_SETUP
 {
 			/* "string" as in var="value" */
 			if (strlen (yytext) == 2) {
-			hlylval.string = dp_uniqstr ("");
+			hlylval.string = dp_uniqstr ((char * )"");
 			return (HL_QSTR);
 			}
 			/* create copy buffer */
-			tmp = dp_calloc (1, (yyleng+1));
+			tmp = (char *) dp_calloc (1, (yyleng+1));
 			/* wipe last double quote */
 			yytext[yyleng-1] = 0;
 			/* copy past first char */
@@ -1484,8 +1484,7 @@ YY_RULE_SETUP
 			  }
 			}
 			hlylval.string = dp_uniqstr (tmp);
-			dp_free (tmp);
-			tmp = NULL;
+			tmp = (char *) dp_free ((void *) tmp);
 			pt = NULL;
 			q = NULL;
 			return (HL_QSTR);
@@ -1494,15 +1493,15 @@ YY_RULE_SETUP
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 317 "dphl.l"
+#line 316 "dphl.l"
 {
 			/* 'string' as in var='value' */
 			if (strlen (yytext) == 2) {
-			hlylval.string = dp_uniqstr ("");
+			hlylval.string = dp_uniqstr ((char * )"");
 			return (HL_QSTR);
 			}
 			/* create copy buffer */
-			tmp = dp_calloc (1, (yyleng+1));
+			tmp = (char *) dp_calloc (1, (yyleng+1));
 			/* wipe last quote */
 			yytext[yyleng-1] = 0;
 			/* copy past first char */
@@ -1544,8 +1543,7 @@ YY_RULE_SETUP
 			  }
 			}
 			hlylval.string = dp_uniqstr (tmp);
-			dp_free (tmp);
-			tmp = NULL;
+			tmp = (char *) dp_free ((void *) tmp);
 			pt = NULL;
 			q = NULL;
 			return (HL_QSTR);
@@ -1553,7 +1551,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 373 "dphl.l"
+#line 371 "dphl.l"
 {
 			/* var */
 			hlylval.string = dp_uniqstr (yytext);
@@ -1696,7 +1694,7 @@ YY_RULE_SETUP
 			}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 514 "dphl.l"
+#line 512 "dphl.l"
 {
 			/* end of buffer */
 			return (EOF);
@@ -1704,7 +1702,7 @@ case YY_STATE_EOF(INITIAL):
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 519 "dphl.l"
+#line 517 "dphl.l"
 {
 			/* something unknown causes parse error */
 			return ((int)yytext[0]);
@@ -1712,10 +1710,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 524 "dphl.l"
+#line 522 "dphl.l"
 ECHO;
 	YY_BREAK
-#line 1719 "lex.hl.c"
+#line 1717 "lex.hl.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2849,7 +2847,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 524 "dphl.l"
+#line 522 "dphl.l"
 
 
 /* lex buffer */
@@ -2897,7 +2895,7 @@ void html_lex_init (int dbg, char *str, int line)
   /* extra space for \0\0 */
   buflen = strlen (str) + 2;
 
-  ibuf = dp_calloc (1, buflen);
+  ibuf = (char *) dp_calloc (1, buflen);
 
   if (ibuf == NULL) { return; }
 
@@ -2969,20 +2967,17 @@ void html_lex_deinit (void)
 
   /* data buffer */
   if (dbuf) {
-    dp_free (dbuf);
-    dbuf = (char *)0;
+    dbuf = (char *) dp_free ((void *) dbuf);
   }
 
   /* tag buffer */
   if (tbuf) {
-    dp_free (tbuf);
-    tbuf = (char *)0;
+    tbuf = (char *) dp_free ((void *) tbuf);
   }
 
   /* input buffer */
   if( ibuf) {
-    dp_free (ibuf);
-    ibuf = (char *)0;
+    ibuf = (char *) dp_free ((void *) ibuf);
   }
 
   /* pointer in ibuf */

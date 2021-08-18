@@ -1743,7 +1743,7 @@ m4_ifdef( [[M4_YY_USES_REJECT]],
 		 */
 		yy_bp = yy_cp;
 
-%% [9.0] code to set up and find next match goes here
+%% [9.0] code to set up and find next match goes here - scan-build says array subscript is undefined at the generated code yy_nxt[yy_current_state][ YY_SC_TO_UI(*yy_cp) ])
 
 yy_find_action:
 %% [10.0] code to find the action number goes here

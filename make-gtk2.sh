@@ -1,6 +1,10 @@
 #!/bin/sh -x
 echo "compiling for use with GTK-2"
-./autogen.sh
-./configure --with-gtk=2.0 --enable-gcc-warnings
-make
+rm -v -f ./dsmake.*
+rm -v -f -r m4
+mkdir m4
+autoreconf -vfim
+./configure --with-gtk=2
+make clean
+./dmake
 

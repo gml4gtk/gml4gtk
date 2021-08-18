@@ -23,7 +23,7 @@
 #define JGF_H 1
 
 /* parse jgf json graph data */
-int jgfparse(struct gml_graph *g, FILE * f, char *fname, char *argv0);
+int jgfparse(struct gml_graph *g, gzFile f, char *fname, char *argv0);
 
 #endif
 

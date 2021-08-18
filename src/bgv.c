@@ -46,27 +46,37 @@
 #include "splay-tree.h"
 #include "main.h"
 #include "bgv.h"
+#include "bgvparser.h"
 #include "dpmem.h"
+#include "dot.tab.h"
 
 static char *curfname = NULL;
 
 static int bgverror = 0;
 
+static int bgvdebug = 0;
+
 /* */
 int bgvparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 {
+	int status = 0;
+
+	if (g == NULL || 1 /* test only */ ) {
+		return (0);
+	}
+
 	curfname = fname;
 
 	/* no errors */
 	bgverror = 0;
 
-	/* set debug option */
-	if (strcmp(argv0, "gml4gtkd") == 0) {
-	} else {
-	}
+	bgvdebug = yydebug;
 
-	if (f) {}
-	if (g) {}
+	status = runbgvparse(f, bgvdebug);
+
+	if (bgvdebug) {
+		printf("%s(): status=%d\n", __func__, status);
+	}
 
 	return (0);
 }

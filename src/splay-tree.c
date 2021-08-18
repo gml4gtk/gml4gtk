@@ -65,10 +65,13 @@ static inline void *splay_tree_malloc(size_t n)
 
 static inline void *splay_tree_free(void *ptr)
 {
+	void *p2 = NULL;
 	if (ptr) {
-		dp_free(ptr);
+		p2 = dp_free(ptr);
+		if (p2) {
+		}
 	}
-	return (NULL);
+	return ((void *)0);
 }
 
 /* forward decl. */
@@ -124,10 +127,9 @@ splay_tree splay_tree_delete(splay_tree sp)
 
 		/* ready. */
 		keys = (splay_tree_key *) splay_tree_free(keys);
-
-		/* keys is never read */
-		if (keys) {	/* fix */
+		if (keys) {
 		}
+		keys = (splay_tree_key *) 0;
 	}
 
 	/* wipe the pointers in the struct to make valgrind happy */
@@ -291,10 +293,9 @@ void splay_tree_remove(splay_tree sp, splay_tree_key key)
 	node->right = (splay_tree_node) 0;
 
 	node = (splay_tree_node) splay_tree_free((void *)node);
-
-	/* node is never read */
-	if (node) {		/* fix */
+	if (node) {
 	}
+	node = (splay_tree_node) 0;
 
 	return;
 }
@@ -492,16 +493,22 @@ splay_tree_node splay_tree_successor(splay_tree sp, splay_tree_key key)
 /* free() wrappers to free key/value */
 void splay_tree_free_value(splay_tree_value value)
 {
+	void *v = NULL;
 	if (value) {
-		(void)splay_tree_free((void *)value);
+		v = splay_tree_free((void *)value);
+		if (v) {
+		}
 	}
 	return;
 }
 
 void splay_tree_free_key(splay_tree_key key)
 {
+	void *k = NULL;
 	if (key) {
-		(void)splay_tree_free((void *)key);
+		k = splay_tree_free((void *)key);
+		if (k) {
+		}
 	}
 	return;
 }

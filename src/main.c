@@ -36,6 +36,8 @@
 
 #include "config.h"
 
+/* for a qt5 gui it is only needed to create a main.cpp instead of using main.c and link the rest of the code */
+
 /* needed to get basename() from string.h
  * #define _GNU_SOURCE
  * basename() changed in g_path_get_basename()
@@ -176,8 +178,8 @@
 #define PACKPADDING 0
 
 /* window initial (x,y) size in pixels */
-#define TOP_LEVEL_WINDOW_XSIZE 700
-#define TOP_LEVEL_WINDOW_YSIZE 600
+#define TOP_LEVEL_WINDOW_XSIZE 800
+#define TOP_LEVEL_WINDOW_YSIZE 650
 
 /* probed once to check if pango lib support markup overline="single" attribute */
 static int pango_overline = -1;
@@ -225,11 +227,11 @@ static GtkWidget *drawingarea1 = (GtkWidget *) 0;
 /* popup level window also used in maingtk2.c */
 static GtkWidget *popupwindow1 = (GtkWidget *) 0;
 
-/* edge label tickbox */
-static GtkWidget *elabel1 = (GtkWidget *) 0;
-
 /* position mode button */
 static GtkWidget *posbutton = (GtkWidget *) 0;
+
+/* edge labels */
+static GtkWidget *elabel1 = (GtkWidget *) 0;
 
 /* status line gtk buffers */
 static GtkTextBuffer *entry1buffer = NULL;
@@ -242,30 +244,40 @@ static int mouse_oldy = 0;
 /* if set, draw dummy nodes */
 static int drawdummy = 0;
 
-#if GTK_HAVE_API_VERSION_0 == 1
+#if (GTK_HAVE_API_VERSION_0 == 1)
 #warning "gtk-0 not implemented"
 #endif
 
-#if GTK_HAVE_API_VERSION_1 == 1
+#if (GTK_HAVE_API_VERSION_1 == 1)
 #warning "gtk-1 not implemented"
 #endif
 
 /* sliders */
-#if GTK_HAVE_API_VERSION_2 == 1
-static GtkObject *adjvscale1 = NULL;
+#if (GTK_HAVE_API_VERSION_2 == 1)
+static GtkObject *adjvscale1 = NULL;	/* left vertical zoom slider */
 static GtkObject *adjvscale2 = NULL;
 static GtkObject *adjhscale1 = NULL;
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
-static GtkAdjustment *adjvscale1 = NULL;
+#if (GTK_HAVE_API_VERSION_3 == 1)
+static GtkAdjustment *adjvscale1 = NULL;	/* left vertical zoom slider */
+static GtkAdjustment *adjvscale2 = NULL;
+static GtkAdjustment *adjhscale1 = NULL;
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+static GtkAdjustment *adjvscale1 = NULL;	/* left vertical zoom slider */
 static GtkAdjustment *adjvscale2 = NULL;
 static GtkAdjustment *adjhscale1 = NULL;
 #endif
 
 /* forward decl. */
 static void do_clear_all(int mode);
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 static void top_level_window_main_quit(void);
+
 static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer user_data);
@@ -277,6 +289,9 @@ static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer u
 static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_fullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data);
 static void on_top_level_window_unfullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data);
+
+#endif
+
 static void xspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void yspin_changed(GtkWidget * widget, gpointer spinbutton);
 static void pos_changed(GtkWidget * widget, gpointer spinbutton);
@@ -303,7 +318,14 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_html(cairo_t * c
 
 static void on_top_level_window_drawingarea1_expose_event_nodes(cairo_t * crp);
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 static void show_about(GtkWidget * widget, gpointer data);
+#endif
+
+/* show about with ok button */
+static void show_about_bare(void);
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* left slider */
 static void on_vscale1_changed(GtkAdjustment * adj);
@@ -313,6 +335,21 @@ static void on_vscale2_changed(GtkAdjustment * adj);
 
 /* bottom slider */
 static void on_hscale1_changed(GtkAdjustment * adj);
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* left slider */
+static void on_vscale1_changed(GtkAdjustment * adj, gpointer data);
+
+/* right slider */
+static void on_vscale2_changed(GtkAdjustment * adj, gpointer data);
+
+/* bottom slider */
+static void on_hscale1_changed(GtkAdjustment * adj, gpointer data);
+
+#endif
 
 #if GTK_HAVE_API_VERSION_2 == 1
 /* redraw drawing area */
@@ -356,727 +393,53 @@ static void static_maingtk_textsizes(void);
 
 static void update_status_text(char *text);
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 static gboolean on_mouse_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data);
 static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * event);
 
-int main(int argc, char *argv[])
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+static void on_motion_notify_event(GtkEventControllerMotion * controller, double x, double y, GtkWidget * widget);
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
+static void sliders_default(void)
 {
-	int status = 0;
+	zfactor = 1.0;
+	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
+	vxmin = 0;
+	vymin = 0;
+	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
+	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+static void sliders_default(void)
+{
+	zfactor = 1.0;
+	vxmin = 0;
+	vymin = 0;
+	return;
+}
+
+#endif
+
+static int initialfiles(int argc, char *argv[])
+{
 	char *s = NULL;
 	char *fnam = NULL;
 	gzFile fgv = (gzFile) 0;
 	gzFile fgml = (gzFile) 0;
 	gzFile fvcg = (gzFile) 0;
-	GtkWidget *vbox1;
-	GtkWidget *menubar1;
-	GtkWidget *menuitem1;
-	GtkWidget *menuitem1_menu;
-	GtkWidget *open1;	/* open gml file */
-	GtkWidget *open2;	/* open dot file */
-	GtkWidget *open3;	/* open vcg file */
-	GtkWidget *open4;	/* open jgf file */
-	GtkWidget *open5;	/* open bgv file */
-	GtkWidget *svg1;
-	GtkWidget *dia1;
-	GtkWidget *jgf1;
-	GtkWidget *about1;
-	GtkWidget *quit1;
-	GtkWidget *hbox1;
-	GtkWidget *hbox2;
-	GtkWidget *vscale1;
-	GtkWidget *vscale2;
-	GtkWidget *hscale1;
-	GtkWidget *hbox3;
-	GtkWidget *xspinlabel;
-	GtkAdjustment *xspinadjustment;
-	GtkWidget *xspinbutton;
-	GtkWidget *yspinlabel;
-	GtkAdjustment *yspinadjustment;
-	GtkWidget *yspinbutton;
-	GtkWidget *pos1;
-	GtkAdjustment *posadjustment;
-	GtkWidget *check1;
-	GtkWidget *dummy1;
-	GtkWidget *rank1;
-	GtkAdjustment *rankadjustment;
-	GtkWidget *rankbutton;
-	GtkWidget *entry1;
-	GtkWidget *barylabel;
-	GtkAdjustment *baryadjustment;
-	GtkWidget *barybutton;
-	GtkWidget *label1;
-	GtkWidget *nnames1;
-	GtkWidget *popup1;
-	GtkWidget *mirrory1;
-	GtkWidget *menuitem2;
-	GtkWidget *menuitem2_menu;
-	GtkWidget *fullscreen1;
-	GtkWidget *unfullscreen1;
-
-	/* */
-	dp_meminit();
-
-	argv0 = argv[0];
-
-	/* get the home dir */
-	s = getenv("HOME");
-	if (s) {
-		lastopendir = dp_calloc(1, (strlen(s) + 1));
-		strcpy(lastopendir, s);
-		lastsavedir = dp_calloc(1, (strlen(s) + 1));
-		strcpy(lastsavedir, s);
-	} else {
-		/* there is no home dir set in env */
-		lastopendir = NULL;
-		lastsavedir = NULL;
-	}
-
-#if !GLIB_CHECK_VERSION (2, 36, 0)
-	/* for GDBus */
-	g_type_init();
-#endif
-
-	/*
-	 *    gtk_init (&argc, &argv); in gkt2, gtk3 and gtk_init() in gtk4
-	 *
-	 * calls the function gtk_init(gint *argc, gchar ***argv) which will be called in all GTK applications. 
-	 * This sets up a few things for us such as the default visual and color map and then proceeds to call 
-	 * gdk_init(gint *argc, gchar ***argv). This function initializes the library for use, sets up default 
-	 * signal handlers, and checks the arguments passed to your application on the command line, 
-	 * looking for one of the following:
-	 *
-	 *    * --gtk-module
-	 *    * --g-fatal-warnings
-	 *    * --gtk-debug
-	 *    * --gtk-no-debug
-	 *    * --gdk-debug
-	 *    * --gdk-no-debug
-	 *    * --display
-	 *    * --sync
-	 *    * --no-xshm
-	 *    * --name
-	 *    * --class
-	 *
-	 * It removes these from the argument list, leaving anything it does not recognize for your application 
-	 * to parse or ignore. This creates a set of standard arguments accepted by all GTK applications.
-	 *
-	 */
-
-	/* do gtk init, gtk will grab the gtk specific options on command line */
-#if GTK_HAVE_API_VERSION_4 == 1
-	(void)gtk_init();
-#else
-	/* gtk 2, 3 */
-	status = gtk_init_check(&argc, &argv);
-
-	if (status == FALSE) {
-		/* this does happen with sudo strace ./mooigraph for some reason */
-		printf("%s is in console mode and need in graphical mode to run\n", argv[0]);
-		fflush(stdout);
-		return (0);
-	}
-#endif
-
-	/* top level outer window */
-	mainwindow1 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-
-	/* make sure to exit oke. */
-	g_signal_connect(G_OBJECT(mainwindow1), "destroy", G_CALLBACK(top_level_window_main_quit), NULL);
-
-	/* needed for the cairo drawing */
-	gtk_widget_set_app_paintable(mainwindow1, TRUE);
-
-	/* use package string program name as set by configure in config.h */
-	gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
-
-	/* pre-set some size */
-	gtk_window_set_default_size(GTK_WINDOW(mainwindow1), TOP_LEVEL_WINDOW_XSIZE, TOP_LEVEL_WINDOW_YSIZE);
-
-	/* --- */
-
-	/* vbox1 is a menu bar */
-#if GTK_HAVE_API_VERSION_2 == 1
-	vbox1 = gtk_vbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
-	gtk_widget_show(vbox1);
-	gtk_container_add(GTK_CONTAINER(mainwindow1), vbox1);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
-	gtk_widget_show(vbox1);
-	gtk_container_add(GTK_CONTAINER(mainwindow1), vbox1);
-#endif
-
-#if GTK_HAVE_API_VERSION_4 == 1
-	/* todo add gtk-4 support */
-#endif
-
-	/* --- */
-
-	/* menu bar in vbox1 */
-	menubar1 = gtk_menu_bar_new();
-	gtk_widget_show(menubar1);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ menubar1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* --- */
-
-	/* menu items in menu bar in vbox1 */
-	menuitem1 = gtk_menu_item_new_with_mnemonic("File");
-	gtk_container_add(GTK_CONTAINER(menubar1), menuitem1);
-	gtk_widget_show(menuitem1);
-
-	/* --- */
-
-	/* 'file' sub menu in menu items in menu bar in vbox1 */
-	menuitem1_menu = gtk_menu_new();
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem1), menuitem1_menu);
-
-	/* --- */
-
-	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
-	open2 = gtk_menu_item_new_with_mnemonic("Open DOT graph");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open2);
-	gtk_widget_show(open2);
-
-	/* run this routine when selected 'open' in 'file' menu */
-	g_signal_connect(G_OBJECT(open2), "activate", G_CALLBACK(on_top_level_window_open2_activate), NULL);
-
-	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
-	open1 = gtk_menu_item_new_with_mnemonic("Open GML graph");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open1);
-	gtk_widget_show(open1);
-
-	/* run this routine when selected 'open' in 'file' menu */
-	g_signal_connect(G_OBJECT(open1), "activate", G_CALLBACK(on_top_level_window_open1_activate), NULL);
-
-	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
-	open3 = gtk_menu_item_new_with_mnemonic("Open VCG graph");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open3);
-	gtk_widget_show(open3);
-
-	/* run this routine when selected 'open' in 'file' menu */
-	g_signal_connect(G_OBJECT(open3), "activate", G_CALLBACK(on_top_level_window_open3_activate), NULL);
-
-	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
-	open4 = gtk_menu_item_new_with_mnemonic("Open JGF graph");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open4);
-	gtk_widget_show(open4);
-
-	/* run this routine when selected 'open' in 'file' menu */
-	g_signal_connect(G_OBJECT(open4), "activate", G_CALLBACK(on_top_level_window_open4_activate), NULL);
-
-	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
-	open5 = gtk_menu_item_new_with_mnemonic("Open BGV graph");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open5);
-	gtk_widget_show(open5);
-
-	/* run this routine when selected 'open' in 'file' menu */
-	g_signal_connect(G_OBJECT(open5), "activate", G_CALLBACK(on_top_level_window_open5_activate), NULL);
-
-	svg1 = gtk_menu_item_new_with_mnemonic("Save as SVG");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), svg1);
-	gtk_widget_show(svg1);
-
-	/* run this routine when selected 'svg' in 'file' menu */
-	g_signal_connect(G_OBJECT(svg1), "activate", G_CALLBACK(on_top_level_window_svg1_activate), NULL);
-
-	dia1 = gtk_menu_item_new_with_mnemonic("Save as DIA");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), dia1);
-	gtk_widget_show(dia1);
-
-	/* run this routine when selected 'dia' in 'file' menu */
-	g_signal_connect(G_OBJECT(dia1), "activate", G_CALLBACK(on_top_level_window_dia1_activate), NULL);
-
-	jgf1 = gtk_menu_item_new_with_mnemonic("Save as JGF");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), jgf1);
-	gtk_widget_show(jgf1);
-
-	/* run this routine when selected 'jgf' in 'file' menu */
-	g_signal_connect(G_OBJECT(jgf1), "activate", G_CALLBACK(on_top_level_window_jgf1_activate), NULL);
-
-	/* 'about' in 'file' sub menu in menu items in menu bar in vbox1 */
-	about1 = gtk_menu_item_new_with_mnemonic("About");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), about1);
-	gtk_widget_show(about1);
-
-	/* run this routine when selected 'about' in 'file' menu */
-	g_signal_connect(G_OBJECT(about1), "activate", G_CALLBACK(show_about), NULL);
-
-	/* 'quit' in 'file' sub menu in menu items in menu bar in vbox1 */
-	quit1 = gtk_menu_item_new_with_mnemonic("Quit");
-	gtk_container_add(GTK_CONTAINER(menuitem1_menu), quit1);
-	gtk_widget_show(quit1);
-
-	/* run this routine when selected 'quit' in 'file' menu */
-	g_signal_connect(G_OBJECT(quit1), "activate", G_CALLBACK(on_top_level_window_quit1_activate), NULL);
-
-	/* --- */
-
-	/* menu items in menu bar in vbox1 */
-	menuitem2 = gtk_menu_item_new_with_mnemonic("Fullscreen");
-	gtk_container_add(GTK_CONTAINER(menubar1), menuitem2);
-	gtk_widget_show(menuitem2);
-
-	/* 'fullscreen' sub menu in menu items in menu bar in vbox1 */
-	menuitem2_menu = gtk_menu_new();
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem2), menuitem2_menu);
-
-	/* 'fullscreen->fullscreen' in 'fullscreen' sub menu in menu items in menu bar in vbox1 */
-	fullscreen1 = gtk_menu_item_new_with_mnemonic("Fullscreen");
-	gtk_container_add(GTK_CONTAINER(menuitem2_menu), fullscreen1);
-	gtk_widget_show(fullscreen1);
-
-	/* run this routine when selected 'fullscreen->fullscreen in 'fullscreen' menu */
-	g_signal_connect(G_OBJECT(fullscreen1), "activate", G_CALLBACK(on_top_level_window_fullscreen1_activate), NULL);
-
-	/* 'fullscreen->normal' in 'fullscreen' sub menu in menu items in menu bar in vbox1 */
-	unfullscreen1 = gtk_menu_item_new_with_mnemonic("Normal");
-	gtk_container_add(GTK_CONTAINER(menuitem2_menu), unfullscreen1);
-	gtk_widget_show(unfullscreen1);
-
-	/* run this routine when selected 'fullscreen->normal' in 'fullscreen' menu */
-	g_signal_connect(G_OBJECT(unfullscreen1), "activate", G_CALLBACK(on_top_level_window_unfullscreen1_activate), NULL);
-
-	/* -- */
-
-	/*
-	 * in hbox1
-	 * left zoom slider
-	 * drawing area
-	 * right y slider
-	 * below x slider
-	 */
-
-	/* add next area to the vbox1 */
-#if GTK_HAVE_API_VERSION_2 == 1
-	hbox1 = gtk_hbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox1,
-			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(hbox1);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox1,
-			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(hbox1);
-#endif
-
-	/* vertical slider in hbox1 for the zoom factor 50% is 1:1 */
-	adjvscale1 = gtk_adjustment_new(50, 0, 100, 0, 0, 0);
-
-#if GTK_HAVE_API_VERSION_2 == 1
-	vscale1 = gtk_vscale_new(GTK_ADJUSTMENT(adjvscale1));
-	g_signal_connect(G_OBJECT(adjvscale1), "value_changed", GTK_SIGNAL_FUNC(on_vscale1_changed), NULL);
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale1,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_scale_set_draw_value(GTK_SCALE(vscale1), FALSE);
-	gtk_widget_show(vscale1);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	vscale1 = gtk_scale_new(GTK_ORIENTATION_VERTICAL, GTK_ADJUSTMENT(adjvscale1));
-	g_signal_connect(G_OBJECT(adjvscale1), "value_changed", G_CALLBACK(on_vscale1_changed), NULL);
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale1,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_scale_set_draw_value(GTK_SCALE(vscale1), FALSE);
-	gtk_widget_show(vscale1);
-#endif
-
-	/* where to draw in hbox1 */
-	drawingarea1 = gtk_drawing_area_new();
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ drawingarea1,
-			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(drawingarea1);
-
-#if GTK_HAVE_API_VERSION_2 == 1
-	g_signal_connect(G_OBJECT(drawingarea1), "expose_event", G_CALLBACK(on_top_level_window_drawingarea1_expose_event), NULL);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	g_signal_connect(G_OBJECT(drawingarea1), "draw", G_CALLBACK(on_top_level_window_drawingarea1_draw_event), NULL);
-#endif
-
-	/* mouse buttons */
-	g_signal_connect(G_OBJECT(drawingarea1), "button-press-event", G_CALLBACK(on_mouse_clicked), NULL);
-	g_signal_connect(G_OBJECT(drawingarea1), "motion_notify_event", G_CALLBACK(on_motion_notify_event), NULL);
-
-	/* get button press events to above callback() routines
-	 * get button 1 press events
-	 * get mouse pointer movement events
-	 */
-	gtk_widget_set_events((drawingarea1), (GDK_BUTTON_PRESS_MASK | GDK_BUTTON1_MOTION_MASK | GDK_POINTER_MOTION_MASK));
-
-	/* vertical slider in hbox1 for the y position range 0...100% of full image size */
-	adjvscale2 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
-
-#if GTK_HAVE_API_VERSION_2 == 1
-	vscale2 = gtk_vscale_new(GTK_ADJUSTMENT(adjvscale2));
-	g_signal_connect(G_OBJECT(adjvscale2), "value_changed", GTK_SIGNAL_FUNC(on_vscale2_changed), NULL);
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale2,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_scale_set_draw_value(GTK_SCALE(vscale2), FALSE);
-	gtk_widget_show(vscale2);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	vscale2 = gtk_scale_new(GTK_ORIENTATION_VERTICAL, GTK_ADJUSTMENT(adjvscale2));
-	g_signal_connect(G_OBJECT(adjvscale2), "value_changed", G_CALLBACK(on_vscale2_changed), NULL);
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale2,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_scale_set_draw_value(GTK_SCALE(vscale2), FALSE);
-	gtk_widget_show(vscale2);
-#endif
-
-	/* horizontal scroller 0..100% of drawing size */
-	adjhscale1 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
-
-#if GTK_HAVE_API_VERSION_2 == 1
-	hscale1 = gtk_hscale_new(GTK_ADJUSTMENT(adjhscale1));
-	g_signal_connect(G_OBJECT(adjhscale1), "value_changed", GTK_SIGNAL_FUNC(on_hscale1_changed), NULL);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hscale1,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_scale_set_draw_value(GTK_SCALE(hscale1), FALSE);
-	gtk_widget_show(hscale1);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	hscale1 = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, GTK_ADJUSTMENT(adjhscale1));
-	g_signal_connect(G_OBJECT(adjhscale1), "value_changed", G_CALLBACK(on_hscale1_changed), NULL);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hscale1,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_scale_set_draw_value(GTK_SCALE(hscale1), FALSE);
-	gtk_widget_show(hscale1);
-#endif
-
-	/* --- */
-
-	/* add next area to the vbox1 */
-#if GTK_HAVE_API_VERSION_2 == 1
-	hbox2 = gtk_hbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox2,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(hbox2);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox2,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(hbox2);
-#endif
-
-	/* --- */
-
-	xspinlabel = gtk_label_new("dx");
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ xspinlabel,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_set_tooltip_text(xspinlabel, "stretch drawing in x-direction");
-	gtk_widget_show(xspinlabel);
-
-	/* spin to change drawing spread factor. note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
-	xspinadjustment = (GtkAdjustment *) gtk_adjustment_new(xspacing /* initial value */ ,
-							       0 /* minimum value */ ,
-							       99 /* maximum value */ ,
-							       1 /* step increment */ ,
-							       1 /* page increment */ ,
-							       0	/* page size now *must* be zero */
-	    );
-
-	xspinbutton = gtk_spin_button_new(xspinadjustment, 1 /* climb rate */ ,
-					  0 /* digits achter de comma */ );
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ xspinbutton,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	g_signal_connect(G_OBJECT(xspinadjustment), "value-changed", G_CALLBACK(xspin_changed), (gpointer) xspinbutton);
-	gtk_widget_show(xspinbutton);
-
-	yspinlabel = gtk_label_new("dy");
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ yspinlabel,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_set_tooltip_text(yspinlabel, "stretch drawing in y-direction");
-	gtk_widget_show(yspinlabel);
-
-	/* spin to change drawing spread factor. note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
-	yspinadjustment = (GtkAdjustment *) gtk_adjustment_new(yspacing /* initial value */ ,
-							       0 /* minimum value */ ,
-							       99 /* maximum value */ ,
-							       1 /* step increment */ ,
-							       1 /* page increment */ ,
-							       0	/* page size now *must* be zero */
-	    );
-
-	yspinbutton = gtk_spin_button_new(yspinadjustment, 1 /* climb rate */ ,
-					  0 /* digits achter de comma */ );
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ yspinbutton,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	gtk_widget_set_tooltip_text(yspinbutton, "stretch y-direction");
-
-	g_signal_connect(G_OBJECT(yspinadjustment), "value-changed", G_CALLBACK(yspin_changed), (gpointer) yspinbutton);
-	gtk_widget_show(yspinbutton);
-
-	/* at every click, advance positioning mode */
-	pos1 = gtk_label_new("pos");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ pos1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_set_tooltip_text(pos1, "positioning mode");
-	gtk_widget_show(pos1);
-
-	posadjustment = (GtkAdjustment *) gtk_adjustment_new(postype /* initial value */ ,
-							     1 /* minimum value */ ,
-							     3 /* maximum value */ ,
-							     1 /* step increment */ ,
-							     1 /* page increment */ ,
-							     0	/* page size now *must* be zero */
-	    );
-
-	posbutton = gtk_spin_button_new(posadjustment, 1 /* climb rate */ ,
-					0 /* digits achter de comma */ );
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ posbutton,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	g_signal_connect(G_OBJECT(posadjustment), "value-changed", G_CALLBACK(pos_changed), (gpointer) posbutton);
-	gtk_widget_show(posbutton);
-
-	/* draw spline edges or normal */
-	check1 = gtk_check_button_new_with_label("splines");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ check1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (option_splines) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(check1), "clicked", G_CALLBACK(check1_toggle), (gpointer) mainwindow1);
-
-	gtk_widget_set_tooltip_text(check1, "edge line splines");
-
-	gtk_widget_show(check1);
-
-	/* draw dummy nodes */
-	dummy1 = gtk_check_button_new_with_label("dummy's");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ dummy1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (drawdummy) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dummy1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dummy1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(dummy1), "clicked", G_CALLBACK(dummy1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(dummy1, "show dummy nodes");
-	gtk_widget_show(dummy1);
-
-	/* */
-	entry1 = gtk_text_view_new();
-	entry1buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry1));
-	gtk_text_buffer_set_text(entry1buffer, "GML4GTK is free software to copy, share and improve", -1);
-	gtk_text_view_set_editable(GTK_TEXT_VIEW(entry1), FALSE);
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ entry1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_set_tooltip_text(entry1, "status information");
-	gtk_widget_show(entry1);
-
-	/*
-	 * next line with toggle buttons
-	 */
-	/* add next area to the vbox1 */
-#if GTK_HAVE_API_VERSION_2 == 1
-	hbox3 = gtk_hbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox3,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(hbox3);
-#endif
-
-#if GTK_HAVE_API_VERSION_3 == 1
-	hbox3 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
-	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox3,
-			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_show(hbox3);
-#endif
-
-	/* level placement */
-	rank1 = gtk_label_new("rank");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ rank1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_set_tooltip_text(rank1, "dfs/bfs/topological levels");
-	gtk_widget_show(rank1);
-
-	/* spin to change rank type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
-	rankadjustment = (GtkAdjustment *) gtk_adjustment_new(ranktype /* initial value */ ,
-							      1 /* minimum value */ ,
-							      3 /* maximum value */ ,
-							      1 /* step increment */ ,
-							      1 /* page increment */ ,
-							      0	/* page size now *must* be zero */
-	    );
-
-	rankbutton = gtk_spin_button_new(rankadjustment, 1 /* climb rate */ ,
-					 0 /* digits achter de comma */ );
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ rankbutton,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	g_signal_connect(G_OBJECT(rankadjustment), "value-changed", G_CALLBACK(rank_changed), (gpointer) rankbutton);
-	gtk_widget_show(rankbutton);
-
-	/* barycenter */
-	barylabel = gtk_label_new("bary");
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ barylabel,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-	gtk_widget_set_tooltip_text(barylabel, "barycenter type");
-	gtk_widget_show(barylabel);
-
-	/* spin to change barycenter type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
-	baryadjustment = (GtkAdjustment *) gtk_adjustment_new(barytype /* initial value */ ,
-							      1 /* minimum value */ ,
-							      5 /* maximum value */ ,
-							      1 /* step increment */ ,
-							      1 /* page increment */ ,
-							      0	/* page size now *must* be zero */
-	    );
-
-	barybutton = gtk_spin_button_new(baryadjustment, 1 /* climb rate */ ,
-					 0 /* digits achter de comma */ );
-
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ barybutton,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	g_signal_connect(G_OBJECT(baryadjustment), "value-changed", G_CALLBACK(bary_changed), (gpointer) barybutton);
-	gtk_widget_show(barybutton);
-
-	/* edgelabels on/off */
-	elabel1 = gtk_check_button_new_with_label("elabel");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ elabel1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (option_edgelabels) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(elabel1), "clicked", G_CALLBACK(elabel1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(elabel1, "edgelabels on/off");
-	gtk_widget_show(elabel1);
-
-	/* labels on/off */
-	label1 = gtk_check_button_new_with_label("labels");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ label1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (option_labels) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(label1), "clicked", G_CALLBACK(label1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(label1, "labels on/off");
-	gtk_widget_show(label1);
-
-	/* node names on/off */
-	nnames1 = gtk_check_button_new_with_label("names");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ nnames1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (option_nnames) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(nnames1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(nnames1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(nnames1), "clicked", G_CALLBACK(nnames1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(nnames1, "node names instead of labels");
-	gtk_widget_show(nnames1);
-
-	/* popup labels on/off */
-	popup1 = gtk_check_button_new_with_label("popup");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ popup1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (option_popup) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(popup1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(popup1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(popup1), "clicked", G_CALLBACK(popup1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(popup1, "popup labels on/off");
-	gtk_widget_show(popup1);
-
-	/* mirror y on/off */
-	mirrory1 = gtk_check_button_new_with_label("mirror");
-	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ mirrory1,
-			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
-			   PACKPADDING);
-
-	/* */
-	if (option_mirrory) {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(mirrory1), TRUE);
-	} else {
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(mirrory1), FALSE);
-	}
-
-	g_signal_connect(G_OBJECT(mirrory1), "clicked", G_CALLBACK(mirrory1_toggle), (gpointer) mainwindow1);
-	gtk_widget_set_tooltip_text(mirrory1, "mirror drawing in y direction");
-	gtk_widget_show(mirrory1);
-
-	/*
-	 * here additional gtk elements
-	 */
-
-	/* put on screen */
-	gtk_widget_show(mainwindow1);
-
 	/* check for optinal gml file on commandline
 	 * on commandline file.gml.gz is supported
 	 * but not dot.gz or vcg.gz
@@ -1123,10 +486,14 @@ int main(int argc, char *argv[])
 								/* update status text */
 								update_status_text("Wait ... Calculating Layout");
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 								while (gtk_events_pending()) {
 									gtk_main_iteration();
 									/* this updates the status text */
 								}
+
+#endif
 
 								do_layout_all(maingraph);
 
@@ -1134,13 +501,7 @@ int main(int argc, char *argv[])
 								update_status_text(NULL);
 
 								/* set sliders to defaults */
-								zfactor = 1.0;
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
-
-								vxmin = 0;
-								vymin = 0;
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+								sliders_default();
 
 								drawing_area_xsize = TOP_LEVEL_WINDOW_XSIZE;
 								drawing_area_ysize = TOP_LEVEL_WINDOW_YSIZE;
@@ -1189,10 +550,14 @@ int main(int argc, char *argv[])
 								/* update status text */
 								update_status_text("Wait ... Calculating Layout");
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 								while (gtk_events_pending()) {
 									gtk_main_iteration();
 									/* this updates the status text */
 								}
+
+#endif
 
 								do_layout_all(maingraph);
 
@@ -1200,13 +565,7 @@ int main(int argc, char *argv[])
 								update_status_text(NULL);
 
 								/* set sliders to defaults */
-								zfactor = 1.0;
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
-
-								vxmin = 0;
-								vymin = 0;
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+								sliders_default();
 
 								drawing_area_xsize = TOP_LEVEL_WINDOW_XSIZE;
 								drawing_area_ysize = TOP_LEVEL_WINDOW_YSIZE;
@@ -1255,10 +614,14 @@ int main(int argc, char *argv[])
 								/* update status text */
 								update_status_text("Wait ... Calculating Layout");
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 								while (gtk_events_pending()) {
 									gtk_main_iteration();
 									/* this updates the status text */
 								}
+
+#endif
 
 								do_layout_all(maingraph);
 
@@ -1266,13 +629,7 @@ int main(int argc, char *argv[])
 								update_status_text(NULL);
 
 								/* set sliders to defaults */
-								zfactor = 1.0;
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
-
-								vxmin = 0;
-								vymin = 0;
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
-								gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+								sliders_default();
 
 								drawing_area_xsize = TOP_LEVEL_WINDOW_XSIZE;
 								drawing_area_ysize = TOP_LEVEL_WINDOW_YSIZE;
@@ -1298,24 +655,1323 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
+	return (0);
+}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+static void set_current_folder(GtkFileChooser * chooser, const char *name);
+
+static void fullscreen_changed(GSimpleAction * action, GVariant * value, gpointer win);
+
+static void on_top_level_window_quit1_activate(GSimpleAction * action, GVariant * paramter, gpointer user_data);
+
+/* open dot decl. */
+static void open1_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* open gml */
+static void open2_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* open vcg */
+static void open3_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* open jgf */
+static void open4_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* open bgv */
+static void open5_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* save svg */
+static void save1_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* save dia xml */
+static void save2_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* save json jgf data */
+static void save3_activated(GSimpleAction * action, GVariant * parameter, gpointer app);
+
+/* show about box with gtk lib info */
+static void about_activated(GSimpleAction * action, GVariant * parameter, gpointer app)
+{
+	show_about_bare();
+	return;
+}
+
+/* draw on screen */
+static void draw_function_for_gtk4(GtkDrawingArea * area, cairo_t * cr, int width, int height, gpointer user_data);
+
+/* draw on pupup window */
+static void popuparea1_draw_event_for_gtk4(GtkDrawingArea * area, cairo_t * crdraw, int width, int height, gpointer user_data);
+
+/* start the gtk-4 gui
+ * this gui is manual crafted and does not depend on builder software or external files
+ * then it should be more sure long term maintance is possible
+ * it can be manual extended and is easier then expected
+ */
+static int maingtk4_activate(GApplication * app, gpointer * user_data)
+{
+	GtkWidget *vbox1 = NULL;
+	GtkWidget *hbox1 = NULL;
+	GtkWidget *vbox2 = NULL;
+	GtkWidget *hbox2 = NULL;
+	GtkWidget *vscale1 = NULL;
+	GtkWidget *vscale2 = NULL;
+	GtkWidget *hscale1 = NULL;
+	GtkWidget *vbox3 = NULL;
+	GtkWidget *hbox3 = NULL;
+	GtkWidget *xspinlabel = NULL;
+	GtkWidget *xspinbutton = NULL;
+	GtkWidget *yspinlabel = NULL;
+	GtkWidget *yspinbutton = NULL;
+	GtkWidget *pos1 = NULL;
+	/* GtkWidget *posbutton is global */
+	GtkWidget *check1 = NULL;
+	GtkWidget *dummy1 = NULL;
+	GtkWidget *entry1 = NULL;
+	GtkWidget *vbox4 = NULL;
+	GtkWidget *hbox4 = NULL;
+	GtkWidget *rank1 = NULL;
+	GtkWidget *rankbutton = NULL;
+	GtkWidget *barylabel = NULL;
+	GtkWidget *barybutton = NULL;
+	/* GtkWidget *elabel1 = NULL; is global */
+	GtkWidget *label1 = NULL;
+	GtkWidget *nnames1 = NULL;
+	GtkWidget *popup1 = NULL;
+	GtkWidget *mirrory1 = NULL;
+	GtkEventController *controller = NULL;
+
+	/* create main window */
+	mainwindow1 = gtk_application_window_new(GTK_APPLICATION(app));
+
+	/* use package string program name as set by configure in config.h */
+	gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+
+	/* pre-set some size */
+	gtk_window_set_default_size(GTK_WINDOW(mainwindow1), TOP_LEVEL_WINDOW_XSIZE, TOP_LEVEL_WINDOW_YSIZE);
+
+	GSimpleAction *act_open1 = g_simple_action_new("open1", NULL);
+	GSimpleAction *act_open2 = g_simple_action_new("open2", NULL);
+	GSimpleAction *act_open3 = g_simple_action_new("open3", NULL);
+	GSimpleAction *act_open4 = g_simple_action_new("open4", NULL);
+	GSimpleAction *act_open5 = g_simple_action_new("open5", NULL);
+
+	GSimpleAction *act_save1 = g_simple_action_new("save1", NULL);
+	GSimpleAction *act_save2 = g_simple_action_new("save2", NULL);
+	GSimpleAction *act_save3 = g_simple_action_new("save3", NULL);
+
+	GSimpleAction *act_about = g_simple_action_new("about", NULL);
+
+	GSimpleAction *act_fullscreen = g_simple_action_new_stateful("fullscreen", NULL, g_variant_new_boolean(FALSE));
+	GSimpleAction *act_quit = g_simple_action_new("quit", NULL);
+
+	GMenu *menubar = g_menu_new();
+	GMenu *menu = g_menu_new();
+	GMenu *section1 = g_menu_new();
+
+	GMenuItem *menu_item_opendot = g_menu_item_new("Open dot", "win.open1");
+	GMenuItem *menu_item_opengml = g_menu_item_new("Open gml", "win.open2");
+	GMenuItem *menu_item_openvcg = g_menu_item_new("Open vcg", "win.open3");
+	GMenuItem *menu_item_openjgf = g_menu_item_new("Open jgf", "win.open4");
+	GMenuItem *menu_item_openbgv = g_menu_item_new("Open bgv", "win.open5");
+
+	GMenuItem *menu_item_savesvg = g_menu_item_new("Save svg", "win.save1");
+	GMenuItem *menu_item_savedia = g_menu_item_new("Save dia", "win.save2");
+	GMenuItem *menu_item_savejgf = g_menu_item_new("Save jgf", "win.save3");
+
+	GMenuItem *menu_item_about = g_menu_item_new("About", "win.about");
+
+	GMenuItem *menu_item_fullscreen = g_menu_item_new("Full Screen", "win.fullscreen");
+	GMenuItem *menu_item_quit = g_menu_item_new("Quit", "app.quit");
+
+	g_signal_connect(act_fullscreen, "change-state", G_CALLBACK(fullscreen_changed), mainwindow1);
+
+	g_signal_connect(act_open1, "activate", G_CALLBACK(open1_activated), app);	/* open dot */
+	g_signal_connect(act_open2, "activate", G_CALLBACK(open2_activated), app);	/* open gml */
+	g_signal_connect(act_open3, "activate", G_CALLBACK(open3_activated), app);	/* open vcg */
+	g_signal_connect(act_open4, "activate", G_CALLBACK(open4_activated), app);	/* open jgf */
+	g_signal_connect(act_open5, "activate", G_CALLBACK(open5_activated), app);	/* open bgv */
+
+	g_signal_connect(act_save1, "activate", G_CALLBACK(save1_activated), app);	/* save svg */
+	g_signal_connect(act_save2, "activate", G_CALLBACK(save2_activated), app);	/* save dia xml */
+
+	g_signal_connect(act_save3, "activate", G_CALLBACK(save3_activated), app);	/* save json jgf data */
+
+	g_signal_connect(act_about, "activate", G_CALLBACK(about_activated), app);
+
+	g_signal_connect(act_quit, "activate", G_CALLBACK(on_top_level_window_quit1_activate), app);
+
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_open1));	/* open dot */
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_open2));	/* open gml */
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_open3));	/* open vcg */
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_open4));	/* open jgf */
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_open5));	/* open bgv */
+
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_save1));	/* save svg */
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_save2));	/* save dia xml */
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_save3));	/* save json jgf data */
+
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_about));
+
+	g_action_map_add_action(G_ACTION_MAP(mainwindow1), G_ACTION(act_fullscreen));
+
+	g_action_map_add_action(G_ACTION_MAP(app), G_ACTION(act_quit));
+
+	/* open graph data */
+	g_menu_append_item(section1, menu_item_opendot);
+	g_menu_append_item(section1, menu_item_opengml);
+	g_menu_append_item(section1, menu_item_openvcg);
+	g_menu_append_item(section1, menu_item_openjgf);
+	g_menu_append_item(section1, menu_item_openbgv);
+
+	/* save drawing */
+	g_menu_append_item(section1, menu_item_savesvg);
+	g_menu_append_item(section1, menu_item_savedia);
+	g_menu_append_item(section1, menu_item_savejgf);
+
+	/* others */
+	g_menu_append_item(section1, menu_item_about);
+
+	g_menu_append_item(section1, menu_item_fullscreen);
+	g_menu_append_item(section1, menu_item_quit);
+
+	g_object_unref(menu_item_about);
+	g_object_unref(menu_item_fullscreen);
+
+	g_object_unref(menu_item_savesvg);
+	g_object_unref(menu_item_savedia);
+	g_object_unref(menu_item_savejgf);
+
+	g_object_unref(menu_item_opendot);
+	g_object_unref(menu_item_opengml);
+	g_object_unref(menu_item_openvcg);
+
+	g_object_unref(menu_item_openjgf);
+	g_object_unref(menu_item_openbgv);
+
+	g_object_unref(menu_item_quit);
+
+	g_menu_append_section(menu, NULL, G_MENU_MODEL(section1));
+
+	g_menu_append_submenu(menubar, "File", G_MENU_MODEL(menu));
+
+	gtk_application_set_menubar(GTK_APPLICATION(app), G_MENU_MODEL(menubar));
+	gtk_application_window_set_show_menubar(GTK_APPLICATION_WINDOW(mainwindow1), TRUE);
+
+	/* next vertical area for slider and drawing are */
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+
+	gtk_widget_set_vexpand(vbox1, TRUE);
+
+	gtk_window_set_child(GTK_WINDOW(mainwindow1), vbox1);
+
+	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+
+	gtk_widget_set_hexpand(hbox1, TRUE);
+
+	gtk_box_append(GTK_BOX(vbox1), hbox1);
+
+	/*
+	 * in hbox1
+	 * left zoom slider
+	 * drawing area
+	 * right y slider
+	 * below x slider
+	 */
+
+	/* add next area to the vbox1 */
+
+	/* vertical slider in hbox1 for the zoom factor 50% is 1:1 */
+	adjvscale1 = gtk_adjustment_new(50, 0, 100, 0, 0, 0);
+
+	vscale1 = gtk_scale_new(GTK_ORIENTATION_VERTICAL, adjvscale1);
+
+	/* stretch slider vertical */
+	gtk_widget_set_vexpand(vscale1, TRUE);
+
+	/* slider routine */
+	g_signal_connect(G_OBJECT(adjvscale1), "value-changed", G_CALLBACK(on_vscale1_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox1), vscale1);
+
+	/* where to draw in hbox1 */
+	drawingarea1 = gtk_drawing_area_new();
+
+	/* stretch maximal */
+	gtk_widget_set_vexpand(drawingarea1, TRUE);
+	gtk_widget_set_hexpand(drawingarea1, TRUE);
+
+	/* add routines for drawing */
+	gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(drawingarea1), draw_function_for_gtk4, NULL, NULL);
+
+	gtk_box_append(GTK_BOX(hbox1), drawingarea1);
+
+	/* add motion routine in the drawingarea */
+
+	controller = gtk_event_controller_motion_new();
+	g_signal_connect(G_OBJECT(controller), "motion", G_CALLBACK(on_motion_notify_event), NULL);
+	gtk_widget_add_controller(GTK_WIDGET(drawingarea1), controller);
+
+	/* at right vertical slider in hbox1 for the y position range 0...100% of full image size */
+	adjvscale2 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
+
+	vscale2 = gtk_scale_new(GTK_ORIENTATION_VERTICAL, adjvscale2);
+
+	/* stretch slider vertical */
+	gtk_widget_set_vexpand(vscale2, TRUE);
+
+	/* add slider */
+	g_signal_connect(G_OBJECT(adjvscale2), "value-changed", G_CALLBACK(on_vscale2_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox1), vscale2);
+
+	/* next vertical area for horizontal slider */
+	vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+
+	gtk_widget_set_vexpand(vbox2, FALSE);
+
+	gtk_box_append(GTK_BOX(vbox1), vbox2);
+
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+
+	gtk_widget_set_hexpand(hbox2, TRUE);
+
+	gtk_box_append(GTK_BOX(vbox2), hbox2);
+
+	/* add horizontal slider */
+
+	/* horizontal scroller 0..100% of drawing size */
+	adjhscale1 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
+
+	hscale1 = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, adjhscale1);
+
+	/* stretch slider */
+	gtk_widget_set_hexpand(hscale1, TRUE);
+
+	/* slider routine */
+	g_signal_connect(G_OBJECT(adjhscale1), "value-changed", G_CALLBACK(on_hscale1_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox2), hscale1);
+
+	/* next vertical area for options */
+	vbox3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+
+	gtk_widget_set_vexpand(vbox3, FALSE);
+
+	gtk_box_append(GTK_BOX(vbox2), vbox3);
+
+	hbox3 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+
+	gtk_widget_set_hexpand(hbox3, TRUE);
+
+	gtk_box_append(GTK_BOX(vbox3), hbox3);
+
+	/* add the options below the horizontal slider */
+
+	/* stretch drawing in x dir */
+	xspinlabel = gtk_label_new("dx");
+
+	gtk_widget_set_tooltip_text(xspinlabel, "stretch drawing in x-direction");
+
+	gtk_box_append(GTK_BOX(hbox3), xspinlabel);
+
+	xspinbutton = gtk_spin_button_new_with_range(0, 99, 1);
+
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(xspinbutton), (double)xspacing);
+
+	g_signal_connect(G_OBJECT(xspinbutton), "value_changed", G_CALLBACK(xspin_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox3), xspinbutton);
+
+	/* stretch drawing in y dir */
+	yspinlabel = gtk_label_new("dy");
+
+	gtk_widget_set_tooltip_text(yspinlabel, "stretch drawing in y-direction");
+
+	gtk_box_append(GTK_BOX(hbox3), yspinlabel);
+
+	yspinbutton = gtk_spin_button_new_with_range(0, 99, 1);
+
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(yspinbutton), (double)yspacing);
+
+	g_signal_connect(G_OBJECT(yspinbutton), "value_changed", G_CALLBACK(yspin_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox3), yspinbutton);
+
+	/* at every click, advance positioning mode, the type of node placament */
+	pos1 = gtk_label_new("pos");
+
+	gtk_widget_set_tooltip_text(pos1, "positioning mode");
+
+	gtk_box_append(GTK_BOX(hbox3), pos1);
+
+	posbutton = gtk_spin_button_new_with_range(1, 3, 1);
+
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(posbutton), (double)postype);
+
+	g_signal_connect(G_OBJECT(posbutton), "value_changed", G_CALLBACK(pos_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox3), posbutton);
+
+	/* draw spline edges or normal */
+	check1 = gtk_check_button_new_with_label("splines");
+
+	/* */
+	if (option_splines) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(check1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(check1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(check1, "edge line splines");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(check1), "toggled", G_CALLBACK(check1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox3), check1);
+
+	dummy1 = gtk_check_button_new_with_label("dummy's");
+
+	/* */
+	if (drawdummy) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(dummy1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(dummy1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(dummy1, "show dummy nodes");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(dummy1), "toggled", G_CALLBACK(dummy1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox3), dummy1);
+
+	/* area with a text message */
+	entry1 = gtk_text_view_new();
+	gtk_widget_set_hexpand(entry1, TRUE);
+	entry1buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry1));
+	gtk_text_buffer_set_text(entry1buffer, "GML4GTK is GNU GPL free software to copy, share and improve", -1);
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(entry1), FALSE);
+	gtk_widget_set_tooltip_text(entry1, "status information");
+
+	/* monospace font for the text messages and font can be changed */
+	gtk_text_view_set_monospace(GTK_TEXT_VIEW(entry1), TRUE);
+
+	/* todo add routines */
+
+	gtk_box_append(GTK_BOX(hbox3), entry1);
+
+	/* next vertical area for options */
+	vbox4 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+
+	gtk_widget_set_vexpand(vbox4, FALSE);
+
+	gtk_box_append(GTK_BOX(vbox3), vbox4);
+
+	hbox4 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+
+	gtk_widget_set_hexpand(hbox4, TRUE);
+
+	gtk_box_append(GTK_BOX(vbox4), hbox4);
+
+	/* add the options below */
+
+	/* the type of vertical levels node placement */
+	rank1 = gtk_label_new("rank");
+
+	gtk_widget_set_tooltip_text(rank1, "dfs/bfs/topological levels");
+
+	gtk_box_append(GTK_BOX(hbox4), rank1);
+
+	/* spin to change rank type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	rankbutton = gtk_spin_button_new_with_range(1, 3, 1);
+
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(rankbutton), (double)ranktype);
+
+	g_signal_connect(G_OBJECT(rankbutton), "value_changed", G_CALLBACK(rank_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), rankbutton);
+
+	/* the type of barycenter to reduce edge crossings */
+	barylabel = gtk_label_new("bary");
+
+	gtk_widget_set_tooltip_text(barylabel, "barycenter type");
+
+	gtk_box_append(GTK_BOX(hbox4), barylabel);
+
+	/* spin to change barycenter type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+
+	barybutton = gtk_spin_button_new_with_range(1, 5, 1);
+
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(barybutton), (double)barytype);
+
+	g_signal_connect(G_OBJECT(barybutton), "value_changed", G_CALLBACK(bary_changed), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), barybutton);
+
+	/* edgelabels on/off */
+	elabel1 = gtk_check_button_new_with_label("elabel");
+
+	/* */
+	if (option_edgelabels) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(elabel1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(elabel1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(elabel1, "edgelabels on/off");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(elabel1), "toggled", G_CALLBACK(elabel1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), elabel1);
+
+	/* labels on/off */
+	label1 = gtk_check_button_new_with_label("labels");
+
+	/* */
+	if (option_labels) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(label1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(label1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(label1, "labels on/off");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(label1), "toggled", G_CALLBACK(label1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), label1);
+
+	/* node names on/off */
+	nnames1 = gtk_check_button_new_with_label("names");
+
+	/* */
+	if (option_nnames) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(nnames1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(nnames1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(nnames1, "node names instead of labels");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(nnames1), "toggled", G_CALLBACK(nnames1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), nnames1);
+
+	/* popup labels on/off */
+	popup1 = gtk_check_button_new_with_label("popup");
+
+	/* */
+	if (option_popup) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(popup1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(popup1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(popup1, "popup labels on/off");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(popup1), "toggled", G_CALLBACK(popup1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), popup1);
+
+	/* mirror y on/off */
+	mirrory1 = gtk_check_button_new_with_label("mirror");
+
+	/* */
+	if (option_mirrory) {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(mirrory1), TRUE);
+	} else {
+		gtk_check_button_set_active(GTK_CHECK_BUTTON(mirrory1), FALSE);
+	}
+
+	gtk_widget_set_tooltip_text(mirrory1, "mirror drawing in y direction");
+
+	/* routine */
+	g_signal_connect(G_OBJECT(mirrory1), "toggled", G_CALLBACK(mirrory1_toggle), NULL);
+
+	gtk_box_append(GTK_BOX(hbox4), mirrory1);
+
+	gtk_window_present(GTK_WINDOW(mainwindow1));
+
+	return (0);
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1 || GTK_HAVE_API_VERSION_3 == 1)
+
+int maingtk23(void)
+{
+	GtkWidget *vbox1;
+	GtkWidget *menubar1;
+	GtkWidget *menuitem1;
+	GtkWidget *menuitem1_menu;
+	GtkWidget *open1;	/* open gml file */
+	GtkWidget *open2;	/* open dot file */
+	GtkWidget *open3;	/* open vcg file */
+	GtkWidget *open4;	/* open jgf file */
+	GtkWidget *open5;	/* open bgv file */
+	GtkWidget *svg1;
+	GtkWidget *dia1;
+	GtkWidget *jgf1;
+	GtkWidget *about1;
+	GtkWidget *quit1;
+	GtkWidget *hbox1;
+	GtkWidget *hbox2;
+	GtkWidget *vscale1;
+	GtkWidget *vscale2;
+	GtkWidget *hscale1;
+	GtkWidget *hbox3;
+	GtkWidget *xspinlabel;
+	GtkAdjustment *xspinadjustment;
+	GtkWidget *xspinbutton;
+	GtkWidget *yspinlabel;
+	GtkAdjustment *yspinadjustment;
+	GtkWidget *yspinbutton;
+	GtkWidget *pos1;
+	GtkAdjustment *posadjustment;
+	GtkWidget *check1;
+	GtkWidget *dummy1;
+	GtkWidget *rank1;
+	GtkAdjustment *rankadjustment;
+	GtkWidget *rankbutton;
+	GtkWidget *entry1;
+	GtkWidget *barylabel;
+	GtkAdjustment *baryadjustment;
+	GtkWidget *barybutton;
+	/* GtkWidget *elabel1; is global */
+	GtkWidget *label1;
+	GtkWidget *nnames1;
+	GtkWidget *popup1;
+	GtkWidget *mirrory1;
+	GtkWidget *menuitem2;
+	GtkWidget *menuitem2_menu;
+	GtkWidget *fullscreen1;
+	GtkWidget *unfullscreen1;
+
+	/* top level outer window */
+	mainwindow1 = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+
+	/* make sure to exit oke. */
+	g_signal_connect(G_OBJECT(mainwindow1), "destroy", G_CALLBACK(top_level_window_main_quit), NULL);
+
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	/* needed for the cairo drawing */
+	gtk_widget_set_app_paintable(mainwindow1, TRUE);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	/* set_app_paintable() here causes trouble with the gtk+-3 gui */
+#endif
+
+	/* use package string program name as set by configure in config.h */
+	gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+
+	/* pre-set some size */
+	gtk_window_set_default_size(GTK_WINDOW(mainwindow1), TOP_LEVEL_WINDOW_XSIZE, TOP_LEVEL_WINDOW_YSIZE);
+
+	/* --- */
+
+	/* vbox1 is a menu bar */
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	vbox1 = gtk_vbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+#endif
+
+	gtk_container_add(GTK_CONTAINER(mainwindow1), vbox1);
+
+	/* --- */
+
+	/* menu bar in vbox1 */
+	menubar1 = gtk_menu_bar_new();
+
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ menubar1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* --- */
+
+	/* menu items in menu bar in vbox1 */
+	menuitem1 = gtk_menu_item_new_with_mnemonic("File");
+	gtk_container_add(GTK_CONTAINER(menubar1), menuitem1);
+
+	/* --- */
+
+	/* 'file' sub menu in menu items in menu bar in vbox1 */
+	menuitem1_menu = gtk_menu_new();
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem1), menuitem1_menu);
+
+	/* --- */
+
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open2 = gtk_menu_item_new_with_mnemonic("Open DOT graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open2);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open2), "activate", G_CALLBACK(on_top_level_window_open2_activate), NULL);
+
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open1 = gtk_menu_item_new_with_mnemonic("Open GML graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open1);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open1), "activate", G_CALLBACK(on_top_level_window_open1_activate), NULL);
+
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open3 = gtk_menu_item_new_with_mnemonic("Open VCG graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open3);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open3), "activate", G_CALLBACK(on_top_level_window_open3_activate), NULL);
+
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open4 = gtk_menu_item_new_with_mnemonic("Open JGF graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open4);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open4), "activate", G_CALLBACK(on_top_level_window_open4_activate), NULL);
+
+	/* 'open' in 'file' sub menu in menu items in menu bar in vbox1 */
+	open5 = gtk_menu_item_new_with_mnemonic("Open BGV graph");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), open5);
+
+	/* run this routine when selected 'open' in 'file' menu */
+	g_signal_connect(G_OBJECT(open5), "activate", G_CALLBACK(on_top_level_window_open5_activate), NULL);
+
+	svg1 = gtk_menu_item_new_with_mnemonic("Save as SVG");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), svg1);
+
+	/* run this routine when selected 'svg' in 'file' menu */
+	g_signal_connect(G_OBJECT(svg1), "activate", G_CALLBACK(on_top_level_window_svg1_activate), NULL);
+
+	dia1 = gtk_menu_item_new_with_mnemonic("Save as DIA");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), dia1);
+
+	/* run this routine when selected 'dia' in 'file' menu */
+	g_signal_connect(G_OBJECT(dia1), "activate", G_CALLBACK(on_top_level_window_dia1_activate), NULL);
+
+	jgf1 = gtk_menu_item_new_with_mnemonic("Save as JGF");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), jgf1);
+
+	/* run this routine when selected 'jgf' in 'file' menu */
+	g_signal_connect(G_OBJECT(jgf1), "activate", G_CALLBACK(on_top_level_window_jgf1_activate), NULL);
+
+	/* 'about' in 'file' sub menu in menu items in menu bar in vbox1 */
+	about1 = gtk_menu_item_new_with_mnemonic("About");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), about1);
+
+	/* run this routine when selected 'about' in 'file' menu */
+	g_signal_connect(G_OBJECT(about1), "activate", G_CALLBACK(show_about), NULL);
+
+	/* 'quit' in 'file' sub menu in menu items in menu bar in vbox1 */
+	quit1 = gtk_menu_item_new_with_mnemonic("Quit");
+	gtk_container_add(GTK_CONTAINER(menuitem1_menu), quit1);
+
+	/* run this routine when selected 'quit' in 'file' menu */
+	g_signal_connect(G_OBJECT(quit1), "activate", G_CALLBACK(on_top_level_window_quit1_activate), NULL);
+
+	/* --- */
+
+	/* menu items in menu bar in vbox1 */
+	menuitem2 = gtk_menu_item_new_with_mnemonic("Fullscreen");
+	gtk_container_add(GTK_CONTAINER(menubar1), menuitem2);
+
+	/* 'fullscreen' sub menu in menu items in menu bar in vbox1 */
+	menuitem2_menu = gtk_menu_new();
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem2), menuitem2_menu);
+
+	/* 'fullscreen->fullscreen' in 'fullscreen' sub menu in menu items in menu bar in vbox1 */
+	fullscreen1 = gtk_menu_item_new_with_mnemonic("Fullscreen");
+	gtk_container_add(GTK_CONTAINER(menuitem2_menu), fullscreen1);
+
+	/* run this routine when selected 'fullscreen->fullscreen in 'fullscreen' menu */
+	g_signal_connect(G_OBJECT(fullscreen1), "activate", G_CALLBACK(on_top_level_window_fullscreen1_activate), NULL);
+
+	/* 'fullscreen->normal' in 'fullscreen' sub menu in menu items in menu bar in vbox1 */
+	unfullscreen1 = gtk_menu_item_new_with_mnemonic("Normal");
+	gtk_container_add(GTK_CONTAINER(menuitem2_menu), unfullscreen1);
+
+	/* run this routine when selected 'fullscreen->normal' in 'fullscreen' menu */
+	g_signal_connect(G_OBJECT(unfullscreen1), "activate", G_CALLBACK(on_top_level_window_unfullscreen1_activate), NULL);
+
+	/* -- */
+
+	/*
+	 * in hbox1
+	 * left zoom slider
+	 * drawing area
+	 * right y slider
+	 * below x slider
+	 */
+
+	/* add next area to the vbox1 */
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	hbox1 = gtk_hbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox1,
+			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	hbox1 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox1,
+			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+#endif
+
+	/* vertical slider in hbox1 for the zoom factor 50% is 1:1 */
+	adjvscale1 = gtk_adjustment_new(50, 0, 100, 0, 0, 0);
+
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	vscale1 = gtk_vscale_new(GTK_ADJUSTMENT(adjvscale1));
+	g_signal_connect(G_OBJECT(adjvscale1), "value_changed", GTK_SIGNAL_FUNC(on_vscale1_changed), NULL);
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale1,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_scale_set_draw_value(GTK_SCALE(vscale1), FALSE);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	vscale1 = gtk_scale_new(GTK_ORIENTATION_VERTICAL, GTK_ADJUSTMENT(adjvscale1));
+	g_signal_connect(G_OBJECT(adjvscale1), "value_changed", G_CALLBACK(on_vscale1_changed), NULL);
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale1,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_scale_set_draw_value(GTK_SCALE(vscale1), FALSE);
+#endif
+
+	/* where to draw in hbox1 */
+	drawingarea1 = gtk_drawing_area_new();
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ drawingarea1,
+			   /* expand */ TRUE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	g_signal_connect(G_OBJECT(drawingarea1), "expose_event", G_CALLBACK(on_top_level_window_drawingarea1_expose_event), NULL);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	g_signal_connect(G_OBJECT(drawingarea1), "draw", G_CALLBACK(on_top_level_window_drawingarea1_draw_event), NULL);
+#endif
+
+	/* mouse buttons */
+	g_signal_connect(G_OBJECT(drawingarea1), "button-press-event", G_CALLBACK(on_mouse_clicked), NULL);
+	g_signal_connect(G_OBJECT(drawingarea1), "motion_notify_event", G_CALLBACK(on_motion_notify_event), NULL);
+
+	/* get button press events to above callback() routines
+	 * get button 1 press events
+	 * get mouse pointer movement events
+	 */
+	gtk_widget_set_events((drawingarea1), (GDK_BUTTON_PRESS_MASK | GDK_BUTTON1_MOTION_MASK | GDK_POINTER_MOTION_MASK));
+
+	/* vertical slider in hbox1 for the y position range 0...100% of full image size */
+	adjvscale2 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
+
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	vscale2 = gtk_vscale_new(GTK_ADJUSTMENT(adjvscale2));
+	g_signal_connect(G_OBJECT(adjvscale2), "value_changed", GTK_SIGNAL_FUNC(on_vscale2_changed), NULL);
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale2,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_scale_set_draw_value(GTK_SCALE(vscale2), FALSE);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	vscale2 = gtk_scale_new(GTK_ORIENTATION_VERTICAL, GTK_ADJUSTMENT(adjvscale2));
+	g_signal_connect(G_OBJECT(adjvscale2), "value_changed", G_CALLBACK(on_vscale2_changed), NULL);
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox1), /* child */ vscale2,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_scale_set_draw_value(GTK_SCALE(vscale2), FALSE);
+#endif
+
+	/* horizontal scroller 0..100% of drawing size */
+	adjhscale1 = gtk_adjustment_new(0, 0, 100, 0, 0, 0);
+
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	hscale1 = gtk_hscale_new(GTK_ADJUSTMENT(adjhscale1));
+	g_signal_connect(G_OBJECT(adjhscale1), "value_changed", GTK_SIGNAL_FUNC(on_hscale1_changed), NULL);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hscale1,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_scale_set_draw_value(GTK_SCALE(hscale1), FALSE);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	hscale1 = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, GTK_ADJUSTMENT(adjhscale1));
+	g_signal_connect(G_OBJECT(adjhscale1), "value_changed", G_CALLBACK(on_hscale1_changed), NULL);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hscale1,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+	gtk_scale_set_draw_value(GTK_SCALE(hscale1), FALSE);
+#endif
+
+	/* --- */
+
+	/* add next area to the vbox1 */
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	hbox2 = gtk_hbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox2,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	hbox2 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox2,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+#endif
+
+	/* --- */
+
+	xspinlabel = gtk_label_new("dx");
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ xspinlabel,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(xspinlabel, "stretch drawing in x-direction");
+	gtk_widget_show(xspinlabel);
+
+	/* spin to change drawing spread factor. note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	xspinadjustment = (GtkAdjustment *) gtk_adjustment_new(xspacing /* initial value */ ,
+							       0 /* minimum value */ ,
+							       99 /* maximum value */ ,
+							       1 /* step increment */ ,
+							       1 /* page increment */ ,
+							       0	/* page size now *must* be zero */
+	    );
+
+	xspinbutton = gtk_spin_button_new(xspinadjustment, 1 /* climb rate */ ,
+					  0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ xspinbutton,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	g_signal_connect(G_OBJECT(xspinadjustment), "value-changed", G_CALLBACK(xspin_changed), (gpointer) xspinbutton);
+
+	yspinlabel = gtk_label_new("dy");
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ yspinlabel,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(yspinlabel, "stretch drawing in y-direction");
+
+	/* spin to change drawing spread factor. note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	yspinadjustment = (GtkAdjustment *) gtk_adjustment_new(yspacing /* initial value */ ,
+							       0 /* minimum value */ ,
+							       99 /* maximum value */ ,
+							       1 /* step increment */ ,
+							       1 /* page increment */ ,
+							       0	/* page size now *must* be zero */
+	    );
+
+	yspinbutton = gtk_spin_button_new(yspinadjustment, 1 /* climb rate */ ,
+					  0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ yspinbutton,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	gtk_widget_set_tooltip_text(yspinbutton, "stretch y-direction");
+
+	g_signal_connect(G_OBJECT(yspinadjustment), "value-changed", G_CALLBACK(yspin_changed), (gpointer) yspinbutton);
+
+	/* at every click, advance positioning mode */
+	pos1 = gtk_label_new("pos");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ pos1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(pos1, "positioning mode");
+
+	posadjustment = (GtkAdjustment *) gtk_adjustment_new(postype /* initial value */ ,
+							     1 /* minimum value */ ,
+							     3 /* maximum value */ ,
+							     1 /* step increment */ ,
+							     1 /* page increment */ ,
+							     0	/* page size now *must* be zero */
+	    );
+
+	posbutton = gtk_spin_button_new(posadjustment, 1 /* climb rate */ ,
+					0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ posbutton,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	g_signal_connect(G_OBJECT(posadjustment), "value-changed", G_CALLBACK(pos_changed), (gpointer) posbutton);
+
+	/* draw spline edges or normal */
+	check1 = gtk_check_button_new_with_label("splines");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ check1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_splines) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(check1), FALSE);
+	}
+
+	/* the window arg is not used */
+	g_signal_connect(G_OBJECT(check1), "clicked", G_CALLBACK(check1_toggle), (gpointer) mainwindow1);
+
+	gtk_widget_set_tooltip_text(check1, "edge line splines");
+
+	/* draw dummy nodes */
+	dummy1 = gtk_check_button_new_with_label("dummy's");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ dummy1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (drawdummy) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dummy1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dummy1), FALSE);
+	}
+
+	/* the window arg is not used */
+	g_signal_connect(G_OBJECT(dummy1), "clicked", G_CALLBACK(dummy1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(dummy1, "show dummy nodes");
+
+	/* */
+	entry1 = gtk_text_view_new();
+	entry1buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry1));
+	gtk_text_buffer_set_text(entry1buffer, "GML4GTK is free software to copy, share and improve", -1);
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(entry1), FALSE);
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox2), /* child */ entry1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(entry1, "status information");
+
+	/*
+	 * next line with toggle buttons
+	 */
+	/* add next area to the vbox1 */
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	hbox3 = gtk_hbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox3,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+	hbox3 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, /* spacing */ 0);
+	gtk_box_pack_start( /* box */ GTK_BOX(vbox1), /* child */ hbox3,
+			   /* expand */ FALSE, /* fill */ TRUE,	/* padding */
+			   PACKPADDING);
+#endif
+
+	/* level placement */
+	rank1 = gtk_label_new("rank");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ rank1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(rank1, "dfs/bfs/topological levels");
+
+	/* spin to change rank type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	rankadjustment = (GtkAdjustment *) gtk_adjustment_new(ranktype /* initial value */ ,
+							      1 /* minimum value */ ,
+							      3 /* maximum value */ ,
+							      1 /* step increment */ ,
+							      1 /* page increment */ ,
+							      0	/* page size now *must* be zero */
+	    );
+
+	rankbutton = gtk_spin_button_new(rankadjustment, 1 /* climb rate */ ,
+					 0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ rankbutton,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	g_signal_connect(G_OBJECT(rankadjustment), "value-changed", G_CALLBACK(rank_changed), (gpointer) rankbutton);
+
+	/* barycenter */
+	barylabel = gtk_label_new("bary");
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ barylabel,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+	gtk_widget_set_tooltip_text(barylabel, "barycenter type");
+
+	/* spin to change barycenter type note that in gtk2 it is a (GtkObject *) and in gtk3 a (GtkAdjustment *) */
+	baryadjustment = (GtkAdjustment *) gtk_adjustment_new(barytype /* initial value */ ,
+							      1 /* minimum value */ ,
+							      5 /* maximum value */ ,
+							      1 /* step increment */ ,
+							      1 /* page increment */ ,
+							      0	/* page size now *must* be zero */
+	    );
+
+	barybutton = gtk_spin_button_new(baryadjustment, 1 /* climb rate */ ,
+					 0 /* digits achter de comma */ );
+
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ barybutton,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	g_signal_connect(G_OBJECT(baryadjustment), "value-changed", G_CALLBACK(bary_changed), (gpointer) barybutton);
+
+	/* edgelabels on/off */
+	elabel1 = gtk_check_button_new_with_label("elabel");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ elabel1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_edgelabels) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(elabel1), "clicked", G_CALLBACK(elabel1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(elabel1, "edgelabels on/off");
+
+	/* labels on/off */
+	label1 = gtk_check_button_new_with_label("labels");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ label1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_labels) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(label1), "clicked", G_CALLBACK(label1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(label1, "labels on/off");
+
+	/* node names on/off */
+	nnames1 = gtk_check_button_new_with_label("names");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ nnames1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_nnames) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(nnames1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(nnames1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(nnames1), "clicked", G_CALLBACK(nnames1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(nnames1, "node names instead of labels");
+
+	/* popup labels on/off */
+	popup1 = gtk_check_button_new_with_label("popup");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ popup1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_popup) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(popup1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(popup1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(popup1), "clicked", G_CALLBACK(popup1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(popup1, "popup labels on/off");
+
+	/* mirror y on/off */
+	mirrory1 = gtk_check_button_new_with_label("mirror");
+	gtk_box_pack_start( /* box */ GTK_BOX(hbox3), /* child */ mirrory1,
+			   /* expand */ FALSE, /* fill */ FALSE,	/* padding */
+			   PACKPADDING);
+
+	/* */
+	if (option_mirrory) {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(mirrory1), TRUE);
+	} else {
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(mirrory1), FALSE);
+	}
+
+	g_signal_connect(G_OBJECT(mirrory1), "clicked", G_CALLBACK(mirrory1_toggle), (gpointer) mainwindow1);
+	gtk_widget_set_tooltip_text(mirrory1, "mirror drawing in y direction");
+
+	/*
+	 * here additional gtk elements
+	 */
+
+	/* put on screen */
+	gtk_widget_show_all(mainwindow1);
+
+	return (0);
+}
+
+#endif
+
+int main(int argc, char *argv[])
+{
+	int ret = 0;
+	char *s = NULL;
+
+	/* check options */
+	if (argc > 1) {
+		for (ret = 1; ret < argc; ret++) {
+			if (strcmp(argv[ret], "--version") == 0) {
+				/* print version in config.h set by configure.ac and exit */
+				printf("%s\n", PACKAGE_STRING);
+				return (0);
+			} else if (strcmp(argv[ret], "--debug") == 0) {
+				/* set debug flag */
+				yydebug = 1;
+				printf("%s(): turned on yydebug\n", __func__);
+			} else {
+				/* add option check here */
+			}
+		}
+	}
+
+	/* */
+	dp_meminit();
+
+	argv0 = argv[0];
+
+	/* get the home dir */
+	s = getenv("HOME");
+	if (s) {
+		lastopendir = dp_calloc(1, (strlen(s) + 1));
+		strcpy(lastopendir, s);
+		lastsavedir = dp_calloc(1, (strlen(s) + 1));
+		strcpy(lastsavedir, s);
+	} else {
+		/* there is no home dir set in env */
+		lastopendir = NULL;
+		lastsavedir = NULL;
+	}
+
+	/* this is depreciated
+	 * g_type_init();
+	 * g_thread_init(NULL);
+	 */
+
+#if !GLIB_CHECK_VERSION (2, 36, 0)
+	/* for GDBus */
+	g_type_init();
+#endif
+
+#if (GTK_HAVE_API_VERSION_0 == 1)
+	ret = 0;
+#endif
+
+#if (GTK_HAVE_API_VERSION_1 == 1)
+	ret = 0;
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1 || GTK_HAVE_API_VERSION_3 == 1)
+
+	/*
+	 *    gtk_init (&argc, &argv); in gkt2, gtk3 and gtk_init() in gtk4
+	 *
+	 * calls the function gtk_init(gint *argc, gchar ***argv) which will be called in all GTK applications. 
+	 * This sets up a few things for us such as the default visual and color map and then proceeds to call 
+	 * gdk_init(gint *argc, gchar ***argv). This function initializes the library for use, sets up default 
+	 * signal handlers, and checks the arguments passed to your application on the command line, 
+	 * looking for one of the following:
+	 *
+	 *    * --gtk-module
+	 *    * --g-fatal-warnings
+	 *    * --gtk-debug
+	 *    * --gtk-no-debug
+	 *    * --gdk-debug
+	 *    * --gdk-no-debug
+	 *    * --display
+	 *    * --sync
+	 *    * --no-xshm
+	 *    * --name
+	 *    * --class
+	 *
+	 * It removes these from the argument list, leaving anything it does not recognize for your application 
+	 * to parse or ignore. This creates a set of standard arguments accepted by all GTK applications.
+	 *
+	 */
+
+	/* do gtk init, gtk will grab the gtk specific options on command line */
+
+	/* gtk 2, 3 */
+	{
+		if (yydebug) {
+			gtk_test_init(&argc, &argv);
+			gtk_test_register_all_types();
+			/* add here g_test_add_func() */
+#if (GTK_HAVE_API_VERSION_2 == 1)
+			/* only in gtk2 */
+			gdk_window_set_debug_updates(TRUE);
+#endif
+			/* this does not work:
+			 * #include "gtkdebug.h"
+			 * gtk_set_debug_flags(0xffffffff);
+			 */
+		} else {
+			gtk_init(&argc, &argv);
+		}
+
+	}
+
+	ret = maingtk23();
+
+	if (ret) {
+	}
+	initialfiles(argc, argv);
+	if (ret) {
+	}
 
 	/* run the gui */
 	gtk_main();
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	{
+		GtkApplication *app = NULL;
+		/* gtk4 has no args */
+		if (yydebug) {
+			(void)gtk_test_init(&argc, &argv);
+			gtk_test_register_all_types();
+		} else {
+			(void)gtk_init();
+		}
+		app = gtk_application_new("www.graphviewer.nl", G_APPLICATION_FLAGS_NONE);
+		g_signal_connect(G_OBJECT(app), "activate", G_CALLBACK(maingtk4_activate), NULL);
+		ret = g_application_run(G_APPLICATION(app), argc, argv);
+		g_object_unref(app);
+		if (ret) {
+		}
+		initialfiles(argc, argv);
+	}
+#endif
 
 	/* */
 	do_clear_all(0);
 
 	if (lastopendir) {
-		dp_free(lastopendir);
+		lastopendir = dp_free(lastopendir);
+		if (lastopendir) {
+		}
 	}
 	if (lastsavedir) {
-		dp_free(lastsavedir);
+		lastsavedir = dp_free(lastsavedir);
+		if (lastsavedir) {
+		}
 	}
 
 	/* optional memory check report when compiled with -DMEMCHECK */
 	dp_memreport();
-
-	return (0);
+	return (ret);
 }
 
 /* scale pos to zvalue */
@@ -1403,7 +2059,12 @@ static struct gml_node *is_node_at_xy(int x, int y)
 static void no_popup(void)
 {
 	if (popupwindow1) {
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 		gtk_widget_destroy(popupwindow1);
+#endif
+#if (GTK_HAVE_API_VERSION_4 == 1)
+		gtk_window_destroy(GTK_WINDOW(popupwindow1));
+#endif
 		popupwindow1 = NULL;
 	}
 	return;
@@ -1528,7 +2189,8 @@ static void popup_nodelabel(struct gml_node *n, cairo_t * crp, int xsize, int ys
 	return;
 }
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
+
 /* redraw drawing area */
 static gboolean popuparea1_expose_event(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 {
@@ -1600,7 +2262,56 @@ static gboolean popuparea1_expose_event(GtkWidget * widget, GdkEventExpose * eve
 }
 #endif
 
-#if GTK_HAVE_API_VERSION_3
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* draw in the popup window the label text */
+static void popuparea1_draw_event_for_gtk4(GtkDrawingArea * area, cairo_t * crdraw, int width, int height, gpointer user_data)
+{
+	struct gml_node *n = NULL;
+	double zfactor_saved = 0.0;
+	int vxmin_saved = 0;
+	int vymin_saved = 0;
+
+	if (popupwindow1 == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+
+	/* the user data has the node to draw */
+	n = (struct gml_node *)user_data;
+
+	if (n == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+
+	/* save mainwindow settings */
+	zfactor_saved = zfactor;
+	vxmin_saved = vxmin;
+	vymin_saved = vymin;
+
+	/* draw node label text at 1:1 100% scale */
+	zfactor = 1.0;
+	vxmin = n->finx;
+	vymin = n->finy;
+
+	cairo_scale(crdraw, zfactor, zfactor);
+
+	/* popup the node label text */
+	popup_nodelabel(n, crdraw, width, height);
+
+	/* restore mainwindow settings */
+	zfactor = zfactor_saved;
+	vxmin = vxmin_saved;
+	vymin = vymin_saved;
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
+
 /* redraw drawing area */
 static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpointer user_data)
 {
@@ -1623,6 +2334,11 @@ static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpoi
 	/* the user data has the node to draw */
 	n = (struct gml_node *)user_data;
 
+	if (n == NULL) {
+		/* shouldnothappen */
+		return (FALSE);
+	}
+
 	/* this is a workaround for issue in cairo-lib 1.14.0 with gtk3,
 	 * cairo.c cairo_destroy() line 305 assert(), (with gtk2 no problem) */
 	crp = cairo_reference(crdraw);
@@ -1639,11 +2355,6 @@ static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpoi
 	if (option_gdebug > 1 || 0) {
 		printf("%s(): drawing area size is (%d,%d) node %p\n", __func__, w, h, (void *)n);
 		fflush(stdout);
-	}
-
-	if (n == NULL) {
-		/* shouldnothappen */
-		return (FALSE);
 	}
 
 	/* save mainwindow settings */
@@ -1669,6 +2380,78 @@ static gboolean popuparea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpoi
 	return (FALSE);
 }
 #endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* popup window with node label text, (x,y) current mouse pointer */
+static void do_popup(struct gml_node *n, int x, int y)
+{
+	int pop = 1;
+	GtkWidget *vbox1 = NULL;
+	GtkWidget *popuparea1 = (GtkWidget *) 0;
+
+	if (yydebug || 0) {
+		printf("%s(): popup window for node at (%d,%d) node ptr %p\n", __func__, x, y, (void *)n);
+	}
+
+	/* if there is alreay a popup, keep it that way */
+	if (popupwindow1) {
+		return;
+	}
+
+	/* fresh window */
+	popupwindow1 = gtk_window_new();
+
+	/* make sure to exit oke. */
+	g_signal_connect(G_OBJECT(popupwindow1), "destroy", G_CALLBACK(no_popup), NULL);
+
+	/* set some title */
+	gtk_window_set_title(GTK_WINDOW(popupwindow1), " ");
+
+	/* pre-set size of full sized label text */
+	gtk_window_set_default_size(GTK_WINDOW(popupwindow1), (n->fbbx + 5) /* XSIZE */ ,
+				    n->fbby + 5 /* YSIZE */ );
+
+	/* decorate the window otherwise it will not show up
+	 * this is a window manager issue and not gtk
+	 * set to true or false
+	 */
+	gtk_window_set_decorated(GTK_WINDOW(popupwindow1), FALSE);
+
+	/* next vertical area for slider and drawing are */
+	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
+
+	gtk_widget_set_hexpand(vbox1, TRUE);
+	gtk_widget_set_vexpand(vbox1, TRUE);
+
+	gtk_window_set_child(GTK_WINDOW(popupwindow1), vbox1);
+
+	/* where to draw in box */
+	popuparea1 = gtk_drawing_area_new();
+
+	/* stretch maximal */
+	gtk_widget_set_vexpand(popuparea1, TRUE);
+	gtk_widget_set_hexpand(popuparea1, TRUE);
+
+	/* add routine for drawing with supplied current node in user data */
+	gtk_drawing_area_set_draw_func(GTK_DRAWING_AREA(popuparea1), /* function */ popuparea1_draw_event_for_gtk4,	/* user_data */
+				       (gpointer) n, /* destroy */ NULL);
+
+	gtk_box_append(GTK_BOX(vbox1), popuparea1);
+
+	if (pop) {
+		/* optional move the popup window here next to the node as in the gtk-3 sourcecode */
+		/* the position of the created popup window is determined by the windowmanager */
+	}
+
+	gtk_window_present(GTK_WINDOW(popupwindow1));
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* popup window with node label text, (x,y) current mouse pointer */
 static void do_popup(struct gml_node *n, int x, int y)
@@ -1703,7 +2486,10 @@ static void do_popup(struct gml_node *n, int x, int y)
 	g_signal_connect(G_OBJECT(popupwindow1), "destroy", G_CALLBACK(no_popup), NULL);
 
 	/* needed for the cairo drawing */
+#if (GTK_HAVE_API_VERSION_2 == 1)
+	/* only for gtk-2, not for gtk-3 */
 	gtk_widget_set_app_paintable(popupwindow1, TRUE);
+#endif
 
 	/* set some title */
 	gtk_window_set_title(GTK_WINDOW(popupwindow1), "label");
@@ -1716,19 +2502,19 @@ static void do_popup(struct gml_node *n, int x, int y)
 	gtk_window_set_decorated(GTK_WINDOW(popupwindow1), FALSE);
 
 	/* vbox1 */
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 	vbox1 = gtk_vbox_new( /* homogeneous */ FALSE, /* spacing */ 0);
 	gtk_widget_show(vbox1);
 	gtk_container_add(GTK_CONTAINER(popupwindow1), vbox1);
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 	vbox1 = gtk_box_new(GTK_ORIENTATION_VERTICAL, /* spacing */ 0);
 	gtk_widget_show(vbox1);
 	gtk_container_add(GTK_CONTAINER(popupwindow1), vbox1);
 #endif
 
-#if GTK_HAVE_API_VERSION_4 == 1
+#if (GTK_HAVE_API_VERSION_4 == 1)
 	/* todo add gtk-4 support */
 #endif
 
@@ -1739,11 +2525,11 @@ static void do_popup(struct gml_node *n, int x, int y)
 			   PACKPADDING);
 	gtk_widget_show(popuparea1);
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 	g_signal_connect(G_OBJECT(popuparea1), "expose_event", G_CALLBACK(popuparea1_expose_event), (gpointer) n);
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 	g_signal_connect(G_OBJECT(popuparea1), "draw", G_CALLBACK(popuparea1_draw_event), (gpointer) n);
 #endif
 
@@ -1760,6 +2546,163 @@ static void do_popup(struct gml_node *n, int x, int y)
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* movement of mouse on the drawing area */
+static void on_motion_notify_event(GtkEventControllerMotion * controller, double doublex, double doubley, GtkWidget * widget)
+{
+	int x = 0;
+	int y = 0;
+	int pressed = 0;
+	int idx = 0;
+	int idy = 0;
+	double gdelta = 0.0;
+	double gsld = 0.0;
+	double val = 0.0;
+	int ival = 0;
+	double dhw = 0.0;
+	double dx = 0.0;
+	double dy = 0.0;
+	double hw = 0.0;
+	double hh = 0.0;
+	GdkModifierType state = 0;
+	struct gml_node *n = NULL;
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		/* make sure there is no popup windows */
+		no_popup();
+		return;
+	}
+
+	/* get the button 1 pressed status */
+	state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(controller));
+
+	if ((state & GDK_BUTTON1_MASK) != 0) {
+		pressed = 1;
+	} else {
+		pressed = 0;
+	}
+
+	/* get (x,y) */
+	x = (int)doublex;
+	y = (int)doubley;
+
+	if (yydebug || 0) {
+		printf("%s(): at (%d,%d) left button pressed is %d\n", __func__, x, y, pressed);
+	}
+
+	fflush(stdout);
+
+	/* if button left pressed move the drawing (x,y) offset */
+	if (pressed) {
+		idx = (mouse_oldx - x);
+		idy = (mouse_oldy - y);
+		if (option_gdebug || 0) {
+			printf("%s(): mouse is at (%d,%d) delta is (%d,%d)\n", __func__, x, y, idx, idy);
+		}
+
+		if ((idx == 0) && (idy == 0)) {
+			/* no change needed */
+			return;
+		}
+
+		if (idx != 0) {
+			hw = (double)(x);
+			dx = (double)(mouse_oldx + vxmin) / zfactor;
+			dhw = ((double)(hw + vxmin) / zfactor);
+			gdelta = dx - dhw;
+			vxmin = vxmin + (int)gdelta;
+			if (vxmin < 0) {
+				vxmin = 0;
+			}
+			if (vxmin > maxx) {
+				vxmin = maxx;
+			}
+			/* */
+			gsld = (gdelta / maxx);
+			gsld = (gsld * 100);
+			val = gtk_adjustment_get_value(GTK_ADJUSTMENT(adjhscale1));
+			ival = (int)val;
+			ival = ival + (int)gsld;
+			if (ival < 0) {
+				ival = 0;
+			}
+			if (ival > 100) {
+				ival = 100;
+			}
+			gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), ival);
+		}
+
+		if (idy != 0) {
+			hh = (double)(y);
+			dy = (double)(mouse_oldy + vymin) / zfactor;
+			dhw = (hh + vymin) / zfactor;
+			gdelta = dy - dhw;
+			vymin = vymin + (int)gdelta;
+			if (vymin < 0) {
+				vymin = 0;
+			}
+			if (vymin > maxy) {
+				vymin = maxy;
+			}
+			/* */
+			gsld = (gdelta / maxy);
+			gsld = (gsld * 100);
+			val = gtk_adjustment_get_value(GTK_ADJUSTMENT(adjvscale2));
+			ival = (int)val;
+			ival = ival + (int)gsld;
+			if (ival < 0) {
+				ival = 0;
+			}
+			if (ival > 100) {
+				ival = 100;
+			}
+			gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), ival);
+		}
+
+		/* save */
+		mouse_oldx = x;
+		mouse_oldy = y;
+		/* only redraw needed */
+		gtk_widget_queue_draw(drawingarea1);
+	}
+
+	/* show popup window with node label text if option is set */
+	if (option_popup) {
+
+		/* only if there is no popup */
+
+		/* check if node is at mouse location */
+		n = is_node_at_xy(x, y);
+		if (n) {
+			if (yydebug || 0) {
+				printf("%s(): found node at cursor\n", __func__);
+			}
+			/* node text must have a size */
+			if ((n->fbbx > 10) && (n->fbby > 10)) {
+				/* popup window with node label text */
+				do_popup(n, x, y);
+			}
+		} else {
+			/* make sure there is no popup windows */
+			no_popup();
+		}
+
+	} else {
+		/* make sure there is no popup windows */
+		no_popup();
+	}
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* dragging drawing when left button 1 is held down */
 static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * event)
@@ -1792,10 +2735,11 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 	}
 
 	/* where mouse click is on window and mouse status */
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 	gdk_window_get_pointer(widget->window, &x, &y, &state);
 #endif
-#if GTK_HAVE_API_VERSION_3 == 1
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
 	if (event) {
 		gdk_window_get_device_position(gtk_widget_get_window(widget), event->device, &x, &y, &state);
 	} else {
@@ -1809,7 +2753,7 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 	if ((state & GDK_BUTTON1_MASK) != 0) {
 		idx = (mouse_oldx - x);
 		idy = (mouse_oldy - y);
-		if (option_gdebug) {
+		if (option_gdebug || 0) {
 			printf("%s(): mouse is at (%d,%d) delta is (%d,%d)\n", __func__, x, y, idx, idy);
 			fflush(stdout);
 		}
@@ -1888,7 +2832,7 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 		n = is_node_at_xy(x, y);
 		if (n) {
 			/* node text must have a size */
-			if (n->fbbx && n->fbby) {
+			if ((n->fbbx > 10) && (n->fbby > 10)) {
 				/* popup window with node label text */
 				do_popup(n, x, y);
 			}
@@ -1904,6 +2848,8 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 
 	return (TRUE);
 }
+
+#endif
 
 /* mouse click on drawing area
 	 *
@@ -1925,6 +2871,13 @@ static gboolean on_motion_notify_event(GtkWidget * widget, GdkEventMotion * even
 	 * by pressing both mouse buttons together.
 	 * for dragging the mouse (x,y) is saved.
  */
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+ /* on_mouse_clicked is handled in motion notify */
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 static gboolean on_mouse_clicked(GtkWidget * widget, GdkEventButton * event, gpointer user_data)
 {
 	int eventbutton = 0;
@@ -1995,6 +2948,8 @@ static gboolean on_mouse_clicked(GtkWidget * widget, GdkEventButton * event, gpo
 	/* unknown button */
 	return TRUE;
 }
+
+#endif
 
 /* debug print layout of one cluster */
 static void do_layout_all_rprint(struct gml_graph *g)
@@ -2075,7 +3030,7 @@ static void do_layout_all_r(struct gml_graph *g)
 	doublespacey(g);
 
 	/* split edges with label into node->label->node */
-	edgelabels(g);
+	edgelabels(g, 0);
 
 	/* after edge label nodes are created:
 	 * calculate (x,y) size of text area
@@ -2162,7 +3117,7 @@ static void do_layout_all(struct gml_graph *g)
 		doublespacey(g);
 
 		/* split edges with label into node->label->node */
-		edgelabels(g);
+		edgelabels(g, 0);
 
 		/* after edge label nodes are created:
 		 * calculate (x,y) size of text area
@@ -2204,13 +3159,7 @@ static void do_relayout_all(struct gml_graph *g)
 	fflush(stdout);
 
 	/* set sliders to defaults */
-	zfactor = 1.0;
-	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), 50);
-
-	vxmin = 0;
-	vymin = 0;
-	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
-	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+	sliders_default();
 
 	/* fit drawing in window */
 	dofit();
@@ -2250,6 +3199,12 @@ static void do_clear_all(int mode)
 
 	if (maingraph) {
 
+		/* clear optional record label and html of node */
+		if (mode == 0) {
+			clear_rlabel_r(maingraph);
+			clear_hlabel_r(maingraph);
+		}
+
 		/* clear number of edges between level n and n+1 */
 		clear_nume_r(maingraph);
 
@@ -2261,12 +3216,6 @@ static void do_clear_all(int mode)
 
 		/* clear count of crossing edges at level */
 		clear_numce_r(maingraph);
-
-		/* clear optional record label and html of node */
-		if (mode == 0) {
-			clear_rlabel_r(maingraph);
-			clear_hlabel_r(maingraph);
-		}
 
 		/* clear self-edges list */
 		clear_selfedgesnodelist_r(maingraph);
@@ -2301,14 +3250,17 @@ static void do_clear_all(int mode)
 			clear_rawedgelist(maingraph);
 
 			/* clear main graph structure */
-			dp_free(maingraph);
+			maingraph = dp_free(maingraph);
 
-			maingraph = NULL;
+			if (maingraph) {
+			}
 		}
 	}
 
 	return;
 }
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* finally stop the gui */
 static void top_level_window_main_quit(void)
@@ -2317,12 +3269,14 @@ static void top_level_window_main_quit(void)
 	do_clear_all(0);
 
 	if (lastopendir) {
-		dp_free(lastopendir);
-		lastopendir = NULL;
+		lastopendir = dp_free(lastopendir);
+		if (lastopendir) {
+		}
 	}
 	if (lastsavedir) {
-		dp_free(lastsavedir);
-		lastsavedir = NULL;
+		lastsavedir = dp_free(lastsavedir);
+		if (lastsavedir) {
+		}
 	}
 
 	/* run the gtk internal routine to stop gtk_main() which is a for(){} loop */
@@ -2330,6 +3284,25 @@ static void top_level_window_main_quit(void)
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+static void fullscreen_changed(GSimpleAction * action, GVariant * value, gpointer win)
+{
+	if (g_variant_get_boolean(value)) {
+		gtk_window_maximize(GTK_WINDOW(win));
+	} else {
+		gtk_window_unmaximize(GTK_WINDOW(win));
+	}
+	g_simple_action_set_state(action, value);
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* use full screen */
 static void on_top_level_window_fullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -2342,6 +3315,14 @@ static void on_top_level_window_fullscreen1_activate(GtkMenuItem * menuitem, gpo
 	return;
 }
 
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 /* use screen in a window */
 static void on_top_level_window_unfullscreen1_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
@@ -2352,6 +3333,286 @@ static void on_top_level_window_unfullscreen1_activate(GtkMenuItem * menuitem, g
 	gtk_window_unfullscreen(GTK_WINDOW(mainwindow1));
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* parse the file */
+static void open2_response_cb_fn(char *inputfilename, char *binputfilename)
+{
+	gzFile f;		/* the zipped file stream */
+	GtkWidget *dialog = NULL;
+
+	/* binputfilename is the short filename and should not be numm */
+
+	/* open file to parse */
+	errno = 0;
+
+	/* open zipped or unzipped file as file stream */
+	f = gzopen(inputfilename, "rb");
+
+	if (f == NULL || 0) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", inputfilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the dot data */
+	if (gmlparse(maingraph, f, inputfilename)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		fflush(stdout);
+		gzclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	fflush(stdout);
+	gzclose(f);
+
+	/* set the basename of file as window title /tmp/foo.dot has window title foo.dot */
+	if (binputfilename) {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), binputfilename);
+	} else {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), inputfilename);
+	}
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, inputfilename);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		/* set sliders to defaults */
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+
+	} else {
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void open2_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bname = NULL;
+
+	if (response_id == GTK_RESPONSE_OK) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		if (yydebug || 0) {
+			g_print("%s(): selected %d files\n", __func__, n);
+		}
+
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastopendir) {
+									lastopendir = dp_free(lastopendir);
+									if (lastopendir) {
+									}
+								}
+								lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastopendir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							bname = g_file_get_basename(file);
+							/* read and parse the file */
+							open2_response_cb_fn(file_chooser_filename, bname);
+							if (bname) {
+								g_free(bname);
+								bname = NULL;
+							};
+							/* there could have been a parse error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): open dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* open dot file */
+static void open2_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_OPEN, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Open gml graph file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Open"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(open2_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "gml");
+	gtk_file_filter_add_pattern(filter, "*.gml");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	/* this are the gzipped graph files */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "gml.gz");
+	gtk_file_filter_add_pattern(filter, "*.gml.gz");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastopendir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -2374,7 +3635,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	if (user_data) {
 	}
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select GML Graph File", 0,	/* parent_window */
@@ -2383,7 +3644,7 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select GML Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
@@ -2419,7 +3680,9 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)dp_free(lastopendir);
+			lastopendir = dp_free(lastopendir);
+			if (lastopendir) {
+			}
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastopendir, file_chooser_dir);
@@ -2456,8 +3719,14 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		if (inputfilename) {
+			inputfilename = dp_free(inputfilename);
+			if (inputfilename) {
+			}
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2486,8 +3755,12 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		gzclose(fgml);
 		/* data is invalid at this point */
 		validdata = 0;
@@ -2517,6 +3790,12 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		/* update status text */
 		update_status_text("Wait ... Calculating Layout");
 
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 		cnt = 1000;
 		while (gtk_events_pending()) {
 			cnt--;
@@ -2525,6 +3804,8 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 				/* this updates the status text */
 			}
 		}
+
+#endif
 
 		do_layout_all(maingraph);
 
@@ -2547,17 +3828,24 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
-
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* fit drawing in window */
 		dofit();
 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -2568,6 +3856,286 @@ static void on_top_level_window_open1_activate(GtkMenuItem * menuitem, gpointer 
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* parse the file */
+static void open5_response_cb_fn(char *inputfilename, char *binputfilename)
+{
+	gzFile f;		/* the zipped file stream */
+	GtkWidget *dialog = NULL;
+
+	/* binputfilename is the short filename and should not be numm */
+
+	/* open file to parse */
+	errno = 0;
+
+	/* open zipped or unzipped file as file stream */
+	f = gzopen(inputfilename, "rb");
+
+	if (f == NULL || 0) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", inputfilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the jgf data */
+	if (bgvparse(maingraph, f, inputfilename, argv0)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		fflush(stdout);
+		gzclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	fflush(stdout);
+	gzclose(f);
+
+	/* set the basename of file as window title /tmp/foo.dot has window title foo.dot */
+	if (binputfilename) {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), binputfilename);
+	} else {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), inputfilename);
+	}
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, inputfilename);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		/* set sliders to defaults */
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+
+	} else {
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void open5_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bname = NULL;
+
+	if (response_id == GTK_RESPONSE_OK) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		if (yydebug || 0) {
+			g_print("%s(): selected %d files\n", __func__, n);
+		}
+
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastopendir) {
+									lastopendir = dp_free(lastopendir);
+									if (lastopendir) {
+									}
+								}
+								lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastopendir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							bname = g_file_get_basename(file);
+							/* read and parse the file */
+							open5_response_cb_fn(file_chooser_filename, bname);
+							if (bname) {
+								g_free(bname);
+								bname = NULL;
+							};
+							/* there could have been a parse error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): open dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* open bgv file */
+static void open5_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_OPEN, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Open bgv graph file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Open"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(open5_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "bgv");
+	gtk_file_filter_add_pattern(filter, "*.bgv");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	/* this are the gzipped graph files */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "bgv.gz");
+	gtk_file_filter_add_pattern(filter, "*.bgv.gz");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastopendir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -2590,7 +4158,7 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 	if (user_data) {
 	}
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select BGV Graph File", 0,	/* parent_window */
@@ -2599,7 +4167,7 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select BGV Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
@@ -2635,7 +4203,9 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)dp_free(lastopendir);
+			lastopendir = dp_free(lastopendir);
+			if (lastopendir) {
+			}
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastopendir, file_chooser_dir);
@@ -2646,9 +4216,7 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
 		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (inputfilename) {
-			strcpy(inputfilename, file_chooser_filename);
-		}
+		strcpy(inputfilename, file_chooser_filename);
 		/* not dp_free() because gtk allocated */
 		g_free(file_chooser_filename);
 	} else {
@@ -2665,7 +4233,7 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 
 	/* open file to parse */
 	errno = 0;
-	f = gzopen(inputfilename, "r");
+	f = gzopen(inputfilename, "rb");
 
 	if (f == NULL) {
 		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
@@ -2675,8 +4243,12 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2694,7 +4266,7 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 	/* create root graph */
 	create_maingraph();
 
-	/* parse the dot data */
+	/* parse the bgv data */
 	if (bgvparse(maingraph, f, baseinputfilename2, argv0)) {
 		/* parse error */
 		if (strlen(parsermessage) == 0) {
@@ -2705,8 +4277,12 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		fflush(stdout);
 		gzclose(f);
 		/* data is invalid at this point */
@@ -2739,6 +4315,8 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 		/* update status text */
 		update_status_text("Wait ... Calculating Layout");
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 		cnt = 1000;
 		while (gtk_events_pending()) {
 			cnt--;
@@ -2747,6 +4325,8 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 				/* this updates the status text */
 			}
 		}
+
+#endif
 
 		do_layout_all(maingraph);
 
@@ -2773,18 +4353,24 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
-
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* fit drawing in window */
 		dofit();
 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
-
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -2795,6 +4381,316 @@ static void on_top_level_window_open5_activate(GtkMenuItem * menuitem, gpointer 
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* set directory for file chooser */
+static void set_current_folder(GtkFileChooser * chooser, const char *name)
+{
+	GtkWidget *dialog;
+	GFile *file = g_file_new_for_path(name);
+	if (file) {
+		if (gtk_file_chooser_set_current_folder(chooser, file, NULL) == FALSE) {
+
+			dialog = gtk_message_dialog_new(GTK_WINDOW(chooser),
+							GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+							GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Could not set the folder to %s",
+							name);
+			gtk_widget_show(dialog);
+			g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		}
+		g_object_unref(file);
+	}
+	return;
+}
+
+/* parse the file */
+static void open1_response_cb_fn(char *inputfilename, char *binputfilename)
+{
+	gzFile f;		/* the zipped file stream */
+	GtkWidget *dialog = NULL;
+
+	/* binputfilename is the short filename and should not be numm */
+
+	/* open file to parse */
+	errno = 0;
+
+	/* open zipped or unzipped file as file stream */
+	f = gzopen(inputfilename, "rb");
+
+	if (f == NULL || 0) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", inputfilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the dot data */
+	if (dotparse(maingraph, f, inputfilename, argv0)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		fflush(stdout);
+		gzclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	fflush(stdout);
+	gzclose(f);
+
+	/* set the basename of file as window title /tmp/foo.dot has window title foo.dot */
+	if (binputfilename) {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), binputfilename);
+	} else {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), inputfilename);
+	}
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, inputfilename);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		/* set sliders to defaults */
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+
+	} else {
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void open1_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bname = NULL;
+
+	if (response_id == GTK_RESPONSE_OK) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		if (yydebug || 0) {
+			g_print("%s(): selected %d files\n", __func__, n);
+		}
+
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastopendir) {
+									lastopendir = dp_free(lastopendir);
+									if (lastopendir) {
+									}
+								}
+								lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastopendir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							bname = g_file_get_basename(file);
+							/* read and parse the file */
+							open1_response_cb_fn(file_chooser_filename, bname);
+							if (bname) {
+								g_free(bname);
+								bname = NULL;
+							};
+							/* there could have been a parse error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): open dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* open dot file */
+static void open1_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_OPEN, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Open dot graph file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Open"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(open1_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "dot");
+	gtk_file_filter_add_pattern(filter, "*.dot");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "gv");
+	gtk_file_filter_add_pattern(filter, "*.gv");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	/* this are the gzipped graph files */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "dot.gz");
+	gtk_file_filter_add_pattern(filter, "*.dot.gz");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "gv.gz");
+	gtk_file_filter_add_pattern(filter, "*.gv.gz");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastopendir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -2817,7 +4713,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 	if (user_data) {
 	}
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select DOT Graph File", 0,	/* parent_window */
@@ -2826,7 +4722,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select DOT Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
@@ -2862,7 +4758,9 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)dp_free(lastopendir);
+			lastopendir = dp_free(lastopendir);
+			if (lastopendir) {
+			}
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastopendir, file_chooser_dir);
@@ -2873,9 +4771,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
 		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (inputfilename) {
-			strcpy(inputfilename, file_chooser_filename);
-		}
+		strcpy(inputfilename, file_chooser_filename);
 		/* not dp_free() because gtk allocated */
 		g_free(file_chooser_filename);
 	} else {
@@ -2892,7 +4788,7 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 
 	/* open file to parse */
 	errno = 0;
-	f = gzopen(inputfilename, "r");
+	f = gzopen(inputfilename, "rb");
 
 	if (f == NULL) {
 		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
@@ -2902,8 +4798,12 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -2932,8 +4832,12 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		fflush(stdout);
 		gzclose(f);
 		/* data is invalid at this point */
@@ -2966,6 +4870,8 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		/* update status text */
 		update_status_text("Wait ... Calculating Layout");
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 		cnt = 1000;
 		while (gtk_events_pending()) {
 			cnt--;
@@ -2974,6 +4880,8 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 				/* this updates the status text */
 			}
 		}
+
+#endif
 
 		do_layout_all(maingraph);
 
@@ -3000,8 +4908,12 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 
 		/* fit drawing in window */
 		dofit();
@@ -3009,9 +4921,12 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
-
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -3022,6 +4937,286 @@ static void on_top_level_window_open2_activate(GtkMenuItem * menuitem, gpointer 
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* parse the file */
+static void open3_response_cb_fn(char *inputfilename, char *binputfilename)
+{
+	gzFile f;		/* the zipped file stream */
+	GtkWidget *dialog = NULL;
+
+	/* binputfilename is the short filename and should not be numm */
+
+	/* open file to parse */
+	errno = 0;
+
+	/* open zipped or unzipped file as file stream */
+	f = gzopen(inputfilename, "rb");
+
+	if (f == NULL || 0) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", inputfilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the dot data */
+	if (vcgparse(maingraph, f, inputfilename, argv0)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		fflush(stdout);
+		gzclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	fflush(stdout);
+	gzclose(f);
+
+	/* set the basename of file as window title /tmp/foo.dot has window title foo.dot */
+	if (binputfilename) {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), binputfilename);
+	} else {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), inputfilename);
+	}
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, inputfilename);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		/* set sliders to defaults */
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+
+	} else {
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void open3_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bname = NULL;
+
+	if (response_id == GTK_RESPONSE_OK) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		if (yydebug || 0) {
+			g_print("%s(): selected %d files\n", __func__, n);
+		}
+
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastopendir) {
+									lastopendir = dp_free(lastopendir);
+									if (lastopendir) {
+									}
+								}
+								lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastopendir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							bname = g_file_get_basename(file);
+							/* read and parse the file */
+							open3_response_cb_fn(file_chooser_filename, bname);
+							if (bname) {
+								g_free(bname);
+								bname = NULL;
+							};
+							/* there could have been a parse error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): open dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* open vcg file */
+static void open3_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_OPEN, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Open vcg graph file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Open"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(open3_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "vcg");
+	gtk_file_filter_add_pattern(filter, "*.vcg");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	/* this are the gzipped graph files */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "vcg.gz");
+	gtk_file_filter_add_pattern(filter, "*.vcg.gz");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastopendir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -3043,7 +5238,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	if (user_data) {
 	}
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select VCG Graph File", 0,	/* parent_window */
@@ -3052,7 +5247,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select VCG Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
@@ -3088,7 +5283,9 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)dp_free(lastopendir);
+			lastopendir = dp_free(lastopendir);
+			if (lastopendir) {
+			}
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastopendir, file_chooser_dir);
@@ -3099,9 +5296,7 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
 		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (inputfilename) {
-			strcpy(inputfilename, file_chooser_filename);
-		}
+		strcpy(inputfilename, file_chooser_filename);
 		/* not dp_free() because gtk allocated */
 		g_free(file_chooser_filename);
 	} else {
@@ -3129,8 +5324,12 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(baseinputfilename2);
-		dp_free(inputfilename);
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -3159,8 +5358,12 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		fflush(stdout);
 		gzclose(fvcg);
 		/* data is invalid at this point */
@@ -3217,16 +5420,24 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 		gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
 
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* fit drawing in window */
 		dofit();
 
 		validdata = 1;
 	} else {
 		/* filename is not saved */
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* update status text */
 		update_status_text("Empty graph ... No Nodes");
 		validdata = 0;
@@ -3237,6 +5448,286 @@ static void on_top_level_window_open3_activate(GtkMenuItem * menuitem, gpointer 
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* parse the file */
+static void open4_response_cb_fn(char *inputfilename, char *binputfilename)
+{
+	gzFile f;		/* the zipped file stream */
+	GtkWidget *dialog = NULL;
+
+	/* binputfilename is the short filename and should not be numm */
+
+	/* open file to parse */
+	errno = 0;
+
+	/* open zipped or unzipped file as file stream */
+	f = gzopen(inputfilename, "rb");
+
+	if (f == NULL || 0) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", inputfilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		/* data is unchanged, so keep validdata status */
+		return;
+	}
+
+	/* type of graph data 0=gml 1=dot 2=vcg */
+	graphtype = 1;
+
+	do_clear_all(0);
+
+	/* background r/g/b of drawing */
+	bgcr = 0xff;
+	bgcg = 0xff;
+	bgcb = 0xff;
+
+	/* create root graph */
+	create_maingraph();
+
+	/* parse the jgf data */
+	if (jgfparse(maingraph, f, inputfilename, argv0)) {
+		/* parse error */
+		if (strlen(parsermessage) == 0) {
+			strcpy(parsermessage, "no parser message");
+		}
+
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		fflush(stdout);
+		gzclose(f);
+		/* data is invalid at this point */
+		validdata = 0;
+		do_clear_all(0);
+		/* use package string program name as set by configure in config.h */
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), PACKAGE_STRING);
+		/* re draw screen */
+		gtk_widget_queue_draw(drawingarea1);
+		return;
+	}
+
+	fflush(stdout);
+	gzclose(f);
+
+	/* set the basename of file as window title /tmp/foo.dot has window title foo.dot */
+	if (binputfilename) {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), binputfilename);
+	} else {
+		gtk_window_set_title(GTK_WINDOW(mainwindow1), inputfilename);
+	}
+
+	/* check for empty graph here */
+	if (maingraph->rawnodelist) {
+
+		printf("%s(): calculating layout of file %s\n", __func__, inputfilename);
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text("Wait ... Calculating Layout");
+
+		do_layout_all(maingraph);
+
+		fflush(stdout);
+
+		/* update status text */
+		update_status_text(NULL);
+
+		/* set sliders to defaults */
+
+		/* fit drawing in window */
+		dofit();
+
+		validdata = 1;
+
+	} else {
+		/* update status text */
+		update_status_text("Empty graph ... No Nodes");
+		validdata = 0;
+	}
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void open4_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bname = NULL;
+
+	if (response_id == GTK_RESPONSE_OK) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		if (yydebug || 0) {
+			g_print("%s(): selected %d files\n", __func__, n);
+		}
+
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastopendir) {
+									lastopendir = dp_free(lastopendir);
+									if (lastopendir) {
+									}
+								}
+								lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastopendir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							bname = g_file_get_basename(file);
+							/* read and parse the file */
+							open4_response_cb_fn(file_chooser_filename, bname);
+							if (bname) {
+								g_free(bname);
+								bname = NULL;
+							};
+							/* there could have been a parse error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): open dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* open jgf file */
+static void open4_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_OPEN, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Open jgf graph file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Open"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(open4_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "jgf");
+	gtk_file_filter_add_pattern(filter, "*.jgf");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	/* this are the gzipped graph files */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "jgf.gz");
+	gtk_file_filter_add_pattern(filter, "*.jgf.gz");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastopendir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastopendir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* 'open' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -3250,7 +5741,7 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 	char *inputfilename = (char *)0;
 	char *baseinputfilename = (char *)0;
 	char *baseinputfilename2 = (char *)0;
-	FILE *f = NULL;
+	gzFile f = NULL;
 	char *bname = NULL;
 
 	if (menuitem) {
@@ -3258,7 +5749,7 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 	if (user_data) {
 	}
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select JGF Graph File", 0,	/* parent_window */
@@ -3267,7 +5758,7 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 
 #endif
 
-#if GTK_HAVE_API_VERSION_3 == 1
+#if (GTK_HAVE_API_VERSION_3 == 1)
 
 	/* see gimp source code howto */
 	dialog = gtk_file_chooser_dialog_new("Select JGF Graph File", GTK_WINDOW(mainwindow1)	/* parent_window */
@@ -3303,7 +5794,9 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastopendir) {
-			(void)dp_free(lastopendir);
+			lastopendir = dp_free(lastopendir);
+			if (lastopendir) {
+			}
 		}
 		lastopendir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastopendir, file_chooser_dir);
@@ -3314,9 +5807,7 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 	/* copy the input filename from gtk */
 	if (file_chooser_filename) {
 		inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (inputfilename) {
-			strcpy(inputfilename, file_chooser_filename);
-		}
+		strcpy(inputfilename, file_chooser_filename);
 		/* node dp_free() because gtk allocated */
 		g_free(file_chooser_filename);
 	} else {
@@ -3334,7 +5825,7 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 
 	/* open file to parse */
 	errno = 0;
-	f = fopen(inputfilename, "r");
+	f = gzopen(inputfilename, "rb");
 
 	if (f == NULL) {
 		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
@@ -3344,8 +5835,12 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 						 "Cannot open file %s for reading (%s)", inputfilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		/* data is unchanged, so keep validdata status */
 		return;
 	}
@@ -3374,10 +5869,14 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 						 GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", parsermessage);
 		gtk_dialog_run(GTK_DIALOG(pdialog));
 		gtk_widget_destroy(pdialog);
-		dp_free(inputfilename);
-		dp_free(baseinputfilename2);
+		inputfilename = dp_free(inputfilename);
+		if (inputfilename) {
+		}
+		baseinputfilename2 = dp_free(baseinputfilename2);
+		if (baseinputfilename2) {
+		}
 		fflush(stdout);
-		fclose(f);
+		gzclose(f);
 		/* data is invalid at this point */
 		validdata = 0;
 		do_clear_all(0);
@@ -3388,7 +5887,7 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 		return;
 	}
 
-	fclose(f);
+	gzclose(f);
 
 	bname = g_path_get_basename(inputfilename);
 	baseinputfilename = uniqstr(bname);
@@ -3442,111 +5941,46 @@ static void on_top_level_window_open4_activate(GtkMenuItem * menuitem, gpointer 
 		validdata = 0;
 	}
 
-	dp_free(inputfilename);
-	dp_free(baseinputfilename2);
-
+	inputfilename = dp_free(inputfilename);
+	if (inputfilename) {
+	}
+	baseinputfilename2 = dp_free(baseinputfilename2);
+	if (baseinputfilename2) {
+	}
 	/* re draw screen */
 	gtk_widget_queue_draw(drawingarea1);
 
 	return;
 }
 
-/* save as gtk svg */
-static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer user_data)
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* generate the file */
+static void save1_response_cb_fn(char *svgfilename, char *binputfilename)
 {
-	GtkWidget *dialog = (GtkWidget *) 0;
-	GtkWidget *edialog = (GtkWidget *) 0;
-	char *file_chooser_filename = (char *)0;
-	char *file_chooser_dir = (char *)0;
-	GtkFileChooser *chooser = NULL;
-	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
-	gint res = 0;
-	char *svgfilename = NULL;
-	FILE *fstream = NULL;
 	int mymaxx = 0;
 	int mymaxy = 0;
 	int saved_vxmin = 0;
 	int saved_vymin = 0;
+	FILE *fstream = NULL;
+	GtkWidget *dialog = NULL;
 	cairo_surface_t *surface = NULL;
 	cairo_t *crp = NULL;
 
-	if (validdata == 0) {
-		return;
-	}
-
-	if (menuitem) {
-	}
-	if (user_data) {
-	}
-
-	dialog = gtk_file_chooser_dialog_new("Save As SVG Image",
-					     /* parent_window */ NULL,
-					     action, "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
-
-	chooser = GTK_FILE_CHOOSER(dialog);
-
-	/* change to last used dir if any */
-	if (lastsavedir) {
-		gtk_file_chooser_set_current_folder(chooser, lastsavedir);
-	}
-
-	/* ask to override existing */
-	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
-
-	/* get the filename */
-	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
-
-	res = gtk_dialog_run(GTK_DIALOG(dialog));
-
-	if (res == GTK_RESPONSE_ACCEPT) {
-		file_chooser_filename = gtk_file_chooser_get_filename(chooser);
-		file_chooser_dir = gtk_file_chooser_get_current_folder(chooser);
-	} else {
-		/* cancel button */
-		(void)gtk_widget_destroy(dialog);
-		return;
-	}
-
-	/* update last-used-dir */
-	if (file_chooser_dir) {
-		if (lastsavedir) {
-			dp_free(lastsavedir);
-		}
-		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
-		strcpy(lastsavedir, file_chooser_dir);
-		/* not dp_free() because gtk allocated */
-		g_free(file_chooser_dir);
-	}
-
-	/* */
-	(void)gtk_widget_destroy(dialog);
-
-	/* */
-	if (file_chooser_filename) {
-		svgfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
-		if (svgfilename) {
-			strcpy(svgfilename, file_chooser_filename);
-		}
-		/* not dp_free() because gtk allocated */
-		g_free(file_chooser_filename);
-	} else {
-		/* no filename */
-		return;
-	}
-
 	errno = 0;
+
 	fstream = fopen(svgfilename, "wb");
 
 	/* check if open */
 	if (fstream == NULL) {
-		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
-						 GTK_DIALOG_DESTROY_WITH_PARENT,
-						 GTK_MESSAGE_ERROR,
-						 GTK_BUTTONS_CLOSE,
-						 "Cannot open file %s for writing (%s)", svgfilename, g_strerror(errno));
-		gtk_dialog_run(GTK_DIALOG(edialog));
-		gtk_widget_destroy(edialog);
-		dp_free(svgfilename);
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", svgfilename);
+		gtk_widget_show(GTK_WIDGET(dialog));
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+
 		return;
 	}
 
@@ -3589,10 +6023,542 @@ static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer u
 	vymin = saved_vymin;
 
 	fclose(fstream);
-	dp_free(svgfilename);
 
 	return;
 }
+
+/* run dialog and set bool done to TRUE if ready */
+static void save1_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bbbname = NULL;
+
+	/* this allows to select multiple files at once and generate all output files with same data */
+	/* the uri allow to save to url as on used the internet */
+
+	if (response_id == GTK_RESPONSE_OK && 1 /* for testing */ ) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		/* this causes crash only at save at the free */
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						if (yydebug || 0) {
+							g_print("%s(): selected file %d with name %s\n", __func__, i, uri);
+						}
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastsavedir) {
+									lastsavedir = dp_free(lastsavedir);
+									if (lastsavedir) {
+									}
+								}
+								lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastsavedir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+								bbbname = g_file_get_basename(file);
+								/* write the file */
+								save1_response_cb_fn(file_chooser_filename, bbbname);
+								if (bbbname) {
+									g_free(bbbname);
+									bbbname = NULL;
+								}
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							/* there could have been a error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): save dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* save svg */
+static void save1_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* nothing todo if there is no layout */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_SAVE, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Save svg file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Save"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(save1_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "svg");
+	gtk_file_filter_add_pattern(filter, "*.svg");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastsavedir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastsavedir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+	dialog = NULL;
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
+/* save as gtk svg */
+static void on_top_level_window_svg1_activate(GtkMenuItem * menuitem, gpointer user_data)
+{
+	GtkWidget *dialog = (GtkWidget *) 0;
+	GtkWidget *edialog = (GtkWidget *) 0;
+	char *file_chooser_filename = (char *)0;
+	char *file_chooser_dir = (char *)0;
+	GtkFileChooser *chooser = NULL;
+	GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+	gint res = 0;
+	char *svgfilename = NULL;
+	FILE *fstream = NULL;
+	int mymaxx = 0;
+	int mymaxy = 0;
+	int saved_vxmin = 0;
+	int saved_vymin = 0;
+	cairo_surface_t *surface = NULL;
+	cairo_t *crp = NULL;
+
+	/* nothing todo if there is no layout */
+	if (validdata == 0) {
+		return;
+	}
+
+	if (menuitem) {
+	}
+	if (user_data) {
+	}
+
+	dialog = gtk_file_chooser_dialog_new("Save As SVG Image",
+					     /* parent_window */ NULL,
+					     action, "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
+
+	chooser = GTK_FILE_CHOOSER(dialog);
+
+	/* change to last used dir if any */
+	if (lastsavedir) {
+		gtk_file_chooser_set_current_folder(chooser, lastsavedir);
+	}
+
+	/* ask to override existing */
+	gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
+
+	/* get the filename */
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	res = gtk_dialog_run(GTK_DIALOG(dialog));
+
+	if (res == GTK_RESPONSE_ACCEPT) {
+		file_chooser_filename = gtk_file_chooser_get_filename(chooser);
+		file_chooser_dir = gtk_file_chooser_get_current_folder(chooser);
+	} else {
+		/* cancel button */
+		(void)gtk_widget_destroy(dialog);
+		return;
+	}
+
+	/* update last-used-dir */
+	if (file_chooser_dir) {
+		if (lastsavedir) {
+			lastsavedir = dp_free(lastsavedir);
+			if (lastsavedir) {
+			}
+		}
+		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+		strcpy(lastsavedir, file_chooser_dir);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_dir);
+	}
+
+	/* */
+	(void)gtk_widget_destroy(dialog);
+
+	/* */
+	if (file_chooser_filename) {
+		svgfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+		strcpy(svgfilename, file_chooser_filename);
+		/* not dp_free() because gtk allocated */
+		g_free(file_chooser_filename);
+	} else {
+		/* no filename */
+		return;
+	}
+
+	errno = 0;
+	fstream = fopen(svgfilename, "wb");
+
+	/* check if open */
+	if (fstream == NULL) {
+		edialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_CLOSE,
+						 "Cannot open file %s for writing (%s)", svgfilename, g_strerror(errno));
+		gtk_dialog_run(GTK_DIALOG(edialog));
+		gtk_widget_destroy(edialog);
+		svgfilename = dp_free(svgfilename);
+		if (svgfilename) {
+		}
+		return;
+	}
+
+	/* write the svg image data */
+
+	/* save current gui settings */
+	saved_vxmin = vxmin;
+	saved_vymin = vymin;
+
+	/* output whole drawing with a small border, then edge line at end is in drawing */
+	vxmin = 0;
+	vymin = 0;
+	mymaxx = (int)((maxx + xspacing) * /* 1.0 */ zfactor);
+	mymaxy = (int)((maxy + yspacing) * /* 1.0 */ zfactor);
+
+	surface = cairo_svg_surface_create(svgfilename, mymaxx, mymaxy);
+
+	/* */
+	crp = cairo_create(surface);
+
+	/* fill drawing background with background color */
+	cairo_set_source_rgb(crp, bgcr / 255.0, bgcg / 255.0, bgcb / 255.0);
+
+	/* select whole drawing to fill wth background color */
+	cairo_rectangle(crp, 0, 0, mymaxx, mymaxy);
+
+	cairo_fill(crp);
+
+	/* use zoom slider drawing scale */
+	cairo_scale(crp, /*1.0 */ zfactor, /*1.0 */ zfactor);
+
+	on_top_level_window_drawingarea1_expose_event_edges(crp);
+	on_top_level_window_drawingarea1_expose_event_nodes(crp);
+
+	cairo_destroy(crp);
+	cairo_surface_destroy(surface);
+
+	/* restore screen (x,y) min */
+	vxmin = saved_vxmin;
+	vymin = saved_vymin;
+
+	fclose(fstream);
+	svgfilename = dp_free(svgfilename);
+	if (svgfilename) {
+	}
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* generate the file */
+static void save2_response_cb_fn(char *diafilename, char *binputfilename)
+{
+	FILE *fstream = NULL;
+	GtkWidget *dialog = NULL;
+
+	errno = 0;
+
+	fstream = fopen(diafilename, "wb");
+
+	/* check if open */
+	if (fstream == NULL) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", diafilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		return;
+	}
+
+	/* write the dia diagram */
+	graph2dia(maingraph, fstream);
+
+	fclose(fstream);
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void save2_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bbbname = NULL;
+
+	/* this allows to select multiple files at once and generate all output files with same data */
+	/* the uri allow to save to url as on used the internet */
+
+	if (response_id == GTK_RESPONSE_OK && 1 /* for testing */ ) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		/* this causes crash only at save at the free */
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						if (yydebug || 0) {
+							g_print("%s(): selected file %d with name %s\n", __func__, i, uri);
+						}
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastsavedir) {
+									lastsavedir = dp_free(lastsavedir);
+									if (lastsavedir) {
+									}
+								}
+								lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastsavedir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+								bbbname = g_file_get_basename(file);
+								/* write the file */
+								save2_response_cb_fn(file_chooser_filename, bbbname);
+								if (bbbname) {
+									g_free(bbbname);
+									bbbname = NULL;
+								}
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							/* there could have been a error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): save dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* save dia xml */
+static void save2_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* nothing todo if there is no layout */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_SAVE, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Save dia xml file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Save"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(save2_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "dia");
+	gtk_file_filter_add_pattern(filter, "*.dia");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastsavedir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastsavedir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+	dialog = NULL;
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* save as dia xml diagram */
 static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -3647,7 +6613,9 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastsavedir) {
-			dp_free(lastsavedir);
+			lastsavedir = dp_free(lastsavedir);
+			if (lastsavedir) {
+			}
 		}
 		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastsavedir, file_chooser_dir);
@@ -3681,7 +6649,9 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 						 "Cannot open file %s for writing (%s)", diafilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(diafilename);
+		diafilename = dp_free(diafilename);
+		if (diafilename) {
+		}
 		return;
 	}
 
@@ -3689,10 +6659,13 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
 	graph2dia(maingraph, fstream);
 
 	fclose(fstream);
-	dp_free(diafilename);
-
+	diafilename = dp_free(diafilename);
+	if (diafilename) {
+	}
 	return;
 }
+
+#endif
 
 /* save as jgf json diagram json jgf version 2.1
 {
@@ -3834,6 +6807,218 @@ static void on_top_level_window_dia1_activate(GtkMenuItem * menuitem, gpointer u
   }
 }
 */
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* generate the file */
+static void save3_response_cb_fn(char *jgffilename, char *binputfilename)
+{
+	FILE *fstream = NULL;
+	GtkWidget *dialog = NULL;
+
+	errno = 0;
+
+	fstream = fopen(jgffilename, "wb");
+
+	/* check if open */
+	if (fstream == NULL) {
+		dialog = gtk_message_dialog_new(GTK_WINDOW(mainwindow1),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "Cannot open file %s", jgffilename);
+		gtk_widget_show(dialog);
+		g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(gtk_window_destroy), NULL);
+		return;
+	}
+
+	/* write the jgf json */
+	graph2jgf(maingraph, fstream);
+
+	fclose(fstream);
+
+	return;
+}
+
+/* run dialog and set bool done to TRUE if ready */
+static void save3_response_cb(GtkDialog * dialog, int response_id, gpointer data)
+{
+	gboolean *done = data;	/* bool to set is passed on at call */
+	GListModel *files = NULL;
+	guint i = 0;
+	guint n = 0;
+	GFile *file = NULL;
+	GFile *folder = NULL;
+	char *uri = NULL;
+	char *file_chooser_dir = NULL;
+	char *inputfilename = NULL;
+	char *file_chooser_filename = NULL;
+	char *bbbname = NULL;
+
+	/* this allows to select multiple files at once and generate all output files with same data */
+	/* the uri allow to save to url as on used the internet */
+
+	if (response_id == GTK_RESPONSE_OK && 1 /* for testing */ ) {
+		/* scan the list with selected files */
+		files = gtk_file_chooser_get_files(GTK_FILE_CHOOSER(dialog));
+		n = g_list_model_get_n_items(files);
+
+		/* this causes crash only at save at the free */
+		for (i = 0; i < n; i++) {
+			file = g_list_model_get_item(files, i);
+			uri = g_file_get_uri(file);
+			/* option here
+			 * the uri is like file:///bin/true
+			 * this allows for network uri
+			 * as https://graphviewer.nl/data/example.dot
+			 */
+			if (uri == NULL) {
+				g_print("%s(): file %d has nil name\n", __func__, i);
+			} else {
+				if (strlen(uri) == 0) {
+					g_print("%s(): file %d has empty name \"\"\n", __func__, i);
+				} else {
+					if (i != 0) {
+						g_print("%s(): skipped file %d with name %s\n", __func__, i, uri);
+					} else {
+						if (yydebug || 0) {
+							g_print("%s(): selected file %d with name %s\n", __func__, i, uri);
+						}
+						/* this is the first file to read 
+						 * uri is file:///bin/foo
+						 * g_file_get_parse_name(file) is /bin/foo
+						 * g_file_get_basename(file) is foo
+						 * g_file_get_path(file) is /bin/foo
+						 */
+						/* update directory of chosen file */
+						folder = gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(dialog));
+						if (folder) {
+							file_chooser_dir = g_file_get_parse_name(folder);
+							if (file_chooser_dir) {
+								if (lastsavedir) {
+									lastsavedir = dp_free(lastsavedir);
+									if (lastsavedir) {
+									}
+								}
+								lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
+								strcpy(lastsavedir, file_chooser_dir);
+								g_free(file_chooser_dir);
+								file_chooser_dir = NULL;
+							}
+							g_object_unref(folder);
+						}
+						/* copy filename */
+						file_chooser_filename = g_file_get_parse_name(file);
+						if (file_chooser_filename) {
+							if (strlen(file_chooser_filename)) {
+								inputfilename = dp_calloc(1, (strlen(file_chooser_filename) + 1));
+								strcpy(inputfilename, file_chooser_filename);
+								bbbname = g_file_get_basename(file);
+								/* write the file */
+								save3_response_cb_fn(file_chooser_filename, bbbname);
+								if (bbbname) {
+									g_free(bbbname);
+									bbbname = NULL;
+								}
+							} else {
+								g_print("%s(): empty filename\n", __func__);
+							}
+							/* there could have been a error */
+							g_free(file_chooser_filename);
+							file_chooser_filename = NULL;
+						}
+						/* print the derived filenames */
+						if (yydebug || 0) {
+							g_print("%s(): %s %s %s %s %s\n", __func__, g_file_get_parse_name(file),
+								g_file_get_basename(file), uri, g_file_get_path(file),
+								g_file_get_parse_name(folder));
+						}
+					}
+				}
+				g_free(uri);
+				uri = NULL;
+			}
+			g_object_unref(file);
+		}
+		g_object_unref(files);
+	} else {
+		/* no file selected */
+		if (yydebug || 0) {
+			g_print("%s(): save dialog was closed\n", __func__);
+		}
+	}
+
+	/* inicate this dialog is finished in passed on var */
+	*done = TRUE;
+
+	g_main_context_wakeup(NULL);
+
+	return;
+}
+
+/* save json jgf */
+static void save3_activated(GSimpleAction * action, GVariant * parameter, gpointer user_data)
+{
+	gboolean multiple = FALSE;	/* if TRUE multiple files can be selected as extended feature */
+	GtkWidget *dialog = NULL;
+	GtkFileFilter *filter = NULL;
+	gboolean done = FALSE;	/* indicator dialog is finished */
+
+	/* nothing todo if there is no layout */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* see the testcase in gtk-4 testfilechooser.c */
+
+	dialog = g_object_new(GTK_TYPE_FILE_CHOOSER_DIALOG,
+			      "action", GTK_FILE_CHOOSER_ACTION_SAVE, "select-multiple", multiple, NULL);
+
+	gtk_window_set_title(GTK_WINDOW(dialog), "Save json jgf file");
+	gtk_dialog_add_buttons(GTK_DIALOG(dialog), ("_Cancel"), GTK_RESPONSE_CANCEL, ("_Save"), GTK_RESPONSE_OK, NULL);
+
+	gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_OK);
+
+	/* the callback will set  bool done to TRUE if ready */
+	g_signal_connect(G_OBJECT(dialog), "response", G_CALLBACK(save3_response_cb), (gpointer) & done);
+
+	/* Filters */
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All Files");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "jgf");
+	gtk_file_filter_add_pattern(filter, "*.jgf");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "json");
+	gtk_file_filter_add_pattern(filter, "*.json");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+
+	if (lastsavedir) {
+		set_current_folder(GTK_FILE_CHOOSER(dialog), lastsavedir);
+	}
+
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
+	gtk_widget_show(dialog);
+
+	/* run dialog and wait until it is ready */
+	while (done == FALSE) {
+		g_main_context_iteration(NULL, TRUE);
+	}
+
+	gtk_window_destroy(GTK_WINDOW(dialog));
+	dialog = NULL;
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer user_data)
 {
 	GtkWidget *dialog = (GtkWidget *) 0;
@@ -3886,7 +7071,9 @@ static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer u
 	/* update last-used-dir */
 	if (file_chooser_dir) {
 		if (lastsavedir) {
-			dp_free(lastsavedir);
+			lastsavedir = dp_free(lastsavedir);
+			if (lastsavedir) {
+			}
 		}
 		lastsavedir = dp_calloc(1, (strlen(file_chooser_dir) + 1));
 		strcpy(lastsavedir, file_chooser_dir);
@@ -3920,7 +7107,9 @@ static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer u
 						 "Cannot open file %s for writing (%s)", jgffilename, g_strerror(errno));
 		gtk_dialog_run(GTK_DIALOG(edialog));
 		gtk_widget_destroy(edialog);
-		dp_free(jgffilename);
+		jgffilename = dp_free(jgffilename);
+		if (jgffilename) {
+		}
 		return;
 	}
 
@@ -3928,10 +7117,40 @@ static void on_top_level_window_jgf1_activate(GtkMenuItem * menuitem, gpointer u
 	graph2jgf(maingraph, fstream);
 
 	fclose(fstream);
-	dp_free(jgffilename);
-
+	jgffilename = dp_free(jgffilename);
+	if (jgffilename) {
+	}
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+static void on_top_level_window_quit1_activate(GSimpleAction * action, GVariant * paramter, gpointer user_data)
+{
+
+	do_clear_all(0);
+
+	if (lastopendir) {
+		lastopendir = dp_free(lastopendir);
+		if (lastopendir) {
+		}
+	}
+	if (lastsavedir) {
+		lastsavedir = dp_free(lastsavedir);
+		if (lastsavedir) {
+		}
+	}
+
+	g_application_quit(G_APPLICATION(user_data));
+	/* never reached */
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* 'quit' in 'file' menu activated - sub menu in menu items in menu bar in vbox1 */
 static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer user_data)
@@ -3943,6 +7162,41 @@ static void on_top_level_window_quit1_activate(GtkMenuItem * menuitem, gpointer 
 	top_level_window_main_quit();
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* left slider zoom scale */
+static void on_vscale1_changed(GtkAdjustment * adj, gpointer data)
+{
+	gdouble val0 = 0.0;
+	int val1 = 0;
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	val0 = gtk_adjustment_get_value(adj);
+	val1 = (int)val0;
+
+	zfactor = exp((double)(3 * (val1 - 50)) / (double)50);
+
+	if (option_gdebug > 1 || 0) {
+		printf("%s(): zoomslider=%d zoomfactor=%f\n", __func__, val1, zfactor);
+		fflush(stdout);
+	}
+
+	/* do a re-draw */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* left slider zoom factor */
 static void on_vscale1_changed(GtkAdjustment * adj)
@@ -3973,6 +7227,40 @@ static void on_vscale1_changed(GtkAdjustment * adj)
 	return;
 }
 
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* right slider y offset 0...100% */
+static void on_vscale2_changed(GtkAdjustment * adj, gpointer data)
+{
+	gdouble val = 0.0;
+	if (adj) {
+	}
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	val = gtk_adjustment_get_value(adj);
+	vymin = (int)((val * maxy) / 100);
+
+	if (option_gdebug > 1) {
+		printf("%s(): yslider=%d vymin=%d (maxy=%d)\n", __func__, (int)val, vymin, maxy);
+		fflush(stdout);
+	}
+
+	/* do a re-draw */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 /* right slider y offset 0...100% */
 static void on_vscale2_changed(GtkAdjustment * adj)
 {
@@ -3998,6 +7286,40 @@ static void on_vscale2_changed(GtkAdjustment * adj)
 
 	return;
 }
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* bottom slider x offset 0...100% */
+static void on_hscale1_changed(GtkAdjustment * adj, gpointer data)
+{
+	gdouble val = 0.0;
+	if (adj) {
+	}
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	val = gtk_adjustment_get_value(adj);
+	vxmin = (int)((val * maxx) / 100);
+
+	if (option_gdebug > 1) {
+		printf("%s(): xslider=%d vxmin=%d (maxx=%d)\n", __func__, (int)val, vxmin, maxx);
+		fflush(stdout);
+	}
+
+	/* do a re-draw */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* bottom slider x offset 0...100% */
 static void on_hscale1_changed(GtkAdjustment * adj)
@@ -4025,6 +7347,8 @@ static void on_hscale1_changed(GtkAdjustment * adj)
 	return;
 }
 
+#endif
+
 /* draw arrow, option to allow multiple arrow types todo
  * arrow comes from (start_x,start_y) to (end_x,end_y)
  * size is optional, if zero a default size is used
@@ -4042,9 +7366,7 @@ static void drarrow(cairo_t * crp, int start_x, int start_y, int end_x, int end_
 	if (yydebug || 0) {
 		printf("%s(): arrow at (%d,%d) coming from (%d,%d) size %f\n", __func__, end_x, end_y, start_x, start_y, size);
 	}
-
-	/* if size is specified, use it, otherwise use default size */
-	if (size == 0) {
+	/* if size is specified, use it, otherwise use default size */ if (size == 0) {
 		arrow_lenght = 8.0;
 	} else {
 		arrow_lenght = size;
@@ -4110,7 +7432,6 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_record_r(cairo_t
 		for (i = 0; i < info->nparts; i++) {
 			on_top_level_window_drawingarea1_expose_event_nodes_record_r(crp, node, info->parts[i]);
 		}
-
 	} else {
 		/* has-data */
 
@@ -4226,9 +7547,10 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_record(cairo_t *
 	return;
 }
 
-/* html 1 item node drawing */
-static void on_top_level_window_drawingarea1_expose_event_nodes_html1item(cairo_t * crp, struct gml_node
-									  *node, struct gml_hitem *item, int xplus, int yplus)
+/* html 1 item node drawing */ static void on_top_level_window_drawingarea1_expose_event_nodes_html1item(cairo_t * crp, struct gml_node
+													 *node,
+													 struct gml_hitem *item,
+													 int xplus, int yplus)
 {
 	PangoLayout *layout = NULL;
 	PangoFontDescription *desc = NULL;
@@ -4412,18 +7734,15 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_html1item(cairo_
 
 		flen = strlen(spans) + strlen(spane) + strlen(item->otext) + 1;
 		fontstr = dp_calloc(1, flen);
-		if (fontstr == NULL) {
-			/* shouldnothappen */
-			g_object_unref(G_OBJECT(layout));
-			return;
-		}
 		/* create new full format string */
 		strcpy(fontstr, spans);
 		strcat(fontstr, item->otext);
 		strcat(fontstr, spane);
 		/* save for re-use */
 		item->fontstr = uniqstr(fontstr);
-		dp_free(fontstr);
+		fontstr = dp_free(fontstr);
+		if (fontstr) {
+		}
 		fontstr = item->fontstr;
 	}
 
@@ -4506,7 +7825,6 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_htmlitems(cairo_
 		/* shouldnothappen */
 		return;
 	}
-
 	if (yydebug || 0) {
 		printf("%s(): node=\"%s\" xyplus=(%d,%d)\n", __func__, node->name, xplus, yplus);
 	}
@@ -4565,7 +7883,6 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_1htmltable(cairo
 		/* shouldnothappen */
 		return;
 	}
-
 	if (tlptr->titem == NULL) {
 		printf("%s(): nil titem\n", __func__);
 		/* shouldnothappen */
@@ -4731,9 +8048,7 @@ static void on_top_level_window_drawingarea1_expose_event_nodes_htmltables(cairo
 		/* shouldnothappen */
 		return;
 	}
-
-	/* */
-	tlptr = node->hlabel->tl;
+	/* */ tlptr = node->hlabel->tl;
 
 	while (tlptr) {
 		on_top_level_window_drawingarea1_expose_event_nodes_1htmltable(crp, node, tlptr);
@@ -5026,7 +8341,6 @@ static int r2d_finx(struct gml_edge *edge)
 
 	if (tn) {
 	}
-
 	if (edge->vedge) {
 		ret = (sn->finx + (sn->bbx / 2));
 		return (ret);
@@ -5062,7 +8376,6 @@ static int d2r_tnx1(struct gml_edge *edge)
 
 	if (sn) {
 	}
-
 	if (edge->vedge) {
 		ret = (tn->finx + (tn->bbx / 2));
 		return (ret);
@@ -5574,7 +8887,7 @@ static void on_top_level_window_drawingarea1_expose_event_edges(cairo_t * crp)
 	return;
 }
 
-#if GTK_HAVE_API_VERSION_2 == 1
+#if (GTK_HAVE_API_VERSION_2 == 1)
 /* redraw drawing area */
 static gboolean on_top_level_window_drawingarea1_expose_event(GtkWidget * widget, GdkEventExpose * event, gpointer user_data)
 {
@@ -5639,7 +8952,60 @@ static gboolean on_top_level_window_drawingarea1_expose_event(GtkWidget * widget
 }
 #endif
 
-#if GTK_HAVE_API_VERSION_3
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+/* draw on screen */
+static void draw_function_for_gtk4(GtkDrawingArea * area, cairo_t * crdraw, int width, int height, gpointer user_data)
+{
+
+	if (area) {
+	}
+	if (user_data) {
+	}
+
+	if (option_gdebug > 1 || 0) {
+		printf("%s(): drawing area size is (%d,%d)\n", __func__, width, height);
+		fflush(stdout);
+	}
+
+	/* save a copy of current size */
+	drawing_area_xsize = width;
+	drawing_area_ysize = height;
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		/* fill drawing area with a light-grey color */
+		cairo_set_source_rgb(crdraw, altr / 255.0, altg / 255.0, altb / 255.0);
+		cairo_rectangle(crdraw, 0, 0, drawing_area_xsize, drawing_area_ysize);
+		cairo_fill(crdraw);
+		cairo_stroke(crdraw);
+		/* no cairo_destroy(crdraw); needed */
+		/* no data */
+		return;
+	}
+
+	/* set current background color parsed from graph data */
+	cairo_set_source_rgb(crdraw, bgcr / 255.0, bgcg / 255.0, bgcb / 255.0);
+
+	/* select whole screen to fill with background color */
+	cairo_rectangle(crdraw, 0, 0, drawing_area_xsize, drawing_area_ysize);
+	cairo_fill(crdraw);
+	cairo_stroke(crdraw);
+
+	/* use zoom slider drawing scale */
+	cairo_scale(crdraw, zfactor, zfactor);
+
+	on_top_level_window_drawingarea1_expose_event_nodes(crdraw);
+	on_top_level_window_drawingarea1_expose_event_edges(crdraw);
+
+	/* no cairo_destroy(crdraw); needed */
+
+	return;
+}
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
 /* redraw drawing area */
 static gboolean on_top_level_window_drawingarea1_draw_event(GtkWidget * widget, cairo_t * crdraw, gpointer user_data)
 {
@@ -5668,6 +9034,7 @@ static gboolean on_top_level_window_drawingarea1_draw_event(GtkWidget * widget, 
 	/* save a copy of current size */
 	drawing_area_xsize = w;
 	drawing_area_ysize = h;
+
 	/* check if there is node data to draw */
 	if (validdata == 0) {
 		/* white fill drawing area */
@@ -5691,6 +9058,7 @@ static gboolean on_top_level_window_drawingarea1_draw_event(GtkWidget * widget, 
 	on_top_level_window_drawingarea1_expose_event_nodes(crdraw);
 	on_top_level_window_drawingarea1_expose_event_edges(crdraw);
 	cairo_destroy(crp);
+
 	return (FALSE);
 }
 #endif
@@ -5739,71 +9107,37 @@ void update_status_text_cross(char *text)
 	/* does not work as expected */
 	return;
 	update_status_text(text);
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 	while (gtk_main_iteration()) {
 		/* this should update the status text */ ;
 	}
-	return;
-}
 
-/* changed type */
-static void pos_changed(GtkWidget * widget, gpointer spinbutton)
-{
-	gfloat val = 0.0;
-
-	if (widget) {
-	}
-	if (spinbutton) {
-	}
-
-	/* check if there is node data to draw */
-	if (validdata == 0) {
-		return;
-	}
-
-	/* at mirrory option force to keep postype 1 because type 2 does not work anymore. */
-	if (option_mirrory) {
-		/* message why pos value does not changes */
-		printf("%s(): because mirror option is active pos mode is fixed to 1 or turn off mirror option\n", __func__);
-		fflush(stdout);
-		postype = 1;
-		/* set the value for the new pos type */
-		gtk_spin_button_set_value((GtkSpinButton *) posbutton, postype);
-		return;
-	}
-
-	/* get the value for the new pos type */
-	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
-
-	/* set new pos type, 1,2,3 */
-	postype = (int)val;
-
-	/* re-calc positions */
-	improve_positions(maingraph);
-
-	/* final (x,y) positioning of nodes/edges */
-	finalxy(maingraph);
-
-	/* calculate edge connections */
-	edgeconnections(maingraph);
-
-	/* update status text */
-	update_status_text(NULL);
-
-	/* only a re-draw needed */
-	gtk_widget_queue_draw(drawingarea1);
+#endif
 
 	return;
 }
 
 /* checkbox 1 is 'splines' */
-static void check1_toggle(GtkWidget * widget, gpointer window)
+static void check1_toggle(GtkWidget * widget, gpointer arg)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
-	if (window) {
+	if (arg) {
 	}
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
+	if (status == TRUE) {
 		option_splines = 1;
 	} else {
 		option_splines = 0;
@@ -5816,12 +9150,22 @@ static void check1_toggle(GtkWidget * widget, gpointer window)
 /* checkbox 2 is 'dummy's' draw dummy nodes */
 static void dummy1_toggle(GtkWidget * widget, gpointer window)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
 	if (window) {
 	}
+
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
+	if (status == TRUE) {
 		drawdummy = 1;
 	} else {
 		drawdummy = 0;
@@ -5834,6 +9178,7 @@ static void dummy1_toggle(GtkWidget * widget, gpointer window)
 /* checkbox 5 is switch edge labels */
 static void elabel1_toggle(GtkWidget * widget, gpointer window)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
 	if (window) {
@@ -5842,8 +9187,17 @@ static void elabel1_toggle(GtkWidget * widget, gpointer window)
 	if (option_labels == 0) {
 		return;
 	}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+	if (status == TRUE) {
 		option_edgelabels = 1;
 	} else {
 		option_edgelabels = 0;
@@ -5866,12 +9220,22 @@ static void elabel1_toggle(GtkWidget * widget, gpointer window)
 /* checkbox 6 is switch labels */
 static void label1_toggle(GtkWidget * widget, gpointer window)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
 	if (window) {
 	}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+	if (status == TRUE) {
 		option_labels = 1;
 	} else {
 		option_labels = 0;
@@ -5882,7 +9246,15 @@ static void label1_toggle(GtkWidget * widget, gpointer window)
 	}
 	/* force edgelabels off */
 	option_edgelabels = 0;
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	gtk_check_button_set_active(GTK_CHECK_BUTTON(elabel1), FALSE);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(elabel1), FALSE);
+#endif
+
 	/* do re-layout */
 	do_relayout_all(maingraph);
 	/* now a re-draw needed */
@@ -5893,12 +9265,22 @@ static void label1_toggle(GtkWidget * widget, gpointer window)
 /* checkbox 7 is node names instead of labels */
 static void nnames1_toggle(GtkWidget * widget, gpointer window)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
 	if (window) {
 	}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+	if (status == TRUE) {
 		option_nnames = 1;
 	} else {
 		option_nnames = 0;
@@ -5917,12 +9299,22 @@ static void nnames1_toggle(GtkWidget * widget, gpointer window)
 /* checkbox 8 is mirror in y direction */
 static void mirrory1_toggle(GtkWidget * widget, gpointer window)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
 	if (window) {
 	}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+	if (status == TRUE) {
 		option_mirrory = 1;
 	} else {
 		option_mirrory = 0;
@@ -5945,12 +9337,22 @@ static void mirrory1_toggle(GtkWidget * widget, gpointer window)
 /* checkbox 7 is switch popup labels */
 static void popup1_toggle(GtkWidget * widget, gpointer window)
 {
+	gboolean status = FALSE;
 	if (widget) {
 	}
 	if (window) {
 	}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	status = gtk_check_button_get_active(GTK_CHECK_BUTTON(widget));
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+	status = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+#endif
+
 	/* toggle the splines option */
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))) {
+	if (status == TRUE) {
 		option_popup = 1;
 	} else {
 		option_popup = 0;
@@ -5963,16 +9365,103 @@ static void popup1_toggle(GtkWidget * widget, gpointer window)
 	return;
 }
 
+/* changed type */
+static void pos_changed(GtkWidget * widget, gpointer spinbutton)
+{
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	GtkSpinButton *spin = NULL;
+#endif
+	gfloat val = 0.0;
+
+	if (widget) {
+	}
+	if (spinbutton) {
+	}
+
+	/* check if there is node data to draw */
+	if (validdata == 0) {
+		return;
+	}
+
+	/* at mirrory option force to keep postype 1 because type 2 does not work anymore. */
+	if (option_mirrory) {
+		/* message why pos value does not changes */
+		printf("%s(): because mirror option is active pos mode is fixed to 1 or turn off mirror option\n", __func__);
+		fflush(stdout);
+		postype = 1;
+#if (GTK_HAVE_API_VERSION_4 == 1)
+		spin = GTK_SPIN_BUTTON(widget);
+		gtk_spin_button_set_value(spin, postype);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
+		/* set the value for the new pos type */
+		gtk_spin_button_set_value((GtkSpinButton *) posbutton, postype);
+
+#endif
+
+		return;
+	}
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	spin = GTK_SPIN_BUTTON(widget);
+
+	val = gtk_spin_button_get_value(spin);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
+	/* get the value for the new pos type */
+	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+#endif
+
+	/* set new pos type, 1,2,3 */
+	postype = (int)val;
+
+	/* re-calc positions */
+	improve_positions(maingraph);
+
+	/* final (x,y) positioning of nodes/edges */
+	finalxy(maingraph);
+
+	/* calculate edge connections */
+	edgeconnections(maingraph);
+
+	/* update status text */
+	update_status_text(NULL);
+
+	/* only a re-draw needed */
+	gtk_widget_queue_draw(drawingarea1);
+
+	return;
+}
+
+/* stretch in x direction */
 static void xspin_changed(GtkWidget * widget, gpointer spinbutton)
 {
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	GtkSpinButton *spin = NULL;
+#endif
 	gfloat val = 0.0;
 	if (widget) {
 	}
 	if (spinbutton) {
 	}
 
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	spin = GTK_SPIN_BUTTON(widget);
+
+	val = gtk_spin_button_get_value(spin);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 	/* get the value for the new drawing spreading factor */
 	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+#endif
 
 	/* set new spreading factor */
 	xspacing = (int)val;
@@ -6002,6 +9491,9 @@ static void xspin_changed(GtkWidget * widget, gpointer spinbutton)
 
 static void yspin_changed(GtkWidget * widget, gpointer spinbutton)
 {
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	GtkSpinButton *spin = NULL;
+#endif
 	gfloat val = 0.0;
 
 	if (widget) {
@@ -6009,8 +9501,18 @@ static void yspin_changed(GtkWidget * widget, gpointer spinbutton)
 	if (spinbutton) {
 	}
 
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	spin = GTK_SPIN_BUTTON(widget);
+
+	val = gtk_spin_button_get_value(spin);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 	/* get the value for the new drawing spreading factor */
 	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+#endif
 
 	/* set new spreading factor */
 	yspacing = (int)val;
@@ -6041,6 +9543,9 @@ static void yspin_changed(GtkWidget * widget, gpointer spinbutton)
 /* changed type */
 static void bary_changed(GtkWidget * widget, gpointer spinbutton)
 {
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	GtkSpinButton *spin = NULL;
+#endif
 	gfloat val = 0.0;
 
 	if (widget) {
@@ -6048,8 +9553,18 @@ static void bary_changed(GtkWidget * widget, gpointer spinbutton)
 	if (spinbutton) {
 	}
 
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	spin = GTK_SPIN_BUTTON(widget);
+
+	val = gtk_spin_button_get_value(spin);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 	/* get the value for the new bary type */
 	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+#endif
 
 	/* set new bary type, 1,2,3 or 4 */
 	barytype = (int)val;
@@ -6071,6 +9586,9 @@ static void bary_changed(GtkWidget * widget, gpointer spinbutton)
 /* changed type */
 static void rank_changed(GtkWidget * widget, gpointer spinbutton)
 {
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	GtkSpinButton *spin = NULL;
+#endif
 	gfloat val = 0.0;
 
 	if (widget) {
@@ -6078,8 +9596,18 @@ static void rank_changed(GtkWidget * widget, gpointer spinbutton)
 	if (spinbutton) {
 	}
 
+#if (GTK_HAVE_API_VERSION_4 == 1)
+	spin = GTK_SPIN_BUTTON(widget);
+
+	val = gtk_spin_button_get_value(spin);
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 	/* get the value for the new bary type */
 	val = gtk_spin_button_get_value((GtkSpinButton *) spinbutton);
+
+#endif
 
 	/* set new rank type, 1,2,3 or 4 */
 	ranktype = (int)val;
@@ -6098,6 +9626,8 @@ static void rank_changed(GtkWidget * widget, gpointer spinbutton)
 	return;
 }
 
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
 /* fit drawing in window */
 static void dofit(void)
 {
@@ -6111,7 +9641,74 @@ static void dofit(void)
 	if (maxx == 0) {
 		maxx = 1;
 	}
+	if (maxy == 0) {
+		maxy = 1;
+	}
 
+	xzscale = (double)(1000 * drawing_area_xsize / maxx);
+	yzscale = (double)(1000 * drawing_area_ysize / maxy);
+
+	xzscale = xzscale / 1000.0;
+	yzscale = yzscale / 1000.0;
+
+	if ((xzscale - yzscale) > 0) {
+		newzscale = yzscale;
+	} else {
+		newzscale = xzscale;
+	}
+
+	if (option_gdebug > 1) {
+		printf
+		    ("%s(): dval=%f fit zoom to %f from xscale=%f and yscale=%f drawingarea=(%d,%d) maxy=(%d,%d)\n",
+		     __func__, dval, newzscale, yzscale, xzscale, drawing_area_xsize, drawing_area_ysize, maxx, maxy);
+	}
+
+	/* old dval = log ((newzscale * (double) 50.0) / 3.0) - 50.0; */
+	dval = log(newzscale) / 3.0;
+	dval = (dval * 50.0);
+	dval = dval + 50.0;
+	val = (int)dval;
+	if (val < 0) {
+		val = 0;
+	}
+
+	if (val > 100) {
+		val = 100;
+	}
+
+	zfactor = exp((double)(3 * (val - 50)) / (double)50);
+	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale1), val);
+
+	if (option_gdebug > 1) {
+		printf("%s(): new slider value is %d (dval=%f) zfactor=%f\n", "dofit", val, dval, zfactor);
+	}
+
+	/* reset v xy min */
+	vxmin = 0;
+	vymin = 0;
+
+	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjvscale2), 0);
+	gtk_adjustment_set_value(GTK_ADJUSTMENT(adjhscale1), 0);
+
+	return;
+}
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
+/* fit drawing in window */
+static void dofit(void)
+{
+	double xzscale = 1.0;
+	double yzscale = 1.0;
+	double newzscale = 1.0;
+	double dval = 1.0;
+	int val = 0;
+
+	/* if no maxx, maxy is set */
+	if (maxx == 0) {
+		maxx = 1;
+	}
 	if (maxy == 0) {
 		maxy = 1;
 	}
@@ -6164,6 +9761,8 @@ static void dofit(void)
 	return;
 }
 
+#endif
+
 /* size of fields */
 static struct gml_p *static_maingtk_textsizes1sz(struct gml_rl *info)
 {
@@ -6172,10 +9771,6 @@ static struct gml_p *static_maingtk_textsizes1sz(struct gml_rl *info)
 	int i = 0;
 
 	data = dp_calloc(1, sizeof(struct gml_p));
-
-	if (info == NULL) {
-		return (data);
-	}
 
 	if (info->hd) {
 		data->x = info->txsize;
@@ -6194,7 +9789,9 @@ static struct gml_p *static_maingtk_textsizes1sz(struct gml_rl *info)
 				}
 				data->y = data->y + dsub->y;
 			}
-			dp_free(dsub);
+			dsub = dp_free(dsub);
+			if (dsub) {
+			}
 		}
 	}
 
@@ -6224,7 +9821,6 @@ static void static_maingtk_textsizes1eq(struct gml_rl *info)
 	if (info == NULL) {
 		return;
 	}
-
 	if (info->nparts == 0) {
 		if (yydebug || 0) {
 			printf("%s(): skip \"%s\"\n", __func__, info->ulabel);
@@ -6348,9 +9944,7 @@ static void static_maingtk_textsizes1rl(struct gml_rl *info)
 	if (info == NULL) {
 		return;
 	}
-
-	/* check if has data */
-	if (info->hd) {
+	/* check if has data */ if (info->hd) {
 		if (info->txsize == 0 && info->tysize == 0) {
 			if (info->label == NULL) {
 				/* shouldnothappen */
@@ -6392,8 +9986,9 @@ static void static_maingtk_textsizes1rl(struct gml_rl *info)
 					info->ulabel = uniqstr("  ");
 				}
 				info->ulabel = uniqstr(tmpb);
-				dp_free(tmpb);
-				tmpb = NULL;
+				tmpb = dp_free(tmpb);
+				if (tmpb) {
+				}
 				/* calculate the text area */
 				if (surface == NULL) {
 					surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 10, 10);
@@ -6494,7 +10089,6 @@ static void static_maingtk_textsizes2rl(struct gml_rl *info, int count, int xoff
 			    ("%s(%d): xyoff(%d,%d) bbxy(%d,%d) nparts=%d info->bbxy(%d,%d)\n",
 			     __func__, count, xoff, yoff, bbx, bby, info->nparts, info->bbx, info->bby);
 		}
-
 		if (yydebug || 0) {
 			if (info->dir == 0) {
 				sdir = "x-dir";
@@ -6605,7 +10199,6 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 		/* shouldnothappen */
 		return;
 	}
-
 	if (yydebug || 0) {
 		printf("%s(): d is (%d,%d) versus bbxy(%d,%d)\n", __func__, data->x, data->y, node->bbx, node->bby);
 	}
@@ -6624,8 +10217,9 @@ static void static_maingtk_textsizes1n(struct gml_node *node)
 	/* relocate the parts */
 	static_maingtk_textsizes2rl(node->rlabel, 0, 0, 0, node->bbx, node->bby);
 
-	dp_free(data);
-
+	data = dp_free(data);
+	if (data) {
+	}
 	return;
 }
 
@@ -6654,7 +10248,6 @@ static struct gml_p *static_maingtk_textsizes1htmlsz1item(struct gml_hitem *item
 		/* shouldnothappen */
 		return (data);
 	}
-
 	if (item->bitflags.table) {
 		if (yydebug || 0) {
 			printf("%s(): item is a <table>\n", __func__);
@@ -6822,7 +10415,6 @@ static struct gml_p *static_maingtk_textsizes1htmlszitems(struct gml_node *node,
 	if (node == NULL) {
 		return (data);
 	}
-
 	if (info == NULL) {
 		return (data);
 	}
@@ -6862,7 +10454,9 @@ static struct gml_p *static_maingtk_textsizes1htmlszitems(struct gml_node *node,
 				pitem->tysizemin = ditem->y;
 				pitem->txsize = ditem->x;
 				pitem->tysize = ditem->y;
-				dp_free(ditem);
+				ditem = dp_free(ditem);
+				if (ditem) {
+				}
 			}
 		}
 		pi = pi->next;
@@ -7012,14 +10606,14 @@ static struct gml_p *static_maingtk_textsizes1htmlsz1table(struct gml_node *node
 		/* shouldnothappen */
 		return (data);
 	}
-
-	/* first scan the sub <table> data */
-	tlptrsub = titemptr->tl;
+	/* first scan the sub <table> data */ tlptrsub = titemptr->tl;
 
 	while (tlptrsub) {
 		subdata = static_maingtk_textsizes1htmlsz1table(node, tlptrsub);
 		/* todo */
-		dp_free(subdata);
+		subdata = dp_free(subdata);
+		if (subdata) {
+		}
 		tlptrsub = tlptrsub->next;
 	}
 
@@ -7083,7 +10677,9 @@ static struct gml_p *static_maingtk_textsizes1htmlsz1table(struct gml_node *node
 				tdiptr->ysize = di->y;
 
 				/* */
-				dp_free(di);
+				di = dp_free(di);
+				if (di) {
+				}
 				/* next item */
 				ilptr = ilptr->next;
 			}
@@ -7275,8 +10871,9 @@ static struct gml_p *static_maingtk_textsizes1htmlsz1table(struct gml_node *node
 	}
 
 	/* ready with <td> x size data */
-	dp_free(tdsz);
-
+	tdsz = dp_free(tdsz);
+	if (tdsz) {
+	}
 	if (yydebug || 0) {
 		printf("%s(): size (%d,%d) <table> in for node \"%s\"\n", __func__, data->x, data->y, node->name);
 	}
@@ -7299,7 +10896,6 @@ static struct gml_p *static_maingtk_textsizes1htmlsztables(struct gml_node *node
 		/* shouldnothappen */
 		return (data);
 	}
-
 	if (info == NULL) {
 		/* shouldnothappen */
 		return (data);
@@ -7317,7 +10913,9 @@ static struct gml_p *static_maingtk_textsizes1htmlsztables(struct gml_node *node
 		trx = subdata->x;
 		try = subdata->y;
 
-		dp_free(subdata);
+		subdata = dp_free(subdata);
+		if (subdata) {
+		}
 		tlptr = tlptr->next;
 	}
 
@@ -7376,10 +10974,9 @@ static void static_maingtk_textsizes1htmln(struct gml_node *node)
 	if (yydebug || 0) {
 		printf("%s(): size (%d,%d) for node \"%s\"\n", __func__, node->bbx, node->bby, node->name);
 	}
-
-	/* */
-	dp_free(data);
-
+	/* */ data = dp_free(data);
+	if (data) {
+	}
 	return;
 }
 
@@ -7402,9 +10999,6 @@ static char *unesc(char *str)
 		return (uniqstr(str));
 	}
 	buf = dp_calloc(1, (strlen(str) + 1));
-	if (buf == NULL) {
-		return (str);
-	}
 	p = str;
 	q = buf;
 	while (*p) {
@@ -7432,8 +11026,9 @@ static char *unesc(char *str)
 		}
 	}
 	p = uniqstr(buf);
-	dp_free(buf);
-	buf = NULL;
+	buf = dp_free(buf);
+	if (buf) {
+	}
 	return (p);
 }
 
@@ -8046,9 +11641,7 @@ static void finalxy3(struct gml_graph *g)
 
 	if (g) {
 	}
-
-	/* determine max. x pos in use */
-	lnl = maingraph->nodelist;
+	/* determine max. x pos in use */ lnl = maingraph->nodelist;
 	while (lnl) {
 		/* copy abs to fin */
 		lnl->node->finx = lnl->node->absx;
@@ -8081,7 +11674,6 @@ static void finalxy(struct gml_graph *g)
 	if (option_priority) {
 
 	}
-
 	switch (postype) {
 	case 1:
 		finalxy1(g);
@@ -8121,6 +11713,8 @@ static void finalxy(struct gml_graph *g)
 
 	return;
 }
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 /* XPM */
 static const char *data_visualization_1_xpm[] = {
@@ -8296,11 +11890,15 @@ static const char *data_visualization_1_xpm[] = {
 	"                                                                                                    "
 };
 
+#endif
+
 /* show about with ok button */
-static void show_about(GtkWidget * widget, gpointer data)
+static void show_about_bare(void)
 {
 	GtkWidget *dialog = NULL;
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 	GdkPixbuf *xpmdata = NULL;
+#endif
 	int buflen = 0;
 	char *buf = NULL;
 	char *pbuf = NULL;
@@ -8309,15 +11907,14 @@ static void show_about(GtkWidget * widget, gpointer data)
 	    "This program does not have network telemetry or creates files.\n"
 	    "See gml4gtk at sourceforge.net\nemail: mooigraph AT gmail.com\n";
 #ifdef WIN32
-	char *text1 = "Product key: GML4-GTKVE-RSION-74YEA-R2021";
+	/* This is actually a real existing product key. */
+	char *text1 = "Product key: B2X2W-DY9D9-YBP8R-G77WC-QB3QM";
 #else
-	char *text1 = "Product Key: GNU-GPL";
+	char *text1 = "Product Key: GNU-GPL-FREE-SOFT-WARE";
 #endif
-
-	if (widget) {
-	}
-	if (data) {
-	}
+#if (GTK_HAVE_API_VERSION_4== 1)
+	const char *artist[] = { "ILona Hungary", NULL };
+#endif
 
 	buflen = 512;
 
@@ -8325,14 +11922,21 @@ static void show_about(GtkWidget * widget, gpointer data)
 
 	buflen--;
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
 	dialog = gtk_about_dialog_new();
-#if GTK_HAVE_API_VERSION_2 == 1
+
+#endif
+
+#if (GTK_HAVE_API_VERSION_2 == 1)
 	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
 #endif
-#if GTK_HAVE_API_VERSION_3 == 1
+
+#if (GTK_HAVE_API_VERSION_3 == 1)
 	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
 #endif
 
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 	/* todo it seems this is depreciated. */
 	xpmdata = gdk_pixbuf_new_from_xpm_data(data_visualization_1_xpm);
 
@@ -8340,6 +11944,9 @@ static void show_about(GtkWidget * widget, gpointer data)
 
 	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), PACKAGE_VERSION);
 	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "Copyright is GNU GPL Version 3+, see http://www.gnu.org/");
+
+#endif
+
 	snprintf(buf, (buflen), "%sCompiled on %s\n", text0, COMPILE_DATE);
 	pbuf = buf + (int)(strlen(buf));
 	/* */
@@ -8350,22 +11957,71 @@ static void show_about(GtkWidget * widget, gpointer data)
 		 GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION, PANGO_VERSION_STRING, CAIRO_VERSION_STRING);
 	pbuf = buf + (int)(strlen(buf));
 	/* */
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 	snprintf(pbuf, (buflen - (int)(strlen(buf))), "running with gtk %d.%d.%d glib %d.%d.%d pango %s cairo %s\n",
 		 gtk_major_version, gtk_minor_version, gtk_micro_version,
 		 glib_major_version, glib_minor_version, glib_micro_version, pango_version_string(), cairo_version_string());
+#endif
+
+#if (GTK_HAVE_API_VERSION_4 == 1)
+
+	snprintf(pbuf, (buflen - (int)(strlen(buf))), "running with gtk %u.%u.%u glib %d.%d.%d pango %s cairo %s\n",
+		 gtk_get_major_version(), gtk_get_minor_version(), gtk_get_micro_version(),
+		 (int)glib_major_version, (int)glib_minor_version, (int)glib_micro_version, pango_version_string(),
+		 cairo_version_string());
+#endif
 
 	pbuf = buf + (int)(strlen(buf));
 	snprintf(pbuf, (buflen - (int)(strlen(buf))), "running with zlib version %s\n", zlibVersion());
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
 
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), buf);
 	gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
 
 	/* suppress warning */
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+
 	gtk_dialog_run(GTK_DIALOG(dialog));
+
 	gtk_widget_destroy(dialog);
-	dp_free(buf);
+#endif
+
+#if (GTK_HAVE_API_VERSION_4== 1)
+	dialog = gtk_about_dialog_new();
+	gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_STRING);
+	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
+	gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog), PACKAGE_URL);
+	gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(dialog), GTK_LICENSE_GPL_3_0);
+	gtk_about_dialog_set_system_information(GTK_ABOUT_DIALOG(dialog), buf);
+	gtk_about_dialog_set_artists(GTK_ABOUT_DIALOG(dialog), artist);
+
+	/* suppress warning */
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(mainwindow1));
+	gtk_widget_show(dialog);
+#endif
+
+	buf = dp_free(buf);
+
+	if (buf) {
+	}
 	return;
 }
+
+#if (GTK_HAVE_API_VERSION_2 == 1) || (GTK_HAVE_API_VERSION_3 == 1)
+
+/* show about with ok button */
+static void show_about(GtkWidget * widget, gpointer data)
+{
+	if (widget) {
+	}
+	if (data) {
+	}
+	show_about_bare();
+	return;
+}
+
+#endif
 
 /* end */

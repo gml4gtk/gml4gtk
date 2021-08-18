@@ -600,10 +600,10 @@ int yy_flex_debug = 1;
 
 static const flex_int16_t yy_rule_linenum[39] =
     {   0,
-      124,  125,  126,  128,  129,  130,  131,  132,  133,  135,
-      136,  137,  138,  139,  140,  141,  142,  143,  144,  145,
-      146,  148,  149,  150,  151,  152,  153,  155,  229,  235,
-      242,  243,  244,  245,  246,  247,  248,  251
+      125,  126,  127,  129,  130,  131,  132,  133,  134,  136,
+      137,  138,  139,  140,  141,  142,  143,  144,  145,  146,
+      147,  149,  150,  151,  152,  153,  154,  156,  227,  232,
+      238,  243,  256,  260,  263,  266,  269,  274
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -664,9 +664,10 @@ char *yytext;
 
 static gzFile gvzin = (gzFile)0;
 
+/* gzfread cannot be used because of older zlib in the dll */
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do { \
-	if ( (result = gzread(gvzin, (char*)buf, (sizeof(char) * max_size) )) < 0) { \
+	if ( (result = gzread(gvzin, (char*)buf, (sizeof(char) * max_size) )) == 0) { \
 		int estatus = 0; \
 		const char *es = gzerror (gvzin, &estatus); \
 		if (estatus == Z_BUF_ERROR) { \
@@ -691,7 +692,7 @@ static void dp_check_c_comment (char *s);
  * void *yyrealloc (void *ptr, size_t n) { return (realloc(ptr,n)); }
 */
 
-#line 695 "lex.yy.c"
+#line 696 "lex.yy.c"
 
 /* empty string "" with length 0 is troublesome in dot: */
 /* digraph {} has no name */
@@ -699,14 +700,14 @@ static void dp_check_c_comment (char *s);
 /* digraph " " {} is digraph with string " " */
 /* node label="" is two chars in output drawing */
 /* allow in fnum1,2,3 also numbers as "23.1" or "23." and ".23" */
-#line 91 "dot.l"
+#line 92 "dot.l"
 	/* use own yyalloc
 	 * %option noyyalloc
 	 * %option noyyfree
 	 * %option noyyrealloc
 	*/
 #define YY_NO_INPUT 1
-#line 710 "lex.yy.c"
+#line 711 "lex.yy.c"
 
 #define INITIAL 0
 #define htmlstr 1
@@ -985,10 +986,10 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 122 "dot.l"
+#line 123 "dot.l"
 
 
-#line 992 "lex.yy.c"
+#line 993 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1003,7 +1004,7 @@ YY_DECL
 		 */
 		yy_bp = yy_cp;
 
-/* %% [9.0] code to set up and find next match goes here */
+/* %% [9.0] code to set up and find next match goes here - scan-build says array subscript is undefined at the generated code yy_nxt[yy_current_state][ YY_SC_TO_UI(*yy_cp) ]) */
 		yy_current_state = (yy_start);
 yy_match:
 		do
@@ -1077,149 +1078,148 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 124 "dot.l"
+#line 125 "dot.l"
 { /* c-comment style */ /* lexer does update yylineno */ dp_check_c_comment(yytext+1); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 125 "dot.l"
+#line 126 "dot.l"
 { /* end of c comment but no start of c comment shouldnothappen */ printf("%s(): end of c-comment without start of c-comment \"*\\\" at line %d skipped\n",__func__,yylineno); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 126 "dot.l"
+#line 127 "dot.l"
 { /* c++ comment style */ /* lexer does update yylineno */ }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 128 "dot.l"
+#line 129 "dot.l"
 { /* dot comment line */ }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 129 "dot.l"
+#line 130 "dot.l"
 { /* this is dot specific */ return (TOKEN_UTF8BOM); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 130 "dot.l"
+#line 131 "dot.l"
 { /* skip form feed chars and spaces */ }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 131 "dot.l"
+#line 132 "dot.l"
 { /* skip tabs */ }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 132 "dot.l"
+#line 133 "dot.l"
 { /* skip new line */ /* lexer does update yylineno */ }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 133 "dot.l"
+#line 134 "dot.l"
 { /* skip carriage return */ }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 135 "dot.l"
+#line 136 "dot.l"
 { return (EOF); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 136 "dot.l"
+#line 137 "dot.l"
 { return (TOKEN_PLUS); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 137 "dot.l"
+#line 138 "dot.l"
 { return (TOKEN_COMMA); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 138 "dot.l"
+#line 139 "dot.l"
 { return (TOKEN_COLON); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 139 "dot.l"
+#line 140 "dot.l"
 { return (TOKEN_SC); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 140 "dot.l"
+#line 141 "dot.l"
 { return (TOKEN_IS); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 141 "dot.l"
+#line 142 "dot.l"
 { return (TOKEN_BRACKETOPEN); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 142 "dot.l"
+#line 143 "dot.l"
 { return (TOKEN_BRACKETCLOSE); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 143 "dot.l"
+#line 144 "dot.l"
 { return (TOKEN_BRACEOPEN); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 144 "dot.l"
+#line 145 "dot.l"
 { return (TOKEN_BRACECLOSE); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 145 "dot.l"
-{ yylval.string = "--"; return (TOKEN_EOP); }
+#line 146 "dot.l"
+{ yylval.string = (char *) dp_uniqstr ((char *) "--"); return (TOKEN_EOP); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 146 "dot.l"
-{ yylval.string = "->"; return (TOKEN_EOP); }
+#line 147 "dot.l"
+{ yylval.string = (char *) dp_uniqstr ((char *) "->"); return (TOKEN_EOP); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 148 "dot.l"
+#line 149 "dot.l"
 { return(TOKEN_EDGE); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 149 "dot.l"
+#line 150 "dot.l"
 { return(TOKEN_NODE); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 150 "dot.l"
+#line 151 "dot.l"
 { return(TOKEN_DIGRAPH); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 151 "dot.l"
+#line 152 "dot.l"
 { return(TOKEN_GRAPH); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 152 "dot.l"
+#line 153 "dot.l"
 { return(TOKEN_SUBGRAPH); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 153 "dot.l"
+#line 154 "dot.l"
 { return(TOKEN_STRICT); }
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 155 "dot.l"
+#line 156 "dot.l"
 {
 				  if(yyleng == 2) {
 				    /* string is "" */
-				    p = dp_uniqstr ("");
-				    yylval.string = p;
+				    yylval.string = (char *)dp_uniqstr((char *)"");
 				    return (TOKEN_QTEXT);
 				  }
 				  /* copy and filter the text, and clear last " */
@@ -1280,10 +1280,8 @@ YY_RULE_SETUP
 				      q++;
 				    }
 				  }
-				  p = dp_uniqstr (tmpp);
-				  yylval.string = p;
-				  dp_free (tmpp);
-				  tmpp = NULL;
+				  yylval.string = (char *) dp_uniqstr ((char *)tmpp);
+				  tmpp = (char *) dp_free ((void *) tmpp);
 				  p = NULL;
 				  q = NULL;
 				  return (TOKEN_QTEXT);
@@ -1291,71 +1289,96 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 229 "dot.l"
+#line 227 "dot.l"
 {
-				  p = dp_uniqstr (yytext);
-				  yylval.string = p;
+				  yylval.string = (char *) dp_uniqstr ((char *)yytext);
 				  return (TOKEN_TEXT);
 				}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 235 "dot.l"
+#line 232 "dot.l"
 {
-				  p = dp_uniqstr (yytext);
-				  yylval.string = p;
+				  yylval.string =(char *)dp_uniqstr ((char *)yytext);
 				  return (TOKEN_NUM);
 				}
 	YY_BREAK
 /* html label, but if it is <> return "" */
 case 31:
 YY_RULE_SETUP
-#line 242 "dot.l"
-{ BEGIN(htmlstr); htmlnest = 1; yylval.string = "<"; }
+#line 238 "dot.l"
+{
+					BEGIN(htmlstr);
+					htmlnest = 1;
+					yylval.string = (char *)"<";
+				}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 243 "dot.l"
-{ htmlnest--; if(htmlnest) { yylval.string = dp_ccat(yylval.string,yytext); } else { yylval.string = dp_ccat(yylval.string,">"); BEGIN(INITIAL); if (strlen(yylval.string) == 2) { yylval.string = ""; } return (TOKEN_HTEXT); } }
+{
+					htmlnest--;
+					if(htmlnest) {
+						yylval.string = (char *) dp_ccat((char *) yylval.string,(char *)yytext);
+					} else {
+						yylval.string = dp_ccat((char *) yylval.string,(char *) ">");
+						BEGIN(INITIAL);
+						if (strlen(yylval.string) == 2) {
+							yylval.string = (char *) "";
+						}
+						return (TOKEN_HTEXT);
+					}
+				}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 244 "dot.l"
-{ htmlnest++; yylval.string = dp_ccat(yylval.string,yytext); }
+#line 256 "dot.l"
+{
+					htmlnest++;
+					yylval.string = (char *) dp_ccat((char *) yylval.string,(char *)yytext);
+				}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 245 "dot.l"
-{ yylval.string = dp_ccat(yylval.string,"&lt;"); }
+#line 260 "dot.l"
+{
+					yylval.string = (char *) dp_ccat((char *) yylval.string,(char *)"&lt;");
+				}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 246 "dot.l"
-{ yylval.string = dp_ccat(yylval.string,"&gt;"); }
+#line 263 "dot.l"
+{
+					yylval.string = (char *)dp_ccat((char *)yylval.string,(char *)"&gt;");
+				}
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 247 "dot.l"
-{ /* yylineno++ is update by lexer code */ ; }
+#line 266 "dot.l"
+{
+					/* yylineno++ is update by lexer code */ ;
+				}
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 248 "dot.l"
-{ yylval.string = dp_ccat(yylval.string,yytext); }
+#line 269 "dot.l"
+{
+					yylval.string = (char *)dp_ccat((char *)yylval.string,(char *)yytext);
+				}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 251 "dot.l"
+#line 274 "dot.l"
 { return ((int)yytext[0]); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 253 "dot.l"
+#line 276 "dot.l"
 ECHO;
 	YY_BREAK
-#line 1359 "lex.yy.c"
+#line 1382 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(htmlstr):
 	yyterminate();
@@ -2492,7 +2515,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 253 "dot.l"
+#line 276 "dot.l"
 
 
 /* */
@@ -2504,9 +2527,10 @@ void dp_lex_init (gzFile f, int debugflag)
   /* activate debug in lexer */
   yy_flex_debug = debugflag;
   /* activate debug in glr parser */
-  yydebug = debugflag;
+  /* yydebug is now set in main() */
+  /* yydebug = debugflag; */
   htmlnest = 0;
-  yyset_debug (debugflag);
+  /* yyset_debug (debugflag); */
   return;
 }
 
@@ -2514,8 +2538,7 @@ void dp_lex_init (gzFile f, int debugflag)
 static void dp_lex_clear (void)
 {
   if (tmpp) {
-    dp_free (tmpp);
-    tmpp = NULL;
+    tmpp = (char *) dp_free ((void *) tmpp);
   }
   p = NULL;
   q = NULL;

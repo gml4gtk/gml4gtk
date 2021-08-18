@@ -116,110 +116,145 @@ Grammar
 
 Terminals, with rules where they appear
 
-$end (0) 0
-error (256) 3
-"{" (258) 2 67 69
-"}" (259) 2 67 69
-"+" (260) 14
-"," (261) 23 42
-":" (262) 32 33 35 36
-"=" (263) 37 38 65 66
-";" (264) 22 43
-"[" (265) 45
-"]" (266) 45
-"utf8code" (267) 5
-"strict" (268) 7 9
-"graph" (269) 7 8 62
-"subgraph" (270) 70 71
-"digraph" (271) 9 10
-"node" (272) 63
-"edge" (273) 64
-"text" <string> (274) 15 37 38 40
-"number" <string> (275) 16
-"string" <string> (276) 13 14
-"<html-string>" <string> (277) 18
-"-> or --" <string> (278) 54 56 57 59
+    $end (0) 0
+    error (256) 3
+    "{" (258) 2 67 69
+    "}" (259) 2 67 69
+    "+" (260) 14
+    "," (261) 23 42
+    ":" (262) 32 33 35 36
+    "=" (263) 37 38 65 66
+    ";" (264) 22 43
+    "[" (265) 45
+    "]" (266) 45
+    "utf8code" (267) 5
+    "strict" (268) 7 9
+    "graph" (269) 7 8 62
+    "subgraph" (270) 70 71
+    "digraph" (271) 9 10
+    "node" (272) 63
+    "edge" (273) 64
+    "text" <string> (274) 15 37 38 40
+    "number" <string> (275) 16
+    "string" <string> (276) 13 14
+    "<html-string>" <string> (277) 18
+    "-> or --" <string> (278) 54 56 57 59
 
 
 Nonterminals, with rules where they appear
 
-$accept (24)
-    on left: 0
-startdot (25)
-    on left: 2 3 4, on right: 0
-$@1 (26)
-    on left: 1, on right: 2
-utf (27)
-    on left: 5 6, on right: 2
-thetype <string> (28)
-    on left: 7 8 9 10, on right: 2
-thename <string> (29)
-    on left: 11 12, on right: 2
-ctext <string> (30)
-    on left: 13 14, on right: 14 17
-text <string> (31)
-    on left: 15 16 17, on right: 11 31 32 33 34 35 36 37 65 66 70
-htext <string> (32)
-    on left: 18, on right: 38 66
-statements (33)
-    on left: 19 20, on right: 2 19 67 69
-statement (34)
-    on left: 21 22 23, on right: 19 20
-statement2 (35)
-    on left: 24 25 26 28, on right: 21 22 23
-$@2 (36)
-    on left: 27, on right: 28
-nstatement (37)
-    on left: 30, on right: 24
-$@3 (38)
-    on left: 29, on right: 30
-nidid <string> (39)
-    on left: 31 32 33, on right: 30
-nid <dp> (40)
-    on left: 34 35 36, on right: 50 54 56
-sattr (41)
-    on left: 37 38, on right: 39
-sattr2 (42)
-    on left: 39 40, on right: 41 42 43
-iattr (43)
-    on left: 41 42 43 44, on right: 41 42 43 45
-tattr (44)
-    on left: 45, on right: 46 60
-oattrib (45)
-    on left: 46 47, on right: 28 30 46 50 53
-estatement (46)
-    on left: 50 53, on right: 25
-$@4 (47)
-    on left: 48, on right: 50
-$@5 (48)
-    on left: 49, on right: 50
-$@6 (49)
-    on left: 51, on right: 53
-$@7 (50)
-    on left: 52, on right: 53
-erhs (51)
-    on left: 54 56 57 59, on right: 50 53 56 59
-$@8 (52)
-    on left: 55, on right: 56
-$@9 (53)
-    on left: 58, on right: 59
-astatement (54)
-    on left: 60 61, on right: 26
-atype (55)
-    on left: 62 63 64, on right: 60
-aset (56)
-    on left: 65 66, on right: 61
-sstatement <dp> (57)
-    on left: 67 69, on right: 28 53 57 59
-$@10 (58)
-    on left: 68, on right: 69
-shead (59)
-    on left: 70 71, on right: 67
+    $accept (24)
+        on left: 0
+    startdot (25)
+        on left: 2 3 4
+        on right: 0
+    $@1 (26)
+        on left: 1
+        on right: 2
+    utf (27)
+        on left: 5 6
+        on right: 2
+    thetype <string> (28)
+        on left: 7 8 9 10
+        on right: 2
+    thename <string> (29)
+        on left: 11 12
+        on right: 2
+    ctext <string> (30)
+        on left: 13 14
+        on right: 14 17
+    text <string> (31)
+        on left: 15 16 17
+        on right: 11 31 32 33 34 35 36 37 65 66 70
+    htext <string> (32)
+        on left: 18
+        on right: 38 66
+    statements (33)
+        on left: 19 20
+        on right: 2 19 67 69
+    statement (34)
+        on left: 21 22 23
+        on right: 19 20
+    statement2 (35)
+        on left: 24 25 26 28
+        on right: 21 22 23
+    $@2 (36)
+        on left: 27
+        on right: 28
+    nstatement (37)
+        on left: 30
+        on right: 24
+    $@3 (38)
+        on left: 29
+        on right: 30
+    nidid <string> (39)
+        on left: 31 32 33
+        on right: 30
+    nid <dp> (40)
+        on left: 34 35 36
+        on right: 50 54 56
+    sattr (41)
+        on left: 37 38
+        on right: 39
+    sattr2 (42)
+        on left: 39 40
+        on right: 41 42 43
+    iattr (43)
+        on left: 41 42 43 44
+        on right: 41 42 43 45
+    tattr (44)
+        on left: 45
+        on right: 46 60
+    oattrib (45)
+        on left: 46 47
+        on right: 28 30 46 50 53
+    estatement (46)
+        on left: 50 53
+        on right: 25
+    $@4 (47)
+        on left: 48
+        on right: 50
+    $@5 (48)
+        on left: 49
+        on right: 50
+    $@6 (49)
+        on left: 51
+        on right: 53
+    $@7 (50)
+        on left: 52
+        on right: 53
+    erhs (51)
+        on left: 54 56 57 59
+        on right: 50 53 56 59
+    $@8 (52)
+        on left: 55
+        on right: 56
+    $@9 (53)
+        on left: 58
+        on right: 59
+    astatement (54)
+        on left: 60 61
+        on right: 26
+    atype (55)
+        on left: 62 63 64
+        on right: 60
+    aset (56)
+        on left: 65 66
+        on right: 61
+    sstatement <dp> (57)
+        on left: 67 69
+        on right: 28 53 57 59
+    $@10 (58)
+        on left: 68
+        on right: 69
+    shead (59)
+        on left: 70 71
+        on right: 67
 
 
 State 0
 
-    0 $accept: . startdot $end
+    0 $accept: • startdot $end
 
     error       shift, and go to state 1
     "utf8code"  shift, and go to state 2
@@ -235,28 +270,28 @@ State 0
 
 State 1
 
-    3 startdot: error .
+    3 startdot: error •
 
     $default  reduce using rule 3 (startdot)
 
 
 State 2
 
-    5 utf: "utf8code" .
+    5 utf: "utf8code" •
 
     $default  reduce using rule 5 (utf)
 
 
 State 3
 
-    0 $accept: startdot . $end
+    0 $accept: startdot • $end
 
     $end  shift, and go to state 5
 
 
 State 4
 
-    2 startdot: utf . thetype thename $@1 "{" statements "}"
+    2 startdot: utf • thetype thename $@1 "{" statements "}"
 
     "strict"   shift, and go to state 6
     "graph"    shift, and go to state 7
@@ -267,15 +302,15 @@ State 4
 
 State 5
 
-    0 $accept: startdot $end .
+    0 $accept: startdot $end •
 
     $default  accept
 
 
 State 6
 
-    7 thetype: "strict" . "graph"
-    9        | "strict" . "digraph"
+    7 thetype: "strict" • "graph"
+    9        | "strict" • "digraph"
 
     "graph"    shift, and go to state 10
     "digraph"  shift, and go to state 11
@@ -283,21 +318,21 @@ State 6
 
 State 7
 
-    8 thetype: "graph" .
+    8 thetype: "graph" •
 
     $default  reduce using rule 8 (thetype)
 
 
 State 8
 
-   10 thetype: "digraph" .
+   10 thetype: "digraph" •
 
     $default  reduce using rule 10 (thetype)
 
 
 State 9
 
-    2 startdot: utf thetype . thename $@1 "{" statements "}"
+    2 startdot: utf thetype • thename $@1 "{" statements "}"
 
     "text"    shift, and go to state 12
     "number"  shift, and go to state 13
@@ -312,42 +347,42 @@ State 9
 
 State 10
 
-    7 thetype: "strict" "graph" .
+    7 thetype: "strict" "graph" •
 
     $default  reduce using rule 7 (thetype)
 
 
 State 11
 
-    9 thetype: "strict" "digraph" .
+    9 thetype: "strict" "digraph" •
 
     $default  reduce using rule 9 (thetype)
 
 
 State 12
 
-   15 text: "text" .
+   15 text: "text" •
 
     $default  reduce using rule 15 (text)
 
 
 State 13
 
-   16 text: "number" .
+   16 text: "number" •
 
     $default  reduce using rule 16 (text)
 
 
 State 14
 
-   13 ctext: "string" .
+   13 ctext: "string" •
 
     $default  reduce using rule 13 (ctext)
 
 
 State 15
 
-    2 startdot: utf thetype thename . $@1 "{" statements "}"
+    2 startdot: utf thetype thename • $@1 "{" statements "}"
 
     $default  reduce using rule 1 ($@1)
 
@@ -356,8 +391,8 @@ State 15
 
 State 16
 
-   14 ctext: ctext . "+" "string"
-   17 text: ctext .
+   14 ctext: ctext • "+" "string"
+   17 text: ctext •
 
     "+"  shift, and go to state 19
 
@@ -366,28 +401,28 @@ State 16
 
 State 17
 
-   11 thename: text .
+   11 thename: text •
 
     $default  reduce using rule 11 (thename)
 
 
 State 18
 
-    2 startdot: utf thetype thename $@1 . "{" statements "}"
+    2 startdot: utf thetype thename $@1 • "{" statements "}"
 
     "{"  shift, and go to state 20
 
 
 State 19
 
-   14 ctext: ctext "+" . "string"
+   14 ctext: ctext "+" • "string"
 
     "string"  shift, and go to state 21
 
 
 State 20
 
-    2 startdot: utf thetype thename $@1 "{" . statements "}"
+    2 startdot: utf thetype thename $@1 "{" • statements "}"
 
     "{"         shift, and go to state 22
     "graph"     shift, and go to state 23
@@ -416,14 +451,14 @@ State 20
 
 State 21
 
-   14 ctext: ctext "+" "string" .
+   14 ctext: ctext "+" "string" •
 
     $default  reduce using rule 14 (ctext)
 
 
 State 22
 
-   69 sstatement: "{" . $@10 statements "}"
+   69 sstatement: "{" • $@10 statements "}"
 
     $default  reduce using rule 68 ($@10)
 
@@ -432,15 +467,15 @@ State 22
 
 State 23
 
-   62 atype: "graph" .
+   62 atype: "graph" •
 
     $default  reduce using rule 62 (atype)
 
 
 State 24
 
-   70 shead: "subgraph" . text
-   71      | "subgraph" .
+   70 shead: "subgraph" • text
+   71      | "subgraph" •
 
     "text"    shift, and go to state 12
     "number"  shift, and go to state 13
@@ -454,28 +489,28 @@ State 24
 
 State 25
 
-   63 atype: "node" .
+   63 atype: "node" •
 
     $default  reduce using rule 63 (atype)
 
 
 State 26
 
-   64 atype: "edge" .
+   64 atype: "edge" •
 
     $default  reduce using rule 64 (atype)
 
 
 State 27
 
-   31 nidid: text .
-   32      | text . ":" text
-   33      | text . ":" text ":" text
-   34 nid: text .
-   35    | text . ":" text
-   36    | text . ":" text ":" text
-   65 aset: text . "=" text
-   66     | text . "=" htext
+   31 nidid: text •
+   32      | text • ":" text
+   33      | text • ":" text ":" text
+   34 nid: text •
+   35    | text • ":" text
+   36    | text • ":" text ":" text
+   65 aset: text • "=" text
+   66     | text • "=" htext
 
     ":"  shift, and go to state 42
     "="  shift, and go to state 43
@@ -486,8 +521,8 @@ State 27
 
 State 28
 
-    2 startdot: utf thetype thename $@1 "{" statements . "}"
-   19 statements: statements . statement
+    2 startdot: utf thetype thename $@1 "{" statements • "}"
+   19 statements: statements • statement
 
     "{"         shift, and go to state 22
     "}"         shift, and go to state 44
@@ -516,16 +551,16 @@ State 28
 
 State 29
 
-   20 statements: statement .
+   20 statements: statement •
 
     $default  reduce using rule 20 (statements)
 
 
 State 30
 
-   21 statement: statement2 .
-   22          | statement2 . ";"
-   23          | statement2 . ","
+   21 statement: statement2 •
+   22          | statement2 • ";"
+   23          | statement2 • ","
 
     ","  shift, and go to state 46
     ";"  shift, and go to state 47
@@ -535,14 +570,14 @@ State 30
 
 State 31
 
-   24 statement2: nstatement .
+   24 statement2: nstatement •
 
     $default  reduce using rule 24 (statement2)
 
 
 State 32
 
-   30 nstatement: nidid . $@3 oattrib
+   30 nstatement: nidid • $@3 oattrib
 
     $default  reduce using rule 29 ($@3)
 
@@ -551,7 +586,7 @@ State 32
 
 State 33
 
-   50 estatement: nid . $@4 erhs $@5 oattrib
+   50 estatement: nid • $@4 erhs $@5 oattrib
 
     $default  reduce using rule 48 ($@4)
 
@@ -560,21 +595,21 @@ State 33
 
 State 34
 
-   25 statement2: estatement .
+   25 statement2: estatement •
 
     $default  reduce using rule 25 (statement2)
 
 
 State 35
 
-   26 statement2: astatement .
+   26 statement2: astatement •
 
     $default  reduce using rule 26 (statement2)
 
 
 State 36
 
-   60 astatement: atype . tattr
+   60 astatement: atype • tattr
 
     "["  shift, and go to state 50
 
@@ -583,15 +618,15 @@ State 36
 
 State 37
 
-   61 astatement: aset .
+   61 astatement: aset •
 
     $default  reduce using rule 61 (astatement)
 
 
 State 38
 
-   28 statement2: sstatement . $@2 oattrib
-   53 estatement: sstatement . $@6 erhs $@7 oattrib
+   28 statement2: sstatement • $@2 oattrib
+   53 estatement: sstatement • $@6 erhs $@7 oattrib
 
     "-> or --"  reduce using rule 51 ($@6)
     $default    reduce using rule 27 ($@2)
@@ -602,14 +637,14 @@ State 38
 
 State 39
 
-   67 sstatement: shead . "{" statements "}"
+   67 sstatement: shead • "{" statements "}"
 
     "{"  shift, and go to state 54
 
 
 State 40
 
-   69 sstatement: "{" $@10 . statements "}"
+   69 sstatement: "{" $@10 • statements "}"
 
     "{"         shift, and go to state 22
     "graph"     shift, and go to state 23
@@ -638,17 +673,17 @@ State 40
 
 State 41
 
-   70 shead: "subgraph" text .
+   70 shead: "subgraph" text •
 
     $default  reduce using rule 70 (shead)
 
 
 State 42
 
-   32 nidid: text ":" . text
-   33      | text ":" . text ":" text
-   35 nid: text ":" . text
-   36    | text ":" . text ":" text
+   32 nidid: text ":" • text
+   33      | text ":" • text ":" text
+   35 nid: text ":" • text
+   36    | text ":" • text ":" text
 
     "text"    shift, and go to state 12
     "number"  shift, and go to state 13
@@ -660,8 +695,8 @@ State 42
 
 State 43
 
-   65 aset: text "=" . text
-   66     | text "=" . htext
+   65 aset: text "=" • text
+   66     | text "=" • htext
 
     "text"           shift, and go to state 12
     "number"         shift, and go to state 13
@@ -675,35 +710,35 @@ State 43
 
 State 44
 
-    2 startdot: utf thetype thename $@1 "{" statements "}" .
+    2 startdot: utf thetype thename $@1 "{" statements "}" •
 
     $default  reduce using rule 2 (startdot)
 
 
 State 45
 
-   19 statements: statements statement .
+   19 statements: statements statement •
 
     $default  reduce using rule 19 (statements)
 
 
 State 46
 
-   23 statement: statement2 "," .
+   23 statement: statement2 "," •
 
     $default  reduce using rule 23 (statement)
 
 
 State 47
 
-   22 statement: statement2 ";" .
+   22 statement: statement2 ";" •
 
     $default  reduce using rule 22 (statement)
 
 
 State 48
 
-   30 nstatement: nidid $@3 . oattrib
+   30 nstatement: nidid $@3 • oattrib
 
     "["  shift, and go to state 50
 
@@ -715,7 +750,7 @@ State 48
 
 State 49
 
-   50 estatement: nid $@4 . erhs $@5 oattrib
+   50 estatement: nid $@4 • erhs $@5 oattrib
 
     "-> or --"  shift, and go to state 62
 
@@ -724,7 +759,7 @@ State 49
 
 State 50
 
-   45 tattr: "[" . iattr "]"
+   45 tattr: "[" • iattr "]"
 
     "text"  shift, and go to state 64
 
@@ -737,14 +772,14 @@ State 50
 
 State 51
 
-   60 astatement: atype tattr .
+   60 astatement: atype tattr •
 
     $default  reduce using rule 60 (astatement)
 
 
 State 52
 
-   28 statement2: sstatement $@2 . oattrib
+   28 statement2: sstatement $@2 • oattrib
 
     "["  shift, and go to state 50
 
@@ -756,7 +791,7 @@ State 52
 
 State 53
 
-   53 estatement: sstatement $@6 . erhs $@7 oattrib
+   53 estatement: sstatement $@6 • erhs $@7 oattrib
 
     "-> or --"  shift, and go to state 62
 
@@ -765,7 +800,7 @@ State 53
 
 State 54
 
-   67 sstatement: shead "{" . statements "}"
+   67 sstatement: shead "{" • statements "}"
 
     "{"         shift, and go to state 22
     "graph"     shift, and go to state 23
@@ -794,8 +829,8 @@ State 54
 
 State 55
 
-   19 statements: statements . statement
-   69 sstatement: "{" $@10 statements . "}"
+   19 statements: statements • statement
+   69 sstatement: "{" $@10 statements • "}"
 
     "{"         shift, and go to state 22
     "}"         shift, and go to state 71
@@ -824,10 +859,10 @@ State 55
 
 State 56
 
-   32 nidid: text ":" text .
-   33      | text ":" text . ":" text
-   35 nid: text ":" text .
-   36    | text ":" text . ":" text
+   32 nidid: text ":" text •
+   33      | text ":" text • ":" text
+   35 nid: text ":" text •
+   36    | text ":" text • ":" text
 
     ":"  shift, and go to state 72
 
@@ -837,28 +872,28 @@ State 56
 
 State 57
 
-   18 htext: "<html-string>" .
+   18 htext: "<html-string>" •
 
     $default  reduce using rule 18 (htext)
 
 
 State 58
 
-   65 aset: text "=" text .
+   65 aset: text "=" text •
 
     $default  reduce using rule 65 (aset)
 
 
 State 59
 
-   66 aset: text "=" htext .
+   66 aset: text "=" htext •
 
     $default  reduce using rule 66 (aset)
 
 
 State 60
 
-   46 oattrib: tattr . oattrib
+   46 oattrib: tattr • oattrib
 
     "["  shift, and go to state 50
 
@@ -870,17 +905,17 @@ State 60
 
 State 61
 
-   30 nstatement: nidid $@3 oattrib .
+   30 nstatement: nidid $@3 oattrib •
 
     $default  reduce using rule 30 (nstatement)
 
 
 State 62
 
-   54 erhs: "-> or --" . nid
-   56     | "-> or --" . nid $@8 erhs
-   57     | "-> or --" . sstatement
-   59     | "-> or --" . sstatement $@9 erhs
+   54 erhs: "-> or --" • nid
+   56     | "-> or --" • nid $@8 erhs
+   57     | "-> or --" • sstatement
+   59     | "-> or --" • sstatement $@9 erhs
 
     "{"         shift, and go to state 22
     "subgraph"  shift, and go to state 24
@@ -897,7 +932,7 @@ State 62
 
 State 63
 
-   50 estatement: nid $@4 erhs . $@5 oattrib
+   50 estatement: nid $@4 erhs • $@5 oattrib
 
     $default  reduce using rule 49 ($@5)
 
@@ -906,9 +941,9 @@ State 63
 
 State 64
 
-   37 sattr: "text" . "=" text
-   38      | "text" . "=" htext
-   40 sattr2: "text" .
+   37 sattr: "text" • "=" text
+   38      | "text" • "=" htext
+   40 sattr2: "text" •
 
     "="  shift, and go to state 78
 
@@ -917,16 +952,16 @@ State 64
 
 State 65
 
-   39 sattr2: sattr .
+   39 sattr2: sattr •
 
     $default  reduce using rule 39 (sattr2)
 
 
 State 66
 
-   41 iattr: sattr2 . iattr
-   42      | sattr2 . "," iattr
-   43      | sattr2 . ";" iattr
+   41 iattr: sattr2 • iattr
+   42      | sattr2 • "," iattr
+   43      | sattr2 • ";" iattr
 
     ","     shift, and go to state 79
     ";"     shift, and go to state 80
@@ -941,21 +976,21 @@ State 66
 
 State 67
 
-   45 tattr: "[" iattr . "]"
+   45 tattr: "[" iattr • "]"
 
     "]"  shift, and go to state 82
 
 
 State 68
 
-   28 statement2: sstatement $@2 oattrib .
+   28 statement2: sstatement $@2 oattrib •
 
     $default  reduce using rule 28 (statement2)
 
 
 State 69
 
-   53 estatement: sstatement $@6 erhs . $@7 oattrib
+   53 estatement: sstatement $@6 erhs • $@7 oattrib
 
     $default  reduce using rule 52 ($@7)
 
@@ -964,8 +999,8 @@ State 69
 
 State 70
 
-   19 statements: statements . statement
-   67 sstatement: shead "{" statements . "}"
+   19 statements: statements • statement
+   67 sstatement: shead "{" statements • "}"
 
     "{"         shift, and go to state 22
     "}"         shift, and go to state 84
@@ -994,15 +1029,15 @@ State 70
 
 State 71
 
-   69 sstatement: "{" $@10 statements "}" .
+   69 sstatement: "{" $@10 statements "}" •
 
     $default  reduce using rule 69 (sstatement)
 
 
 State 72
 
-   33 nidid: text ":" text ":" . text
-   36 nid: text ":" text ":" . text
+   33 nidid: text ":" text ":" • text
+   36 nid: text ":" text ":" • text
 
     "text"    shift, and go to state 12
     "number"  shift, and go to state 13
@@ -1014,16 +1049,16 @@ State 72
 
 State 73
 
-   46 oattrib: tattr oattrib .
+   46 oattrib: tattr oattrib •
 
     $default  reduce using rule 46 (oattrib)
 
 
 State 74
 
-   34 nid: text .
-   35    | text . ":" text
-   36    | text . ":" text ":" text
+   34 nid: text •
+   35    | text • ":" text
+   36    | text • ":" text ":" text
 
     ":"  shift, and go to state 86
 
@@ -1032,8 +1067,8 @@ State 74
 
 State 75
 
-   54 erhs: "-> or --" nid .
-   56     | "-> or --" nid . $@8 erhs
+   54 erhs: "-> or --" nid •
+   56     | "-> or --" nid • $@8 erhs
 
     "-> or --"  reduce using rule 55 ($@8)
     $default    reduce using rule 54 (erhs)
@@ -1043,8 +1078,8 @@ State 75
 
 State 76
 
-   57 erhs: "-> or --" sstatement .
-   59     | "-> or --" sstatement . $@9 erhs
+   57 erhs: "-> or --" sstatement •
+   59     | "-> or --" sstatement • $@9 erhs
 
     "-> or --"  reduce using rule 58 ($@9)
     $default    reduce using rule 57 (erhs)
@@ -1054,7 +1089,7 @@ State 76
 
 State 77
 
-   50 estatement: nid $@4 erhs $@5 . oattrib
+   50 estatement: nid $@4 erhs $@5 • oattrib
 
     "["  shift, and go to state 50
 
@@ -1066,8 +1101,8 @@ State 77
 
 State 78
 
-   37 sattr: "text" "=" . text
-   38      | "text" "=" . htext
+   37 sattr: "text" "=" • text
+   38      | "text" "=" • htext
 
     "text"           shift, and go to state 12
     "number"         shift, and go to state 13
@@ -1081,7 +1116,7 @@ State 78
 
 State 79
 
-   42 iattr: sattr2 "," . iattr
+   42 iattr: sattr2 "," • iattr
 
     "text"  shift, and go to state 64
 
@@ -1094,7 +1129,7 @@ State 79
 
 State 80
 
-   43 iattr: sattr2 ";" . iattr
+   43 iattr: sattr2 ";" • iattr
 
     "text"  shift, and go to state 64
 
@@ -1107,21 +1142,21 @@ State 80
 
 State 81
 
-   41 iattr: sattr2 iattr .
+   41 iattr: sattr2 iattr •
 
     $default  reduce using rule 41 (iattr)
 
 
 State 82
 
-   45 tattr: "[" iattr "]" .
+   45 tattr: "[" iattr "]" •
 
     $default  reduce using rule 45 (tattr)
 
 
 State 83
 
-   53 estatement: sstatement $@6 erhs $@7 . oattrib
+   53 estatement: sstatement $@6 erhs $@7 • oattrib
 
     "["  shift, and go to state 50
 
@@ -1133,15 +1168,15 @@ State 83
 
 State 84
 
-   67 sstatement: shead "{" statements "}" .
+   67 sstatement: shead "{" statements "}" •
 
     $default  reduce using rule 67 (sstatement)
 
 
 State 85
 
-   33 nidid: text ":" text ":" text .
-   36 nid: text ":" text ":" text .
+   33 nidid: text ":" text ":" text •
+   36 nid: text ":" text ":" text •
 
     "-> or --"  reduce using rule 36 (nid)
     $default    reduce using rule 33 (nidid)
@@ -1149,8 +1184,8 @@ State 85
 
 State 86
 
-   35 nid: text ":" . text
-   36    | text ":" . text ":" text
+   35 nid: text ":" • text
+   36    | text ":" • text ":" text
 
     "text"    shift, and go to state 12
     "number"  shift, and go to state 13
@@ -1162,7 +1197,7 @@ State 86
 
 State 87
 
-   56 erhs: "-> or --" nid $@8 . erhs
+   56 erhs: "-> or --" nid $@8 • erhs
 
     "-> or --"  shift, and go to state 62
 
@@ -1171,7 +1206,7 @@ State 87
 
 State 88
 
-   59 erhs: "-> or --" sstatement $@9 . erhs
+   59 erhs: "-> or --" sstatement $@9 • erhs
 
     "-> or --"  shift, and go to state 62
 
@@ -1180,50 +1215,50 @@ State 88
 
 State 89
 
-   50 estatement: nid $@4 erhs $@5 oattrib .
+   50 estatement: nid $@4 erhs $@5 oattrib •
 
     $default  reduce using rule 50 (estatement)
 
 
 State 90
 
-   37 sattr: "text" "=" text .
+   37 sattr: "text" "=" text •
 
     $default  reduce using rule 37 (sattr)
 
 
 State 91
 
-   38 sattr: "text" "=" htext .
+   38 sattr: "text" "=" htext •
 
     $default  reduce using rule 38 (sattr)
 
 
 State 92
 
-   42 iattr: sattr2 "," iattr .
+   42 iattr: sattr2 "," iattr •
 
     $default  reduce using rule 42 (iattr)
 
 
 State 93
 
-   43 iattr: sattr2 ";" iattr .
+   43 iattr: sattr2 ";" iattr •
 
     $default  reduce using rule 43 (iattr)
 
 
 State 94
 
-   53 estatement: sstatement $@6 erhs $@7 oattrib .
+   53 estatement: sstatement $@6 erhs $@7 oattrib •
 
     $default  reduce using rule 53 (estatement)
 
 
 State 95
 
-   35 nid: text ":" text .
-   36    | text ":" text . ":" text
+   35 nid: text ":" text •
+   36    | text ":" text • ":" text
 
     ":"  shift, and go to state 98
 
@@ -1232,21 +1267,21 @@ State 95
 
 State 96
 
-   56 erhs: "-> or --" nid $@8 erhs .
+   56 erhs: "-> or --" nid $@8 erhs •
 
     $default  reduce using rule 56 (erhs)
 
 
 State 97
 
-   59 erhs: "-> or --" sstatement $@9 erhs .
+   59 erhs: "-> or --" sstatement $@9 erhs •
 
     $default  reduce using rule 59 (erhs)
 
 
 State 98
 
-   36 nid: text ":" text ":" . text
+   36 nid: text ":" text ":" • text
 
     "text"    shift, and go to state 12
     "number"  shift, and go to state 13
@@ -1258,6 +1293,6 @@ State 98
 
 State 99
 
-   36 nid: text ":" text ":" text .
+   36 nid: text ":" text ":" text •
 
     $default  reduce using rule 36 (nid)

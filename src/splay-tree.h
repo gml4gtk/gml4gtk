@@ -25,6 +25,16 @@
 #ifndef SPLAY_TREE_H
 #define SPLAY_TREE_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+#define __BEGIN_DECLS extern "C" {
+#define __END_DECLS }
+#else
+#define __BEGIN_DECLS		/* empty */
+#define __END_DECLS		/* empty */
+#endif
+
 /* needed for type unintptr_t or use long long int */
 #include <stdint.h>
 

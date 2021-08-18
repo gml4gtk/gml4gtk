@@ -24,6 +24,21 @@
 #ifndef DPHL_H
 #define DPHL_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+# define __BEGIN_DECLS extern "C" {
+# define __END_DECLS }
+#else
+# define __BEGIN_DECLS /* empty */
+# define __END_DECLS /* empty */
+#endif
+
+/* html.l */
+extern int hllineno;
+
+__BEGIN_DECLS
+
 /* parse html label of one node */
 extern int htmlparse (struct dpnode *node);
 
@@ -33,8 +48,6 @@ extern void dphl_attr_huh (char *tag, char *attr, char *value);
 /* check data before/after <table> */
 extern void dphl_tabledata(char *str);
 
-/* html.l */
-extern int hllineno;
 
 /* html.l init */
 extern void html_lex_init (int debug, char *str, int line);
@@ -221,6 +234,8 @@ extern void dphl_data (char *str);
 
 /* free mem */
 extern void dphl_freemem (void);
+
+__END_DECLS
 
 #endif
 

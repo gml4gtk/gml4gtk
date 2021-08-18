@@ -41,6 +41,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zlib.h>
 
 #include "splay-tree.h"
 #include "main.h"
@@ -50,6 +51,7 @@
 #include "jgf.h"
 #include "json.h"
 #include "dpmem.h"
+#include "dot.tab.h"
 
 /* update sizes */
 #undef LIBJSON_DEFAULT_STACK_SIZE
@@ -89,7 +91,8 @@ static void jgfparse_clear(void)
 	return;
 }
 
-static int jgfprocess_file(json_parser * parser, FILE * input, int *retlines, int *retcols)
+/* static int jgfprocess_file(json_parser * parser, FILE * input, int *retlines, int *retcols) okd */
+static int jgfprocess_file(json_parser * parser, gzFile zinput, int *retlines, int *retcols)
 {
 	char buffer[(32 * 1024)];
 	int ret = 0;
@@ -102,7 +105,8 @@ static int jgfprocess_file(json_parser * parser, FILE * input, int *retlines, in
 	lines = 1;
 	col = 0;
 	while (1) {
-		read = fread(buffer, 1, (32 * 1024), input);
+		read = gzread(zinput, (char *)buffer, (32 * 1024));
+		/* read = fread(buffer, 1, (32 * 1024), input); old */
 		if (read <= 0) {
 			/* eof */
 			break;
@@ -424,8 +428,19 @@ static int my_callback(void *userdata, int type, const char *data, uint32_t leng
 	return (status);
 }
 
-/* */
-int jgfparse(struct gml_graph *g, FILE * jgfinput, char *fname, char *argv0)
+static void wrapped_dp_free(void *p)
+{
+	void *pp = NULL;
+	if (p) {
+		pp = dp_free(p);
+		if (pp) {
+		}
+	}
+	return;
+}
+
+/* int jgfparse(struct gml_graph *g, FILE * jgfinput, char *fname, char *argv0) old */
+int jgfparse(struct gml_graph *g, gzFile jgfinput, char *fname, char *argv0)
 {
 	json_config jgfconfig;
 	json_parser jgfparser;
@@ -465,18 +480,10 @@ int jgfparse(struct gml_graph *g, FILE * jgfinput, char *fname, char *argv0)
 	/* wrap to own dpmem.c calloc/realloc/free */
 	jgfconfig.user_calloc = dp_calloc;
 	jgfconfig.user_realloc = dp_realloc;
-	jgfconfig.user_free = dp_free;
+	jgfconfig.user_free = wrapped_dp_free;
 
-	jgfdebug = 0;
-
-	/* */
-	if (strcmp(argv0, "gml4gtkd") == 0) {
-		/* debug option */
-		jgfdebug = 1;
-	} else {
-		/* debug option */
-		jgfdebug = 0;
-	}
+	/* debug option */
+	jgfdebug = yydebug;
 
 	ret = json_parser_init(&jgfparser, &jgfconfig, &my_callback, /* (void *)userdata */ NULL);
 

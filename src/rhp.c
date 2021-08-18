@@ -408,12 +408,15 @@ static void *mymalloc(size_t n, char *f, int l)
 
 static void myfree(void *ptr, char *f, int l)
 {
+	void *ptr2 = NULL;
 	if (f) {
 	}
 	if (l) {
 	}
 	if (ptr) {
-		dp_free(ptr);
+		ptr2 = dp_free(ptr);
+		if (ptr2) {
+		}
 	}
 	return;
 }
@@ -422,6 +425,7 @@ static void myfree(void *ptr, char *f, int l)
 struct rhpedge;
 
 /* int64_t or ptrdiff_t or long long int (64-bits) */
+/* at 32bits compilation this create warning different size from pointer to int but not problem */
 typedef long long int rhp_spkey;
 typedef long long int rhp_spval;
 
@@ -1050,7 +1054,7 @@ void rhp_layout_callback(int (*getlayoutdata)
 {
 
 	/* check for callback() */
-	if (getlayoutdata == NULL) {
+	if(getlayoutdata == NULL) {
 		rhp_log("%s(): no callback routine shouldnothappen!\n", __func__);
 		return;
 	}
@@ -1065,7 +1069,7 @@ void rhp_layout_callback(int (*getlayoutdata)
 int rhp_node_foreach(int (*getnodedata)
 		      (int num, int level, int pos, void *data))
 {
-	struct rhp_spn *spn = (struct rhp_spn *)0;
+	struct rhp_spn *spn =(struct rhp_spn *)0;
 	struct rhpnode *nd = (struct rhpnode *)0;
 	int status = 0;
 
@@ -1205,7 +1209,7 @@ void *rhp_node_get_data(int num)
 int rhp_edge_foreach(int (*getedgedata)
 		      (int num, int fnum, int flevel, int fpos, int tnum, int tlevel, int tpos, int64_t ecross, void *data))
 {
-	struct rhp_spn *spn = (struct rhp_spn *)0;
+	struct rhp_spn *spn =(struct rhp_spn *)0;
 	struct rhpedge *ed = (struct rhpedge *)0;
 	int status = 0;
 
@@ -1731,7 +1735,7 @@ static void rhp_tree_delete_helper(struct rhp_sp *sp, struct rhp_spn *node)
 		}
 	}
 
-	rhp_free((void *)node, __func__, __LINE__);
+	(void)rhp_free((void *)node, __func__, __LINE__);
 
 	return;
 }
@@ -1741,7 +1745,7 @@ static struct rhp_sp *rhp_sp_delete(struct rhp_sp *sp)
 {
 	if (sp) {
 		rhp_tree_delete_helper(sp, sp->root);
-		rhp_free((void *)sp, __func__, __LINE__);
+		(void)rhp_free((void *)sp, __func__, __LINE__);
 	}
 
 	return ((struct rhp_sp *)0);
@@ -1985,7 +1989,9 @@ static void rhp_empty_best_crossings_order(void)
 	for (level = 0; level < rhp_nlevels; level++) {
 		if (rhp_best_crossings_order->node_ptr_on_layer[level]) {
 			rhp_best_crossings_order->node_ptr_on_layer[level] = (struct rhpnode * *)rhp_free((void *)
-													  rhp_best_crossings_order->node_ptr_on_layer[level], __func__, __LINE__);
+													  rhp_best_crossings_order->
+													  node_ptr_on_layer[level],
+													  __func__, __LINE__);
 		}
 	}
 

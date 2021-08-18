@@ -32,12 +32,17 @@
 #include "splay-tree.h"
 #include "main.h"
 #include "dp.h"
+#include "dpus.h"
 #include "lex.yy.h"
 #include "dpmem.h"
 
 #define YY_DEBUG 1
 
 #define YYERROR_VERBOSE 1
+
+/* GNU Bison 3.7.4 bug wrongly uses this attribute not supported in C99 mode */
+#undef _Noreturn
+#define _Noreturn /**/
 
 /* memory usage wrapping feature */
 #ifndef YYFREE
@@ -134,10 +139,10 @@ utf:
 	;
 
 thetype:
-	  TOKEN_STRICT TOKEN_GRAPH { isstrict = 1; $$ = "--"; }
-	| TOKEN_GRAPH { isstrict = 0; $$ = "--"; }
-	| TOKEN_STRICT TOKEN_DIGRAPH { isstrict = 1; $$ = "->"; }
-	| TOKEN_DIGRAPH { isstrict = 0; $$ = "->"; }
+	  TOKEN_STRICT TOKEN_GRAPH { isstrict = 1; $$ = (char *) dp_uniqstr((char *) "--"); }
+	| TOKEN_GRAPH { isstrict = 0; $$ = (char *)  dp_uniqstr( (char *) "--"); }
+	| TOKEN_STRICT TOKEN_DIGRAPH { isstrict = 1; $$ = (char *)  dp_uniqstr( (char *) "->"); }
+	| TOKEN_DIGRAPH { isstrict = 0; $$ = (char *)  dp_uniqstr( (char *) "->"); }
 	;
 
 /* graph name can be empty */
@@ -187,7 +192,7 @@ statement2:
 	  nstatement
 	| estatement
 	| astatement
-	| sstatement { /* $1 is not used here */ dp_free($1); dp_atype_sgraph(); } oattrib { dp_atype_graph (); }
+	| sstatement { /* $1 is not used here */ /* $1 is  read-only object */ (void)dp_free((void *)$1); dp_atype_sgraph(); } oattrib { dp_atype_graph (); }
 	;
 
 nstatement:
@@ -230,7 +235,7 @@ sattr:
 
 sattr2:
 	  sattr
-	| TOKEN_TEXT { dp_aset ($1,"true",0); }
+	| TOKEN_TEXT { dp_aset ((char *)$1,(char *)"true",0); }
 	;
 
 iattr:

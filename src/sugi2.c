@@ -1220,45 +1220,90 @@ static void bc_n(struct gml_graph *g, int it1value, int it2value)
 
 	for (i = 0; i < g->maxlevel; i++) {
 		if (a[i]) {
-			dp_free(a[i]->b);
-			dp_free(a[i]->mi0);
-			dp_free(a[i]->m0i);
-			dp_free(a[i]->bits);
+			a[i]->b = dp_free(a[i]->b);
+			if (a[i]->b) {
+			}
+			a[i]->mi0 = dp_free(a[i]->mi0);
+			if (a[i]->mi0) {
+			}
+			a[i]->m0i = dp_free(a[i]->m0i);
+			if (a[i]->m0i) {
+			}
+			a[i]->bits = dp_free(a[i]->bits);
+			if (a[i]->bits) {
+			}
 		}
 		if (a1[i]) {
-			dp_free(a1[i]->b);
-			dp_free(a1[i]->mi0);
-			dp_free(a1[i]->m0i);
-			dp_free(a1[i]->bits);
+			a1[i]->b = dp_free(a1[i]->b);
+			if (a1[i]->b) {
+			}
+			a1[i]->mi0 = dp_free(a1[i]->mi0);
+			if (a1[i]->mi0) {
+			}
+			a1[i]->m0i = dp_free(a1[i]->m0i);
+			if (a1[i]->m0i) {
+			}
+			a1[i]->bits = dp_free(a1[i]->bits);
+			if (a1[i]->bits) {
+			}
 		}
 		if (a2[i]) {
-			dp_free(a2[i]->b);
-			dp_free(a2[i]->mi0);
-			dp_free(a2[i]->m0i);
-			dp_free(a2[i]->bits);
+			a2[i]->b = dp_free(a2[i]->b);
+			if (a2[i]->b) {
+			}
+			a2[i]->mi0 = dp_free(a2[i]->mi0);
+			if (a2[i]->mi0) {
+			}
+			a2[i]->m0i = dp_free(a2[i]->m0i);
+			if (a2[i]->m0i) {
+			}
+			a2[i]->bits = dp_free(a2[i]->bits);
+			if (a2[i]->bits) {
+			}
 		}
 		if (as[i]) {
-			dp_free(as[i]->b);
-
-			dp_free(as[i]->mi0);
-
-			dp_free(as[i]->m0i);
-
-			dp_free(as[i]->bits);
+			as[i]->b = dp_free(as[i]->b);
+			if (as[i]->b) {
+			}
+			as[i]->mi0 = dp_free(as[i]->mi0);
+			if (as[i]->mi0) {
+			}
+			as[i]->m0i = dp_free(as[i]->m0i);
+			if (as[i]->m0i) {
+			}
+			as[i]->bits = dp_free(as[i]->bits);
+			if (as[i]->bits) {
+			}
 		}
 	}
 
 	for (i = 0; i < g->maxlevel; i++) {
-		dp_free(a[i]);
-		dp_free(a1[i]);
-		dp_free(a2[i]);
-		dp_free(as[i]);
+		a[i] = dp_free(a[i]);
+		if (a[i]) {
+		}
+		a1[i] = dp_free(a1[i]);
+		if (a1[i]) {
+		}
+		a2[i] = dp_free(a2[i]);
+		if (a2[i]) {
+		}
+		as[i] = dp_free(as[i]);
+		if (as[i]) {
+		}
 	}
 
-	dp_free(a);
-	dp_free(a1);
-	dp_free(a2);
-	dp_free(as);
+	a = dp_free(a);
+	if (a) {
+	}
+	a1 = dp_free(a1);
+	if (a1) {
+	}
+	a2 = dp_free(a2);
+	if (a2) {
+	}
+	as = dp_free(as);
+	if (as) {
+	}
 
 	return;
 }
@@ -1528,12 +1573,13 @@ void reduce_crossings2(struct gml_graph *g, int it1v, int it2v)
 {
 
 	/* number of crossing edges at level */
-	if (g->numce == NULL) {
-		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
-		if (g->numce == NULL) {
-			return;
+	if (g->numce) {
+		g->numce = dp_free(g->numce);
+		if (g->numce) {
 		}
 	}
+
+	g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	if (g->maxlevel == 0) {
 		/* if graph has only 1 or more nodes */

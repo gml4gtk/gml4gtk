@@ -1,5 +1,11 @@
 https://graphviewer.nl/
 
+For windows users this open sourse project can improve by blocking
+spy and other websites at https://crazymax.dev/WindowsSpyBlocker/
+
+The gml4gtk windows version has included the gtk-3 dll's but when
+thwy are already installed these included dll's are not needed.
+
 To run this program on windows it needs the 64bits gtk-3 dll's to be installed
 and these are available from: https://sourceforge.net/projects/gtk3win/
 The file with 64bits gtk3 dll's is gtk3-runtime x84_64
@@ -24,9 +30,10 @@ also:
 make clean
 make cleaner
 
-For gtk2 or gtk3
-./configure --with-gtk=2.0
-./configure --with-gtk=3.0
+For gtk2 or gtk3 or gtk4
+./configure --with-gtk=2
+./configure --with-gtk=3
+./configure --with-gtk=4
 
 Usage:
 gml4gtk
@@ -36,10 +43,20 @@ gml4gtk file.dot
 gml4gtk file.gv
 
 Or see make-gtk2.sh and make-gtk3.sh scripts for the gtk2 or gtk3 versions.
+
+also these options can be used:
+gml4gtk --version [print version to stdout and exit]
+gml4gtk --debug [shows gtk gdk drawing debug]
+
+setting GTK_DEBUG in the environment turns on gtk debugging, see the gtk docs
+
+
 When compiled with "./configure --enable-gcc-warnings" to get more compiler
 checks a -DMEMCHECK cflag is set and in dpmem.c is extra memory check done.
 
 Because this is a gtk program it can be compiled for windows or mac osx.
+The gtk support for compilation on os-x is at https://gitlab.gnome.org/GNOME/gtk-osx
+On Linux it is possible to cross compile to os-x and not easy to create a setup.
 
 When compiled for windows it needs all gtk dll's to run the program.
 
@@ -171,14 +188,6 @@ For free pdf's about graph layout topics search also here:
 https://scholar.archive.org/
 Use for example "graph barycenter" as search.
 
-Todo: dot does incremental layout for the cluster subgraphs
-and gml4gtk can do that, but need to find a way to combine
-the results in a single drawing. The problem is that when
-edges go from one part to inside of another part the edge
-is constructed using dummy nodes and lines between them then
-extra dummy nodes must be added to the part which may change
-the layout of that part.
-
 To generate skeleton for use with flex-2.4.6 go into it's src dir and run:
 sed 's/m4_/m4postproc_/g; s/m4preproc_/m4_/g' flex.skl | m4 -P -DFLEX_MAJOR_VERSION=2 -DFLEX_MINOR_VERSION=4 -DFLEX_SUBMINOR_VERSION=6 | sed 's/m4postproc_/m4_/g' > myflex.skl
 Then use flex with "flex -Smyflex.skl input.l" and now myflex.skl can be edited.
@@ -188,9 +197,6 @@ The source is checked and used with clang-12 and gcc-11 compiler development ver
 To make a package for debian, slackware, fedora, ubuntu the checkinstall program can be used.
 
 Settings for autoconf can be changed editing the .autom4te.cfg file
-
-And donations of samples of graph data to layout are needed
-or financial means to buy programming and graph books.
 
 some parts are (C) Universitaet Passau 1986-1991
 some parts are Copyright (C) 1998-2021 Free Software Foundation, Inc. from GNU GCC

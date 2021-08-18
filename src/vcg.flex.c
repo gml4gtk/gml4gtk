@@ -3305,7 +3305,7 @@ static const flex_int16_t yy_rule_linenum[23] =
     {   0,
       123,  124,  125,  126,  128,  129,  130,  131,  133,  134,
       135,  137,  138,  139,  140,  141,  142,  143,  144,  145,
-      147,  200
+      147,  199
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -3395,7 +3395,7 @@ static gzFile vcgzin = (gzFile)0;
 		int estatus = 0; \
 		const char *es = gzerror (vcgzin, &estatus); \
 		if (estatus == Z_BUF_ERROR) { \
-			YY_FATAL_ERROR( "gzfread() in vcg.l flex scanner failed"); \
+			YY_FATAL_ERROR( "gzread() in vcg.l flex scanner failed"); \
 		} else { \
 			if (estatus) { \
 				printf ("%s(): zlib error status %d %s in vcg.l\n",__func__,(int)estatus,es); \
@@ -3713,7 +3713,7 @@ YY_DECL
 		 */
 		yy_bp = yy_cp;
 
-/* %% [9.0] code to set up and find next match goes here */
+/* %% [9.0] code to set up and find next match goes here - scan-build says array subscript is undefined at the generated code yy_nxt[yy_current_state][ YY_SC_TO_UI(*yy_cp) ]) */
 		yy_current_state = (yy_start);
 yy_match:
 		while ( (yy_current_state = yy_nxt[yy_current_state][ YY_SC_TO_UI(*yy_cp) ]) > 0 )
@@ -3883,15 +3883,15 @@ case 21:
 YY_RULE_SETUP
 #line 147 "vcg.l"
 {
-				  if (vcgleng == 2) {
+				  if (yyleng == 2) {
 				    /* string is "" */
 				    vcglaststring = vcg_uniqstr ("");
 				    return (VCG_STRING);
 				  }
 				  /* copy and filter the text, and clear last " */
-				  vcgtext[vcgleng-1] = 0;
-				  tmpp = (char *) dp_calloc (1, (vcgleng+1));
-				  p = vcgtext;
+				  yytext[yyleng-1] = 0;
+				  tmpp = (char *) dp_calloc (1, (yyleng+1));
+				  p = yytext;
 				  p++; /* skip first " */
 				  q = tmpp;
 				  while (*p)
@@ -3928,8 +3928,7 @@ YY_RULE_SETUP
 				  }
 				  p = vcg_uniqstr (tmpp);
 				  vcglaststring = p;
-				  dp_free (tmpp);
-				  tmpp = NULL;
+				  tmpp = dp_free (tmpp);
 				  p = NULL;
 				  q = NULL;
 				  return (VCG_STRING);
@@ -3937,15 +3936,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 200 "vcg.l"
+#line 199 "vcg.l"
 { return ((int)yytext[0]); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 202 "vcg.l"
+#line 201 "vcg.l"
 ECHO;
 	YY_BREAK
-#line 3949 "vcg.flex.c"
+#line 3948 "vcg.flex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -5075,17 +5074,17 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 202 "vcg.l"
+#line 201 "vcg.l"
 
 
 /* */
 void vcg_lex_init (gzFile f, int debugflag)
 {
   vcglineno=1;
-  vcgin = (FILE *)0;
+  yyin = (FILE *)0;
   vcgzin = (gzFile)f;
   /* activate debug in lexer */
-  vcg_flex_debug = debugflag;
+  yy_flex_debug = debugflag;
   /* activate debug in vcg parser */
   vcgdebug = debugflag;
   return;
@@ -5096,9 +5095,9 @@ void vcg_lex_clear (void)
 {
   vcglineno=1;
   yylex_destroy();
-  vcg_flex_debug = 0;
+  yy_flex_debug = 0;
   vcgzin = (gzFile)0;
-  vcgin = (FILE *)0;
+  yyin = (FILE *)0;
   return;
 }
 

@@ -69,6 +69,18 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 	struct dpstyle *stylenum = NULL;
 	struct dpmargin *mnum = NULL;
 
+	/* safety */
+	if (l == NULL) {
+		printf("dot %s():  shouldnothappen nil l\n", __func__);
+		return;
+	}
+
+	/* safety */
+	if (r == NULL) {
+		printf("dot %s():  shouldnothappen nil r\n", __func__);
+		return;
+	}
+
 	if (dp_cclass == DP_TNODE) {
 		res = dp_curnode;
 	} else if (dp_cclass == DP_TNODEDEF) {
@@ -109,8 +121,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.colorset = 1;
 			}
-			dp_free(colornum);
-			colornum = NULL;
+			colornum = (struct dpcolor *)dp_free((void *)colornum);
+			if (colornum) {
+			}
 		} else if (strcmp(l, "colorscheme") == 0) {
 			tmpi = dp_colorschemecode(r);
 			if (tmpi == (-1)) {
@@ -165,8 +178,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 						 __func__, r, res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		}
 		break;
 
@@ -198,8 +212,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.fcolorset = 1;
 			}
-			dp_free(colornum);
-			colornum = NULL;
+			colornum = (struct dpcolor *)dp_free((void *)colornum);
+			if (colornum) {
+			}
 		} else if (strcmp(l, "fixedsize") == 0) {
 			/* if fixedsize=true, the width parameter is used for node x size */
 			boolnum = dp_getbool(r);
@@ -221,8 +236,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.fixsizeset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "fontcolor") == 0) {
 			colornum = dp_getcolor(res->bitflags0.csnumset, res->csnum, r);
 			if (colornum->pe) {
@@ -249,8 +265,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.fontcolorset = 1;
 			}
-			dp_free(colornum);
-			colornum = NULL;
+			colornum = (struct dpcolor *)dp_free((void *)colornum);
+			if (colornum) {
+			}
 		} else if (strcmp(l, "fontname") == 0) {
 			if (r) {
 				if (strlen(r)) {
@@ -286,8 +303,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 						 res->yylineno);
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else {
 			/* something else */
 		}
@@ -340,8 +358,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags0.heightset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "href") == 0) {
 			/* url node */
 			if (r) {
@@ -401,8 +420,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.iscaleset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else {
 			/* something else */
 		}
@@ -422,7 +442,7 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				} else {
 					/* label="" does empty the label text */
 					/* dot sets few spaces at "" to get ellipse default shape */
-					res->label = dp_uniqstr("  ");
+					res->label = dp_uniqstr((char *)"  ");
 					res->htmllabel = 0;
 				}
 				res->bitflags0.labelset = 1;
@@ -497,8 +517,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 							res->marginy = mnum->y;
 						}
 					}
-					dp_free(mnum);
-					mnum = NULL;
+					mnum = (struct dpmargin *)dp_free((void *)mnum);
+					if (mnum) {
+					}
 					res->bitflags0.marginset = 1;
 				}
 			}
@@ -531,8 +552,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.nojustset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else {
 			/* something else */
 		}
@@ -564,8 +586,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags0.oriset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else {
 			/* something else */
 		}
@@ -597,8 +620,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags0.penwidthset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "peripheries") == 0) {
 			/* for polygonal shapes */
 			num = dp_getnum(r);
@@ -624,8 +648,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags0.periset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "pin") == 0) {
 			/* fixed pos of node if pos specified */
 			boolnum = dp_getbool(r);
@@ -647,8 +672,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags0.pinset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "pos") == 0) {
 			/* position of node %f,%f as string */
 			if (r) {
@@ -713,8 +739,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 				}
 				res->bitflags1.reguset = 1;
 			}
-			dp_free(boolnum);
-			boolnum = NULL;
+			boolnum = (struct dpbool *)dp_free((void *)boolnum);
+			if (boolnum) {
+			}
 		} else if (strcmp(l, "root") == 0) {
 			/* this is not a dot but twopi keyword */
 		} else {
@@ -749,8 +776,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags1.spset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "shape") == 0) {
 			tmpi = dp_isdotshape(r);
 			if (tmpi == (-1)) {
@@ -797,8 +825,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags1.showbset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "sides") == 0) {
 			/* number of sides in a polygon shape */
 			num = dp_getnum(r);
@@ -832,8 +861,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags0.sidesset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "skew") == 0) {
 			/* +/- skew factor polygon shape */
 			num = dp_getnum(r);
@@ -856,8 +886,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags1.skewset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "sortv") == 0) {
 			/* packing modus */
 			num = dp_getnum(r);
@@ -882,8 +913,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags1.sortvset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else if (strcmp(l, "style") == 0) {
 			stylenum = dp_getstyle(r);
 			if (stylenum->pe) {
@@ -1018,8 +1050,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					}
 				}
 			}
-			dp_free(stylenum);
-			stylenum = NULL;
+			stylenum = (struct dpstyle *)dp_free((void *)stylenum);
+			if (stylenum) {
+			}
 		} else {
 			/* something else */
 		}
@@ -1086,8 +1119,9 @@ void dp_do_nattr(char *l, char *r, int ishtml)
 					res->bitflags0.widthset = 1;
 				}
 			}
-			dp_free(num);
-			num = NULL;
+			num = (struct dpnum *)dp_free((void *)num);
+			if (num) {
+			}
 		} else {
 			/* something else */
 		}

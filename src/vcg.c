@@ -56,6 +56,7 @@
 #include "vcg.yy.h"
 #include "vcg.tab.h"
 #include "dpmem.h"
+#include "dot.tab.h"
 
 /* like yydebug, set via lexer init */
 int vcgdebug = 0;
@@ -96,8 +97,9 @@ static void vel_clear(void)
 
 	while (pvnl) {
 		pvnlnext = pvnl->next;
-		dp_free(pvnl);
-		pvnl = NULL;
+		pvnl = dp_free(pvnl);
+		if (pvnl) {
+		}
 		pvnl = pvnlnext;
 	}
 
@@ -114,8 +116,9 @@ static void vnl_clear(void)
 
 	while (pvnl) {
 		pvnlnext = pvnl->next;
-		dp_free(pvnl);
-		pvnl = NULL;
+		pvnl = dp_free(pvnl);
+		if (pvnl) {
+		}
 		pvnl = pvnlnext;
 	}
 
@@ -680,11 +683,7 @@ int vcgparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 	vcgerror = 0;
 
 	/* in vcg.l */
-	if (strcmp(argv0, "gml4gtkd") == 0) {
-		vcg_lex_init(f, /* debugflag */ 0);
-	} else {
-		vcg_lex_init(f, /* debugflag */ 0);
-	}
+	vcg_lex_init(f, /* debugflag */ yydebug);
 
 	/* expect "graph" as first token in vcg graph */
 	vcgtoken = vcglex();

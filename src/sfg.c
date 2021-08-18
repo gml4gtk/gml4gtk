@@ -83,8 +83,10 @@ static inline void *sfg_calloc (size_t nmemb, size_t size)
 
 static inline void *sfg_free (void *ptr)
 {
+void *p2=NULL;
 	if (ptr) {
-		(void)dp_free (ptr);
+		p2=dp_free (ptr);
+if(p2){}
 	}
 	return ((void *)0);
 }
@@ -1831,8 +1833,12 @@ static void clear_nodelist(struct gml_graph *g)
 	lnll = g->nodelist;
 	while (lnll) {
 		nlnext = lnll->next;
+if(		lnll->node ){
 		lnll->node = (struct gml_node *) sfg_free(lnll->node);
+}
+if(		lnll->node ){}
 		lnll = (struct gml_nlist *) sfg_free(lnll);
+if(		lnll ){}
 		lnll = nlnext;
 	}
 	g->nodelist = NULL;
@@ -4228,9 +4234,12 @@ static void barycenter(struct gml_graph *g, int it1v, int it2v)
 {
 
 	/* number of crossing edges at level */
-	if (g->numce == NULL) {
+	if (g->numce ) {
+		g->numce = (int *)dp_freen (		g->numce );
+if(		g->numce ){}
+}
 		g->numce = (int *) sfg_calloc(1, (g->maxlevel + 1) * sizeof(int));
-	}
+
 
 	if (g->maxlevel == 0) {
 		/* if graph has only 1 or more nodes */

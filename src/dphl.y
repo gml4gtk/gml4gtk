@@ -158,8 +158,11 @@ static void yyerror (const char *msg)
  */
 %define api.prefix {hly}
 
-/* not a yacc parser and gcc-11 analyzer has a problem with bison yacc parsers. */
-%glr-parser
+/* not a yacc parser and gcc-11 analyzer has a problem with bison yacc parsers.
+ * %glr-parser
+ * the glr parser output has problems when compiled with C++ compiler
+ * todo to find a solution
+ */
 
 /* where to start in the grammar */
 %start begin
@@ -456,7 +459,7 @@ table_1arg:
 	| HL_TOOLTIP HL_IS HL_QSTR { if (dphl_chk_title ($3,T_TABLE)) { YYERROR; } }
 	| HL_VALIGN HL_IS HL_QSTR { if (dphl_chk_valign ($3,T_TABLE)) { YYERROR; } }
 	| HL_WIDTH HL_IS HL_QSTR { if (dphl_chk_width ($3,T_TABLE)) { YYERROR; } }
-	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ("<table>", $1, $3); }
+	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ((char *) "<table>", $1, $3); }
 	;
 
 /* for <td> with optional args
@@ -510,7 +513,7 @@ td_1arg:
 	| HL_TOOLTIP HL_IS HL_QSTR { if (dphl_chk_title ($3,T_TD)) { YYERROR; } }
 	| HL_VALIGN HL_IS HL_QSTR { if (dphl_chk_valign ($3,T_TD)) { YYERROR; } }
 	| HL_WIDTH HL_IS HL_QSTR { if (dphl_chk_width ($3,T_TD)) { YYERROR; } }
-	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ("<td>", $1, $3); }
+	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ((char *) "<td>", $1, $3); }
 	;
 
 /* for <img> with optional args but src must be set
@@ -526,7 +529,7 @@ img_arg:
 img_1arg:
 	  HL_SCALE HL_IS HL_QSTR { if (dphl_chk_scale ($3)) { YYERROR; } }
 	| HL_SRC HL_IS HL_QSTR { if (dphl_chk_src ($3)) { YYERROR; } }
-	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ("<img>", $1, $3); }
+	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ((char *) "<img>", $1, $3); }
 	;
 
 /* for <br> with optional arg
@@ -539,7 +542,7 @@ br_arg:
 
 br_1arg:
 	  HL_ALIGN HL_IS HL_QSTR { if (dphl_chk_align ($3,T_BR)) { YYERROR; } }
-	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ("<br>", $1, $3); }
+	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ((char *) "<br>", $1, $3); }
 	;
 
 /* for <font> with optional args
@@ -556,7 +559,7 @@ font_1arg:
 	  HL_COLOR HL_IS HL_QSTR { if (dphl_chk_color ($3,T_FONT)) { YYERROR; } }
 	| HL_FACE HL_IS HL_QSTR { if (dphl_chk_face ($3)) { YYERROR; } }
 	| HL_POINTSIZE HL_IS HL_QSTR { if (dphl_chk_pointsize ($3)) { YYERROR; } }
-	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ("<font>", $1, $3); }
+	| HL_STR HL_IS HL_QSTR { dphl_attr_huh ((char *) "<font>", $1, $3); }
 	;
 
 %%

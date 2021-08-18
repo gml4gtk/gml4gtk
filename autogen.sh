@@ -44,6 +44,7 @@ rm -f ./configure
 rm -f ./Makefile
 rm -f ./Makefile.in
 rm -fr src/.deps
+rm -fr m4
 
 #
 locate_binary() {
@@ -201,6 +202,8 @@ echo "./autogen.sh: done with autoconf"
 #scan-build make
 #./configure --enable-gcc-warnings CC=gcc
 #./configure --enable-gcc-warnings CC=clang
-#./configure --with-gtk=2.0
+./configure --with-gtk=2.0
+make clean
+dmake
 
 # end.

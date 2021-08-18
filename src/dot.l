@@ -49,9 +49,10 @@
 
 static gzFile gvzin = (gzFile)0;
 
+/* gzfread cannot be used because of older zlib in the dll */
 #undef YY_INPUT
 #define YY_INPUT(buf,result,max_size) do { \
-	if ( (result = gzread(gvzin, (char*)buf, (sizeof(char) * max_size) )) < 0) { \
+	if ( (result = gzread(gvzin, (char*)buf, (sizeof(char) * max_size) )) == 0) { \
 		int estatus = 0; \
 		const char *es = gzerror (gvzin, &estatus); \
 		if (estatus == Z_BUF_ERROR) { \
@@ -141,8 +142,8 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 "]"				{ return (TOKEN_BRACKETCLOSE); }
 "{"				{ return (TOKEN_BRACEOPEN); }
 "}"				{ return (TOKEN_BRACECLOSE); }
-"--"				{ yylval.string = "--"; return (TOKEN_EOP); }
-"->"				{ yylval.string = "->"; return (TOKEN_EOP); }
+"--"				{ yylval.string = (char *) dp_uniqstr ((char *) "--"); return (TOKEN_EOP); }
+"->"				{ yylval.string = (char *) dp_uniqstr ((char *) "->"); return (TOKEN_EOP); }
 
 [Ee][Dd][Gg][Ee]		{ return(TOKEN_EDGE); }
 [Nn][Oo][Dd][Ee]		{ return(TOKEN_NODE); }
@@ -154,8 +155,7 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 {STR}				{
 				  if(yyleng == 2) {
 				    /* string is "" */
-				    p = dp_uniqstr ("");
-				    yylval.string = p;
+				    yylval.string = (char *)dp_uniqstr((char *)"");
 				    return (TOKEN_QTEXT);
 				  }
 				  /* copy and filter the text, and clear last " */
@@ -216,35 +216,58 @@ NUM	{INUM}|{FNUM1}|{FNUM2}|{FNUM3}
 				      q++;
 				    }
 				  }
-				  p = dp_uniqstr (tmpp);
-				  yylval.string = p;
-				  dp_free (tmpp);
-				  tmpp = NULL;
+				  yylval.string = (char *) dp_uniqstr ((char *)tmpp);
+				  tmpp = (char *) dp_free ((void *) tmpp);
 				  p = NULL;
 				  q = NULL;
 				  return (TOKEN_QTEXT);
 				}
 
 {ID}				{
-				  p = dp_uniqstr (yytext);
-				  yylval.string = p;
+				  yylval.string = (char *) dp_uniqstr ((char *)yytext);
 				  return (TOKEN_TEXT);
 				}
 
 {NUM}				{
-				  p = dp_uniqstr (yytext);
-				  yylval.string = p;
+				  yylval.string =(char *)dp_uniqstr ((char *)yytext);
 				  return (TOKEN_NUM);
 				}
 
 	/* html label, but if it is <> return "" */
-[<]				{ BEGIN(htmlstr); htmlnest = 1; yylval.string = "<"; }
-<htmlstr>[>]			{ htmlnest--; if(htmlnest) { yylval.string = dp_ccat(yylval.string,yytext); } else { yylval.string = dp_ccat(yylval.string,">"); BEGIN(INITIAL); if (strlen(yylval.string) == 2) { yylval.string = ""; } return (TOKEN_HTEXT); } }
-<htmlstr>[<]			{ htmlnest++; yylval.string = dp_ccat(yylval.string,yytext); }
-<htmlstr>[\\][<]		{ yylval.string = dp_ccat(yylval.string,"&lt;"); }
-<htmlstr>[\\][>]		{ yylval.string = dp_ccat(yylval.string,"&gt;"); }
-<htmlstr>[\\][\n]		{ /* yylineno++ is update by lexer code */ ; }
-<htmlstr>([^><\\]*|[\\].)	{ yylval.string = dp_ccat(yylval.string,yytext); }
+[<]				{
+					BEGIN(htmlstr);
+					htmlnest = 1;
+					yylval.string = (char *)"<";
+				}
+<htmlstr>[>]			{
+					htmlnest--;
+					if(htmlnest) {
+						yylval.string = (char *) dp_ccat((char *) yylval.string,(char *)yytext);
+					} else {
+						yylval.string = dp_ccat((char *) yylval.string,(char *) ">");
+						BEGIN(INITIAL);
+						if (strlen(yylval.string) == 2) {
+							yylval.string = (char *) "";
+						}
+						return (TOKEN_HTEXT);
+					}
+				}
+<htmlstr>[<]			{
+					htmlnest++;
+					yylval.string = (char *) dp_ccat((char *) yylval.string,(char *)yytext);
+				}
+<htmlstr>[\\][<]		{
+					yylval.string = (char *) dp_ccat((char *) yylval.string,(char *)"&lt;");
+				}
+<htmlstr>[\\][>]		{
+					yylval.string = (char *)dp_ccat((char *)yylval.string,(char *)"&gt;");
+				}
+<htmlstr>[\\][\n]		{
+					/* yylineno++ is update by lexer code */ ;
+				}
+<htmlstr>([^><\\]*|[\\].)	{
+					yylval.string = (char *)dp_ccat((char *)yylval.string,(char *)yytext);
+				}
 
 
 .				{ return ((int)yytext[0]); }
@@ -260,9 +283,10 @@ void dp_lex_init (gzFile f, int debugflag)
   /* activate debug in lexer */
   yy_flex_debug = debugflag;
   /* activate debug in glr parser */
-  yydebug = debugflag;
+  /* yydebug is now set in main() */
+  /* yydebug = debugflag; */
   htmlnest = 0;
-  yyset_debug (debugflag);
+  /* yyset_debug (debugflag); */
   return;
 }
 
@@ -270,8 +294,7 @@ void dp_lex_init (gzFile f, int debugflag)
 static void dp_lex_clear (void)
 {
   if (tmpp) {
-    dp_free (tmpp);
-    tmpp = NULL;
+    tmpp = (char *) dp_free ((void *) tmpp);
   }
   p = NULL;
   q = NULL;

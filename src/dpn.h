@@ -34,6 +34,18 @@
 #ifndef DPN_H
 #define DPN_H 1
 
+#undef __BEGIN_DECLS
+#undef __END_DECLS
+#ifdef __cplusplus
+# define __BEGIN_DECLS extern "C" {
+# define __END_DECLS }
+#else
+# define __BEGIN_DECLS /* empty */
+# define __END_DECLS /* empty */
+#endif
+
+__BEGIN_DECLS
+
 /* node[] attribute to check */
 extern void dp_do_nattr (char *l, char *r, int ishtml);
 
@@ -42,6 +54,8 @@ extern void dp_nodefdef (struct dpnode *n);
 
 /* set graph default */
 extern void dp_nodegdef (struct dpnode *from, struct dpnode *n);
+
+__END_DECLS
 
 #endif
 
