@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Year, month and day this program is compiled. */
-#define COMPILE_DATE "Tue 17 Aug 2021"
+#define COMPILE_DATE "Mon Sep  6 21:34:34 UTC 2021"
 
 /* System where this is compiled. */
 #define COMPILE_UNAME "Linux"
@@ -80,7 +80,7 @@
 #define PACKAGE_NAME "gml4gtk"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "gml4gtk 7.5"
+#define PACKAGE_STRING "gml4gtk 7.6"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "gml4gtk.tar.gz"
@@ -89,7 +89,7 @@
 #define PACKAGE_URL "https://sourceforge.net/projects/gml4gtk"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "7.5"
+#define PACKAGE_VERSION "7.6"
 
 /* using a windows compiler */
 #define PLATFORM_WIN32 0
@@ -104,4 +104,4 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "7.5"
+#define VERSION "7.6"

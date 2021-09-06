@@ -32,7 +32,7 @@ The node labels can be turned off in the gui and popup selected then the labels 
 The gml4gtk program supports the usage of gzip'ed input graph data files using zlib  
 For other details see the README1 file  
 clang scan-build: No bugs found.  
-gcc-11.1 -fanalyzer option: issues in generated parser code  
+gcc-11.2.1 -fanalyzer option: no issues  
   
 ![screenshot](screenshot.png)
 

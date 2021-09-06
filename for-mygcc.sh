@@ -45,20 +45,58 @@
 #make CHECK="~/misc/src/smatch/smatch --full-path" CC=~/misc/src/smatch/smatch/cgcc
 #exit 0
 
+# using gcc-10 on debian 11
+# using gcc-11.2 on fedora 34
+rm -v -f O1 O2 O3
+autoreconf -fvim
+./configure --with-gtk=3 --enable-gcc-warnings CFLAGS=" -fanalyzer "
+make clean
+make CC=gcc CFLAGS="-O0 -fanalyzer " 1>O1 2>O2
+grep warn O2 >O3
+exit 0
+
 # GCC development snapshot in home directory called mygcc
 $HOME/mygcc/bin/gcc --version
+
+autoreconf -fvim
 
 # recommended way to do this and CC CFLAGS will not be added to shell environment
 # only newest software http://gcc.gnu.org
 # gcc-10.1 and gcc-11 has -fanalyzer option
-#./configure --enable-gcc-warnings CC=$HOME/mygcc/bin/gcc CFLAGS="-O0 -g"
-./configure --enable-gcc-warnings CC=$HOME/mygcc/bin/gcc CFLAGS="-O3 -g"
+#./configure --enable-gcc-warnings CC=$HOME/mygcc/bin/gcc CFLAGS="-O0 -g -fcallgraph-info "
+#./configure --enable-gcc-warnings CC=$HOME/mygcc12/bin/gcc CFLAGS="-g -O0 -fdump-rtl-all-graph -fdump-tree-all-graph -fdump-ipa-all-graph"
+#./configure --enable-gcc-warnings CC=$HOME/mygcc12/bin/gcc CFLAGS="-g -O0 -fanalyzer -fdump-analyzer-callgraph -fdump-analyzer-exploded-graph"
+./configure --enable-gcc-warnings CC=$HOME/mygcc12/bin/gcc CFLAGS=" -fanalyzer -fcallgraph-info "
+#./configure --enable-gcc-warnings CC=$HOME/mygcc/bin/gcc CFLAGS=" -fanalyzer "
+
+make clean
+#make
+#exit 0
+
+# set to 1/0
+doit="0"
+if test "$doit" -eq 1; then
+CC=$HOME/mygcc/bin/gcc
+CFLAGS=" -fanalyzer -Wall -Wextra -fdump-analyzer-callgraph"
+$CC $CFLAGS -c -I. -Isrc src/lex.yy.c 1>O1 2>O2
+grep warn O2 >O3
+exit 0
+fi
+
+#make CC=$HOME/mygcc/bin/gcc CFLAGS="-O0 -fcallgraph-info " 1>O1 2>O2
+#exit 0
+
+#make CC=$HOME/mygcc12/bin/gcc CFLAGS="-O0 -fanalyzer -fdump-analyzer-callgraph" 1>O1 2>O2
+#make CC=$HOME/mygcc12/bin/gcc CFLAGS="-O0 -fanalyzer  -fcallgraph-info" 1>O1 2>O2
+make CC=$HOME/mygcc/bin/gcc CFLAGS="-O0 -fanalyzer " 1>O1 2>O2
+grep warn O2 >O3
 
 #./configure CC=$HOME/mygcc/bin/gcc
 
 # rtl data gcc/graph.c
 #./configure CC=$HOME/mygcc/bin/gcc CFLAGS="-Wall -pedantic -fdump-rtl-all-graph"
 #$HOME/mygcc/bin/gcc -c -I. -I.. -fdump-rtl-all-graph src/rhp.c
+
 #$HOME/mygcc/bin/gcc -c -I. -I.. -fdump-tree-all-graph src/rhp.c
 #$HOME/mygcc/bin/gcc -c -I. -I.. -fdump-ipa-all-graph src/rhp.c
 # this generates vcg file with file extention .ci
@@ -68,14 +106,25 @@ $HOME/mygcc/bin/gcc --version
 #$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=da src/dp.c
 # su is stack usage
 #$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=su src/dp.c
-$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=su,da src/dpif.c
+#$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=su,da src/dpif.c
 #$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=su src/vcg.c
 #$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fcallgraph-info=su,da src/vcgus.c
 # these should generate dot files
 #$HOME/mygcc/bin/gcc -c -I. -I.. -fdump-analyzer-callgraph src/rhp.c
 #$HOME/mygcc/bin/gcc -c -I. -I.. -fdump-analyzer-exploded-graph src/rhp.c
 #$HOME/mygcc/bin/gcc -c -I. -I.. -fdump-analyzer-supergraph src/rhp.c
+$HOME/mygcc/bin/gcc --version
+exit 0
 
+$HOME/mygcc/bin/gcc -c -I. -I.. -Isrc -fanalyzer -fdump-analyzer-supergraph    src/dpif.c
+
+# -fdump-analyzer-state-purge
+# -fdump-analyzer-exploded-graph
+# -fdump-analyzer-callgraph
+# -fdump-analyzer-supergraph
+
+# -fdump-analyzer-exploded-graph -fdump-analyzer-state-purge -fdump-analyzer-supergraph src/dpif.c
+exit 0
 
 # tree data gcc/graph.c
 #./configure CC=$HOME/mygcc7/bin/gcc CFLAGS="-Wall -pedantic -fdump-tree-all-graph"

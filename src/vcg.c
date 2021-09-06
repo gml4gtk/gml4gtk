@@ -671,6 +671,9 @@ static void copyall(struct gml_graph *g)
 /* */
 int vcgparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 {
+	if (argv0) {
+	}
+
 	curfname = fname;
 
 	/* uniq node number */

@@ -93,16 +93,13 @@ static splay_tree gmlparser_splaytree = NULL;
 
 struct GML_pair *GML_parser(gzFile source, struct GML_stat *stat, int open)
 {
-
 	struct GML_token token;
-	struct GML_pair *pair;
-	struct GML_pair *list;
+	struct GML_pair *pair = NULL;
+	struct GML_pair *list = NULL;
 	struct GML_pair *tmp = NULL;
-	struct GML_list_elem *tmp_elem;
+	struct GML_list_elem *tmp_elem = NULL;
 
-	assert(stat);
-
-	pair = (struct GML_pair *)gmlparser_calloc(1, sizeof(struct GML_pair));
+	pair = (struct GML_pair *)gmlparser_calloc((size_t)1, sizeof(struct GML_pair));
 
 	list = pair;
 
@@ -176,7 +173,7 @@ struct GML_pair *GML_parser(gzFile source, struct GML_stat *stat, int open)
 
 		if (!stat->key_list) {
 			stat->key_list = (struct GML_list_elem *)
-			    gmlparser_calloc(1, sizeof(struct GML_list_elem));
+			    gmlparser_calloc((size_t)1, sizeof(struct GML_list_elem));
 			stat->key_list->next = NULL;
 			stat->key_list->key = token.value.string;
 			pair->key = token.value.string;
@@ -198,7 +195,7 @@ struct GML_pair *GML_parser(gzFile source, struct GML_stat *stat, int open)
 			if (!tmp_elem) {
 				/* #warning "memleak here " */
 				tmp_elem = (struct GML_list_elem *)
-				    gmlparser_calloc(1, sizeof(struct GML_list_elem));
+				    gmlparser_calloc((size_t)1, sizeof(struct GML_list_elem));
 				tmp_elem->next = stat->key_list;
 				stat->key_list = tmp_elem;
 				tmp_elem->key = token.value.string;
@@ -209,6 +206,15 @@ struct GML_pair *GML_parser(gzFile source, struct GML_stat *stat, int open)
 		token = GML_scanner(source);
 
 		switch (token.kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_LIST:	/* unused */
+			break;
+
 		case GML_INT:
 			pair->kind = GML_INT;
 			pair->value.integer = token.value.integer;
@@ -262,7 +268,7 @@ struct GML_pair *GML_parser(gzFile source, struct GML_stat *stat, int open)
 		}
 
 		tmp = pair;
-		pair = (struct GML_pair *)gmlparser_calloc(1, sizeof(struct GML_pair));
+		pair = (struct GML_pair *)gmlparser_calloc((size_t)1, sizeof(struct GML_pair));
 		tmp->next = pair;
 	}
 
@@ -338,6 +344,7 @@ void GML_print_list(struct GML_pair *list, int level)
 		printf("*KEY* : %s", tmp->key);
 
 		switch (tmp->kind) {
+
 		case GML_INT:
 			printf("  *VALUE* (long) : %ld \n", tmp->value.integer);
 			break;
@@ -355,8 +362,24 @@ void GML_print_list(struct GML_pair *list, int level)
 			GML_print_list(tmp->value.list, level + 1);
 			break;
 
+		case GML_KEY:
+			printf("Unexpected \n");
+			break;
+		case GML_L_BRACKET:
+			printf("Unexpected \n");
+			break;
+		case GML_R_BRACKET:
+			printf("Unexpected \n");
+			break;
+		case GML_END:
+			printf("Unexpected \n");
+			break;
+		case GML_ERROR:
+			printf("Unexpected \n");
+			break;
+
 		default:
-			printf("Unknown kind %d\n", tmp->kind);
+			printf("Unknown kind %u\n", tmp->kind);
 			break;
 		}
 
@@ -376,14 +399,14 @@ void gmlparser_free(void *ptr)
 }
 
 /* tracking memory allocations in the splay */
-void *gmlparser_calloc(int nn, size_t sz)
+void *gmlparser_calloc(size_t nn, size_t sz)
 {
 	void *ret;
-	ret = dp_calloc(nn, sz);
+	ret = dp_calloc((size_t)1, (nn * sz));
 	if (gmlparser_splaytree == NULL) {
 		gmlparser_splaytree = splay_tree_new(splay_tree_compare_pointers, splay_tree_free_key, NULL);
 	}
-	splay_tree_insert(gmlparser_splaytree, (splay_tree_value) ret, 0);
+	splay_tree_insert(gmlparser_splaytree, (splay_tree_key) ret, (splay_tree_value) 0);
 	return (ret);
 }
 
@@ -416,6 +439,17 @@ static struct edgegr *GT_parse_list_edge_graphics(struct GML_pair *pairs)
 	while (pairs) {
 
 		switch (pairs->kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_L_BRACKET:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_ERROR:	/* unused */
+			break;
+
 		case GML_INT:
 			break;
 
@@ -450,7 +484,7 @@ static struct edgegr *GT_parse_list_edge_graphics(struct GML_pair *pairs)
 				}
 
 				if (pe == 0) {
-					ecolor = ((red << 16) | (green << 8) | blue);
+					ecolor = (int)(((red << 16) | (green << 8) | blue));
 					foundecolor = 1;
 				} else {
 					printf
@@ -473,7 +507,7 @@ static struct edgegr *GT_parse_list_edge_graphics(struct GML_pair *pairs)
 	}
 
 	if (foundecolor) {
-		egr = dp_calloc(1, sizeof(struct edgegr));
+		egr = dp_calloc((size_t)1, sizeof(struct edgegr));
 		egr->foundecolor = foundecolor;
 		egr->ecolor = ecolor;
 		return (egr);
@@ -509,13 +543,24 @@ static void GT_parse_list_edge(struct gml_graph *g, struct GML_pair *pairs)
 
 	while (pairs) {
 		switch (pairs->kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_L_BRACKET:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_ERROR:	/* unused */
+			break;
+
 		case GML_INT:
 			if (strcasecmp(pairs->key, "source") == 0) {
-				foundsource = pairs->value.integer;
+				foundsource = (int)pairs->value.integer;
 				foundsourceset++;
 			}
 			if (strcasecmp(pairs->key, "target") == 0) {
-				foundtarget = pairs->value.integer;
+				foundtarget = (int)pairs->value.integer;
 				foundtargetset++;
 			}
 			break;
@@ -670,6 +715,17 @@ static struct nodelgr *GT_parse_list_node_labelgraphics(struct GML_pair *pairs)
 	while (pairs) {
 
 		switch (pairs->kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_L_BRACKET:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_ERROR:	/* unused */
+			break;
+
 		case GML_INT:
 			break;
 
@@ -702,7 +758,7 @@ static struct nodelgr *GT_parse_list_node_labelgraphics(struct GML_pair *pairs)
 					pe = 1;
 				}
 				if (pe == 0) {
-					fontcolor = ((red << 16) | (green << 8) | blue);
+					fontcolor = (int)((red << 16) | (green << 8) | blue);
 					foundfontcolor = 1;
 				} else {
 					printf
@@ -728,7 +784,7 @@ static struct nodelgr *GT_parse_list_node_labelgraphics(struct GML_pair *pairs)
 	}
 
 	if (foundtext || foundfontcolor) {
-		nlgr = dp_calloc(1, sizeof(struct nodelgr));
+		nlgr = dp_calloc((size_t)1, sizeof(struct nodelgr));
 		nlgr->foundfontcolor = foundfontcolor;
 		nlgr->fontcolor = fontcolor;
 		nlgr->foundtext = foundtext;
@@ -762,6 +818,17 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 	while (pairs) {
 
 		switch (pairs->kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_L_BRACKET:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_ERROR:	/* unused */
+			break;
+
 		case GML_INT:
 			break;
 
@@ -795,7 +862,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 				}
 
 				if (pe == 0) {
-					ncolor = ((red << 16) | (green << 8) | blue);
+					ncolor = (int)((red << 16) | (green << 8) | blue);
 					foundncolor = 1;
 				} else {
 					printf("gml %s(): cannot parse node background color %s\n", __func__, pairs->value.string);
@@ -827,7 +894,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 					pe = 1;
 				}
 				if (pe == 0) {
-					nbcolor = ((red << 16) | (green << 8) | blue);
+					nbcolor = (int)((red << 16) | (green << 8) | blue);
 					foundnbcolor = 1;
 				} else {
 					printf("gml %s(): cannot parse node bordercolor %s\n", __func__, pairs->value.string);
@@ -847,7 +914,7 @@ static struct nodegr *GT_parse_list_node_graphics(struct GML_pair *pairs)
 	}
 
 	if (foundncolor || foundnbcolor) {
-		ngr = dp_calloc(1, sizeof(struct nodegr));
+		ngr = dp_calloc((size_t)1, sizeof(struct nodegr));
 		ngr->foundncolor = foundncolor;
 		ngr->ncolor = ncolor;
 		ngr->foundnbcolor = foundnbcolor;
@@ -887,12 +954,23 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 
 	while (pairs) {
 		switch (pairs->kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_L_BRACKET:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_ERROR:	/* unused */
+			break;
+
 		case GML_INT:
 			if (strcasecmp(pairs->key, "id") == 0) {
-				foundid = pairs->value.integer;
+				foundid = (int)pairs->value.integer;
 				foundidset++;
-				memset(buf, 0, 16);
-				snprintf(buf, 16 - 1, "%d", foundid);
+				memset(buf, 0, (size_t)16);
+				snprintf(buf, (size_t)(16 - 1), "%d", foundid);
 				nodename = uniqstr(buf);
 			}
 			break;
@@ -904,7 +982,7 @@ static void GT_parse_list_node(struct gml_graph *g, struct GML_pair *pairs)
 			if (strcasecmp(pairs->key, "id") == 0) {
 				nodename = uniqstr(pairs->value.string);
 				errno = 0;
-				rs = strtol(pairs->value.string, &strtolhelp, 10);
+				rs = strtol(pairs->value.string, &strtolhelp, (int)10);
 				if (errno || (*strtolhelp) != 0) {
 					/* error in number */
 					printf("gml %s(): string found at id but expecting a number and skipped\n", __func__);
@@ -1019,6 +1097,17 @@ static void GT_parse_list(struct gml_graph *g, struct GML_pair *pairs)
 	while (pairs) {
 
 		switch (pairs->kind) {
+		case GML_KEY:	/* unused */
+			break;
+		case GML_L_BRACKET:	/* unused */
+			break;
+		case GML_R_BRACKET:	/* unused */
+			break;
+		case GML_END:	/* unused */
+			break;
+		case GML_ERROR:	/* unused */
+			break;
+
 		case GML_INT:
 			break;
 
@@ -1054,8 +1143,8 @@ int gmlparse(struct gml_graph *g, gzFile f, char *fname)
 	struct GML_pair *data = NULL;
 	struct GML_stat *status = NULL;
 
-	status = dp_calloc(1, sizeof(struct GML_stat));
-	memset(parsermessage, 0, 256);
+	status = dp_calloc((size_t)1, sizeof(struct GML_stat));
+	memset(parsermessage, 0, (size_t)256);
 
 	data = GML_parser(f, status, 0);
 
@@ -1063,41 +1152,41 @@ int gmlparse(struct gml_graph *g, gzFile f, char *fname)
 		/* parsed not oke */
 		switch (status->err.err_num) {
 		case GML_UNEXPECTED:
-			snprintf(parsermessage, (256 - 1),
-				 "gml %s(): unexpected error near line %d:%d file %s",
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "gml %s(): unexpected error near line %u:%u file %s",
 				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_SYNTAX:
-			snprintf(parsermessage, (256 - 1),
-				 "gml %s(): syntax error near line %d:%d file %s", __func__, status->err.line, status->err.column,
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "gml %s(): syntax error near line %u:%u file %s", __func__, status->err.line, status->err.column,
 				 fname);
 			break;
 		case GML_PREMATURE_EOF:
-			snprintf(parsermessage, (256 - 1),
-				 "gml %s(): early end of file near line %d:%d file %s",
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "gml %s(): early end of file near line %u:%u file %s",
 				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_TOO_MANY_DIGITS:
-			snprintf(parsermessage, (256 - 1),
-				 "gml %s(): too many digits near line %d:%d file %s",
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "gml %s(): too many digits near line %u:%u file %s",
 				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_OPEN_BRACKET:
-			snprintf(parsermessage, (256 - 1),
-				 "gml %s(): open bracket error near line %d:%d file %s",
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "gml %s(): open bracket error near line %u:%u file %s",
 				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_TOO_MANY_BRACKETS:
-			snprintf(parsermessage, (256 - 1),
-				 "%s(gmlparser)(): too many brackets near line %d:%d file %s",
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "%s(gmlparser)(): too many brackets near line %u:%u file %s",
 				 __func__, status->err.line, status->err.column, fname);
 			break;
 		case GML_OK:
 			/* parsed oke and no message */
 			break;
 		default:
-			snprintf(parsermessage, (256 - 1),
-				 "gml %s(): unknown error near line %d:%d file %s", __func__, status->err.line, status->err.column,
+			snprintf(parsermessage, (size_t)(256 - 1),
+				 "gml %s(): unknown error near line %u:%u file %s", __func__, status->err.line, status->err.column,
 				 fname);
 			break;
 		}

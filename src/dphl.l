@@ -27,6 +27,7 @@
  */
 
 /* gcc-11 analyzer has several problems with the flex-2.4.6 generated lexers, even with own customized skeleton */
+/* at malloc error lexer will leak memory and do exit() */
 
 %{
 

@@ -5,40 +5,31 @@ flex -Sflex.skl dot.l
 #flex dphl.l
 flex -Sflex.skl dphl.l
 
-echo "generating vcg lexer"
+echo "generating lexers"
 # -d   == add debug code
 # -8   == generate 8 bits scanner
 # -f   == fast large scanner
 # -R   == reentrant lexer for threaded parsing
-flex -Sflex.skl -d -8 -f --yylineno --prefix=vcg --outfile=vcg.flex.c vcg.l
+# --tables-file=vcg.tables.c generates binary table data
+flex  -Sflex.skl -d -8 -f --yylineno --prefix=vcg --outfile=vcg.flex.c vcg.l
+
+echo "flex 2.6.4 on debian 11 works"
+echo "flex 2.6.4 on fedora 34 crashes"
+
+# special skeleton to write only the dfa table data
+# after manual edit it is usable for own yylex() routine
+# flex  -Sflextables.skl -d -8 -f --yylineno --prefix=vcg --outfile=vcg.flextables.c vcg.l
 
 
-rm dot.tab.c
-rm dot.tab.h
-rm dot.output
-rm dot.xml
-echo "generating dot lexer and parser"
-
-bison -d --graph=dot.gv -x dot.y
-cat dot.xml |xsltproc xml2dot.xsl - >dot2.gv
-cat dot.xml |xsltproc xml2text.xsl - >dot2.txt
-cat dot.xml |xsltproc xml2gml.xsl - >dot2.gml
-cat dot.xml |xsltproc xml2xhtml.xsl - >dot2.html
-
-echo "generating dot html lexer and parser"
-bison -d --graph=dphl.gv dphl.y
-#
-echo "flex 2.6.4 lexers generate warnings using scan-build and gcc-11"
 flex --version
 bison --version
 #
 diff -p flex.skl flex-2.6.4.skl >flex-skl-diff.txt
 
-echo "debian has flex 2.6.4"
-echo "fedora has flex version 2.6.4"
+echo "debian 11 has flex 2.6.4"
+echo "debian 10 has flex 2.6.4"
+echo "fedora 34 has flex version 2.6.4"
 
-echo "debian has bison version 3.3.2"
-echo "fedora has bison version 3.7.4"
 
 #  Using own customized skeleton for the lexer code:
 #   flex -S myflex.skl -o mylexer.c mylexer.l

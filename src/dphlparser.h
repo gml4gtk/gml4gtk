@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.7.4.  */
+/* A Bison parser, made by GNU Bison 3.7.5.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -137,7 +137,7 @@ extern int hlydebug;
 #if ! defined HLYSTYPE && ! defined HLYSTYPE_IS_DECLARED
 union HLYSTYPE
 {
-#line 186 "dphl.y"
+#line 191 "dphl.y"
  char *string; 
 
 #line 144 "dphlparser.h"

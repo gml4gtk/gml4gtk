@@ -36,6 +36,8 @@
 
 /* parse jgf json graph data using json.c */
 
+/* todo the gtk+ libs seem already have a json parser, test if that can be used instead of json.c */
+
 #include "config.h"
 
 #include <stdio.h>
@@ -447,6 +449,9 @@ int jgfparse(struct gml_graph *g, gzFile jgfinput, char *fname, char *argv0)
 	int ret = 0;
 	int jgfcol = 0;
 	int jgflines = 0;
+
+	if (argv0) {
+	}
 
 	/* todo make a parse tree first. */
 

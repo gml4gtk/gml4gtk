@@ -1,7 +1,6 @@
 
 /*
  *  Copyright 2021
- *  (C) Universitaet Passau 1986-1991
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,61 +34,11 @@
  * License-Filename: LICENSE
  */
 
-#ifndef GML_PARSER_H
-#define GML_PARSER_H 1
-
-union GML_pair_val {
-	long integer;
-	double floating;
-	char *string;
-	struct GML_pair *list;
-};
-
-struct GML_pair {
-	char *key;
-	GML_value kind;
-	union GML_pair_val value;
-	struct GML_pair *next;
-};
-
-struct GML_list_elem {
-	char *key;
-	struct GML_list_elem *next;
-};
-
-struct GML_stat {
-	struct GML_error err;
-	struct GML_list_elem *key_list;
-};
-
-/*
- * returns list of KEY - VALUE pairs. Errors and a pointer to a list
- * of key-names are returned in GML_stat. Previous information contained
- * in GML_stat, i.e. the key_list, will be *lost*.
- */
-
-extern struct GML_pair *GML_parser(gzFile stream, struct GML_stat *status, int code);
-
-/*
- * free memory used in a list of GML_pair
- */
-
-extern void GML_free_list(struct GML_pair *pl, struct GML_list_elem *el);
-
-/*
- * debugging
- */
-
-extern void GML_print_list(struct GML_pair *pl, int code);
-
-/* memory wrapping */
-extern void gmlparser_free(void *ptr);
+#ifndef POSZ_H
+#define POSZ_H 1
 
 /* */
-extern void *gmlparser_calloc(size_t nn, size_t sz);
-
-/* */
-extern int gmlparse(struct gml_graph *g, gzFile f, char *fname);
+extern void positionz(struct gml_graph *g);
 
 #endif
 

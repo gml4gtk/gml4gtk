@@ -50,7 +50,7 @@
 #include <string.h>
 
 /* switch mem lib */
-#undef CLIB
+#define CLIB 1			/* for testing plain clib is easier */
 
 #ifdef CLIB
 /* use the c lib */

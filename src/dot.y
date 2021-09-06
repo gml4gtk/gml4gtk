@@ -1,4 +1,9 @@
 
+/* bison 3.7.5 glr code
+dot.tab.c:359:18: warning: leak of ‘<unknown>’ [CWE-401] [-Wanalyzer-malloc-leak]
+dot.tab.c:2906:10: warning: leak of ‘yystack.yyitems’ [CWE-401] [-Wanalyzer-malloc-leak]
+*/
+
 /*
  *  Copyright 2021
  *

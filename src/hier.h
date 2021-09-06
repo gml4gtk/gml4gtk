@@ -103,8 +103,17 @@ extern void reorg(struct gml_graph *g);
 /* prepare */
 extern void prep(struct gml_graph *g);
 
+/* set edges with labels */
+extern void prepel(struct gml_graph *g);
+
 /* determine startnodes */
 extern void startnodes(struct gml_graph *g);
+
+/* determine startnodes */
+extern void startnodesafter(struct gml_graph *g);
+
+/* final after barycenter */
+extern void finalafter(struct gml_graph *g);
 
 /* prepare */
 extern void prepincr(struct gml_graph *g);
@@ -138,6 +147,9 @@ extern void clear_rawnodelist(struct gml_graph *g);
 
 /* free edgelist */
 extern void clear_rawedgelist(struct gml_graph *g);
+
+/* clear optional edge label data */
+extern void clear_edgelabeldata(struct gml_graph *g);
 
 /* free nodelist and nodes */
 extern void clear_nodelist_r(struct gml_graph *g, int mode);
@@ -176,13 +188,25 @@ extern void shorteredges(struct gml_graph *g);
 extern void doublespacey(struct gml_graph *g);
 
 /* doublespace the vertical levels */
-extern void doublespaceafter(struct gml_graph *g);
+extern void doublespaceyafter(struct gml_graph *g);
+
+/* check for same edges */
+extern void checksame(struct gml_graph *g);
+
+/* split same edges */
+extern void splitsame(struct gml_graph *g);
 
 /* split longer edges */
-extern void splitedges(struct gml_graph *g);
+extern void splitedges(struct gml_graph *g, int after);
+
+/* split longer edges */
+extern void splitedgesafter(struct gml_graph *g);
 
 /* create level node count data */
 extern void nodecounts(struct gml_graph *g);
+
+/* create level node count data */
+extern void nodecountsafter(struct gml_graph *g);
 
 /* */
 extern void add_new_node(struct gml_graph *g, struct gml_graph *ro, int nr,
@@ -198,9 +222,9 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	     int foundtarget, char *elabel, int ecolor, int style, char *fcompass, char *tcompass, int constraint, int ishtml);
 
 /* */
-extern void add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro,
+extern void add_new_dummyedge(struct gml_graph *g, struct gml_edge *rawedge, struct gml_graph *ro,
 			      int foundsource, int foundtarget, int reversed,
-			      int ecolor, int style, char *fcompass, char *tcompass, int constraint);
+			      int ecolor, int style, char *fcompass, char *tcompass, int constraint, struct gml_el *eldata);
 
 /* lists per position */
 extern void make_posnodes(struct gml_graph *g);

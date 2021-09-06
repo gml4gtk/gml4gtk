@@ -626,8 +626,12 @@ static struct gml_htlist *hltcopy_r(struct tlist *tl, struct gml_htlist *htl, st
 		while (tlptr) {
 
 			/* */
-			tlnew = dp_calloc(1, sizeof(struct gml_htlist));
+			tlnew = (struct gml_htlist *)dp_calloc(1, sizeof(struct gml_htlist));
 			tlnew = hltcopy_r(tlptr, tlnew, node);
+			if (tlnew == NULL) {	/* shouldnothappen */
+				return (NULL);
+			}
+
 			if (tlnew->titem) {
 
 				/* */
@@ -1184,6 +1188,9 @@ int dotparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 	if (fname) {
 	}
 
+	if (argv0) {
+	}
+
 	/* static buffer for parser error message */
 	memset(parsermessage, 0, 256);
 	memset(dp_errmsg, 0, 256);
@@ -1403,6 +1410,12 @@ int dotparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 
 	/* all edges */
 	es = dp_aedges;
+
+	/* ishtml is set if edge label is a html label
+	 * todo not implemented yet
+	 */
+	ishtml = 0;
+
 	while (es) {
 		edge = es->e;
 		/* graph where edge is located */
@@ -1436,6 +1449,11 @@ int dotparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 
 		/* econstraint is normally 1 */
 
+		/* todo html record label support for edge label
+		 * parse label here in components and copy data
+		 * add as param in add_new_edge()
+		 */
+
 		/* transform \n \l \r chars */
 		elabel = dolabel(NULL, edge->label);
 
@@ -1459,95 +1477,99 @@ int dotparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 		style = edge->style;
 		fc = uniqstr(edge->fcompass);
 		tc = uniqstr(edge->tcompass);
+		/* in hier.c copy to the layouter */
 		add_new_edge(g, ro, foundsource, foundtarget, elabel, ecolor, style, fc, tc, econstraint, ishtml);
 		es = es->next;
 	}
 
-	/* add artificial node for starter nodes when the rooted
-	 * subgraph cluster has a label and add edge to startnode.
-	 * this is needed for gcc rtl/tree/ipa data
-	 */
-	if (nodehasrootname) {
+	/* todo this is a way to add graph name but should be different */
+	if (1) {
+		/* add artificial node for starter nodes when the rooted
+		 * subgraph cluster has a label and add edge to startnode.
+		 * this is needed for gcc rtl/tree/ipa data
+		 */
+		if (nodehasrootname) {
 
-		/* init rand() */
-		srand((unsigned int)time(NULL));
-		/* list with all nodes */
-		nss = dp_anodes;
-		while (nss) {
+			/* init rand() */
+			srand((unsigned int)time(NULL));
+			/* list with all nodes */
+			nss = dp_anodes;
+			while (nss) {
 
-			/* get node data */
-			node = nss->n;
-			/* check the starter nodes */
-			if ((node->indegree == 0) && (node->outdegree != 0)) {
-				if (node->root) {
-					if (node->root->label) {
-						if (strlen(node->root->label)) {
+				/* get node data */
+				node = nss->n;
+				/* check the starter nodes */
+				if ((node->indegree == 0) && (node->outdegree != 0)) {
+					if (node->root) {
+						if (node->root->label) {
+							if (strlen(node->root->label)) {
 
-							/* todo html label for subgraph labels */
+								/* todo html label for subgraph labels */
 
-							if (yydebug || 0) {
-								printf
-								    ("%s(): node \"%s\" is rooted in cluster with label \"%s\" and adding artificial node\n",
-								     __func__, node->name, node->root->label);
+								if (yydebug || 0) {
+									printf
+									    ("%s(): node \"%s\" is rooted in cluster with label \"%s\" and adding artificial node\n",
+									     __func__, node->name, node->root->label);
+								}
+								/* this node is a starter node with cluster label
+								 * now add artifical node with cluster label
+								 * add edge from artificial node to this node
+								 */
+
+								/* graph where node is located */
+								ro = uniqgraph(node->root->nr);
+								/* node name with rand() chars */
+								nodename = dp_randnname();
+								if (yydebug || 0) {
+									printf
+									    ("%s(): generating artificial startnode \"%s\" to point to node \"%s\"\n",
+									     __func__, nodename, node->name);
+								}
+
+								/* set cluster label as node label */
+								nodelabel = dolabel(NULL, node->root->label);
+								/* node fill color white and bordercolor black */
+								ncolor = 0x00ffffff;
+								nbcolor = 0;
+								fontcolor = 0;
+								/* record or html data is currently not supported in cluster labels */
+								rl = NULL;
+								hl = NULL;
+								ishtml = 0;
+								/* uniq node number starting at 1 */
+								maingraph->nodenum++;
+								nr = maingraph->nodenum;
+								/* node number as in gml graph 
+								 * using -1 does not apply the gml id check.
+								 */
+								foundid = (-1);
+								add_new_node(g, ro, nr, foundid, nodename, nodelabel, ncolor,
+									     nbcolor, rl, hl, fontcolor, ishtml);
+								/* add edge from artifical node to startnode */
+								/* regular edge */
+								foundsource = maingraph->nodenum;
+								foundtarget = node->nr;
+								econstraint = 1;
+								elabel = NULL;
+								ishtml = 0;
+								ecolor = 0;
+								style = 0;
+								fc = NULL;
+								tc = NULL;
+								/* graph where edge is located */
+								ro = uniqgraph(node->root->nr);
+								add_new_edge(g, ro, foundsource, foundtarget, elabel, ecolor, style,
+									     fc, tc, econstraint, ishtml);
 							}
-							/* this node is a starter node with cluster label
-							 * now add artifical node with cluster label
-							 * add edge from artificial node to this node
-							 */
-
-							/* graph where node is located */
-							ro = uniqgraph(node->root->nr);
-							/* node name with rand() chars */
-							nodename = dp_randnname();
-							if (yydebug || 0) {
-								printf
-								    ("%s(): generating artificial startnode \"%s\" to point to node \"%s\"\n",
-								     __func__, nodename, node->name);
-							}
-
-							/* set cluster label as node label */
-							nodelabel = dolabel(NULL, node->root->label);
-							/* node fill color white and bordercolor black */
-							ncolor = 0x00ffffff;
-							nbcolor = 0;
-							fontcolor = 0;
-							/* record or html data is currently not supported in cluster labels */
-							rl = NULL;
-							hl = NULL;
-							ishtml = 0;
-							/* uniq node number starting at 1 */
-							maingraph->nodenum++;
-							nr = maingraph->nodenum;
-							/* node number as in gml graph 
-							 * using -1 does not apply the gml id check.
-							 */
-							foundid = (-1);
-							add_new_node(g, ro, nr, foundid, nodename, nodelabel, ncolor,
-								     nbcolor, rl, hl, fontcolor, ishtml);
-							/* add edge from artifical node to startnode */
-							/* regular edge */
-							foundsource = maingraph->nodenum;
-							foundtarget = node->nr;
-							econstraint = 1;
-							elabel = NULL;
-							ishtml = 0;
-							ecolor = 0;
-							style = 0;
-							fc = NULL;
-							tc = NULL;
-							/* graph where edge is located */
-							ro = uniqgraph(node->root->nr);
-							add_new_edge(g, ro, foundsource, foundtarget, elabel, ecolor, style,
-								     fc, tc, econstraint, ishtml);
 						}
 					}
 				}
+
+				nss = nss->next;
 			}
 
-			nss = nss->next;
 		}
-
-	}
+	}			/* if(1) */
 
 	/* background r/g/b of drawing */
 	if (dp_groot) {

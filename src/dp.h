@@ -993,7 +993,7 @@ struct dprankdir {
 struct dpranksep {
 	int pe;
 	int es;
-	int number;
+	double number;
 	int eq;
 };
 

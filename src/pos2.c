@@ -718,7 +718,7 @@ static void make_cnodelist(struct gml_graph *g)
 		printf("%s(): nodes in graph part with startnode %d are:\n", __func__, csn);
 		gnl = cnodelist;
 		while (gnl) {
-			printf("%s(): node \"%s\" level=%d\n", __func__, gnl->node->name, gnl->node->rely);
+			printf("%s(): node %d level=%d startnode %d\n", __func__, gnl->node->nr, gnl->node->rely, csn);
 			gnl = gnl->next;
 		}
 	}
@@ -1069,12 +1069,13 @@ static void cfinalxy(struct gml_graph *g)
 	yoff = 0;
 
 	/* number of edges between level n and n+1 */
+	if (g->nume) {
+		g->nume = (int *)dp_free((int *)g->nume);
+	}
 	g->nume = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 	/* scan vert. to adjust the y positions. */
 	for (i = 0; i < (g->maxlevel + 1); i++) {
-		/* y spacing between the vert. levels */
-		yoff = (yoff + yspacing);
 
 		/* determine half-way of the ypos. */
 		if (chpos[i] == 0) {
@@ -1084,9 +1085,15 @@ static void cfinalxy(struct gml_graph *g)
 			hw = (chpos[i] / 2);
 		}
 
-		/* update with current y */
+		/* update half-way with current y */
 		hw = hw + yoff;
 
+		if (yydebug || 0) {
+			printf("%s(): at level %d y size is %d from %d to %d and half-way is %d\n", __func__, i, chpos[i], yoff,
+			       yoff + chpos[i], hw);
+		}
+
+		/* nodes at this relative y level */
 		lnl = clevelnodes[i];
 
 		ecount = 0;
@@ -1156,6 +1163,7 @@ static void cfinalxy(struct gml_graph *g)
 	return;
 }
 
+/* move whole part to new x offset position */
 static void movefinal(int xoffset)
 {
 	struct gml_nlist *gnl = NULL;
@@ -1166,6 +1174,17 @@ static void movefinal(int xoffset)
 		gnl->node->finx = gnl->node->finx + xoffset;
 		gnl->node->lx0 = gnl->node->lx0 + xoffset;
 		gnl->node->lx1 = gnl->node->lx1 + xoffset;
+		/* x,y size of raster */
+		gnl->node->lxsize = (gnl->node->lx1 - gnl->node->lx0);
+		gnl->node->lysize = (gnl->node->ly1 - gnl->node->ly0);
+
+		/* extra check */
+		if (gnl->node->lxsize < 0) {
+			printf("%s(): lxsize=%d fixme\n", __func__, gnl->node->lxsize);
+		}
+		if (gnl->node->lysize < 0) {
+			printf("%s(): lysize=%d fixme\n", __func__, gnl->node->lysize);
+		}
 		gnl = gnl->next;
 	}
 
@@ -1272,10 +1291,12 @@ void improve_positions2(struct gml_graph *g)
 		gnl->node->absy = gnl->node->rely;
 		gnl->node->finx = 0;
 		gnl->node->finy = 0;
-		gnl->node->lx0 = 0;
-		gnl->node->lx1 = 1;
+		gnl->node->lx0 = -1;	/* undefined */
+		gnl->node->ly0 = -1;
+		gnl->node->lx1 = -1;
+		gnl->node->ly1 = -1;
 		if (gnl->node->startnode < 0) {
-			printf("%s(): node %s has no startnode\n", __func__, gnl->node->name);
+			printf("%s(): node %d %s has no startnode\n", __func__, gnl->node->nr, gnl->node->name);
 		}
 		if (yydebug || 0) {
 			printf("%s(): node \"%s\" is at level %d position %d startnode %d\n", __func__, gnl->node->nlabel,
@@ -1343,6 +1364,17 @@ void improve_positions2(struct gml_graph *g)
 	/* position level 0, single nodes if any */
 	if (g->nsinglenodes) {
 		/* done in finalxy() in main.c */
+	}
+
+	/* run extra check */
+	gnl = g->nodelist;
+	while (gnl) {
+		/* check undefined */
+		if ((gnl->node->lx0 == -1) || (gnl->node->ly0 == -1) || (gnl->node->lx1 == -1) || (gnl->node->ly1 == -1)
+		    ) {
+			printf("%s(): node level undefined\n", __func__);
+		}
+		gnl = gnl->next;
 	}
 
 	return;

@@ -713,7 +713,7 @@ static void dp_clrnodesli(struct dppart *info)
 		info->parts = (struct dppart **)dp_free((void *)info->parts);
 	}
 
-	info2 = dp_free(info);
+	info2 = (struct dppart *)dp_free(info);
 	if (info2) {
 	}
 
@@ -922,7 +922,7 @@ static void dp_clrnodes(void)
 		}
 		if (nl->n->hlinfo) {
 			dp_clearhlinfonode(nl->n);
-			nl->n->hlinfo = dp_free(nl->n->hlinfo);
+			nl->n->hlinfo = (struct hlpart *)dp_free(nl->n->hlinfo);
 			if (nl->n->hlinfo) {
 			}
 		}
@@ -1645,12 +1645,20 @@ static void dp_endel(struct dpeplink *el)
 	}
 
 	if (eptr && eptr->next == NULL) {
+
+		if (dp_headepl == NULL) {
+			/* shouldnothappen */
+			return;
+		}
+
+		/* from and to node */
 		fn = dp_headepl->ep;
 		tn = eptr->ep;
 
 		ltype = fn->type;
 		rtype = tn->type;
 
+		/* check type of from and to node */
 		if (ltype == 0 && rtype == 0) {
 			dp_endel_n2n(fn, tn);
 		} else if (ltype == 0 && rtype == 1) {

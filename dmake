@@ -21,10 +21,13 @@
 #  *  The freedom to study how the program works, and change it to make it do what you wish
 #  *  The freedom to redistribute copies so you can help others
 #  *  The freedom to distribute copies of your modified versions to others
+#  *
+#  * SPDX-License-Identifier: GPL-3.0+
+#  * License-Filename: LICENSE
 #  */
-# 
+#
 # GNU / Linux is user-friendly. It's just particular who its friends are :)
-# 
+#
 # Only for GNU LINUX console:
 #
 #    \033          ascii ESCape
@@ -54,11 +57,12 @@
 # add colors for enter/leave dir
 # if errors then run script to mailto or otherwise
 # if errors then run script to start emacs on the file
+# this cn run with GNU gawk and mawk on debian Linux
 rm -v -f dsmake.output
 rm -v -f dsmake.errors
 rm -v -f dsmake.warnings
 make $1 $2 $3 $4 2>&1 |
-gawk '
+awk '
 function toul() { print "\033[4m"; }
 function tobold() { print "\033[36m"; }
 function isentermakedir(thetext) { n = match(thetext, /[ ]Entering/); return n; }

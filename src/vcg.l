@@ -1,3 +1,8 @@
+/* gcc-10 -fanalyzer
+vcg.flex.c:4433:1: warning: leak of ‘<unknown>’ [CWE-401] [-Wanalyzer-malloc-leak]
+vcg.flex.c:5003:9: warning: leak of ‘<unknown>’ [CWE-401] [-Wanalyzer-malloc-leak]
+vcg.flex.c:5003:9: warning: leak of ‘<unknown>’ [CWE-401] [-Wanalyzer-malloc-leak]
+*/
 
 /*
  *  Copyright 2021
@@ -63,9 +68,13 @@
 #undef YY_BUF_SIZE
 #define YY_BUF_SIZE 16384
 
+/* at malloc error there will be a memory leak but it does also
+ * #define YY_FATAL_ERROR(msg) exit(0)
+ */
 
-static char *p = NULL;
-static char *q = NULL;
+/* char *p is used in flex coe */
+static char *ppointer = NULL;
+static char *qpointer = NULL;
 static char *tmpp = NULL;
 
 char *vcglaststring = NULL;
@@ -151,47 +160,51 @@ CCE	\/\/[^\n]*
 				  }
 				  /* copy and filter the text, and clear last " */
 				  yytext[yyleng-1] = 0;
+				  /* one byte to much but that is later on corrected */
 				  tmpp = (char *) dp_calloc (1, (yyleng+1));
-				  p = yytext;
-				  p++; /* skip first " */
-				  q = tmpp;
-				  while (*p)
+				  ppointer = yytext;
+				  ppointer++; /* skip first " */
+				  qpointer = tmpp;
+				  while (*ppointer)
 				  {
-				    if (*p =='\\') {
-				      if(*(p+1) == 0) {
-				        *q = '\\';
-				        q++;
-				        p++; /* "\" as last char */
-				      } else if (*(p+1) =='\n') {
-				        p = p + 2; /* skip "\\n" sequence */
-				      } else if (*(p+1) == 'n') {
-				        *q = '\n'; /* */
-				        q++;
-				        p = p + 2;
-				      } else if (*(p+1) == '"') {
-				        *q = '"'; /* */
-				        q++;
-				        p = p + 2;
-				      } else if (*(p+1) == '\\') {
-				        *q = '\\';
-				        q++;
-				        p = p + 2;
+				    if ((*ppointer) =='\\') {
+				      if((*(ppointer+1)) == 0) {
+				        *qpointer = '\\';
+				        qpointer++;
+				        ppointer++; /* "\" as last char */
+				      } else if ((*(ppointer+1)) =='\n') {
+				        ppointer = ppointer + 2; /* skip "\\n" sequence */
+				      } else if ((*(ppointer+1)) == 'n') {
+				        *qpointer = '\n'; /* */
+				        qpointer++;
+				        ppointer = ppointer + 2;
+				      } else if ((*(ppointer+1)) == '"') {
+				        *qpointer = '"'; /* */
+				        qpointer++;
+				        ppointer = ppointer + 2;
+				      } else if ((*(ppointer+1)) == '\\') {
+				        *qpointer = '\\';
+				        qpointer++;
+				        ppointer = ppointer + 2;
 				      } else {
-				        *q = *p; /* copy other esc sequences */
-				        p++;
-				        q++;
+				        *qpointer = *ppointer; /* copy other esc sequences */
+				        ppointer++;
+				        qpointer++;
 				      }
 				    } else {
-				      *q = *p; /* copy regular chars */
-				      p++;
-				      q++;
+				      *qpointer = *ppointer; /* copy regular chars */
+				      ppointer++;
+				      qpointer++;
 				    }
 				  }
-				  p = vcg_uniqstr (tmpp);
-				  vcglaststring = p;
+				  /* do a strdup() */
+				  ppointer = vcg_uniqstr (tmpp);
+				  vcglaststring = ppointer;
 				  tmpp = dp_free (tmpp);
-				  p = NULL;
-				  q = NULL;
+				  ppointer = NULL;
+				  qpointer = NULL;
+				  if (ppointer) {}
+				  if (qpointer) {}
 				  return (VCG_STRING);
 				}
 
@@ -234,4 +247,4 @@ void vcg_yydebug (int debugflag)
   return;
 }
 
-/* end */
+/* end. */

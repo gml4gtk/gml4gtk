@@ -61,6 +61,9 @@ int bgvparse(struct gml_graph *g, gzFile f, char *fname, char *argv0)
 {
 	int status = 0;
 
+	if (argv0) {
+	}
+
 	if (g == NULL || 1 /* test only */ ) {
 		return (0);
 	}

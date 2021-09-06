@@ -41,6 +41,7 @@
 #include <string.h>
 #include <strings.h>
 #include <errno.h>
+#include <math.h>
 
 #include "splay-tree.h"
 #include "main.h"
@@ -893,8 +894,11 @@ struct dpnum *dp_getnum(char *s)
 		return (ret);
 	}
 
-	/* check for unusual "-0", different languages handle -0 different, go language does not implement -0 correctly */
-	if (n == 0) {
+	/* check for unusual "-0", different languages handle -0 different,
+	 * go language does not implement -0 correctly 
+	 * if (n==0){}
+	 */
+	if (fabs(n) < 0.01) {
 		if (strchr(s, '-')) {
 			printf("%s(): number `%s' is negative zero\n", __func__, s);
 		}
@@ -1513,7 +1517,7 @@ struct dpranksep *dp_getranksep(char *s)
 	}
 
 	if (n == 1) {
-		ret->number = f;
+		ret->number = (double)f;
 		return (ret);
 	}
 
@@ -1527,7 +1531,7 @@ struct dpranksep *dp_getranksep(char *s)
 	}
 
 	if (n == 1) {
-		ret->number = f;
+		ret->number = (double)f;
 		ret->eq = 1;
 		return (ret);
 	}

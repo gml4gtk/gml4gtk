@@ -144,6 +144,8 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 	struct gml_nlist *lnl = NULL;
 	struct gml_elist *enl = NULL;
 	int layer = 0;
+	/* save current maxlevel */
+	g->bmaxlevel = g->maxlevel;
 	/* type of barycenter, 1 is sugi2.c, 2 is sugi3, else is rhp.c */
 	if (barytype == 1) {
 		reduce_crossings2(g, it1val, it2val);
@@ -156,9 +158,12 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 	} else {
 		/* using rhp.c */
 		/* number of crossing edges at level */
-		if (g->numce == NULL) {
-			g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
+
+		if (g->numce) {
+			g->numce = (int *)dp_free((int *)g->numce);
 		}
+
+		g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
 
 		if (g->maxlevel == 0) {
 			/* if graph has only 1 or more nodes */
@@ -254,6 +259,134 @@ void barycenter(struct gml_graph *g, int it1val, int it2val)
 	return;
 }
 
+/* set edges with edge labels */
+void prepel(struct gml_graph *g)
+{
+	struct gml_graph *ga = NULL;
+	struct gml_elist *enl = NULL;
+	struct gml_edge *edge = NULL;
+	struct gml_elist *enl2 = NULL;
+	struct gml_edge *edge2 = NULL;
+	struct gml_el *nel = NULL;
+	struct gml_ellist *nellist = NULL;
+	int notoke = 0;
+
+	if (g == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+
+	/* scan the raw edge list */
+	ga = maingraph;
+
+	if (ga->nedges == 0) {
+		/* there are no edges */
+		return;
+	}
+
+	if (ga->tnedgelabels == 0) {
+		/* no edges with edge label, nothing todo */
+		return;
+	}
+
+	if (ga->ellist) {
+		/* edges aready done */
+		return;
+	}
+
+	if (ga->rawedgelist == NULL) {
+		/* there is no edge data */
+		return;
+	}
+
+	/* scan the edges */
+	enl = ga->rawedgelist;
+
+	while (enl) {
+		edge = enl->edge;
+		if (edge) {
+			if (edge->elabel) {
+				/* silenc "" as edge label */
+				if (strlen(edge->elabel) == 0) {
+					/* shoulnothappen already done in add_new_edge() */
+					printf("%s(): empty edge label turned off\n", __func__);
+					edge->elabel = NULL;
+				} else {
+					/* create new entry for this edge with edge label */
+					nel = (struct gml_el *)dp_calloc(1, sizeof(struct gml_el));
+					/* set the original from/to nodes */
+					nel->ofrom = uniqnode2(ga, edge->from_node->nr);
+					if (nel->ofrom == NULL) {
+						/* shouldnothappen */
+						printf("%s(): no from node\n", __func__);
+						return;
+					}
+					nel->oto = uniqnode2(ga, edge->to_node->nr);
+					if (nel->oto == NULL) {
+						/* shouldnothappen */
+						printf("%s(): no to node\n", __func__);
+						return;
+					}
+					if (nel->ofrom == NULL || nel->oto == NULL) {
+						/* shouldnothappen */
+						nel = (struct gml_el *)dp_free((struct gml_el *)nel);
+						if (nel) {
+						}
+						/* at some problem to be fixed first */
+						notoke = 1;
+						break;
+					}
+					/* edge in raw edgelust */
+					nel->rawedge = edge;
+					/* set original full text */
+					nel->elabel = edge->elabel;
+					/* optional html type label */
+					nel->ishtml = edge->ishtml;
+					/* link */
+					nellist = (struct gml_ellist *)dp_calloc(1, sizeof(struct gml_ellist));
+					/* set data */
+					nellist->eledge = nel;
+					if (ga->ellist == NULL) {
+						/* first entry */
+						ga->ellist = nellist;
+						ga->ellisttail = nellist;
+					} else {
+						ga->ellisttail->next = nellist;
+						ga->ellisttail = nellist;
+					}
+					/* mark it in the raw edge */
+					edge->eldata = nel;
+					/* mark it in the edge list */
+					enl2 = ga->edgelist;
+					/* scan for the corresponding regular edge */
+					while (enl2) {
+						edge2 = enl2->edge;
+						if (edge2) {
+							if (edge2->nr == edge->nr) {
+								/* mark it in the regular edge */
+								edge2->eldata = nel;
+							}
+						}
+						enl2 = enl2->next;
+					}
+					if (yydebug || 0) {
+						printf("%s(): added edge %d as edge with edge label\n", __func__, edge->nr);
+					}
+				}
+			}
+		}
+		/* next raw edge */
+		enl = enl->next;
+	}
+
+	if (notoke) {
+		/* shouldnothappen */
+		printf("%s(): found a problem to be fixed\n", __func__);
+	}
+
+	return;
+}
+
 /* prepare for all-at-once graph layout */
 void prep(struct gml_graph *g)
 {
@@ -268,6 +401,7 @@ void prep(struct gml_graph *g)
 	struct gml_edge *edge = NULL;
 
 	if (g == NULL) {
+		/* shouldnothappen */
 		return;
 	}
 
@@ -344,86 +478,100 @@ void prep(struct gml_graph *g)
 	while (enl) {
 		edge = enl->edge;
 
-		edge2 = dp_calloc(1, sizeof(struct gml_edge));
+		if (edge) {
+			edge2 = dp_calloc(1, sizeof(struct gml_edge));
 
-		edge2->nr = edge->nr;
-		if (edge->nr > g->edgenum) {
-			g->edgenum = edge->nr;
-		}
-
-		edge2->rootedon = edge->rootedon;
-		edge2->from_node = uniqnode2(g, edge->from_node->nr);
-		if (edge2->from_node == NULL) {
-			printf("%s(): nil from\n", __func__);
-		}
-
-		edge2->to_node = uniqnode2(g, edge->to_node->nr);
-		if (edge2->to_node == NULL) {
-			printf("%s(): nil to\n", __func__);
-		}
-
-		if (edge2->from_node == edge2->to_node) {
-			/* shouldnothappen */
-			printf("%s(): selfedge huh?\n", __func__);
-		}
-
-		/* edge label or NULL for no edgelabel.
-		 * with gui checkbox the edgelabels can be turned on/off
-		 */
-		if (edge->elabel) {
-			ga->tnedgelabels++;
-		}
-
-		/* set to zero if no edgelabels wanted */
-		if (option_edgelabels == 0) {
-			edge2->elabel = NULL;
-			ga->nedgelabels = 0;
-		} else {
-			/* add edgelabels in the graph layout */
-			edge2->elabel = edge->elabel;
-			if (edge2->elabel) {
-				ga->nedgelabels++;
+			edge2->nr = edge->nr;
+			if (edge->nr > g->edgenum) {
+				g->edgenum = edge->nr;
 			}
-		}
 
-		/* edge color */
-		edge2->ecolor = edge->ecolor;
-		edge2->style = edge->style;
-		/* from/to compass point in gcc data */
-		edge2->fcompass = edge->fcompass;
-		edge2->tcompass = edge->tcompass;
-		/* dot constraint flag */
-		edge2->constraint = edge->constraint;
-		/* check if nodes are in same subgraph, and in a cluster */
-		if (edge2->from_node && edge2->to_node) {
-			if (edge2->from_node->rootedon == edge2->to_node->rootedon) {
-				if (edge2->from_node->rootedon->type == SG_CLUSTER) {
-					if (yydebug || 0) {
-						printf("%s(): edge %d is inside cluster\n", __func__, edge2->nr);
-					}
-					edge2->incluster = 1;
+			/* set subgraph where this edge is rooted */
+			edge2->rootedon = edge->rootedon;
+
+			/* get new from/to nodes */
+			edge2->from_node = uniqnode2(g, edge->from_node->nr);
+			if (edge2->from_node == NULL) {
+				/* shouldnothappen */
+				printf("%s(): nil from\n", __func__);
+				return;
+			}
+
+			edge2->to_node = uniqnode2(g, edge->to_node->nr);
+			if (edge2->to_node == NULL) {
+				/* shouldnothappen */
+				printf("%s(): nil to\n", __func__);
+				return;
+			}
+
+			if (edge2->from_node == edge2->to_node) {
+				/* shouldnothappen */
+				printf("%s(): selfedge huh?\n", __func__);
+			}
+
+			/* set pointer to the origi raw edge data to be used later on */
+			edge2->rawedge = edge;
+
+			/* edge label or NULL for no edgelabel.
+			 * with gui checkbox the edgelabels can be turned on/off
+			 */
+			if (edge->elabel) {
+				ga->tnedgelabels++;
+			}
+
+			/* set to zero if no edgelabels wanted */
+			if (option_edgelabels == 0) {
+				edge2->elabel = NULL;
+				ga->nedgelabels = 0;
+			} else {
+				/* add edgelabels in the graph layout */
+				edge2->elabel = edge->elabel;
+				if (edge2->elabel) {
+					ga->nedgelabels++;
 				}
 			}
 
-			/* update in/out degree of nodes for reorg() */
-			edge2->from_node->outdegree++;
-			edge2->to_node->indegree++;
+			/* edge color */
+			edge2->ecolor = edge->ecolor;
+			edge2->style = edge->style;
+			/* from/to compass point in gcc data */
+			edge2->fcompass = edge->fcompass;
+			edge2->tcompass = edge->tcompass;
+			/* dot constraint flag */
+			edge2->constraint = edge->constraint;
+			/* check if nodes are in same subgraph, and in a cluster */
+			if (edge2->from_node && edge2->to_node) {
+				if (edge2->from_node->rootedon == edge2->to_node->rootedon) {
+					if (edge2->from_node->rootedon->type == SG_CLUSTER) {
+						if (yydebug || 0) {
+							printf("%s(): edge %d is inside cluster\n", __func__, edge2->nr);
+						}
+						edge2->incluster = 1;
+					}
+				}
+
+				/* update in/out degree of nodes for reorg() */
+				edge2->from_node->outdegree++;
+				edge2->to_node->indegree++;
+			}
+
+			enl2 = dp_calloc(1, sizeof(struct gml_elist));
+
+			enl2->edge = edge2;
+
+			/* link in */
+			if (ga->edgelist == NULL) {
+				ga->edgelist = enl2;
+				ga->edgelisttail = enl2;
+			} else {
+				ga->edgelisttail->next = enl2;
+				ga->edgelisttail = enl2;
+			}
+
+			/* total number of edges */
+			ga->nedges++;
 		}
-
-		enl2 = dp_calloc(1, sizeof(struct gml_elist));
-
-		enl2->edge = edge2;
-
-		/* link in */
-		if (ga->edgelist == NULL) {
-			ga->edgelist = enl2;
-			ga->edgelisttail = enl2;
-		} else {
-			ga->edgelisttail->next = enl2;
-			ga->edgelisttail = enl2;
-		}
-
-		ga->nedges++;
+		/* to next raw edge */
 		enl = enl->next;
 	}
 
@@ -453,6 +601,8 @@ void startnodes(struct gml_graph *g)
 	/* number of start nodes in the graph */
 	g->nstartnodes = 0;
 
+	/* build the s/tlist of a node */
+	clear_stlist_all(g);
 	make_stlist(g);
 
 	lnl = g->nodelist;
@@ -491,6 +641,157 @@ void startnodes(struct gml_graph *g)
 	return;
 }
 
+/* mark node reachable from given node */
+static void startnodesafterdfs(struct gml_node *n, int sn)
+{
+	struct gml_elist *oe = NULL;
+
+	if (n->startnode >= 0) {
+		/* already marked but has additional startnode */
+		n->nstartnodes++;
+		return;
+	}
+
+	/* set this as start node number */
+	n->startnode = sn;
+
+	/* node has at least connection with one start node */
+	n->nstartnodes = 1;
+
+	/* source list, outgoing edges */
+	oe = n->outgoing_e;
+
+	while (oe) {
+		/* follow outgoing edges */
+		if (oe->edge) {
+			startnodesafterdfs(oe->edge->to_node, sn);
+		}
+		oe = oe->next;
+	}
+
+	return;
+}
+
+/* determine startnodes after barycenter dna doublespace */
+void startnodesafter(struct gml_graph *g)
+{
+	struct gml_nlist *lnl = NULL;
+	int i = 0;
+
+	if (g == NULL) {
+		return;
+	}
+
+	/* number of start nodes in the graph */
+	g->nstartnodes = 0;
+
+	/* build the s/tlist of a node */
+	clear_stlist_all(g);
+	make_stlist(g);
+
+	lnl = g->nodelist;
+
+	while (lnl) {
+		if (lnl->node) {
+			if (yydebug || 0) {
+				printf("%s(): node \"%s\" indegree=%d outdegree=%d\n", __func__, lnl->node->name,
+				       lnl->node->indegree, lnl->node->outdegree);
+			}
+			if (lnl->node->indegree == 0 && lnl->node->outdegree != 0) {
+				g->nstartnodes++;
+			}
+			/* unmark the startnode but keep single nodes unchanged */
+			if (lnl->node->indegree != 0 || lnl->node->outdegree != 0) {
+				lnl->node->startnode = (-1);
+				lnl->node->nstartnodes = 0;
+			}
+		}
+		lnl = lnl->next;
+	}
+
+	/* fill the table with startnodes */
+	if (g->startnodes) {
+		g->startnodes = dp_free(g->startnodes);
+		if (g->startnodes) {
+		}
+	}
+
+	/*  original graph can have zero start nodes but avoid malloc(0) */
+	g->startnodes = dp_calloc(1, ((g->nstartnodes + 1) * sizeof(int)));
+
+	/* fill the array with the startnodes */
+	i = 0;
+	lnl = g->nodelist;
+	while (lnl) {
+		if (lnl->node) {
+			if (lnl->node->indegree == 0 && lnl->node->outdegree != 0) {
+				g->startnodes[i] = lnl->node->nr;
+				i++;
+			}
+		}
+		lnl = lnl->next;
+	}
+
+	/* the single nodes are not marked as start node */
+
+	if (yydebug || 1) {
+		printf("%s(): %d startnodes\n", __func__, g->nstartnodes);
+	}
+
+	/* mark which nodes are reachable from this start node */
+
+	lnl = g->nodelist;
+	while (lnl) {
+		if (lnl->node) {
+			if (lnl->node->indegree == 0 && lnl->node->outdegree != 0) {
+				startnodesafterdfs(lnl->node, lnl->node->nr);
+			}
+		}
+		lnl = lnl->next;
+	}
+
+	return;
+}
+
+/* final after barycenter */
+void finalafter(struct gml_graph *g)
+{
+	struct gml_nlist *lnl = NULL;
+
+	if (g == NULL) {
+		return;
+	}
+	/* in bmaxlevel is max y level at barycenter
+	 * in maxlevel is current max y level after varycenter
+	 * the baryccenter maxlevel can be different from current
+	 */
+
+	if (g->bmaxlevel != g->maxlevel) {
+		if (yydebug || 1) {
+			printf("%s(): scaled up from %d levels to %d levels\n", __func__, g->bmaxlevel, g->maxlevel);
+		}
+
+		/* todo copy number of edge crossings at level */
+		if (g->numce) {
+			g->numce = (int *)dp_free((void *)g->numce);
+		}
+		g->numce = (int *)dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
+
+	}
+
+	/* copy y to rely relative y pos. and rely is used but positioning() */
+	lnl = g->nodelist;
+
+	while (lnl) {
+		if (lnl->node) {
+			lnl->node->rely = lnl->node->y;
+		}
+		lnl = lnl->next;
+	}
+
+	return;
+}
+
 /* add node to cluster, only if there is edge connected inside cluster
  * there can also be single nodes in a cluster or nodes connecting
  * to other clusters and those are not in the nodelist here
@@ -509,9 +810,11 @@ static void prepincr_addnode(struct gml_graph *g, struct gml_node *node)
 	found = 0;
 	lnl = ga->nodelist;
 	while (lnl) {
-		if (lnl->node->nr == node->nr) {
-			found = 1;
-			break;
+		if (lnl->node) {
+			if (lnl->node->nr == node->nr) {
+				found = 1;
+				break;
+			}
 		}
 		lnl = lnl->next;
 	}
@@ -601,10 +904,8 @@ void prepincr(struct gml_graph *g)
 			prepincr_addnode(g, edge->from_node);
 			prepincr_addnode(g, edge->to_node);
 			/* create copy of the edge */
+
 			edge2 = dp_calloc(1, sizeof(struct gml_edge));
-			if (edge2 == NULL) {
-				return;
-			}
 
 			edge2->nr = edge->nr;
 			if (edge->nr > g->edgenum) {
@@ -613,7 +914,20 @@ void prepincr(struct gml_graph *g)
 
 			edge2->rootedon = edge->rootedon;
 			edge2->from_node = uniqnode2(g, edge->from_node->nr);
+
+			if (edge2->from_node == NULL) {
+				/* shouldnothappen */
+				printf("%s(): nil from_node\n", __func__);
+				return;
+			}
+
 			edge2->to_node = uniqnode2(g, edge->to_node->nr);
+
+			if (edge2->to_node == NULL) {
+				/* shouldnothappen */
+				printf("%s(): nil to_node\n", __func__);
+				return;
+			}
 			if (edge2->from_node == edge2->to_node) {
 				/* shouldnothappen */
 				printf("%s(): selfedge huh?\n", __func__);
@@ -1492,7 +1806,7 @@ void graph2jgf(struct gml_graph *g, FILE * f)
 	return;
 }
 
-/* compare outgoing edges, looking at the to-node prosition */
+/* compare outgoing edges, looking at the to-node position */
 static int edgescompareout(const void *p, const void *q)
 {
 	struct gml_edge *l;
@@ -1510,7 +1824,7 @@ static int edgescompareout(const void *p, const void *q)
 	return (lll - rrr);
 }
 
-/* compare incoming edges, looking at the from-node prosition */
+/* compare incoming edges, looking at the from-node position */
 static int edgescomparein(const void *p, const void *q)
 {
 	struct gml_edge *l;
@@ -1529,6 +1843,7 @@ static int edgescomparein(const void *p, const void *q)
 }
 
 /* calculate edge connections */
+/* todo this has errors */
 void edgeconnections(struct gml_graph *g)
 {
 	struct gml_elist *ell;
@@ -1554,6 +1869,7 @@ void edgeconnections(struct gml_graph *g)
 	/* make arrays with edges in every node */
 	lnl = g->nodelist;
 	while (lnl) {
+		/* connect incoming edges */
 		if (lnl->node->indegree > 1) {
 			/* check if enough size at node for edge placement */
 			if ((lnl->node->indegree * 3 + 15 + 15) < lnl->node->bbx) {
@@ -1575,6 +1891,7 @@ void edgeconnections(struct gml_graph *g)
 			}
 		}
 
+		/* conect outgoing edges */
 		if (lnl->node->outdegree > 1) {
 			if ((lnl->node->outdegree * 3 + 15 + 15) < lnl->node->bbx) {
 				lnl->node->oedges = (struct gml_edge **)dp_calloc(1, (sizeof(struct gml_edge *))
@@ -2067,6 +2384,44 @@ void clear_rawedgelist(struct gml_graph *g)
 	return;
 }
 
+/* clear optional edge label data */
+void clear_edgelabeldata(struct gml_graph *g)
+{
+	struct gml_ellist *elp = NULL;
+
+	if (g == NULL) {
+		/* shouldnothappen */
+		return;
+	}
+
+	/* the list with edges with edge labels */
+	elp = g->ellist;
+
+	while (elp) {
+		if (elp->eledge) {
+			/* zero the edge data and free */
+			elp->eledge->rawedge = NULL;
+			elp->eledge->ofrom = NULL;
+			elp->eledge->oto = NULL;
+			elp->eledge->elabel = NULL;
+			elp->eledge->ishtml = 0;
+			elp->eledge->tx = 0;
+			elp->eledge->ty = 0;
+			elp->eledge = (struct gml_el *)dp_free((struct gml_el *)elp->eledge);
+		}
+		elp = elp->next;
+	}
+
+	g->ellist = NULL;
+	g->ellisttail = NULL;
+
+	/* no edge labels */
+	g->nedgelabels = 0;
+	g->tnedgelabels = 0;
+
+	return;
+}
+
 /* clear nodelist, nodes and inside nodes
  * if mode==0 also clear record node label data
  * if mode<>0 keep the rlabel record label data
@@ -2077,6 +2432,7 @@ void clear_nodelist_r(struct gml_graph *g, int mode)
 	struct gml_nlist *nlnext = NULL;
 	struct gml_glist *gl = NULL;
 	if (g == NULL) {
+		/* shouldnothappen */
 		return;
 	}
 
@@ -2346,6 +2702,10 @@ void edgelabels(struct gml_graph *g, int mode)
 		return;
 	}
 
+	/* unused */
+	if (mode) {
+	}
+
 	/* scan edges all downwards */
 	el = g->edgelist;
 	while (el) {
@@ -2385,29 +2745,33 @@ void edgelabels(struct gml_graph *g, int mode)
 			add_new_dummynode(g, maingraph->nodenum);
 			/* mark this is a label node and set label text */
 			ln = uniqnode2(NULL, maingraph->nodenum);
-			/* edge-label-node, original from/to node */
-			ln->el_fnode = el->edge->from_node;
-			ln->el_tnode = el->edge->to_node;
-			/* y level difference between original from/to-nodes */
-			ydiff = (ln->el_tnode->y - ln->el_fnode->y);
-			if (0) {
-				printf("%s(): ydiff=%d\n", __func__, ydiff);
+			if (ln) {
+				/* edge-label-node, original from/to node */
+				ln->el_fnode = el->edge->from_node;
+				ln->el_tnode = el->edge->to_node;
+				/* y level difference between original from/to-nodes */
+				if (ln->el_tnode && ln->el_fnode) {
+					ydiff = (ln->el_tnode->y - ln->el_fnode->y);
+				}
+				if (0) {
+					printf("%s(): ydiff=%d\n", __func__, ydiff);
+				}
+				/* put edge label halfway */
+				ln->y = ln->el_fnode->y + (ydiff / 2);
+				ln->elabel = 1;	/* mark this is a edgelabel */
+				ln->dummy = 0;
+				ln->name = el->edge->elabel;
+				ln->nlabel = el->edge->elabel;
+				/* node belongs to graph with this startnode */
+				ln->startnode = el->edge->from_node->startnode;
+				/* set if html label */
+				ln->ishtml = ishtml;
 			}
-			/* put edge label halfway */
-			ln->y = ln->el_fnode->y + (ydiff / 2);
-			ln->elabel = 1;	/* mark this is a edgelabel */
-			ln->dummy = 0;
-			ln->name = el->edge->elabel;
-			ln->nlabel = el->edge->elabel;
-			/* node belongs to graph with this startnode */
-			ln->startnode = el->edge->from_node->startnode;
-			/* set if html label */
-			ln->ishtml = ishtml;
 			/* create new edges with label node in between */
-			add_new_dummyedge(g, el->edge->rootedon, el->edge->from_node->nr,
-					  maingraph->nodenum, rev, ecolor, style, fc, tc, constraint);
-			add_new_dummyedge(g, el->edge->rootedon, maingraph->nodenum,
-					  el->edge->to_node->nr, rev, ecolor, style, fc, tc, constraint);
+			add_new_dummyedge(g, el->edge->rawedge, el->edge->rootedon, el->edge->from_node->nr,
+					  maingraph->nodenum, rev, ecolor, style, fc, tc, constraint, el->edge->eldata);
+			add_new_dummyedge(g, el->edge->rawedge, el->edge->rootedon, maingraph->nodenum,
+					  el->edge->to_node->nr, rev, ecolor, style, fc, tc, constraint, el->edge->eldata);
 			/* free old edge */
 			del_edge(g, el);
 			el = dp_free(el);
@@ -3512,17 +3876,18 @@ static void unrev(struct gml_graph *g)
 	el = g->edgelist;
 	while (el) {
 		edge = el->edge;
-		if (el->edge->reversed) {
-			changed++;
-			sn = edge->from_node;
-			tn = edge->to_node;
-			/* swap */
-			tmpnode = tn;
-			el->edge->to_node = sn;
-			el->edge->from_node = tmpnode;
-			el->edge->reversed = 0;
+		if (edge) {
+			if (el->edge->reversed) {
+				changed++;
+				sn = edge->from_node;
+				tn = edge->to_node;
+				/* swap */
+				tmpnode = tn;
+				el->edge->to_node = sn;
+				el->edge->from_node = tmpnode;
+				el->edge->reversed = 0;
+			}
 		}
-
 		el = el->next;
 	}
 
@@ -3686,397 +4051,457 @@ void shorteredges(struct gml_graph *g)
 	return;
 }
 
-/* doublespace the vertical levels after barycenter */
-void doublespaceafter(struct gml_graph *g)
-{
-	struct gml_nlist *lnll = NULL;
-	int miniy = 0;
-	int ol = 0;
-	int *gnumce = NULL;
-	int i = 0;
-	int ce = 0;
-	struct gml_elist *el = NULL;
-	struct gml_elist *elnext = NULL;
-	struct gml_elist *el2 = NULL;
-	struct gml_elist *elnext2 = NULL;
-	struct gml_edge *edge = NULL;
-	struct gml_edge *edge2 = NULL;
-	struct gml_node *sn = NULL;
-	struct gml_node *tn = NULL;
-	struct gml_node *sn2 = NULL;
-	struct gml_node *tn2 = NULL;
-	struct gml_node *ln = NULL;
-	int edgel = 0;
-	int edgel2 = 0;
-	char rev = 0;
-	int ecolor = 0;
-	int style = 0;
-	int ishtml = 0;
-	char *fc = NULL;
-	char *tc = NULL;
-	char constraint = 0;
-	int changed = 0;
-	int todo = 0;
-	int todoedge = 0;
-	int delnr = 0;
-	return;
-	ol = g->maxlevel;
-
-	/* same edges now will have different dummy nodes resulting in 2 lines */
-	g->maxlevel = 0;
-
-	/* un-mark all nodes */
-	lnll = g->nodelist;
-	while (lnll) {
-		lnll->node->done = 0;
-		lnll = lnll->next;
-	}
-
-	/* correct for start level */
-	if (g->startnodeslevel > 0) {
-		miniy = 1;
-	}
-
-	g->nedgelabels = 0;
-
-	/* check how many edges with labels todo here */
-	todo = 0;
-	todoedge = 0;
-	changed = 0;
-	el = g->edgelist;
-	while (el) {
-		elnext = el->next;
-		edge = el->edge;
-		if (edge->elabel) {
-			g->nedgelabels++;
-		}
-		sn = edge->from_node;	/* from-node */
-		tn = edge->to_node;	/* to-node */
-		edgel = (tn->y - sn->y);
-		if (edgel == 1) {
-			if (edge->elabel) {
-				todo++;
-			}
-		}
-		if (edgel < 0 || 1) {
-			printf("%s(): initial edgelen is %d\n", __func__, edgel);
-		}
-
-		/* reverse if needed */
-		if (edgel < 0) {
-			edge->done = 0;
-			todoedge++;
-		} else {
-			edge->done = 1;
-		}
-		el = elnext;
-	}
-
-	if (todoedge) {
-		el = g->edgelist;
-		while (el) {
-			elnext = el->next;
-			edge = el->edge;
-			sn = edge->from_node;	/* from-node */
-			tn = edge->to_node;	/* to-node */
-			if (edge->done) {
-				edge->from_node = tn;
-				edge->to_node = sn;
-				if (edge->reversed) {
-					edge->reversed = 0;
-				} else {
-					edge->reversed = 1;
-				}
-				changed++;
-			}
-			edgel = (tn->y - sn->y);
-			if (edgel < 0) {
-				printf("%s(): now edgelen is %d\n", __func__, edgel);
-			}
-
-			el = elnext;
-		}
-	}
-
-	if (yydebug || 1) {
-		printf("%s(): updating %d edges with labels and changed is %d\n", __func__, todo, changed);
-	}
-
-	if (changed) {
-		clear_stlist_all(g);
-		make_stlist(g);
-	}
-
-	if (yydebug || 1) {
-		el = g->edgelist;
-		while (el) {
-			elnext = el->next;
-			edge = el->edge;
-			sn = edge->from_node;	/* from-node */
-			tn = edge->to_node;	/* to-node */
-			edgel = (tn->y - sn->y);
-			printf("%s(): at edge %d edgel is %d\n", __func__, edge->nr, edgel);
-			el = elnext;
-		}
-	}
-
-	changed = 0;
-	for (i = 0; i < todo; i++) {
-		el = g->edgelist;
-		while (el) {
-			elnext = el->next;
-			edge = el->edge;
-			sn = edge->from_node;	/* from-node */
-			tn = edge->to_node;	/* to-node */
-			edgel = (tn->y - sn->y);
-			if (edgel < 0) {
-				printf("%s(): at edge %d found edgelen is %d\n", __func__, edge->nr, edgel);
-			}
-			if (edge->elabel) {
-				if (edgel == 1) {
-					/* edge attr. is-reversed */
-					rev = el->edge->reversed;
-					ecolor = el->edge->ecolor;
-					style = el->edge->style;
-					fc = el->edge->fcompass;
-					tc = el->edge->tcompass;
-					constraint = el->edge->constraint;
-					/* set if html label */
-					ishtml = el->edge->ishtml;
-					maingraph->nodenum++;
-					/* create label node */
-					add_new_dummynode(g, maingraph->nodenum);
-					/* mark this is a label node and set label text */
-					ln = uniqnode2(NULL, maingraph->nodenum);
-					/* edge-label-node, original from/to node */
-					ln->el_fnode = sn;
-					ln->el_fnode->y = (2 * ln->el_fnode->y);
-					ln->el_fnode->done = 1;
-					ln->el_tnode = tn;
-					ln->el_tnode->y = (2 * ln->el_tnode->y);
-					ln->el_tnode->done = 1;
-					/* put edge label halfway */
-					ln->y = (ln->el_fnode->y + 1);
-					ln->done = 1;
-					ln->elabel = 1;	/* mark this is a edgelabel */
-					ln->dummy = 0;
-					ln->name = el->edge->elabel;
-					ln->nlabel = el->edge->elabel;
-					/* node belongs to graph with this startnode */
-					ln->startnode = sn->startnode;
-					/* set if html label */
-					ln->ishtml = ishtml;
-					/* create new edges with label node in between 
-					 * add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro,
-					 * int foundsource, int foundtarget, int reversed,
-					 * int ecolor, int style,
-					 * char *fcompass, char *tcompass,
-					 * int constraint)
-					 */
-					add_new_dummyedge(g, el->edge->rootedon /* rooted */ ,
-							  sn->nr /* source */ ,
-							  maingraph->nodenum /* target */ ,
-							  rev /* reversed */ ,
-							  ecolor /* color */ ,
-							  style /* style */ ,
-							  fc /* compass */ ,
-							  tc /* compass */ , constraint);
-					/* second edge */
-					add_new_dummyedge(g, el->edge->rootedon, maingraph->nodenum /* source */ ,
-							  tn->nr /* target */ ,
-							  rev, ecolor, style, fc, tc, constraint);
-					delnr = el->edge->nr;
-					if (yydebug || 1) {
-						printf("%s(): deleting edge %d replaced with edges\n", __func__, el->edge->nr);
-					}
-					/* free old edge */
-					del_edge(g, el);
-					el = dp_free(el);
-					if (el) {
-					}
-					changed++;
-
-					if (yydebug || 1) {
-						el2 = g->edgelist;
-						while (el2) {
-							elnext2 = el2->next;
-							edge2 = el2->edge;
-							sn2 = edge2->from_node;	/* from-node */
-							tn2 = edge2->to_node;	/* to-node */
-							edgel2 = (tn2->y - sn2->y);
-							printf("%s(): after delete of edge %d the edge %d has len %d\n", __func__,
-							       delnr, edge2->nr, edgel2);
-							el2 = elnext2;
-						}
-					}
-
-					break;
-				}
-			}
-			el = elnext;
-		}
-	}
-
-	if (yydebug || 1) {
-		printf("%s(): updated %d edges with labels and changed %d\n", __func__, todo, changed);
-	}
-
-	if (changed) {
-		clear_stlist_all(g);
-		make_stlist(g);
-	}
-
-	/* at the odd levels the edge labels will be placed. */
-	lnll = g->nodelist;
-	while (lnll) {
-		if (lnll->node->done == 0) {
-			lnll->node->y = (2 * lnll->node->y);
-			lnll->node->done = 1;
-		}
-		/* where the actual drawing starts at y-level */
-		if (lnll->node->y > g->startnodeslevel) {
-			lnll->node->y = lnll->node->y - miniy;
-		}
-		if (lnll->node->y > g->maxlevel) {
-			g->maxlevel = lnll->node->y;
-		}
-		lnll = lnll->next;
-	}
-
-	if (yydebug || 1) {
-		printf("%s(): changed maxlevel from %d to %d\n", __func__, ol, g->maxlevel);
-	}
-
-	/* re-create g->numce */
-	gnumce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
-
-	for (i = 0; i < ol; i++) {
-		ce = g->numce[i];
-		gnumce[i * 2] = ce;
-		gnumce[(i * 2) + 1] = ce;
-	}
-	g->numce = dp_free(g->numce);
-	if (g->numce) {
-	}
-	g->numce = gnumce;
-	return;
-}
-
 /* doublespace the vertical levels */
 void doublespacey(struct gml_graph *g)
 {
 	struct gml_nlist *lnll = NULL;
 	int miniy = 0;
+	if (g == NULL) {
+		return;
+	}
 	/* same edges now will have different dummy nodes resulting in 2 lines */
 	g->maxlevel = 0;
 	/* correct for start level */
 	if (g->startnodeslevel > 0) {
 		miniy = 1;
+	} else {
+		miniy = 0;
 	}
 	/* at the odd levels the edge labels will be placed. */
 	lnll = g->nodelist;
 	while (lnll) {
-		lnll->node->y = (2 * lnll->node->y);
-		/* where the actual drawing starts at y-level */
-		if (lnll->node->y > g->startnodeslevel) {
-			lnll->node->y = lnll->node->y - miniy;
+		if (lnll->node) {
+			lnll->node->y = (2 * lnll->node->y);
+			/* where the actual drawing starts at y-level */
+			if (lnll->node->y > g->startnodeslevel) {
+				lnll->node->y = (lnll->node->y - miniy);
+			}
+			if (lnll->node->y > g->maxlevel) {
+				g->maxlevel = lnll->node->y;
+			}
 		}
-		if (lnll->node->y > g->maxlevel) {
-			g->maxlevel = lnll->node->y;
-		}
-
 		lnll = lnll->next;
 	}
+
+	/* maxlevel is updated now for the new situation */
 
 	return;
 }
 
-/* split longer edges */
-void splitedges(struct gml_graph *g)
+/* doublespace the vertical levels after barycenter */
+void doublespaceyafter(struct gml_graph *g)
+{
+	struct gml_nlist *lnll = NULL;
+	struct gml_elist *el = NULL;
+	struct gml_node *node = NULL;
+	int miniy = 0;
+	if (g == NULL) {
+		return;
+	}
+	/* same edges now will have different dummy nodes resulting in 2 lines */
+	g->maxlevel = 0;
+	/* correct for start level */
+	if (g->startnodeslevel > 0) {
+		miniy = 1;
+	} else {
+		miniy = 0;
+	}
+	/* at the odd levels the edge labels will be placed. */
+	lnll = g->nodelist;
+	while (lnll) {
+		if (lnll->node) {
+			/* unmark node */
+			lnll->node->done = 0;
+		}
+		lnll = lnll->next;
+	}
+
+	/* update nodes in edges and refresh new max level */
+	el = g->edgelist;
+	while (el) {
+		if (el->edge) {
+			/* skip already split edges */
+			if (el->edge->split == 0) {
+				/* move source/target node */
+				node = el->edge->from_node;
+				if (node) {
+					/* only if node is not yet re-positioned */
+					if (node->done == 0) {
+						el->edge->from_node->y = (2 * el->edge->from_node->y);
+						/* where the actual drawing starts at y-level */
+						if (el->edge->from_node->y > g->startnodeslevel) {
+							el->edge->from_node->y = (el->edge->from_node->y - miniy);
+						}
+						if (el->edge->from_node->y > g->maxlevel) {
+							g->maxlevel = el->edge->from_node->y;
+						}
+						node->done = 1;
+					}
+				}
+				node = el->edge->to_node;
+				if (node) {
+					if (node->done == 0) {
+						el->edge->to_node->y = (2 * el->edge->to_node->y);
+						/* where the actual drawing starts at y-level */
+						if (el->edge->to_node->y > g->startnodeslevel) {
+							el->edge->to_node->y = (el->edge->to_node->y - miniy);
+						}
+						if (el->edge->to_node->y > g->maxlevel) {
+							g->maxlevel = el->edge->to_node->y;
+						}
+						node->done = 1;
+					}
+				}
+			}
+		}
+		el = el->next;
+	}
+
+	/* the unconnected single nodes are not moved */
+
+	return;
+}
+
+/* check for same edges
+ * if node has two same outgoing edges
+ * both will be marked as same edge
+ */
+void checksame(struct gml_graph *g)
+{
+	struct gml_nlist *lnll = NULL;
+	struct gml_node *node = NULL;
+	struct gml_node *tonode = NULL;
+	struct gml_elist *el = NULL;
+	struct gml_elist *oute = NULL;
+	struct gml_elist *oute2 = NULL;
+	int flag = 0;
+	int nsamee = 0;
+	if (g == NULL) {	/* shouldnothappen */
+		return;
+	}
+	/* clear same flag */
+	g->nsamee = 0;
+	el = g->edgelist;
+	while (el) {
+		if (el->edge) {
+			flag++;
+			el->edge->from_node->same = 0;
+			el->edge->to_node->same = 0;
+			el->edge->same = 0;
+		}
+		el = el->next;
+	}
+	if (flag == 0) {
+		/* there are no edges to mark */
+		return;
+	}
+	/* check outgoing edges at nodes */
+	lnll = g->nodelist;
+	while (lnll) {
+		node = lnll->node;
+		if (node) {
+			oute = node->outgoing_e;
+			while (oute) {
+				if (oute->edge) {
+					if (oute->edge->from_node && oute->edge->to_node) {
+						/* only check no same edges here */
+						if (oute->edge->same == 0) {
+							/* get current to node of this outgoing edge */
+							tonode = oute->edge->to_node;
+							if (tonode) {
+								/* scan the next outgoing edges */
+								flag = 0;
+								oute2 = oute->next;
+								while (oute2) {
+									if (oute2->edge) {
+										if (oute2->edge->to_node == tonode) {
+											/* found a same edge and mark */
+											oute2->edge->from_node->same = 1;
+											oute2->edge->to_node->same = 1;
+											oute2->edge->same = 1;
+											flag++;
+											/* update global count */
+											nsamee++;
+										}
+									}
+									oute2 = oute2->next;
+								}
+							}	/* tonode */
+						}
+						/* also mark orig edge */
+						if (flag) {
+							if (oute->edge) {
+								if (oute->edge->same == 0) {
+									/* update global count */
+									nsamee++;
+								}
+								/* mark edge and nodes as part of same edge */
+								if (oute->edge->from_node) {
+									oute->edge->from_node->same = 1;
+								}
+								if (oute->edge->to_node) {
+									/* this funny is only needed to make clang analyzer happier */
+									oute->edge->to_node->same = 1;
+								}
+								oute->edge->same = 1;
+							}
+						}
+					}
+				}
+				oute = oute->next;
+			}
+
+		}
+		lnll = lnll->next;
+	}
+	/* update global count */
+	if (nsamee) {
+		g->nsamee = nsamee;
+		printf("%s(): found %d same edges\n", __func__, nsamee);
+	}
+	return;
+}
+
+/* split same edges */
+void splitsame(struct gml_graph *g)
 {
 	struct gml_elist *el = NULL;
 	struct gml_elist *elnext = NULL;
-	struct gml_edge *edge = NULL;
 	struct gml_node *sn = NULL;
 	struct gml_node *tn = NULL;
-	struct gml_node *nlnode = NULL;
-	int edgelen = 0;
-	int prevnodeid = 0;
-	int newid = 0;
-	int i = 0;
-	int sny = 0;
 	char rev = 0;
 	int ecolor = 0;
 	int style = 0;
 	char *fc = NULL;
 	char *tc = NULL;
 	char constraint = 0;
+	struct gml_el *eldata = NULL;
+	int sny = 0;
+	int haslabel = 0;
+	int newid = 0;
+	struct gml_node *nlnode = NULL;
+
+	if (g == NULL) {
+		return;
+	}
+	if (g->nsamee == 0) {
+		/* no edges to split */
+	}
+	/* scan the edges */
+	el = g->edgelist;
+	while (el) {
+		/* mark edges todo */
+		if (el->edge) {
+			el->edge->done = 1;
+		}
+		el = el->next;
+	}
+
 	el = g->edgelist;
 	while (el) {
 		elnext = el->next;
-		edge = el->edge;
-		sn = edge->from_node;	/* from-node */
-		tn = edge->to_node;	/* to-node */
-		rev = edge->reversed;	/* edge attr. to copy when splitting edge */
-		ecolor = edge->ecolor;	/* color of edge line */
-		style = edge->style;
-		fc = edge->fcompass;
-		tc = edge->tcompass;
-		constraint = edge->constraint;
-		edgelen = (tn->y - sn->y);
-		/* horizontal edge */
-		if (edgelen == 0) {
-			/* horizontal edge has original endpoints, used in drawing edges */
-			edge->hedge = 1;
-			g->nhedges++;	/* number of horizontal edges */
-			/* mark that nodes have a hor. edge */
-			sn->hashedge = 1;
-			tn->hashedge = 1;
-			if (0) {
-				printf
-				    ("%s(): horizontal edge %d->%d \"%s\"->\"%s\" rev=%d length %d pos=%d -> pos=%d\n",
-				     __func__, sn->nr, tn->nr, sn->nlabel, tn->nlabel, rev, edgelen, sn->x, tn->x);
-				fflush(stdout);
+		if (el->edge) {
+			if (el->edge->done) {
+				/* split edges which are multiple times specified */
+				if (el->edge->same) {
+					/* split this same edge with dummy node needed for barycenter */
+					sn = el->edge->from_node;	/* from-node */
+					tn = el->edge->to_node;	/* to-node */
+					rev = el->edge->reversed;	/* edge attr. to copy when splitting edge */
+					ecolor = el->edge->ecolor;	/* color of edge line */
+					style = el->edge->style;
+					fc = el->edge->fcompass;
+					tc = el->edge->tcompass;
+					/* graphviz edge contraint flag */
+					constraint = el->edge->constraint;
+					/* optional extra edge label data */
+					eldata = el->edge->eldata;
+					/* get relative y level of start node */
+					sny = el->edge->from_node->y;
+					/* check if edge has a edge label */
+					if (el->edge->elabel) {
+						/* has edge label */
+						haslabel = 1;
+					} else {
+						haslabel = 0;
+					}
+					/* dummy node numbers start at first free node nr number */
+					maingraph->nodenum++;
+					newid = maingraph->nodenum;
+					add_new_dummynode(g, newid);
+					/* this should always find the node with given number */
+					nlnode = uniqnode2(NULL, newid);
+					if (nlnode) {
+						/* optional edge label data */
+						nlnode->eldata = eldata;
+						nlnode->dummy = 1;	/* this is a dummy node */
+						nlnode->elabel = haslabel;	/* possible a edgelabel */
+						/* set relative level of dummy node strting from source node */
+						nlnode->y = (sny + 1);
+						nlnode->startnode = sn->startnode;
+					}
+					/* this will set marker it is split edge and it is head of split edge */
+					add_new_dummyedge(g, el->edge->rawedge, el->edge->rootedon, sn->nr, newid, rev, ecolor,
+							  style, fc, tc, constraint, eldata);
+					/* add final edge and re-position to node */
+					tn->y = (sny + 2);
+					add_new_dummyedge(g, el->edge->rawedge, el->edge->rootedon, newid, tn->nr, rev, ecolor,
+							  style, fc, tc, constraint, eldata);
+					/* unlink original edge which is now a split edge a->dummy->b */
+					/* edge ready */
+					el->edge->done = 0;
+					del_edge(g, el);
+					el = dp_free(el);
+					if (el) {
+					}
+				}
 			}
-
-		} else if (edgelen > 1) {
-			if (yydebug) {
-				printf("%s(): splitting edge %d->%d length %d\n", __func__, sn->nr, tn->nr, edgelen);
-				fflush(stdout);
-			}
-
-			prevnodeid = sn->nr;
-			sny = sn->y;
-			for (i = 1; i < edgelen; i++) {
-				/* dummy node numbers start at first free node nr number */
-				maingraph->nodenum++;
-				newid = maingraph->nodenum;
-				add_new_dummynode(g, newid);
-				nlnode = uniqnode2(NULL, newid);
-				nlnode->dummy = 1;	/* this is a dummy node */
-				nlnode->elabel = 0;	/* not a edgelabel */
-				nlnode->y = (sny + i);
-				nlnode->startnode = sn->startnode;
-				add_new_dummyedge(g, el->edge->rootedon, prevnodeid, newid, rev, ecolor, style, fc, tc, constraint);
-				prevnodeid = newid;
-			}
-
-			add_new_dummyedge(g, el->edge->rootedon, prevnodeid, tn->nr, rev, ecolor, style, fc, tc, constraint);
-			del_edge(g, el);
-			el = dp_free(el);
-			if (el) {
-			}
-		} else if (edgelen == 1) {
-			/* edge len is 1 oke. */
-		} else {
-			/* shouldnothappen */
-			printf("%s(): edgelen<0 is %d shouldnothappen\n", __func__, edgelen);
-			fflush(stdout);
 		}
-
 		el = elnext;
 	}
 
+	return;
+}
+
+/* split longer edges with dummy nodes and all edges point downwards
+ * if after is set it is running after the barycenter
+ */
+void splitedges(struct gml_graph *g, int after)
+{
+	struct gml_elist *el = NULL;
+	struct gml_elist *elnext = NULL;
+	struct gml_node *sn = NULL;
+	struct gml_node *tn = NULL;
+	struct gml_node *nlnode = NULL;
+	struct gml_el *eldata = NULL;
+	int edgelen = 0;
+	int prevnodeid = 0;
+	int newid = 0;
+	int i = 0;
+	int sny = 0;
+	int snx = 0;
+	char rev = 0;
+	int ecolor = 0;
+	int style = 0;
+	char *fc = NULL;
+	char *tc = NULL;
+	char constraint = 0;
+	/* scan the edges */
+	el = g->edgelist;
+	while (el) {
+		/* mark edges todo */
+		if (el->edge) {
+			el->edge->done = 1;
+		}
+		el = el->next;
+	}
+
+	g->nhedges = 0;		/* number of horizontal edges */
+	el = g->edgelist;
+	while (el) {
+		elnext = el->next;
+		if (el->edge) {
+			if (el->edge->done) {
+				el->edge->hedge = 0;	/* not hor. edge */
+				sn = el->edge->from_node;	/* from-node */
+				tn = el->edge->to_node;	/* to-node */
+				rev = el->edge->reversed;	/* edge attr. to copy when splitting edge */
+				ecolor = el->edge->ecolor;	/* color of edge line */
+				style = el->edge->style;
+				fc = el->edge->fcompass;
+				tc = el->edge->tcompass;
+				constraint = el->edge->constraint;
+				/* optional extra edge label data */
+				eldata = el->edge->eldata;
+				edgelen = (tn->y - sn->y);
+				/* horizontal edge */
+				if (edgelen == 0) {
+					/* horizontal edge has original endpoints, used in drawing edges */
+					el->edge->hedge = 1;
+					g->nhedges++;	/* number of horizontal edges */
+					/* mark that nodes have a hor. edge */
+					sn->hashedge = 1;
+					tn->hashedge = 1;
+					if (0) {
+						printf
+						    ("%s(): horizontal edge %d->%d \"%s\"->\"%s\" rev=%d length %d pos=%d -> pos=%d\n",
+						     __func__, sn->nr, tn->nr, sn->nlabel, tn->nlabel, rev, edgelen, sn->x, tn->x);
+						fflush(stdout);
+					}
+					/* edge ready */
+					el->edge->done = 0;
+
+				} else if (edgelen > 1) {
+					if (yydebug) {
+						printf("%s(): splitting edge %d->%d length %d\n", __func__, sn->nr, tn->nr,
+						       edgelen);
+						fflush(stdout);
+					}
+					/* start at source node */
+					prevnodeid = sn->nr;
+					/* get relative y level of start node */
+					sny = sn->y;
+					/* relative x pos of source node */
+					snx = sn->x;
+					for (i = 1; i < edgelen; i++) {
+						/* dummy node numbers start at first free node nr number */
+						maingraph->nodenum++;
+						newid = maingraph->nodenum;
+						add_new_dummynode(g, newid);
+						/* this should always find the node with given number */
+						nlnode = uniqnode2(NULL, newid);
+						if (nlnode) {
+							/* optional edge label data */
+							nlnode->eldata = eldata;
+							nlnode->dummy = 1;	/* this is a dummy node */
+							nlnode->elabel = 0;	/* not a edgelabel */
+							/* set relative level of dummy node strting from source node */
+							nlnode->y = (sny + i);
+							/* at after barycenter also set the rel. x pos based on source node */
+							if (after) {
+								nlnode->x = snx;
+							}
+							/* start node of the new dummy node from source */
+							nlnode->startnode = sn->startnode;
+						}
+						add_new_dummyedge(g, el->edge->rawedge, el->edge->rootedon, prevnodeid, newid, rev,
+								  ecolor, style, fc, tc, constraint, eldata);
+						prevnodeid = newid;
+					}
+					add_new_dummyedge(g, el->edge->rawedge, el->edge->rootedon, prevnodeid, tn->nr, rev, ecolor,
+							  style, fc, tc, constraint, eldata);
+					/* edge ready */
+					el->edge->done = 0;
+					del_edge(g, el);
+					el = dp_free(el);
+					if (el) {
+					}
+				} else if (edgelen == 1) {
+					/* edge len is 1 oke. */
+					/* edge ready */
+					el->edge->done = 0;
+				} else {
+					/* shouldnothappen */
+					printf("%s(): edgelen<0 is %d shouldnothappen\n", __func__, edgelen);
+					fflush(stdout);
+					/* edge ready */
+					el->edge->done = 0;
+				}
+			}
+		}
+		el = elnext;
+	}
+
+	return;
+}
+
+/* split edges after barycenter */
+void splitedgesafter(struct gml_graph *g)
+{
+	if (g) {
+		/* this will split the already split same edges again */
+		splitedges(g, /* after mode */ 1);
+	}
 	return;
 }
 
@@ -4087,11 +4512,73 @@ void nodecounts(struct gml_graph *g)
 	/* refresh st lists */
 	clear_stlist_all(g);
 	make_stlist(g);
-	/* table with number of nodes per level */
-	g->nnodes_of_level = dp_calloc((g->maxlevel + 1), sizeof(int));
-	if (g->nnodes_of_level == NULL) {
-		return;
+	/* refresh max level */
+	g->maxlevel = 0;
+	lnll = g->nodelist;
+	while (lnll) {
+		if (lnll->node) {
+			/* rely used for sugi */
+			lnll->node->rely = lnll->node->y;
+			if (lnll->node->rely > g->maxlevel) {
+				g->maxlevel = lnll->node->rely;
+			}
+		}
+		lnll = lnll->next;
 	}
+
+	/* table with number of nodes per level */
+	if (g->nnodes_of_level) {
+		g->nnodes_of_level = dp_free(g->nnodes_of_level);
+	}
+	/* +1 extra spare */
+	g->nnodes_of_level = dp_calloc(1, ((g->maxlevel + 2) * sizeof(int)));
+
+	/* determine widest level and how many nodes it has */
+	g->widestlevel = 0;
+	g->widestnnodes = 0;
+	lnll = g->nodelist;
+	while (lnll) {
+		if (lnll->node) {
+			/* rely used for sugi */
+			g->nnodes_of_level[lnll->node->rely] = (g->nnodes_of_level[lnll->node->rely] + 1);
+			/* x used for sugi, offset 1...n */
+			lnll->node->relx = g->nnodes_of_level[lnll->node->y];
+			if (g->nnodes_of_level[lnll->node->rely] >= g->widestnnodes) {
+				g->widestnnodes = g->nnodes_of_level[lnll->node->rely];
+				g->widestlevel = lnll->node->rely;
+			}
+		}
+		lnll = lnll->next;
+	}
+
+	return;
+}
+
+/* create level node count data */
+void nodecountsafter(struct gml_graph *g)
+{
+	struct gml_nlist *lnll = NULL;
+	/* refresh st lists */
+	clear_stlist_all(g);
+	make_stlist(g);
+	/* refresh max level */
+	g->maxlevel = 0;
+	lnll = g->nodelist;
+	while (lnll) {
+		if (lnll->node) {
+			/* rely used for sugi */
+			lnll->node->rely = lnll->node->y;
+			if (lnll->node->rely > g->maxlevel) {
+				g->maxlevel = lnll->node->rely;
+			}
+		}
+		lnll = lnll->next;
+	}
+	/* table with number of nodes per level */
+	if (g->nnodes_of_level) {
+		g->nnodes_of_level = dp_free(g->nnodes_of_level);
+	}
+	g->nnodes_of_level = dp_calloc(1, ((g->maxlevel + 2) * sizeof(int)));
 
 	/* determine widest level and how many nodes it has */
 	g->widestlevel = 0;
@@ -4099,15 +4586,15 @@ void nodecounts(struct gml_graph *g)
 	lnll = g->nodelist;
 	while (lnll) {
 		/* rely used for sugi */
-		lnll->node->rely = lnll->node->y;
-		g->nnodes_of_level[lnll->node->y] = g->nnodes_of_level[lnll->node->y] + 1;
-		/* x used for sugi, offset 1...n */
-		lnll->node->relx = g->nnodes_of_level[lnll->node->y];
-		if (g->nnodes_of_level[lnll->node->y] >= g->widestnnodes) {
-			g->widestnnodes = g->nnodes_of_level[lnll->node->y];
-			g->widestlevel = lnll->node->y;
+		if (lnll->node) {
+			g->nnodes_of_level[lnll->node->rely] = (g->nnodes_of_level[lnll->node->rely] + 1);
+			/* x used for sugi, offset 1...n */
+			lnll->node->relx = g->nnodes_of_level[lnll->node->rely];
+			if (g->nnodes_of_level[lnll->node->rely] >= g->widestnnodes) {
+				g->widestnnodes = g->nnodes_of_level[lnll->node->rely];
+				g->widestlevel = lnll->node->rely;
+			}
 		}
-
 		lnll = lnll->next;
 	}
 
@@ -4116,6 +4603,8 @@ void nodecounts(struct gml_graph *g)
 
 /* this is called from the parsercode.
  * the parser has already done some checks.
+ * ishtml is set if edge label is a html string
+ * todo ishtml for edge labels not implemeted yet also not record labels
  */
 void
 add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
@@ -4237,13 +4726,16 @@ add_new_edge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 
 /* edge to dummy node is in edgelist but not in rawedgelist */
 void
-add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
-		  int foundtarget, int reversed, int ecolor, int style, char *fcompass, char *tcompass, int constraint)
+add_new_dummyedge(struct gml_graph *g, struct gml_edge *rawedge, struct gml_graph *ro, int foundsource,
+		  int foundtarget, int reversed, int ecolor, int style, char *fcompass, char *tcompass, int constraint,
+		  struct gml_el *eldata)
 {
 	struct gml_node *snode = NULL;
 	struct gml_node *tnode = NULL;
 	struct gml_edge *edge = NULL;
 	struct gml_elist *el = NULL;
+
+	/* get from/to nodes */
 	snode = uniqnode2(NULL, foundsource);
 	if (snode == NULL) {
 		printf("%s(): sourcenode in %d->%d not found and edge is skipped\n", __func__, foundsource, foundtarget);
@@ -4255,13 +4747,15 @@ add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 		printf("%s(): targetnode in %d->%d not found and edge is skipped\n", __func__, foundsource, foundtarget);
 		return;
 	}
-
 	edge = dp_calloc(1, sizeof(struct gml_edge));
-	if (edge == NULL) {
-		return;
-	}
+	/* create uniq edge num */
 	g->edgenum++;
+	/* original edge where this split edge came from */
+	/* it means every split edge has the info about the original edge */
+	edge->rawedge = rawedge;
+	/* new edge number */
 	edge->nr = g->edgenum;
+	/* sub graph where edge is rooted on */
 	edge->rootedon = ro;
 	edge->from_node = snode;	/* from-node */
 	edge->to_node = tnode;	/* to-node */
@@ -4270,23 +4764,37 @@ add_new_dummyedge(struct gml_graph *g, struct gml_graph *ro, int foundsource,
 	edge->style = style;
 	edge->fcompass = fcompass;
 	edge->tcompass = tcompass;
+	/* dot edge constraint */
 	edge->constraint = constraint;
+	/* optional edge label data */
+	edge->eldata = eldata;
 	/* edge is a inner edge if both nodes are dummy nodes */
 	if (edge->from_node->dummy && edge->to_node->dummy) {
 		edge->inner = 1;
 	} else {
 		edge->inner = 0;
 	}
-	el = dp_calloc(1, sizeof(struct gml_elist));
-	if (el == NULL) {
-		return;
+	/* this edge is part of a split edge */
+	edge->split = 1;
+	edge->headsplit = 0;
+	edge->tailsplit = 0;
+	/* mark if start of split edge */
+	if (edge->from_node->dummy == 0 && edge->to_node->dummy != 0) {
+		edge->headsplit = 1;
 	}
-
+	/* mark if end of a split edge */
+	if (edge->from_node->dummy == 0 && edge->to_node->dummy != 0) {
+		edge->tailsplit = 1;
+	}
+	el = dp_calloc(1, sizeof(struct gml_elist));
+	/* set edge data */
 	el->edge = edge;
 	if (g->edgelist == NULL) {
+		/* first entry */
 		g->edgelist = el;
 		g->edgelisttail = el;
 	} else {
+		/* next entry */
 		g->edgelisttail->next = el;
 		g->edgelisttail = el;
 	}
@@ -4428,9 +4936,6 @@ void add_new_dummynode(struct gml_graph *g, int foundid)
 	}
 
 	node = dp_calloc(1, sizeof(struct gml_node));
-	if (node == NULL) {
-		return;
-	}
 
 	node->id = foundid;
 	node->nr = foundid;
@@ -4439,9 +4944,6 @@ void add_new_dummynode(struct gml_graph *g, int foundid)
 	/* dummy nodes are in work list, not raw nodes list */
 	uniqnode_add2(NULL, node);
 	lnll = dp_calloc(1, sizeof(struct gml_nlist));
-	if (lnll == NULL) {
-		return;
-	}
 
 	lnll->node = node;
 	if (g->nodelist == NULL) {
@@ -4780,7 +5282,7 @@ static const char *humansized(int bytes)
 }
 
 /* dfs the outgoing edges at level i */
-static void longestpath_r(struct gml_graph *g, struct gml_node *n, int i)
+static void longestpath_r(struct gml_graph *g, struct gml_node *n, struct gml_node *sn, int i)
 {
 	struct gml_elist *el = NULL;
 	if (i > g->maxlevel) {
@@ -4791,11 +5293,14 @@ static void longestpath_r(struct gml_graph *g, struct gml_node *n, int i)
 		return;
 	}
 
+	/* node belongs to this start node */
+	n->startnode = sn->nr;
+
 	n->done = 1;
 	el = n->outgoing_e;
 	while (el) {
 		if (el->edge->to_node->done == 0) {
-			longestpath_r(g, el->edge->to_node, (i + 1));
+			longestpath_r(g, el->edge->to_node, sn, (i + 1));
 		}
 		el = el->next;
 	}
@@ -4834,7 +5339,7 @@ void longestpath(struct gml_graph *g)
 		/* start at startnodes */
 		if (nl->node->indegree == 0 && nl->node->outdegree != 0) {
 			g->maxlevel = 0;
-			longestpath_r(g, nl->node, 0);
+			longestpath_r(g, nl->node, nl->node, 0);
 			n = g->maxlevel;
 			if (yydebug || 0) {
 				printf("%s(): longest path is %d starting at %s\n", __func__, n, nl->node->name);
@@ -4853,7 +5358,7 @@ void longestpath(struct gml_graph *g)
 		/* start at other nodes */
 		if (nl->node->done == 0) {
 			g->maxlevel = 0;
-			longestpath_r(g, nl->node, 0);
+			longestpath_r(g, nl->node, nl->node, 0);
 			n = g->maxlevel;
 			if (yydebug || 0) {
 				printf("%s(): path is %d starting at %s\n", __func__, n, nl->node->name);

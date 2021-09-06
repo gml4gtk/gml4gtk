@@ -165,18 +165,18 @@ int GML_search_ISO(char *str, int len)
 	int i = 0;
 	int ret = '&';
 
-	if (!strncmp(str, "&quot;", len)) {
+	if (strncmp(str, "&quot;", (size_t)len) == 0) {
 		return 34;
-	} else if (!strncmp(str, "&amp;", len)) {
+	} else if (strncmp(str, "&amp;", (size_t)len) == 0) {
 		return 38;
-	} else if (!strncmp(str, "&lt;", len)) {
+	} else if (strncmp(str, "&lt;", (size_t)len) == 0) {
 		return 60;
-	} else if (!strncmp(str, "&gt;", len)) {
+	} else if (strncmp(str, "&gt;", (size_t)len) == 0) {
 		return 62;
 	}
 
 	for (i = 0; i < 96; i++) {
-		if (!strncmp(str, GML_table[i], len)) {
+		if (strncmp(str, GML_table[i], (size_t)len) == 0) {
 			ret = i + 160;
 			break;
 		}
@@ -292,7 +292,7 @@ struct GML_token GML_scanner(gzFile source)
 		do {
 			if (count == cur_max_size - 1) {
 				*tmp = 0;
-				tmp = (char *)gmlparser_calloc(1, 2 * cur_max_size * sizeof(char));
+				tmp = (char *)gmlparser_calloc((size_t)1, (2 * cur_max_size * sizeof(char)));
 				strcpy(tmp, ret);
 
 				if (cur_max_size > INITIAL_SIZE) {
@@ -335,7 +335,7 @@ struct GML_token GML_scanner(gzFile source)
 		*tmp = 0;
 		token.kind = GML_KEY;
 /* #warning "memleak here" */
-		token.value.string = (char *)gmlparser_calloc(1, (count + 1) * sizeof(char));
+		token.value.string = (char *)gmlparser_calloc((size_t)1, ((count + 1) * sizeof(char)));
 		strcpy(token.value.string, ret);
 
 		if (cur_max_size > INITIAL_SIZE) {
@@ -376,7 +376,7 @@ struct GML_token GML_scanner(gzFile source)
 
 				if (count >= cur_max_size - 8) {
 					*tmp = 0;
-					tmp = (char *)gmlparser_calloc(1, 2 * cur_max_size * sizeof(char));
+					tmp = (char *)gmlparser_calloc((size_t)1, (2 * cur_max_size * sizeof(char)));
 					strcpy(tmp, ret);
 
 					if (cur_max_size > INITIAL_SIZE) {
@@ -449,7 +449,7 @@ struct GML_token GML_scanner(gzFile source)
 
 			*tmp = 0;
 			token.kind = GML_STRING;
-			token.value.string = (char *)gmlparser_calloc(1, (count + 1) * sizeof(char));
+			token.value.string = (char *)gmlparser_calloc((size_t)1, ((count + 1) * sizeof(char)));
 			strcpy(token.value.string, ret);
 
 			if (cur_max_size > INITIAL_SIZE) {

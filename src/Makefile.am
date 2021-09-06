@@ -39,6 +39,7 @@ gml4gtk_SOURCES = \
 	pos2.c \
 	pos3.c \
 	pos4.c \
+	posz.c \
 	hier.c \
 	splay-tree.c \
 	skip-list.c \
@@ -77,6 +78,19 @@ gml4gtk_CFLAGS = \
 
 # added zlib
 gml4gtk_tolink = @GTK_LIBS@ -lz
+
+# compile with airbus gcc settings
+abgcc: $(gml4gtk_SOURCES)
+	rm -v -f ./gml4gtk
+	rm -v -f ./O1 ./O2
+	$(CC) $(AIRBUS_GCC_COMPILER_WARNING) $(GTK_CFLAGS) $(gml4gtk_SOURCES) -I. -I.. $(gml4gtk_tolink) -lm -o gml4gtk 1>O1 2>O2
+	$(CC) --version
+
+# compile with airbus gcc settings
+abclang: $(gml4gtk_SOURCES)
+	rm -f ./gml4gtk
+	clang-11 $(AIRBUS_CLANG_COMPILER_WARNING) $(GTK_CFLAGS) $(gml4gtk_SOURCES) -I. -I.. $(gml4gtk_tolink) -lm -o gml4gtk
+	clang-11 --version
 
 #
 gml4gtk$(EXEEXT): $(gml4gtk_SOURCES)
@@ -131,7 +145,7 @@ jsonlint:
 
 #
 indent:
-	./lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h skip-list.h
+	./lindent.sh $(gml4gtk_SOURCES) main.h gml_parser.h gml_scanner.h bubbling.h sugi.h pos.h pos2.h pos3.h hier.h splay-tree.h uniqstr.h uniqnode.h uniqgraph.h vcg.h vcgus.h vcg.yy.h vcg.tab.h vcgun.h json.h jgf.h skip-list.h sfg.c sfg.h
 
 # clang -emit-llvm hello.c -c -o main.bc
 # opt -dot-cfg-only main.bc

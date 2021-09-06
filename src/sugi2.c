@@ -1579,17 +1579,17 @@ void reduce_crossings2(struct gml_graph *g, int it1v, int it2v)
 		}
 	}
 
-	g->numce = (int *)dp_calloc(1, (g->maxlevel + 1) * sizeof(int));
-
-	if (g->maxlevel == 0) {
-		/* if graph has only 1 or more nodes */
-		return;
-	}
+	g->numce = (int *)dp_calloc(1, ((g->maxlevel + 1) * sizeof(int)));
 
 	/* with too complex graph data at least this message is on console before cpu get roasted. */
 	printf("%s(): starting barycenter algorithm for graph with %d nodes, %d edges in %d levels ... wait\n", __func__, g->nnodes,
 	       g->nedges, g->maxlevel);
 	fflush(stdout);
+
+	if (g->maxlevel == 0) {
+		/* if graph has only 1 or more nodes */
+		return;
+	}
 
 	if (g->nnodes < 2) {
 		return;

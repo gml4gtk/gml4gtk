@@ -1,4 +1,9 @@
 
+/* gcc -fanalyzer issues in the bison generated yacc parser
+ * dphlparser.c:533:19: warning: 'free' of 'yyss' which points to memory not on the heap [CWE-590] [-Wanalyzer-free-of-non-heap]
+ * dphlparser.c:2270:10: warning: leak of 'yyptr' [CWE-401] [-Wanalyzer-malloc-leak]
+ */
+
 /*
  *  Copyright 2021
  *

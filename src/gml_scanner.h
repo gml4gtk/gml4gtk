@@ -57,8 +57,8 @@ typedef enum {
 
 struct GML_error {
 	GML_error_value err_num;
-	int line;
-	int column;
+	unsigned int line;
+	unsigned int column;
 };
 
 union GML_tok_val {

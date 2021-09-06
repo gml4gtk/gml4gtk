@@ -36,7 +36,7 @@
 #
 
 AC_PREREQ([2.69])
-AC_INIT([gml4gtk], [7.5], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
+AC_INIT([gml4gtk], [7.6], [mooigraph@gmail.com], [gml4gtk.tar.gz], [https://sourceforge.net/projects/gml4gtk])
 AC_CONFIG_SRCDIR([src/main.h])
 AC_CONFIG_HEADERS([config.h])
 
@@ -113,6 +113,7 @@ CFLAGS="$ac_save_CFLAGS"])
 # extra code in dpmem.c starts checking for memory leaks.
 # GCC_COMPILER_WARNING(--verbose)
 # GCC_COMPILER_WARNING(-H)
+# -Wnull-dereference warns about possible NULL pointers
 AC_ARG_ENABLE(gcc-warnings,
               AC_HELP_STRING([--enable-gcc-warnings],
 	                     [turn on lots of GCC warnings (not recommended)]),
@@ -154,6 +155,7 @@ if test "${enableval}" = yes; then
   GCC_COMPILER_WARNING(-Wshift-overflow)
   GCC_COMPILER_WARNING(-Wnull-dereference)
   GCC_COMPILER_WARNING(-Wnonnull)
+  GCC_COMPILER_WARNING(-Wnnull-dereference)
   GCC_COMPILER_WARNING(-Woverride-init-side-effects)
   GCC_COMPILER_WARNING(-Wunused-const-variable)
   GCC_COMPILER_WARNING(-Wframe-address)
@@ -162,6 +164,7 @@ if test "${enableval}" = yes; then
 else
   WARNING_CFLAGS=
   GCC_COMPILER_WARNING(-Wall)
+  GCC_COMPILER_WARNING(-Wextra)
   GCC_COMPILER_WARNING(-Wshadow)
   GCC_COMPILER_WARNING(-Wno-overlength-strings)
   GCC_COMPILER_WARNING(-pedantic)
@@ -174,6 +177,7 @@ else
   GCC_COMPILER_WARNING(-fcompare-debug)
   GCC_COMPILER_WARNING(-flto)
   GCC_COMPILER_WARNING(-fwhole-program)
+  GCC_COMPILER_WARNING(-Wnull-dereference)
 fi
 
 #  GCC compiler rtl and tree data generation
@@ -184,6 +188,18 @@ fi
 #  GCC_COMPILER_WARNING(-fcallgraph-info)
 
 #? AC_INCLUDE_DEFAULTS([stdio.h math.h])
+
+# compiler setting from airbus aerospace
+# see https://github.com/airbus-seclab/c-compiler-security
+# in src dir use make abgcc
+# -Wtraditional-conversion [temp turned off -- too much]
+AIRBUS_GCC_COMPILER_WARNING="$CFLAGS -O2 -Wall -Wextra -Wpedantic -Wformat=2 -Wformat-overflow=2 -Wformat-truncation=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wtrampolines -Walloca -Wvla -Warray-bounds=2 -Wimplicit-fallthrough=3  -Wshift-overflow=2 -Wcast-qual -Wstringop-overflow=4 -Wconversion -Warith-conversion -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wformat-signedness -Wshadow -Wstrict-overflow=4 -Wundef -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wstack-usage=1000000 -Wcast-align=strict -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code"
+
+# same for clang use make abclang
+AIRBUS_CLANG_COMPILER_WARNING="$CFLAGS -O2 -Walloca -Wcast-qual -Wconversion -Wformat=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wstrict-overflow=3 -Wvla -Warray-bounds -Warray-bounds-pointer-arithmetic -Wassign-enum -Wbad-function-cast -Wconditional-uninitialized -Wconversion -Wfloat-equal -Wformat-type-confusion -Widiomatic-parentheses -Wimplicit-fallthrough -Wloop-analysis -Wpointer-arith -Wshift-sign-overflow -Wshorten-64-to-32 -Wswitch-enum -Wtautological-constant-in-range-compare -Wunreachable-code-aggressive  -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fsanitize=safe-stack -fPIE -fstack-clash-protection -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code"
+
+AC_SUBST(AIRBUS_GCC_COMPILER_WARNING)
+AC_SUBST(AIRBUS_CLANG_COMPILER_WARNING)
 
 # Checks for libraries.
 AC_CHECK_LIB([m], [sqrt])
@@ -398,7 +414,11 @@ AC_DEFINE_UNQUOTED([PLATFORM_WIN32], [$HAVE_PLATFORM_WIN32], [using a windows co
 
 # compilation date in config.h
 # CONFIG_DATE=`date +"%a %x %Y"`
-CONFIG_DATE=`date +"%a %d %b %Y"`
+# CONFIG_DATE=`date +"%a %d %b %Y"`
+# unix timestamp
+# date +%s
+# utc time
+CONFIG_DATE=`date -u `
 
 AC_SUBST(CONFIG_DATE)
 

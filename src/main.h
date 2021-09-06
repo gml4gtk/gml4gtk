@@ -52,9 +52,16 @@ struct gml_edge;
 struct gml_elist;
 struct gml_nlist;
 struct gml_glist;
+struct gml_el;
+struct gml_ellist;
 struct gml_rl;
 struct gml_p;
 struct gml_hl;
+
+/*
+ * the flags in the structs can be bitflags or chars
+ * but then compiler warnings may appear
+ */
 
 struct gml_graph {
 	int id;			/* uniq number and 0 is rootgraph */
@@ -68,6 +75,7 @@ struct gml_graph {
 	int tnedgelabels;	/* total number of edge labels in whole graph */
 
 	int maxlevel;		/* max. level in graph */
+	int bmaxlevel;		/* max. level in graph at bary */
 	int *nnodes_of_level;	/* number of nodes at level */
 
 	int nnodes;		/* number of input nodes */
@@ -104,9 +112,11 @@ struct gml_graph {
 	struct gml_nlist *nodelisttail;
 	struct gml_elist *edgelist;
 	struct gml_elist *edgelisttail;
-	struct gml_nlist *singlenodelist;
+	struct gml_ellist *ellist;	/* edges with edge labels */
+	struct gml_ellist *ellisttail;	/* edges with edge labels */
+	struct gml_nlist *singlenodelist;	/* single nodes with no edges */
 	struct gml_nlist *singlenodelisttail;
-	struct gml_nlist *selfedgesnodelist;
+	struct gml_nlist *selfedgesnodelist;	/* nodes with edges to itself */
 	struct gml_nlist *selfedgesnodelisttail;
 
 	struct gml_glist *subglist;	/* subgraphs */
@@ -116,6 +126,10 @@ struct gml_graph {
 	int sugi_fcrossings;	/* sugiyama final crossings */
 	int sugi_changes;	/* sugiyama changes made */
 	int *numce;		/* number of edge crossings per level */
+
+	int elsizes;		/* set if edge label size are determined */
+	int nodesizes;		/* set if node sizes are set */
+	int nsamee;		/* number of same edges */
 };
 
 /* list of subgraphs */
@@ -131,6 +145,7 @@ struct gml_node {
 	int id;			/* id number as in gml graph */
 	char *name;		/* name of node or label */
 	int startnode;		/* node belongs to part of graph with this startnode */
+	int nstartnodes;	/* node belongs to part of graph with this amount of startnodes */
 	int objectnr;		/* dia xml object number */
 	int x;			/* */
 	int y;			/* */
@@ -146,17 +161,21 @@ struct gml_node {
 	int finy;		/* final y pos */
 	int tx;			/* text xsize */
 	int ty;			/* text ysize */
+	int ftx;		/* full text xsize */
+	int fty;		/* full text ysize */
 	int lx0;		/* start of level x pos where node is */
 	int lx1;		/* end of level x pos where node is */
 	int ly0;		/* start of level y pos where node is */
 	int ly1;		/* end of level y pos where node is */
-	char txsize;		/* set if node text size is calculated */
-	char incluster;		/* set if node is in a cluster layout */
-	char drawrh;		/* if set draw r/h labels */
-	char dummy;		/* set to 1 if dummy node */
-	char hashedge;		/* set to 1 if node has hor. edges */
-	char elabel;		/* set if node is a edge label */
-	char ishtml;		/* set if label is html label <> */
+	int lxsize;		/* x size of level */
+	int lysize;		/* y size of level */
+	int txsize;		/* set if node text size is calculated */
+	int incluster;		/* set if node is in a cluster layout */
+	int drawrh;		/* if set draw r/h labels */
+	int dummy;		/* set to 1 if dummy node */
+	int hashedge;		/* set to 1 if node has hor. edges */
+	int elabel;		/* set if node is a edge label */
+	int ishtml;		/* set if label is html label <> */
 	int nselfedges;		/* number of self edges at this node */
 	struct gml_elist *outgoing_e;	/* source list, outgoing edges */
 	struct gml_elist *outgoing_etail;	/* source list, outgoing edges */
@@ -181,6 +200,8 @@ struct gml_node {
 	struct gml_node *el_tnode;	/* in edge-label the to-node */
 	int done;		/* dfs black/white */
 	int grey;		/* dfs grey */
+	int same;		/* set if node is part of same edge */
+	struct gml_el *eldata;	/* extra original edge data if edge label node or dummy node */
 };
 
 struct gml_nlist {
@@ -194,23 +215,50 @@ struct gml_edge {
 	struct gml_graph *rootedon;	/* graph where edge is located */
 	struct gml_node *from_node;	/* from node */
 	struct gml_node *to_node;	/* to node */
-	char incluster;		/* set if edge is in cluster layout */
-	char reversed;		/* set if edge is reversed */
-	char hedge;		/* set if edge is horizontal line */
-	char vedge;		/* set if edge is vertical */
-	char inner;		/* set if edge is a inner edge */
+	int same;		/* set if edge is multiple times defined */
+	int incluster;		/* set if edge is in cluster layout */
+	int reversed;		/* set if edge is reversed */
+	int hedge;		/* set if edge is horizontal line */
+	int vedge;		/* set if edge is vertical */
+	int inner;		/* set if edge is a inner edge */
 	char *elabel;		/* optional edge label */
 	int ishtml;		/* set if elabel is <> html label */
 	int ecolor;		/* r/g/b edge line color */
 	int style;		/* edge line style, solid dotted dashed */
 	char *fcompass;		/* optional from-compass point */
 	char *tcompass;		/* optional to-compass point */
-	char constraint;	/* dot edge constraint */
+	int constraint;		/* dot edge constraint */
+	struct gml_el *eldata;	/* extra data if edge has edge label */
+	int split;		/* set if edge is part of a split edge */
+	int headsplit;		/* set if edge is head of a split edge */
+	int tailsplit;		/* set if edge is tail of a split edge */
+	struct gml_edge *rawedge;	/* edge in rawedgelist */
 };
 
+/* edges */
 struct gml_elist {
 	struct gml_edge *edge;
 	struct gml_elist *next;
+};
+
+/* extra edge info for edges with label
+ * and for dummy nodes
+ * full data of edge is in struct gml_edge
+ */
+struct gml_el {
+	struct gml_edge *rawedge;	/* edge in rawedgelist */
+	struct gml_node *ofrom;	/* original from node */
+	struct gml_node *oto;	/* original to node */
+	char *elabel;		/* original edge label text */
+	int ishtml;		/* set if elabel is <> html label but not yet implementef */
+	int tx;			/* x size of label */
+	int ty;			/* y size of label */
+};
+
+/* list of edges with edge label */
+struct gml_ellist {
+	struct gml_el *eledge;
+	struct gml_ellist *next;
 };
 
 /* record label */
@@ -401,6 +449,13 @@ struct gml_hl {
 
 /* in gui code, update status text crossings */
 extern void update_status_text_cross(char *text);
+
+/* needed for gcc -fanalyzer */
+#if (GTK_HAVE_API_VERSION_2 == 1 || GTK_HAVE_API_VERSION_3 == 1)
+
+extern int maingtk23(void);
+
+#endif
 
 #endif
 

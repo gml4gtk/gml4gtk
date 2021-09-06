@@ -1,7 +1,7 @@
 
 /*
  *  Copyright 2021
- *  (C) Universitaet Passau 1986-1991
+ *  based on priority algorithm from graphlet (C) Universitaet Passau 1986-1991
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -520,6 +520,7 @@ static void improve_positions1(struct gml_graph *g)
 
 	/* this can happen */
 	if (g->nnodes_of_level == NULL) {
+		/* there is no number of nodes at level info, shouldnothappen */
 		return;
 	}
 
@@ -539,15 +540,19 @@ static void improve_positions1(struct gml_graph *g)
 		gnl->node->absy = gnl->node->rely;
 		gnl->node->finx = 0;
 		gnl->node->finy = 0;
+		gnl->node->lx0 = -1;	/* -1 means undefined */
+		gnl->node->ly0 = -1;
+		gnl->node->lx1 = -1;
+		gnl->node->ly1 = -1;
 		gnl = gnl->next;
 	}
 
-	/* XXX tofix todo these params */
+	/* these params can be tuned */
 
 	/* min. node dist, minimum 1 */
 	mindist = 1;
 
-	/* number of up/down sweeps */
+	/* number of up/down sweeps of priority placement algorithm, see sugiyama paper and book */
 	count = 1;
 
 	for (ii = 0; ii < count; ii++) {
@@ -667,6 +672,8 @@ static void improve_positions1(struct gml_graph *g)
  * which are turned into real coords in finalxy()
  * pos3 set in absx,absy real coords and finalxy3()
  * copies that to finx,finy
+ * todo add brandes algorithm
+ * todo add horizontal compaction as graphviz does
  */
 void improve_positions(struct gml_graph *g)
 {
@@ -674,6 +681,12 @@ void improve_positions(struct gml_graph *g)
 
 	printf("%s(): positioning mode is %d\n", __func__, postype);
 	fflush(stdout);
+
+	if (g == NULL) {	/* shouldnothappen */
+		return;
+	}
+
+	/* the pos routines also must set new level info in ly0, ly1 used in the drawing routines */
 
 	switch (postype) {
 	case 1:

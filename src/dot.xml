@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<bison-xml-report version="3.7.4" bug-report="bug-bison@gnu.org" url="https://www.gnu.org/software/bison/">
+<bison-xml-report version="3.7.5" bug-report="bug-bison@gnu.org" url="https://www.gnu.org/software/bison/">
 
   <filename>dot.y</filename>
 

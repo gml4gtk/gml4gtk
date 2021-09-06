@@ -761,9 +761,9 @@ int json_parser_init(json_parser * parser, json_config * config, json_parser_cal
 	    ? parser->config.max_nesting : LIBJSON_DEFAULT_STACK_SIZE;
 
 	parser->stack = parser_calloc(parser, parser->stack_size, sizeof(parser->stack[0]));
-	if (!parser->stack)
+	if (!parser->stack) {	/* gcc-10 -fanalyzer sys memory leak here */
 		return JSON_ERROR_NO_MEMORY;
-
+	}
 	/* initialize the parse buffer */
 	parser->buffer_size = (parser->config.buffer_initial_size > 0)
 	    ? parser->config.buffer_initial_size : LIBJSON_DEFAULT_BUFFER_SIZE;
@@ -1102,8 +1102,9 @@ int json_parser_dom_init(json_parser_dom * dom,
 	dom->stack_size = 1024;
 	dom->stack_offset = 0;
 	dom->stack = memory_calloc(dom->user_calloc, dom->stack_size, sizeof(*(dom->stack)));
-	if (!dom->stack)
+	if (!dom->stack) {	/* gcc-10 -fanalyzer memory leak here */
 		return JSON_ERROR_NO_MEMORY;
+	}
 	dom->append = append;
 	dom->create_structure = create_structure;
 	dom->create_data = create_data;
